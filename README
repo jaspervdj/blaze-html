@@ -1,0 +1,16 @@
+# BlazeHtml
+
+    import Data.Text (pack, unpack)
+
+    import Text.BlazeHtml
+    import Text.BlazeHtml.CommonElements
+
+    main = do
+        putStrLn $ unpack $ printHtml html
+      where
+        html = h1 (pack "BlazeHtml")
+             . setAttribute (pack "class") (pack "notice") . div_ (
+                     p (text $ pack "BlazeHtml is a fast text combinator library.")
+                   . img (pack "logo.png") (pack "BlazeHtml logo.")
+                   . p (text $ pack "This is a usage example.")
+             )

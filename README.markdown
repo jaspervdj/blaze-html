@@ -3,17 +3,17 @@
 BlazeHtml is a fast HTML combinator library, currently in an experimental state.
 The interface and modules are provisional and in development.
 
-    import Data.Text (pack, unpack)
+    {-# LANGUAGE OverloadedStrings #-}
 
     import Text.BlazeHtml
-    import Text.BlazeHtml.CommonElements
+    import Text.BlazeHtml.HtmlElements
+    import Text.BlazeHtml.Renderers
 
-    main = do
-        putStrLn $ unpack $ printHtml html
-      where
-        html = h1 (pack "BlazeHtml")
-             . setAttribute (pack "class") (pack "notice") . div_ (
-                     p (text $ pack "BlazeHtml is a HTML combinator library.")
-                   . img (pack "logo.png") (pack "BlazeHtml logo.")
-                   . p (text $ pack "This is a usage example.")
-             )
+    main = renderHtml stdoutRenderer $ do
+        h1 "BlazeHtml" ! [("id", "header")]
+        img "logo.png" "BlazeHtml logo"
+
+        setAttributes [("class", "intro")]
+        p $ do text "BlazeHtml is a blazing fast HTML combinator library."
+               em $ text "BlazeHtml uses a monadic interface."
+               text "This gives us very readable code."

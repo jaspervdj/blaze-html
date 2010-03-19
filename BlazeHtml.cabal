@@ -28,4 +28,5 @@ library
   exposed-modules:  Text.BlazeHtml.Html
                     Text.BlazeHtml.Render.HtmlIO
                     Text.BlazeHtml.Render.HtmlText
+                    Text.BlazeHtml.Render.HtmlPretty
   other-modules:    Text.BlazeHtml.Internal.Html

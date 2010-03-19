@@ -23,7 +23,7 @@ newtype HtmlPretty = HtmlPretty
 -- | Simple helper function to render the attributes.
 renderAttributes :: Attributes -> Text
 renderAttributes [] = T.empty
-renderAttributes t  = T.init . foldr append mempty $ t
+renderAttributes t  = foldr append mempty $ t
   where
     append (k, v) = mappend (mconcat [" ", k, "=\"", v, "\""])
 
@@ -36,16 +36,16 @@ instance Html HtmlPretty where
     renderLeafElement t = HtmlPretty $ do
         attrs <- ask
         indnt <- get
-        return $ (replicate indnt "  ") `mappend` "<" `mappend` t `mappend` " "
+        return $ (replicate indnt "  ") `mappend` "<" `mappend` t
                      `mappend` renderAttributes attrs `mappend` "/>\n"
-    modifyAttributes f = HtmlPretty . local f . runHtmlPretty
+    modifyUnescapedAttributes f = HtmlPretty . local f . runHtmlPretty
     renderElement t h = HtmlPretty $ do
         attrs <- ask
         indnt <- get
         put (indnt+1)
-        inner <- runHtmlPretty (modifyAttributes (const []) h)
+        inner <- runHtmlPretty (modifyUnescapedAttributes (const []) h)
         put indnt
-        return $ "<" `mappend` t `mappend` " "
+        return $ "<" `mappend` t
                      `mappend` renderAttributes attrs `mappend` ">\n"
                      `mappend` inner
                      `mappend` "</" `mappend` t `mappend` ">\n"

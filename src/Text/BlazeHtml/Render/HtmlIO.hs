@@ -10,6 +10,7 @@ module Text.BlazeHtml.Render.HtmlIO
     , renderHtmlIO
     ) where
 
+import Data.Monoid
 import Data.Text (Text)
 
 import Text.BlazeHtml.Internal.Html
@@ -31,7 +32,7 @@ renderUnescapedAttributes out = mapM_ $ \(k,v) ->
 -- | Render a begin tag except for its end.
 renderBeginTag :: Text -> TextOutputter -> Attributes -> IO ()
 renderBeginTag t out attrs =
-    out "<" >> out t >> out " " >> renderUnescapedAttributes out attrs
+    out "<" >> out t >> renderUnescapedAttributes out attrs
 
 instance Monoid HtmlIO where
     mempty        = HtmlIO . const . const $ return ()
@@ -39,12 +40,12 @@ instance Monoid HtmlIO where
         getHtmlIO h1 out attrs >> getHtmlIO h2 out attrs
 
 instance Html HtmlIO where
-  renderUnescapedText t = HtmlIO $ \out attrs -> out t
-  renderLeafElement t   = HtmlIO $ \out attrs ->
-    renderBeginTag t out attrs >> out "/>"
-  modifyUnescapedAttributes f h = HtmlIO $ \out attrs -> 
-    getHtmlIO h out (f attrs)
-  renderElement t h = HtmlIO $ \out attrs -> do
-    renderBeginTag t out attrs >> out ">"
-    getHtmlIO h out []
-    out "</" >> out t >> out ">"
+    renderUnescapedText t = HtmlIO $ \out _ -> out t
+    renderLeafElement t   = HtmlIO $ \out attrs ->
+        renderBeginTag t out attrs >> out "/>"
+    modifyUnescapedAttributes f h = HtmlIO $ \out attrs -> 
+        getHtmlIO h out (f attrs)
+    renderElement t h = HtmlIO $ \out attrs -> do
+        renderBeginTag t out attrs >> out ">"
+        getHtmlIO h out []
+        out "</" >> out t >> out ">"

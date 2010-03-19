@@ -16,10 +16,16 @@ type Attributes = [(Text,Text)]
 -- | Any Html document is a monoid. Furthermore, the following equalities hold.
 --
 --    renderText mempty = mempty
+--
 --    renderText t1 `mappend` renderText t2 = renderText (t1 `mappend` t2)
 --
+--    modifyAttributes f (t1 `mappend` t2) = 
+--    modifyAttributes t1 `mappend` modifyAttributes t2
+--
 --    modifyAttributes f (modifyAttributes g h) = modifyAttributes (g.f) h
+--
 --    modifyAttributes f (renderText t) = renderText t
+--
 --    renderElement t h = renderElement t (modifyAttributes (const []) h)
 --
 --  Note that the interface below may be extended, if a performing

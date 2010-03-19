@@ -62,5 +62,5 @@ instance Html HtmlIO where
     out $ "</" `mappend` t `mappend` ">"
 
 -- | Output html to stdout.
-renderHtmlIO :: HtmlIO -> IO ()
-renderHtmlIO = (`runReaderT` []) . (`runReaderT` IO.putStr) . runHtmlIO
+renderHtmlIO :: (Text -> IO ()) -> HtmlIO -> IO ()
+renderHtmlIO out = (`runReaderT` []) . (`runReaderT` out) . runHtmlIO

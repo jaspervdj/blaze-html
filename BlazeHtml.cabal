@@ -27,4 +27,5 @@ library
                     mtl >= 1.1
   exposed-modules:  Text.BlazeHtml.Html
                     Text.BlazeHtml.Render.HtmlIO
+                    Text.BlazeHtml.Render.HtmlText
   other-modules:    Text.BlazeHtml.Internal.Html

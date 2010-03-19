@@ -1,8 +1,8 @@
 module Text.BlazeHtml.Internal.Html
     ( Attributes
     , Html (..)
-    , addAttributes
-    , setAttributes
+    , addUnescapedAttributes
+    , setUnescapedAttributes
     ) where
 
 import Data.Monoid
@@ -33,16 +33,16 @@ type Attributes = [(Text,Text)]
 --
 class Monoid h => Html h where
     -- | Render text -- no escaping is done.
-    renderUnescapedText :: Text -> h
+    renderUnescapedText       :: Text -> h
     -- | Render a leaf element with the given tag name.
-    renderLeafElement   :: Text -> h
+    renderLeafElement         :: Text -> h
     -- | Render an element with the given tag name and the given inner html.
-    renderElement       :: Text -> h -> h
+    renderElement             :: Text -> h -> h
     -- | Set the attributes of the outermost element.
-    modifyAttributes    :: (Attributes -> Attributes) -> h -> h
+    modifyUnescapedAttributes :: (Attributes -> Attributes) -> h -> h
 
-addAttributes :: (Html h) => Attributes -> h -> h
-addAttributes attributes = modifyAttributes (++ attributes)
+addUnescapedAttributes :: (Html h) => Attributes -> h -> h
+addUnescapedAttributes attributes = modifyUnescapedAttributes (++ attributes)
 
-setAttributes :: (Html h) => Attributes -> h -> h
-setAttributes attributes = modifyAttributes (const attributes)
+setUnescapedAttributes :: (Html h) => Attributes -> h -> h
+setUnescapedAttributes attributes = modifyUnescapedAttributes (const attributes)

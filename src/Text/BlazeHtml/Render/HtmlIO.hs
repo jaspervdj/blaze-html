@@ -50,7 +50,7 @@ instance Html HtmlIO where
     out $ "<" `mappend` t `mappend` " "
     out $ renderAttributes attrs
     out $ "/>"
-  modifyAttributes f h = 
+  modifyUnescapedAttributes f h = 
     HtmlIO $ ReaderT $ \out -> local f (runReaderT (runHtmlIO h) out)
   renderElement t h = HtmlIO $ do
     out <- getOutputter
@@ -58,7 +58,7 @@ instance Html HtmlIO where
     out $ "<" `mappend` t
     out $ renderAttributes attrs
     out $ ">"
-    runHtmlIO $ modifyAttributes (const []) h
+    runHtmlIO $ modifyUnescapedAttributes (const []) h
     out $ "</" `mappend` t `mappend` ">"
 
 -- | Output html to stdout.

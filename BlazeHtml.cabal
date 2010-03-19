@@ -30,3 +30,4 @@ library
                     Text.BlazeHtml.Render.HtmlText
                     Text.BlazeHtml.Render.HtmlPrettyText
   other-modules:    Text.BlazeHtml.Internal.Html
+                    Text.BlazeHtml.Internal.Escaping

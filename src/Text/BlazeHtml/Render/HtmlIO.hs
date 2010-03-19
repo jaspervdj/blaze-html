@@ -1,66 +1,50 @@
 {-# LANGUAGE OverloadedStrings #-}
+-- | An instance of the Html typeclass modelling html documents that get output
+-- directly using IO.
+--
+-- TODO: Add instructions explaining how to get high-performance when using
+-- this document type. Most likely this amounts to a simple SPEZIALIZE pragma
+-- for each function producing values of the 'HtmlIO' type.
 module Text.BlazeHtml.Render.HtmlIO
     ( HtmlIO
     , renderHtmlIO
     ) where
 
-import Control.Monad.Reader
-import Control.Monad.Writer
 import Data.Text (Text)
-import qualified Data.Text as T
-import qualified Data.Text.IO as IO
 
 import Text.BlazeHtml.Internal.Html
 
--- | This type explains the approach taken in 
---
---    http://github.com/jaspervdj/BlazeHtml/blob/master/src/Text/BlazeHtml.hs
---
--- as a special instance of the Html typeclass. The only difference is that
--- we require setting of attributes to explicitly mention the Html element that
--- should receive these attributes.
-newtype HtmlIO = HtmlIO
-    { runHtmlIO :: ReaderT (Text -> IO ()) (ReaderT Attributes IO) ()
-    }
+type TextOutputter = Text -> IO ()
 
--- | Retrieve the outputer from the outer reader and lift it.
-getOutputter = (liftIO .) `liftM` ask
+-- | A html document that gets output over IO.
+newtype HtmlIO = HtmlIO {getHtmlIO :: TextOutputter -> Attributes -> IO ()}
 
--- | Retrieve the attributes from
-getAttributes = lift ask
+-- | Output an HtmlIO value using the given text output function.
+renderHtmlIO :: (Text -> IO ()) -> HtmlIO -> IO ()
+renderHtmlIO out h = getHtmlIO h out []
 
--- | Helper function to render the attributes.
-renderAttributes :: Attributes -> Text
-renderAttributes [] = T.empty
-renderAttributes t  = foldr append mempty $ t
-  where
-  append (k, v) = mappend (mconcat [" ", k, "=\"", v, "\""])
+-- | Helper function to render attributes.
+renderUnescapedAttributes :: TextOutputter -> Attributes -> IO ()
+renderUnescapedAttributes out = mapM_ $ \(k,v) -> 
+    out " " >> out k >> out "=\"" >> out v >> out "\""
+
+-- | Render a begin tag except for its end.
+renderBeginTag :: Text -> TextOutputter -> Attributes -> IO ()
+renderBeginTag t out attrs =
+    out "<" >> out t >> out " " >> renderUnescapedAttributes out attrs
 
 instance Monoid HtmlIO where
-  mempty        = HtmlIO $ return ()
-  mappend m1 m2 = HtmlIO $ runHtmlIO m1 >> runHtmlIO m2
+    mempty        = HtmlIO . const . const $ return ()
+    mappend h1 h2 = HtmlIO $ \out attrs -> 
+        getHtmlIO h1 out attrs >> getHtmlIO h2 out attrs
 
 instance Html HtmlIO where
-  renderUnescapedText t = HtmlIO $ do
-    out <- getOutputter
-    out t
-  renderLeafElement t = HtmlIO $ do
-    out <- getOutputter
-    attrs <- getAttributes
-    out $ "<" `mappend` t
-    out $ renderAttributes attrs
-    out $ "/>"
-  modifyUnescapedAttributes f h = 
-    HtmlIO $ ReaderT $ \out -> local f (runReaderT (runHtmlIO h) out)
-  renderElement t h = HtmlIO $ do
-    out <- getOutputter
-    attrs <- getAttributes
-    out $ "<" `mappend` t
-    out $ renderAttributes attrs
-    out $ ">"
-    runHtmlIO $ modifyUnescapedAttributes (const []) h
-    out $ "</" `mappend` t `mappend` ">"
-
--- | Output html to stdout.
-renderHtmlIO :: (Text -> IO ()) -> HtmlIO -> IO ()
-renderHtmlIO out = (`runReaderT` []) . (`runReaderT` out) . runHtmlIO
+  renderUnescapedText t = HtmlIO $ \out attrs -> out t
+  renderLeafElement t   = HtmlIO $ \out attrs ->
+    renderBeginTag t out attrs >> out "/>"
+  modifyUnescapedAttributes f h = HtmlIO $ \out attrs -> 
+    getHtmlIO h out (f attrs)
+  renderElement t h = HtmlIO $ \out attrs -> do
+    renderBeginTag t out attrs >> out ">"
+    getHtmlIO h out []
+    out "</" >> out t >> out ">"

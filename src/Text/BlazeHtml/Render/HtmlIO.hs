@@ -32,7 +32,7 @@ getAttributes = lift ask
 -- | Helper function to render the attributes.
 renderAttributes :: Attributes -> Text
 renderAttributes [] = T.empty
-renderAttributes t  = T.init . foldr append mempty $ t
+renderAttributes t  = foldr append mempty $ t
   where
   append (k, v) = mappend (mconcat [" ", k, "=\"", v, "\""])
 
@@ -47,7 +47,7 @@ instance Html HtmlIO where
   renderLeafElement t = HtmlIO $ do
     out <- getOutputter
     attrs <- getAttributes
-    out $ "<" `mappend` t `mappend` " "
+    out $ "<" `mappend` t
     out $ renderAttributes attrs
     out $ "/>"
   modifyUnescapedAttributes f h = 

@@ -19,7 +19,7 @@ newtype HtmlText = HtmlText
 -- | Simple helper function to render the attributes.
 renderAttributes :: Attributes -> Text
 renderAttributes [] = T.empty
-renderAttributes t  = T.init . foldr append mempty $ t
+renderAttributes t  = foldr append mempty $ t
   where
     append (k, v) = mappend (mconcat [" ", k, "=\"", v, "\""])
 
@@ -31,13 +31,13 @@ instance Html HtmlText where
     renderUnescapedText = HtmlText . return
     renderLeafElement t = HtmlText $ do
         attrs <- ask
-        return $ "<" `mappend` t `mappend` " "
+        return $ "<" `mappend` t
                      `mappend` renderAttributes attrs `mappend` "/>"
     modifyUnescapedAttributes f = HtmlText . local f . runHtmlText
     renderElement t h = HtmlText $ do
         attrs <- ask
         inner <- runHtmlText (modifyUnescapedAttributes (const []) h)
-        return $ "<" `mappend` t `mappend` " "
+        return $ "<" `mappend` t
                      `mappend` renderAttributes attrs `mappend` ">"
                      `mappend` inner
                      `mappend` "</" `mappend` t `mappend` ">"

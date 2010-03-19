@@ -28,3 +28,10 @@ library
   exposed-modules:  Text.BlazeHtml.Html
                     Text.BlazeHtml.Render.HtmlIO
   other-modules:    Text.BlazeHtml.Internal.Html
+
+executable criterion
+  ghc-options:      -Wall
+  hs-source-dirs:   src benchmarks
+  build-depends:    base >= 4 && < 5, criterion
+  main-is:          Criterion.hs
+  extensions:       OverloadedStrings

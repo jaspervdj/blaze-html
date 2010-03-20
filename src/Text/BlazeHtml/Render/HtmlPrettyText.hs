@@ -23,7 +23,7 @@ newtype HtmlPrettyText = HtmlPrettyText
 -- | Simple helper function to render the attributes.
 renderAttributes :: Attributes -> Text
 renderAttributes [] = T.empty
-renderAttributes t  = foldr append mempty $ t
+renderAttributes t  = foldr append mempty t
   where
     append (k, v) = mappend (mconcat [" ", k, "=\"", v, "\""])
 

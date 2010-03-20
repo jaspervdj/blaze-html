@@ -10,8 +10,8 @@ import Text.BlazeHtml.Internal.Html hiding (modifyUnescapedAttributes)
 
 -- | The basic combinators for nesting HTMl and setting attributes are
 (<!) :: Html h => (h -> h) -> Attributes -> h -> h
-(<!) e attrs inner = addUnescapedAttributes attrs $ e inner
+(<!) e attrs = addUnescapedAttributes attrs . e
  
 -- | Set the inner html to a list of inner html elements
 (</) :: Html h => (h -> h) -> [h] -> h
-(</) e inner = e $ mconcat inner
+(</) = (. mconcat)

@@ -3,7 +3,7 @@
 --  (see 'http://www.owasp.org/index.php/ESAPI')
 
 module Text.BlazeHtml.Internal.Escaping (
-    escapeHtml, escapeAttribute, escapeJavaScript
+    escapeHtml, escapeAttribute, escapeJavaScript, escapeCSS
 ) where
 
 import qualified Data.IntMap as I
@@ -48,7 +48,13 @@ escapeJavaScript = T.concatMap $ escapeChar javaScriptImmune encode
     javaScriptImmune = ",._"
     
     pad n hex = reverse . take n $ reverse hex ++ repeat '0'
-            
+
+-- | Escape text for CSS (style) data            
+escapeCSS :: Text -> Text
+escapeCSS = T.concatMap $ escapeChar "" encode
+  where
+    encode c = T.pack $ concat ["\\", hex c, " "]
+
 -- | escape a single character            
 escapeChar :: 
     [Char]            -- ^ Lists of chars to be used verbatim

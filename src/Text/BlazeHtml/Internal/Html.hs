@@ -13,6 +13,10 @@ module Text.BlazeHtml.Internal.Html
 import Data.Monoid
 import Text.BlazeHtml.Text (Text)
 
+infixl 2 !
+infixl 2 <!
+infix 1 </
+
 -- | Attributes as an association list. 
 --   Please do not rely on the fact that this is an association list - this is
 --   subject to change.
@@ -86,9 +90,13 @@ addUnescapedAttribute key value =
 clearAttributes :: (Html h) => h -> h
 clearAttributes = setUnescapedAttributes []
 
+-- | Add attributes to a node element.
 (<!) :: (IsAttributable a, Html h) => (h -> h) -> a -> h -> h
 el <! a = \inner -> (el inner) ! a
 
+-- | Build a node element with a list of inner HTML documents.
+(</) :: (Html h) => (h -> h) -> [h] -> h
+el </ inner = el (mconcat inner)
 
 -- | A class for specifying how to use a specific type to set attributes.  
 -- We use this to allow the operator (!) to set both a single attribute 

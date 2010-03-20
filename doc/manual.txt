@@ -1,6 +1,6 @@
 * Pulling ourselves up by our bootstraps
 
-BlazeHTML is a library to produce HTML.  It is faster than programs which manually assemble HTML from strings, it guarantees at compile time that the HTML is valid, and gives composites of elements and attributs and content the same semantics as primitive elements.  This section provides enough rote material to experiment while following the systematic exposition starting in the next section.
+BlazeHTML is a library to produce HTML. It is faster than programs which manually assemble HTML from strings, it guarantees at compile time that the HTML is syntactically valid, and gives composites of elements and attributes and content the same semantics as primitive elements.  This section provides enough rote material to experiment while following the systematic exposition starting in the next section.
 
 The simplest value in HTML is a plain string, such as @Hello, world!@, with no tags.  In BlazeHtml it is denoted
 
@@ -45,7 +45,7 @@ We need three functions
 
 In our example HTML, 'em' contains only one value, which fits its type 'Html h => h -> h'.  'p' has the same type, but takes three values.  How does this work?
 
-This situation occurs often enough to Haskell to have a definitive solution.  Instead of writing separate functions that do the same thing, but on inputs 'a' and '[a]', we make the type into a monoid.  A monoid is any type with a sensible values corresponding to zero (denoted 'mzero'), and a way of "adding" values (denoted 'mappend').  The numbers 0, 1, 2, ... are the classical example of a monoid.  Lists are a monoid with @[]@ playing the role of zero and concatenation as addition.
+This situation occurs often enough to Haskell to have a definitive solution.  Instead of writing separate functions that do the same thing, but on inputs 'a' and '[a]', we make the type into a monoid.  A monoid is any type with a sensible values corresponding to zero (denoted 'mempty'), and a way of "adding" values (denoted 'mappend').  The numbers 0, 1, 2, ... are the classical example of a monoid.  Lists are a monoid with @[]@ playing the role of zero and concatenation as addition.
 
 'Html' is a monoid with an empty chunk of text as zero and concatenation as addition.  We can pass the three chunks to 'p' by first adding them,
 
@@ -58,12 +58,12 @@ BlazeHtml provides a combinator @(</) :: Html h => (h -> h) -> [h] -> h@ for thi
 The semantics of '(</)' were chosen to permit defining composite elements that behave exactly like the primitive ones, as in
 
 > remark :: Html h -> h -> h
-> remark t = p </ [ strong $ text "Remark.", t, strong $ text " End Remark." ]
+> remark t = p </ [ strong $ text "Remark. ", t, strong $ text " End Remark." ]
 
 then in GHCi,
 
 > > putHtml $ remark $ text "This is a remark."
-> <p><strong>Remark. </strong> This is a remark.<strong> End Remark.</strong></p>@
+> <p><strong>Remark. </strong>This is a remark.<strong> End Remark.</strong></p>@
 
 /Remark/. All of HTML's elements retain their name in BlazeHtml.  @\<strong>\<\/strong>@ is 'strong'; @\<div>\<\/div>@ is 'div'; etc.  Most have type 'Html h => h -> h', but not all.  'img', for example, has type @Html h => String -> String -> h -> h@ to set the @src@ and @alt@ attributes.  You will profit from looking over the types of all the standard elements. /End Remark/
 

@@ -6,6 +6,7 @@ import Text.BlazeHtml.Text (Text)
 import qualified Text.BlazeHtml.Text as T
 import Text.BlazeHtml.Internal.Html
 import Text.BlazeHtml.Render.HtmlText
+import System.IO (putStrLn)
 
 -- Must implement an Eq instance for each Html instance we test
 instance Eq HtmlText where
@@ -32,12 +33,46 @@ prop_RenderDistrib h t1 t2 = left == right
     left = h `mappend` renderUnescapedText t1 `mappend` renderUnescapedText t2
     right = h `mappend` renderUnescapedText (t1 `mappend` t2)
 
-prop_NoAttribUnescaped :: (Html h, Eq h) => h -> Attributes -> Text -> Bool
-prop_NoAttribUnescaped h a t = left == right
+prop_SetAttribUnescaped :: (Html h, Eq h) => h -> Attributes -> Text -> Bool
+prop_SetAttribUnescaped h a t = left == right
   where
     left = h `mappend` setUnescapedAttributes a (renderUnescapedText t)
     right = h `mappend` (renderUnescapedText t)
 
+prop_AddAttribUnescaped :: (Html h, Eq h) => h -> Attributes -> Text -> Bool
+prop_AddAttribUnescaped h a t = left == right
+  where
+    left = h `mappend` addUnescapedAttributes a (renderUnescapedText t)
+    right = h `mappend` (renderUnescapedText t)
+
+-- The Html object passed in MUST have an outer tag, so attributes can be set
+prop_SetAttribOverwrite :: (Html h, Eq h) => h -> Attributes -> Attributes -> Text -> Bool
+prop_SetAttribOverwrite h a1 a2 t = left == right
+  where
+    left = setUnescapedAttributes a1 (setUnescapedAttributes a2 h)
+    right = setUnescapedAttributes a2 h
+
+prop_AddSetAttribOverwrite :: (Html h, Eq h) => h -> Attributes -> Attributes -> Text -> Bool
+prop_AddSetAttribOverwrite h a1 a2 t = left == right
+  where
+    left = addUnescapedAttributes a1 (setUnescapedAttributes a2 h)
+    right = setUnescapedAttributes a2 h
+
+orangeAttribs = [(T.pack("orange"), T.pack("mandarin"))]
+appleAttribs = [(T.pack("apple"), T.pack("bramley"))]
+
+pHtmlText :: HtmlText
+pHtmlText = renderLeafElement $ T.pack "p"
+
 runTests = do
     quickCheck $ prop_RenderEmpty (mempty :: HtmlText)
     quickCheck $ prop_RenderDistrib (mempty :: HtmlText)
+    quickCheck $ prop_SetAttribUnescaped (mempty :: HtmlText) orangeAttribs
+    quickCheck $ prop_AddAttribUnescaped (mempty :: HtmlText) orangeAttribs
+    quickCheck $ prop_SetAttribOverwrite pHtmlText orangeAttribs appleAttribs
+    quickCheck $ prop_AddSetAttribOverwrite pHtmlText orangeAttribs appleAttribs
+
+printTests = do
+    putStr "p orange=mandarin\t\t"
+    putStrLn $ T.unpack $ renderHtmlText $ setUnescapedAttributes orangeAttribs pHtmlText
+    putStrLn $ T.unpack $ renderHtmlText $ setUnescapedAttributes appleAttribs (setUnescapedAttributes orangeAttribs pHtmlText)

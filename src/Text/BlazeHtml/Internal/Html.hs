@@ -20,18 +20,18 @@ type AttributeManipulation = Attributes -> Attributes
 
 -- | Any Html document is a monoid. Furthermore, the following equalities hold.
 --
---    renderText mempty = mempty
+--    renderUnescapedText mempty = mempty
 --
---    renderText t1 `mappend` renderText t2 = renderText (t1 `mappend` t2)
+--    renderUnescapedText t1 `mappend` renderUnescapedText t2 = renderText (t1 `mappend` t2)
 --
---    modifyAttributes f (t1 `mappend` t2) = 
---    modifyAttributes t1 `mappend` modifyAttributes t2
+--    modifyUnescapedAttributes f (t1 `mappend` t2) = 
+--    modifyUnescapedAttributes t1 `mappend` modifyUnescapedAttributes t2
 --
---    modifyAttributes f (modifyAttributes g h) = modifyAttributes (g.f) h
+--    modifyUnescapedAttributes f (modifyUnescapedAttributes g h) = modifyUnescapedAttributes (g.f) h
 --
---    modifyAttributes f (renderText t) = renderText t
+--    modifyUnescapedAttributes f (renderUnescapedText t) = renderUnescapedText t
 --
---    renderElement t h = renderElement t (modifyAttributes (const []) h)
+--    renderElement t h = renderElement t (modifyUnescapedAttributes (const []) h)
 --
 --  Note that the interface below may be extended, if a performing
 --  implementation requires it.

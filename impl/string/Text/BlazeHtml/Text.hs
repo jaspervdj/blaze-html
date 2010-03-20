@@ -1,7 +1,7 @@
 -- | String based implementation 
 -- If the export list changes, the other implementation have to be changed too
 module Text.BlazeHtml.Text
-    ( Text, pack, empty, singleton
+    ( Text, pack, unpack, empty, singleton
     , append, map, concat, concatMap, replicate
     ) where
 

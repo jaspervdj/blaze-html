@@ -33,10 +33,10 @@ instance Html HtmlText where
         attrs <- ask
         return $ "<" `mappend` t
                      `mappend` renderAttributes attrs `mappend` "/>"
-    modifyUnescapedAttributes f = HtmlText . local f . runHtmlText
+    modifyUnescapedAttributes f = HtmlText . local (f id) . runHtmlText
     renderElement t h = HtmlText $ do
         attrs <- ask
-        inner <- runHtmlText (modifyUnescapedAttributes (const []) h)
+        inner <- runHtmlText $ clearAttributes h
         return $ "<" `mappend` t
                      `mappend` renderAttributes attrs `mappend` ">"
                      `mappend` inner

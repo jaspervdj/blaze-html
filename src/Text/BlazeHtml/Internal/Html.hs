@@ -3,6 +3,9 @@ module Text.BlazeHtml.Internal.Html
     , Html (..)
     , addUnescapedAttributes
     , setUnescapedAttributes
+    , addUnescapedAttribute
+    , setUnescapedAttribute
+    , clearAttributes
     ) where
 
 import Data.Monoid
@@ -12,6 +15,9 @@ import Data.Text (Text)
 --   Please do not rely on the fact that this is an association list - this is
 --   subject to change.
 type Attributes = [(Text,Text)]
+
+-- | Function that manipulates attributes. This is used for the CPS.
+type AttributeManipulation = Attributes -> Attributes
 
 -- | Any Html document is a monoid. Furthermore, the following equalities hold.
 --
@@ -39,10 +45,29 @@ class Monoid h => Html h where
     -- | Render an element with the given tag name and the given inner html.
     renderElement             :: Text -> h -> h
     -- | Set the attributes of the outermost element.
-    modifyUnescapedAttributes :: (Attributes -> Attributes) -> h -> h
+    modifyUnescapedAttributes ::
+        (AttributeManipulation -> AttributeManipulation) -> h -> h
 
 addUnescapedAttributes :: (Html h) => Attributes -> h -> h
-addUnescapedAttributes attributes = modifyUnescapedAttributes (++ attributes)
+addUnescapedAttributes = modifyUnescapedAttributes . (.) . (++)
 
 setUnescapedAttributes :: (Html h) => Attributes -> h -> h
-setUnescapedAttributes = modifyUnescapedAttributes . const
+setUnescapedAttributes = modifyUnescapedAttributes . (.) . const
+
+-- | Add one HTML attribute.
+--
+-- > addAttribute "src" "foo.png"
+addUnescapedAttribute :: (Html h) => Text -> Text -> h -> h
+addUnescapedAttribute key value =
+    modifyUnescapedAttributes (((key, value) :) .)
+
+-- | Set one HTML attribute.
+--
+-- > setAttribute "src" "foo.png"
+setUnescapedAttribute :: (Html h) => Text -> Text -> h -> h
+setUnescapedAttribute key value =
+    modifyUnescapedAttributes (const [(key, value)] .)
+
+-- | Remove all HTML attributes.
+clearAttributes :: (Html h) => h -> h
+clearAttributes = setUnescapedAttributes []

@@ -40,12 +40,13 @@ instance Html HtmlPrettyText where
         return $ replicate indent " " `mappend` "<" `mappend` t
                                       `mappend` renderAttributes attrs
                                       `mappend` "/>\n"
-    modifyUnescapedAttributes f = HtmlPrettyText . local f . runHtmlPrettyText
+    modifyUnescapedAttributes f =
+        HtmlPrettyText . local (f id) . runHtmlPrettyText
     renderElement t h = HtmlPrettyText $ do
         attrs <- ask
         indent <- get
         put (indent + 2)
-        inner <- runHtmlPrettyText (modifyUnescapedAttributes (const []) h)
+        inner <- runHtmlPrettyText $ clearAttributes h
         put indent
         return $ "<" `mappend` t
                      `mappend` renderAttributes attrs `mappend` ">\n"

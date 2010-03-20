@@ -43,8 +43,7 @@ instance Html HtmlIO where
     renderUnescapedText t = HtmlIO $ \out _ -> out t
     renderLeafElement t   = HtmlIO $ \out attrs ->
         renderBeginTag t out attrs >> out "/>"
-    modifyUnescapedAttributes f h = HtmlIO $ \out attrs -> 
-        getHtmlIO h out (f attrs)
+    modifyUnescapedAttributes f h = HtmlIO $ \out -> getHtmlIO h out . f id
     renderElement t h = HtmlIO $ \out attrs -> do
         renderBeginTag t out attrs >> out ">"
         getHtmlIO h out []

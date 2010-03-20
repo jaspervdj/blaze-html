@@ -1,6 +1,10 @@
 module Text.BlazeHtml.Html
     ( module Text.BlazeHtml.Internal.Html
+    , (<!)
+    , (</)
     ) where
+
+import Data.Monoid (mconcat)
 
 import Text.BlazeHtml.Internal.Html hiding (modifyUnescapedAttributes)
 

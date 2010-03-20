@@ -1,16 +1,14 @@
-{-# LANGUAGE OverloadedStrings #-}
-import Criterion.Main (defaultMain,bench)
 import Control.Concurrent (forkIO)
 import Control.Monad (forever)
+import Criterion.Main (defaultMain,bench,Benchmark)
 import Data.Text(Text)
+import qualified Data.Text as T
 import qualified Data.Text.IO as T
 import Network (PortID(PortNumber),Socket)
-import qualified Data.Text as T
-import Text.BlazeHtml.Html
-import Text.BlazeHtml.Render.HtmlIO
 import qualified Network as N
-import System.IO
+import Text.BlazeHtml.Html
 import Text.BlazeHtml.Render.HtmlText
+import System.IO
 
 main :: IO ()
 main = N.withSocketsDo $ do
@@ -22,12 +20,15 @@ main = N.withSocketsDo $ do
          defaultMain $ (fileIO fh) ++ [bench "streamIO" $ streamIO handle contents]
          hClose fh
 
+fileIO :: Handle -> [Benchmark]
 fileIO h = [bench "file io test" $ fileTest h simpleText]
 
 fileTest :: Handle -> Text -> IO ()
 fileTest h t = T.hPutStr h t
 
-simpleText = renderHtmlText (addUnescapedAttributes [("class","demo")] $ renderLeafElement "p")
+simpleText :: Text
+simpleText = renderHtmlText (addUnescapedAttributes [("class","demo")] $
+                                                    renderLeafElement "p")
 
 -- | Run a simple fileIO test.
 streamIO :: Handle -> Text -> IO ()

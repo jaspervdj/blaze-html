@@ -27,6 +27,17 @@ type AttributeManipulation = Attributes -> Attributes
 --
 --    renderUnescapedText t1 `mappend` renderUnescapedText t2 = renderText (t1 `mappend` t2)
 --
+--    setAttributes a (renderUnescapedText t) = renderUnescapedText t
+--
+--    addAttributes a (renderUnescapedText t) = renderUnescapedText t
+--
+--    setAttributes a1 (setAttributes a2 h) = setAttributes a2 h
+--
+--    addAttributes a1 (setAttributes a2 h) = setAttributes a2 h
+--
+--    addAttributes a1 (addAttributes a2 h) = addAttributes (a2 `mappend` a1) h 
+--
+--
 --    modifyUnescapedAttributes f (t1 `mappend` t2) = 
 --    modifyUnescapedAttributes t1 `mappend` modifyUnescapedAttributes t2
 --

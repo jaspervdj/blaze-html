@@ -55,7 +55,7 @@ escapeCSS = T.concatMap $ escapeChar "" encode
   where
     encode c = T.pack $ concat ["\\", hex c, " "]
 
--- | escape a single character            
+-- | Escape a single character            
 escapeChar :: 
     [Char]            -- ^ Lists of chars to be used verbatim
     -> (Char -> Text) -- ^ function handling non standard cases
@@ -70,7 +70,7 @@ escapeChar immune enc c
     | c <= toEnum 0x1f                     = " "
     | c >= toEnum 0x7f && c <= toEnum 0x9f = " "  
     | otherwise                            = enc c
-    
+   
 hex :: Char -> String 
 hex c = map toUpper $ showHex (fromEnum c) []   
  

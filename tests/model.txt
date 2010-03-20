@@ -1,0 +1,1 @@
+<b><a5 s="d" id="1" name="-1" id="2" name="-2" id="3" name="-3"><a4 s="d"><a3 s="d"><a2 s="d"><a1 s="d"><a0><blockquote id="1" name="-1" id="2" name="-2"><img src="foo.png" alt="Foo Illustration"/></blockquote></a0></a1></a2></a3></a4></a5></b>

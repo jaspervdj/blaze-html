@@ -2,42 +2,72 @@
 -- | Escaping is based on the ESAPI project
 --  (see 'http://www.owasp.org/index.php/ESAPI')
 
-module Text.BlazeHtml.Internal.Escaping
-    ( escapeHtml
-    ) where
+module Text.BlazeHtml.Internal.Escaping (
+    escapeHtml, escapeAttribute, escapeJavaScript
+) where
 
 import qualified Data.IntMap as I
-import Numeric
+import Data.Char (toUpper)
+import Numeric (showHex)
 import Text.BlazeHtml.Text (Text)
 import qualified Text.BlazeHtml.Text as T
+
+
+-- | Escaping text in generic HTML elements
+escapeHtml :: Text -> Text
+escapeHtml = escapeEntity htmlImmune
+  where htmlImmune = ",.-_ "
+  
+-- | Escaping text in attribute values
+escapeAttribute :: Text -> Text
+escapeAttribute = escapeEntity attributeImmune
+  where attributeImmune = ",.-_"
 
 -- | escaping basic text the be used inside normal HTML-elements 
 -- based on 'http://code.google.com/p/owasp-esapi-java/source/browse/trunk/src/main/java/org/owasp/esapi/codecs/HTMLEntityCodec.java'
 --
 -- Should be improved by using an array-based lookup for chars <=0xff
-escapeHtml :: Text -> Text
-escapeHtml = T.concatMap escape
-  where
-    escape c 
-      | c >= toEnum 0x30 && c <= toEnum 0x39 = T.singleton c
-      | c >= toEnum 0x41 && c <= toEnum 0x5A = T.singleton c
-      | c >= toEnum 0x61 && c <= toEnum 0x7A = T.singleton c
-      | c `elem` ("\t\n\r " ++ htmlImmune)   = T.singleton c
-      | c <= toEnum 0x1f                     = " "
-      | c >= toEnum 0x7f && c <= toEnum 0x9f = " "  
+escapeEntity :: String -> Text -> Text
+escapeEntity immune = T.concatMap $ escapeChar immune encode
+  where    
+    encode c 
       | Just ent <- I.lookup (fromEnum c) entityMap 
-                                             = T.concat ["&", ent, ";"]
-      | otherwise                            = hex c
+                  = T.concat ["&", ent, ";"]
+      | otherwise = T.pack $ concat ["&#", hex c , ";"]
+    
+-- | Escaping text intended for places where scripts can be used 
+escapeJavaScript :: Text -> Text
+escapeJavaScript = T.concatMap $ escapeChar javaScriptImmune encode
+  where 
+    encode c 
+      | c <= toEnum 0xff     = T.pack $ concat ["\\x", pad 2 $ hex c]
+      | c <= toEnum 0xffff   = T.pack $ concat ["\\u", pad 4 $ hex c]
+      | c <= toEnum 0xffffff = T.pack $ concat ["\\u", pad 6 $ hex c]
+      | otherwise            = T.pack $ concat ["\\u", pad 8 $ hex c]
+  
+    javaScriptImmune = ",._"
+    
+    pad n hex = reverse . take n $ reverse hex ++ repeat '0'
             
-
--- | chars safe for HTML
-htmlImmune :: [Char]
-htmlImmune = ",.-_ "
-
--- | convert a cahr to the hex-entity syntax
-hex :: Char -> Text
-hex c = T.concat ["&#", T.pack $ showHex (fromEnum c) [], ";"]
-
+-- | escape a single character            
+escapeChar :: 
+    [Char]            -- ^ Lists of chars to be used verbatim
+    -> (Char -> Text) -- ^ function handling non standard cases
+    -> Char           -- ^ char to encode
+    -> Text            
+escapeChar immune enc c 
+    | c `elem` immune                      = T.singleton c
+    | c >= toEnum 0x30 && c <= toEnum 0x39 = T.singleton c
+    | c >= toEnum 0x41 && c <= toEnum 0x5A = T.singleton c
+    | c >= toEnum 0x61 && c <= toEnum 0x7A = T.singleton c
+    | c `elem` "\t\n\r"                    = T.singleton c
+    | c <= toEnum 0x1f                     = " "
+    | c >= toEnum 0x7f && c <= toEnum 0x9f = " "  
+    | otherwise                            = enc c
+    
+hex :: Char -> String 
+hex c = map toUpper $ showHex (fromEnum c) []   
+ 
 entityMap :: I.IntMap Text
 entityMap = I.fromList [
     (34,   "quot")     {- quotation mark -},                             

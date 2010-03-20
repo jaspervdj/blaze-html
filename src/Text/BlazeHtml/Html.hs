@@ -2,9 +2,7 @@
 {-# OPTIONS_HADDOCK ignore-exports #-}
 -- |BlazeHTML is a library to produce HTML. It is faster than the @html@ package, it guarantees at compile time that the HTML is syntactically valid, and gives composites of elements and attributes and content the same semantics as primitive elements.  This module contains the general documentation, and the combinators for generating HTML.
 --
--- \<h2>Pulling ourselves up by our bootstraps\</h2>
---
--- This section provides enough rote material to experiment while following the systematic exposition starting in the next section.
+-- Before beginning a systematic exposition of BlazeHtml, we provide enough rote material to experiment while following the rest of the documentation.
 --
 -- The simplest value in HTML is a plain string, such as @Hello, world!@, with no tags.  In BlazeHtml it is denoted
 --
@@ -25,8 +23,6 @@
 -- 'BlazeHtml.Html' includes functions like 'div', 'head', and 'span' which conflict with other functions.  You should adjust what functions you hide from 'BlazeHtml.Html' and 'Prelude' to your particular needs.
 --
 -- So much for preliminaries.  Let us turn to generating HTML.
---
--- * Elements and nesting
 --
 -- HTML is a markup language.  It wraps chunks of text in a hierarchy of elements.  Aside from element attributes, which we will examine in the next section, encoding 
 --
@@ -79,8 +75,6 @@
 --
 -- With 'text', the element functions, and '(</)' you can construct the hierarchy of any HTML document.  We must now add attributes to element.
 --
--- * Adding attributes
---
 -- @p :: Html h => h -> h@ has no attributes.  A paragraph element with a set of attributes has the same time.  How do we turn one into the other?
 --
 -- First, all attributes in BlazeHtml have type 'Attribute', a synonym for @(Text,Text)@.  The first field is the attribute's key, the second it's value.  The library provides a combinator
@@ -119,8 +113,6 @@
 --
 -- Second, the value of @text "Hello, world!"@ is a valid argument for '(!)', but what does it mean to add attributes to a value with no elements?  In BlazeHtml, it does nothing.  The attributes are discarded and the text is unchanged.  Formally, it satisfies @text x ! a == text x@ for all @x :: Text@ and @a :: Attribute@ or @a :: [Attribute]@.
 --
--- * Renderers
---
 -- 'putHtml' let us explore HTML generation.  Now we must use the generated HTML.  To render HTML, we must have an instance of the 'Html' typeclass.  BlazeHtml provides several such renderers for different purposes.
 --
 -- Each renderer provides a function @render@/ModuleName/ ('renderHtmlText' in 'HtmlText', 'renderHtmlPretty' in 'HtmlPretty', etc.) which takes a value of type 'Html h => h'.  The exact type of the rendering function depends on the renderer since they need different parameters.  The current renderers in BlazeHtml are
@@ -133,18 +125,16 @@
 --
 -- See the description of the 'Html' typeclass for the details of implementing an instance of it.
 --
--- * Examples
+-- The BlazeHtml library's modules fall in three categories.  'Text.BlazeHtml.Html', 'Text.BlazeHtml.XHtml', and 'Text.BlazeHtml.Xml' are the libraries users import.  They bear all the combinators and elements for their respective formats.  The renderers are all found in @Text.BlazeHtml.Render@, for example 'Text.BlazeHtml.Render.HtmlIO' and 'Text.BlazeHtml.Render.HtmlText'.  The modules under @Text.BlazeHtml.Internal@ contain the guts of the library.  'Text.BlazeHtml.Internal.Html' contains the 'Html' typeclass, and 'Text.BlazeHtml.Internal.Escaping' implements string escaping for the library.
+--
+-- Finally, here are some examples of pages encoded in BlazeHtml:
 --
 -- > html </ [ head </ [ link "stylesheet" "default.css"
 -- >                   , title $ text "Hello!" ]
 -- >         , body </ [ h1 $ text "Hello!"
 -- >                   , p $ text "Welcome to BlazeHtml." ]]
 --
--- * Appendix: Design and formal description
---
--- The BlazeHtml library's modules fall in three categories.  'Text.BlazeHtml.Html', 'Text.BlazeHtml.XHtml', and 'Text.BlazeHtml.Xml' are the libraries users import.  They bear all the combinators and elements for their respective formats.  The renderers are all found in @Text.BlazeHtml.Render@, for example 'Text.BlazeHtml.Render.HtmlIO' and 'Text.BlazeHtml.Render.HtmlText'.  The modules under @Text.BlazeHtml.Internal@ contain the guts of the library.  'Text.BlazeHtml.Internal.Html' contains the 'Html' typeclass, and 'Text.BlazeHtml.Internal.Escaping' implements string escaping for the library.
---
--- The 'Html' typeclass is the core of the library.  All HTML generation is performed by combinators on this typeclass; all HTML rendering is done by instances of that typeclass.
+
 
 module Text.BlazeHtml.Html
     ( module Text.BlazeHtml.Internal.Html
@@ -193,7 +183,6 @@ module Text.BlazeHtml.Html
     , ul
     , u
     , unescapedText
-    , TextBlazeHtml.Internal.Html(..)
     ) where
 
 import Prelude hiding (div, head, span)

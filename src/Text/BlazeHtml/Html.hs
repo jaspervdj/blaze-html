@@ -86,9 +86,9 @@
 -- > > putHtml $ p <! ("id","myparagraph") "Hello, world!"
 -- > <p id="myparagraph">Hello, world!</p>
 --
--- Very often you will want to set a list of attributes.  The type above for '(<!)' is wrong; it is actually overloaded over attributes.  You can call it with a single attribute, or a list of them, as in
+-- Very often you will want to set a list of attributes.  BlazeHtml provides a combinator '(<!:)' that differs from '(<!)' only in that it takes a list of attributes instead of a single attribute.  For example,
 --
--- > > putHtml $ p <! [("id","myparagraph"), ("style","color: green")] "Hello, world!"
+-- > > putHtml $ p <!: [("id","myparagraph"), ("style","color: green")] "Hello, world!"
 -- > <p id="myparagraph" style="color: green">Hello, world!</p>
 --
 -- /Warning./ Attribute values added with '(<!)' are added verbatim.  There is no escaping.  To prevent security flaws, you should never, ever manually set attributes with dynamic data.  BlazeHtml provides attribute combinators like 'href' and 'charset' which take care of escaping data.  Use them instead. /End Warning./
@@ -97,9 +97,9 @@
 -- 
 -- > (!) :: Html h => h -> Attribute -> h
 --
--- operator.  This type is again incorrect: '(!)', like '(<!)', is overloaded to accept 'Attribute' and '[Attribute]'.  For example,
+-- operator.  Again, there is an operator '(!:)' which takes a list of 'Attribute' instead of a single one.  For example,
 --
--- > > putHtml $ (p $ text "Hello, world!") ! ("id","myparagraph") ! [("style","color: blue"), ("class", "ugly")]
+-- > > putHtml $ (p $ text "Hello, world!") ! ("id","myparagraph") !: [("style","color: blue"), ("class", "ugly")]
 -- > <p id="myparagraph" style="color: blue" class="ugly">Hello, world!</p>
 --
 -- /Warning./ If you add the same attribute twice to the same element, it will appear twice in that element.  BlazeHtml does no checking of uniqueness or merging of elements, since the correct behavior is not obvious.  Should an @id@ attribute be overridden?  Should multiple @class@ attributes be merged?  It is the user's responsibility to ensure their attribute lists are valid. /End Warning./

@@ -45,4 +45,4 @@ addUnescapedAttributes :: (Html h) => Attributes -> h -> h
 addUnescapedAttributes attributes = modifyUnescapedAttributes (++ attributes)
 
 setUnescapedAttributes :: (Html h) => Attributes -> h -> h
-setUnescapedAttributes attributes = modifyUnescapedAttributes (const attributes)
+setUnescapedAttributes = modifyUnescapedAttributes . const

@@ -9,17 +9,23 @@ lipsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ul
 
 tlipsum = (T.pack lipsum)
 
+openDevNull :: IO (Handle)
+openDevNull = do
+    h <- openFile "/dev/null" WriteMode
+    hSetBuffering h (BlockBuffering Nothing)
+    return h
+
 print_concat_str :: Int -> String -> IO ()
 print_concat_str n str = do
     let tstr = concat $ take n (repeat str)
-    h <- openFile "/dev/null" WriteMode
+    h <- openDevNull
     hPutStr h tstr
     hFlush h
     hClose h
 
 print_repeat_str :: Int -> String -> IO ()
 print_repeat_str n str = do
-    h <- openFile "/dev/null" WriteMode
+    h <- openDevNull
     helper n str h
     hFlush h
     hClose h
@@ -30,14 +36,14 @@ print_repeat_str n str = do
 print_concat_text :: Int -> Text -> IO ()
 print_concat_text n str = do
     let tstr = T.concat $ take n (repeat str)
-    h <- openFile "/dev/null" WriteMode
+    h <- openDevNull
     TIO.hPutStr h tstr
     hFlush h
     hClose h
 
 print_repeat_text :: Int -> Text -> IO ()
 print_repeat_text n str = do
-    h <- openFile "/dev/null" WriteMode
+    h <- openDevNull
     helper n str h
     hFlush h
     hClose h

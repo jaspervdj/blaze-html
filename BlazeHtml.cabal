@@ -1,5 +1,5 @@
 Name:               BlazeHtml
-Version:            1.4
+Version:            0.1
 
 Synopsis:           A simple, fast and efficient HTML combinator library.
 Description:        A simple, fast and efficient HTML combinator library using
@@ -28,4 +28,13 @@ library
   exposed-modules:  Text.BlazeHtml.Html
                     Text.BlazeHtml.Render.HtmlIO
                     Text.BlazeHtml.Render.HtmlText
+                    Text.BlazeHtml.Render.HtmlPrettyText
   other-modules:    Text.BlazeHtml.Internal.Html
+                    Text.BlazeHtml.Internal.Escaping
+
+executable criterion
+  ghc-options:      -Wall
+  hs-source-dirs:   src benchmarks
+  build-depends:    base >= 4 && < 5, criterion
+  main-is:          Criterion.hs
+  extensions:       OverloadedStrings

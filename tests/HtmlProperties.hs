@@ -11,13 +11,14 @@ import Text.BlazeHtml.Render.HtmlText
 instance Eq HtmlText where
     a == b = renderHtmlText a == renderHtmlText b
 
-instance Arbitrary Char where
-    arbitrary     = oneof [choose ('\0','\55295'), choose ('\57344','\1114111')]
-    coarbitrary c = variant (fromEnum c `rem` 4)
+newtype SpecialChar = SC { unSC :: Char } deriving Show
+instance Arbitrary SpecialChar where
+   arbitrary = do 
+      x <- oneof [choose ('\0','\55295'), choose ('\57344','\1114111')]
+      return (SC x)
 
 instance Arbitrary Text where
     arbitrary     = T.pack `fmap` arbitrary
-    coarbitrary s = coarbitrary (T.unpack s)
 
 -- Tests for equalities detailed in Html typeclass
 
@@ -29,12 +30,14 @@ prop_RenderDistrib :: (Html h, Eq h) => h -> Text -> Text -> Bool
 prop_RenderDistrib h t1 t2 = left == right
   where
     left = h `mappend` renderUnescapedText t1 `mappend` renderUnescapedText t2
-    right = renderUnescapedText (t1 `mappend` t2)
+    right = h `mappend` renderUnescapedText (t1 `mappend` t2)
 
-prop_ModAttrDistrib :: (Html h, Eq h) => 
-    h -> (AttributeManipulation -> AttributeManipulation) -> Text -> Text -> Bool
-prop_ModAttrDistrib h f t1 t2 = left == right
+prop_NoAttribUnescaped :: (Html h, Eq h) => h -> Attributes -> Text -> Bool
+prop_NoAttribUnescaped h a t = left == right
   where
-    
---    modifyUnescapedAttributes f (t1 `mappend` t2) = 
---    modifyUnescapedAttributes t1 `mappend` modifyUnescapedAttributes t2
+    left = h `mappend` setUnescapedAttributes a (renderUnescapedText t)
+    right = h `mappend` (renderUnescapedText t)
+
+runTests = do
+    quickCheck $ prop_RenderEmpty (mempty :: HtmlText)
+    quickCheck $ prop_RenderDistrib (mempty :: HtmlText)

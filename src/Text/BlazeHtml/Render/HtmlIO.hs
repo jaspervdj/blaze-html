@@ -12,12 +12,8 @@ module Text.BlazeHtml.Render.HtmlIO
 
 import Prelude hiding (putStr)
 import Data.Monoid
-<<<<<<< HEAD
-import Text.BlazeHtml.Text (Text)
-=======
-import Data.Text.IO
+import Text.BlazeHtml.Text (Text,hPutStr)
 import System.IO (Handle)
->>>>>>> Changed HtmlIO to output to a Handle rather than an arbitrary (Text -> IO ()) function.
 
 import Text.BlazeHtml.Internal.Html
 

@@ -90,11 +90,16 @@ clearAttributes = setUnescapedAttributes []
 el <! a = \inner -> (el inner) ! a
 
 
+-- | A class for specifying how to use a specific type to set attributes.  
+-- We use this to allow the operator (!) to set both a single attribute 
+-- and a list of attributes.
 class IsAttributable q where
     (!) :: Html h => h -> q -> h
 
+-- | IsAttributable instance for a single Attribute
 instance IsAttributable (Text,Text) where
     e ! attr = addUnescapedAttributes [attr] e
 
+-- | IssAttributatable instance for a list of Attributes
 instance IsAttributable [(Text,Text)] where
     e ! attrs = addUnescapedAttributes attrs e

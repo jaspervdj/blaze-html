@@ -18,6 +18,14 @@ source-repository head
   type:             git
   location:         git://github.com/jaspervdj/BlazeHtml.git
 
+flag text
+  description: use Data.Text as underlying implementation for string data
+  default:     True
+  
+flag string
+  description: use String as underlying implementation for string data
+  default:     False
+         
 library
   ghc-options:      -Wall
   hs-source-dirs:   src
@@ -31,7 +39,11 @@ library
                     Text.BlazeHtml.Render.HtmlPrettyText
   other-modules:    Text.BlazeHtml.Internal.Html
                     Text.BlazeHtml.Internal.Escaping
-
+  if flag(text) 
+    hs-source-dirs: impl/text
+  if flag(string)
+    hs-source-dirs: impl/string
+  
 executable criterion
   ghc-options:      -Wall
   hs-source-dirs:   src benchmarks

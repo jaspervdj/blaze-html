@@ -6,7 +6,10 @@ import Data.Text()
 import qualified Data.Text.IO as T
 
 main :: IO ()
-main = defaultMain [
-       -- ,bench "fib 30" $ whnf fib 30
-       bench "addUnescapedAttributes [(\"class\",\"demo\")]" $ renderHtmlIO T.putStr $ addUnescapedAttributes [("class","demo")] $ renderLeafElement "p"
-       ]
+main = defaultMain $ fileIO ++ streamIO
+
+fileIO :: IO ()
+fileIO = undefined
+
+streamIO :: IO ()
+streamIO = undefined

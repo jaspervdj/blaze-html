@@ -27,25 +27,28 @@ type AttributeManipulation = Attributes -> Attributes
 --
 --    renderUnescapedText t1 `mappend` renderUnescapedText t2 = renderText (t1 `mappend` t2)
 --
---    setAttributes a (renderUnescapedText t) = renderUnescapedText t
+--    setUnescapedAttributes a (renderUnescapedText t) = renderUnescapedText t
 --
---    addAttributes a (renderUnescapedText t) = renderUnescapedText t
+--    addUnescapedAttributes a (renderUnescapedText t) = renderUnescapedText t
 --
---    setAttributes a1 (setAttributes a2 h) = setAttributes a2 h
+--    setUnescapedAttributes a1 (setUnescapedAttributes a2 h) = setUnescapedAttributes a2 h
 --
---    addAttributes a1 (setAttributes a2 h) = setAttributes a2 h
+--    addUnescapedAttributes a1 (setUnescapedAttributes a2 h) = setUnescapedAttributes a2 h
 --
---    addAttributes a1 (addAttributes a2 h) = addAttributes (a2 `mappend` a1) h 
+--    addUnescapedAttributes a1 (addUnescapedAttributes a2 h) = addUnescapedAttributes (a2 `mappend` a1) h 
 --
+--    renderElement t h = renderElement t (modifyUnescapedAttributes (const []) h)
 --
+---------------------------------------------------------------------
+--
+--    The following need to be tested in a more compreensive way:
+--  
 --    modifyUnescapedAttributes f (t1 `mappend` t2) = 
 --    modifyUnescapedAttributes t1 `mappend` modifyUnescapedAttributes t2
 --
 --    modifyUnescapedAttributes f (modifyUnescapedAttributes g h) = modifyUnescapedAttributes (g.f) h
 --
 --    modifyUnescapedAttributes f (renderUnescapedText t) = renderUnescapedText t
---
---    renderElement t h = renderElement t (modifyUnescapedAttributes (const []) h)
 --
 --  Note that the interface below may be extended, if a performing
 --  implementation requires it.

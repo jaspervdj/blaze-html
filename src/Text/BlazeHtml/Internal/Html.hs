@@ -1,10 +1,9 @@
 module Text.BlazeHtml.Internal.Html
     ( Attributes
     , Html (..)
-    , addUnescapedAttributes
     , setUnescapedAttributes
     , addUnescapedAttribute
-    , setUnescapedAttribute
+    , addUnescapedAttributes
     , clearAttributes
     ) where
 
@@ -48,26 +47,24 @@ class Monoid h => Html h where
     modifyUnescapedAttributes ::
         (AttributeManipulation -> AttributeManipulation) -> h -> h
 
-addUnescapedAttributes :: (Html h) => Attributes -> h -> h
-addUnescapedAttributes = modifyUnescapedAttributes . (.) . (++)
-
+-- | Set the attributes all outermost elements to the given list of
+-- unescaped HTML attributes.
 setUnescapedAttributes :: (Html h) => Attributes -> h -> h
 setUnescapedAttributes = modifyUnescapedAttributes . (.) . const
 
--- | Add one HTML attribute.
+-- | Add a single unescaped HTML attribute to all outermost elements.
+--
+-- > addAttribute "src" "foo.png"
+addUnescapedAttributes :: (Html h) => Attributes -> h -> h
+addUnescapedAttributes = modifyUnescapedAttributes . (.) . (++)
+
+-- | Add a single HTML attribute to all outermost elements.
 --
 -- > addAttribute "src" "foo.png"
 addUnescapedAttribute :: (Html h) => Text -> Text -> h -> h
 addUnescapedAttribute key value =
     modifyUnescapedAttributes (((key, value) :) .)
 
--- | Set one HTML attribute.
---
--- > setAttribute "src" "foo.png"
-setUnescapedAttribute :: (Html h) => Text -> Text -> h -> h
-setUnescapedAttribute key value =
-    modifyUnescapedAttributes (const [(key, value)] .)
-
--- | Remove all HTML attributes.
+-- | Remove the HTML attributes of all outermost elements.
 clearAttributes :: (Html h) => h -> h
 clearAttributes = setUnescapedAttributes []

@@ -1,3 +1,4 @@
+{-# LANGUAGE FlexibleInstances, TypeSynonymInstances #-}
 module Text.BlazeHtml.Internal.Html
     ( Attributes
     , Html (..)
@@ -5,6 +6,8 @@ module Text.BlazeHtml.Internal.Html
     , addUnescapedAttribute
     , addUnescapedAttributes
     , clearAttributes
+    , IsAttributable((!))
+    , (<!)
     ) where
 
 import Data.Monoid
@@ -68,3 +71,16 @@ addUnescapedAttribute key value =
 -- | Remove the HTML attributes of all outermost elements.
 clearAttributes :: (Html h) => h -> h
 clearAttributes = setUnescapedAttributes []
+
+(<!) :: (IsAttributable a, Html h) => (h -> h) -> a -> h -> h
+el <! a = \inner -> (el inner) ! a
+
+
+class IsAttributable q where
+    (!) :: Html h => h -> q -> h
+
+instance IsAttributable (Text,Text) where
+    e ! attr = addUnescapedAttributes [attr] e
+
+instance IsAttributable [(Text,Text)] where
+    e ! attrs = addUnescapedAttributes attrs e

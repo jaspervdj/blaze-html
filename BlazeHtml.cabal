@@ -33,8 +33,7 @@ library
                     text >= 0.7,
                     containers >= 0.1,
                     mtl >= 1.1
-  exposed-modules:  Text.BlazeHtml.Html
-                    Text.BlazeHtml.Text
+  exposed-modules:  Text.BlazeHtml.Text
                     Text.BlazeHtml.Render.HtmlIO
                     Text.BlazeHtml.Render.HtmlText
                     Text.BlazeHtml.Render.HtmlPrettyText

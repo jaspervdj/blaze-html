@@ -93,6 +93,8 @@
 --
 -- /Warning./ Attribute values added with '(<!)' are added verbatim.  There is no escaping.  To prevent security flaws, you should never, ever manually set attributes with dynamic data.  BlazeHtml provides attribute combinators like 'href' and 'charset' which take care of escaping data.  Use them instead. /End Warning./
 --
+-- Attribute combinators have the same name in HTML and in BlazeHtml - 'href' for @href@, 'id' for @id@ - with three exceptions: @class@, @type@, and @data@ are called 'class'', 'type'', and 'data'' in BlazeHtml since they clash with Haskell reserved keywords.
+--
 -- '(<!)' operates on functions.  You may need to add attributes to an 'Html' value directly, for which BlazeHtml provides the 
 -- 
 -- > (!) :: Html h => h -> Attribute -> h
@@ -137,8 +139,12 @@
 
 
 module Text.BlazeHtml.Html
-    ( module Text.BlazeHtml.Internal.Html
-    	, text, unescapedText
+    ( 
+     -- * Basic combinators
+     module Text.BlazeHtml.Internal.Html
+    -- * Text chunks
+    , text, unescapedText, emptyText
+    -- * Elements
       , a_, a
       , abbr
       , acronym
@@ -255,6 +261,10 @@ unescapedText = renderUnescapedText
 -- | Create an 'Html' value from a chunk of text, with proper string escaping.
 text :: (Html h) => Text -> h
 text = renderUnescapedText . escapeHtml
+
+-- | 'emptyText' is an empty chunk of text with no tags.
+emptyText :: (Html h) => h
+emptyText = mempty
 
 -- | Render an @a@ element.
 --

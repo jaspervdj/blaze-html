@@ -2,3 +2,5 @@ dist
 .\#*
 *.o
 *.hi
+*~
+.DS_Store

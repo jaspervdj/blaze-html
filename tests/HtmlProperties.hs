@@ -8,6 +8,7 @@ import Text.BlazeHtml.Internal.Html
 import Text.BlazeHtml.Render.HtmlIO
 import Text.BlazeHtml.Render.HtmlText
 import Text.BlazeHtml.Render.HtmlPrettyText
+import Text.BlazeHtml.Render.HtmlByteString
 import System.IO
 import System.IO.Unsafe (unsafePerformIO)
 
@@ -35,6 +36,9 @@ instance Eq HtmlIO where
 
 instance Eq HtmlPrettyText where
     a == b = renderHtmlPrettyText a == renderHtmlPrettyText b
+
+instance Eq HtmlByteString where
+    a == b = renderHtmlByteString a == renderHtmlByteString b
 
 newtype SpecialChar = SC { unSC :: Char } deriving Show
 instance Arbitrary SpecialChar where
@@ -115,6 +119,9 @@ pHtmlIO = renderLeafElement $ T.pack "p"
 pHtmlPrettyText :: HtmlPrettyText
 pHtmlPrettyText = renderLeafElement $ T.pack "p"
 
+pHtmlByteString :: HtmlByteString
+pHtmlByteString = renderLeafElement $ T.pack "p"
+
 runHtmlTests empty pelem = do
     quickCheck $ prop_RenderEmpty empty
     quickCheck $ prop_RenderDistrib empty
@@ -128,6 +135,7 @@ runTests = do
     runHtmlTests (mempty :: HtmlText) pHtmlText
     runHtmlTests (mempty :: HtmlIO) pHtmlIO
     runHtmlTests (mempty :: HtmlPrettyText) pHtmlPrettyText
+    runHtmlTests (mempty :: HtmlByteString) pHtmlByteString
  
 printTests = do
     putStrLn $ T.unpack $ renderHtmlText $ setUnescapedAttributes orangeAttribs pHtmlText

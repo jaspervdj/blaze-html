@@ -5,12 +5,36 @@ import Data.Monoid
 import Text.BlazeHtml.Text (Text)
 import qualified Text.BlazeHtml.Text as T
 import Text.BlazeHtml.Internal.Html
+import Text.BlazeHtml.Render.HtmlIO
 import Text.BlazeHtml.Render.HtmlText
-import System.IO (putStrLn)
+import Text.BlazeHtml.Render.HtmlPrettyText
+import System.IO
+import System.IO.Unsafe (unsafePerformIO)
 
 -- Must implement an Eq instance for each Html instance we test
 instance Eq HtmlText where
     a == b = renderHtmlText a == renderHtmlText b
+
+instance Eq HtmlIO where
+    a == b = unsafePerformIO $ fileCompare a b
+      where
+        fileCompare a b = do
+            -- Output the HTML to temp files
+            (aname, ahandle) <- openTempFile "/tmp" "htmliotest.html"
+            renderHtmlIO ahandle a
+            hFlush ahandle
+            (bname, bhandle) <- openTempFile "/tmp" "htmliotest.html"
+            renderHtmlIO bhandle b
+            hFlush bhandle
+            -- Read in the resulting data and compare it
+            adata <- hGetContents ahandle
+            hClose ahandle
+            bdata <- hGetContents bhandle
+            hClose bhandle
+            return (adata == bdata)
+
+instance Eq HtmlPrettyText where
+    a == b = renderHtmlPrettyText a == renderHtmlPrettyText b
 
 newtype SpecialChar = SC { unSC :: Char } deriving Show
 instance Arbitrary SpecialChar where
@@ -85,15 +109,26 @@ appleAttribs = [(T.pack("apple"), T.pack("bramley"))]
 pHtmlText :: HtmlText
 pHtmlText = renderLeafElement $ T.pack "p"
 
-runTests = do
-    quickCheck $ prop_RenderEmpty (mempty :: HtmlText)
-    quickCheck $ prop_RenderDistrib (mempty :: HtmlText)
-    quickCheck $ prop_SetAttribUnescaped (mempty :: HtmlText) orangeAttribs
-    quickCheck $ prop_AddAttribUnescaped (mempty :: HtmlText) orangeAttribs
-    quickCheck $ prop_SetAttribOverwrite pHtmlText orangeAttribs appleAttribs
-    quickCheck $ prop_AddSetAttribOverwrite pHtmlText orangeAttribs appleAttribs
-    quickCheck $ prop_AddAddAttrib pHtmlText orangeAttribs appleAttribs
+pHtmlIO :: HtmlIO
+pHtmlIO = renderLeafElement $ T.pack "p"
 
+pHtmlPrettyText :: HtmlPrettyText
+pHtmlPrettyText = renderLeafElement $ T.pack "p"
+
+runHtmlTests empty pelem = do
+    quickCheck $ prop_RenderEmpty empty
+    quickCheck $ prop_RenderDistrib empty
+    quickCheck $ prop_SetAttribUnescaped empty orangeAttribs
+    quickCheck $ prop_AddAttribUnescaped empty orangeAttribs
+    quickCheck $ prop_SetAttribOverwrite pelem orangeAttribs appleAttribs
+    quickCheck $ prop_AddSetAttribOverwrite pelem orangeAttribs appleAttribs
+    quickCheck $ prop_AddAddAttrib pelem orangeAttribs appleAttribs
+     
+runTests = do
+    runHtmlTests (mempty :: HtmlText) pHtmlText
+    runHtmlTests (mempty :: HtmlIO) pHtmlIO
+    runHtmlTests (mempty :: HtmlPrettyText) pHtmlPrettyText
+ 
 printTests = do
     putStrLn $ T.unpack $ renderHtmlText $ setUnescapedAttributes orangeAttribs pHtmlText
     putStrLn $ T.unpack $ renderHtmlText $ setUnescapedAttributes appleAttribs (setUnescapedAttributes orangeAttribs pHtmlText)

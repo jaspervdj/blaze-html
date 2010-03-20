@@ -191,6 +191,7 @@ import Prelude hiding (div, head, span)
 import Text.BlazeHtml.Text (Text)
 import Text.BlazeHtml.Internal.Html 
     hiding (modifyUnescapedAttributes, clearAttributes)
+import Text.BlazeHtml.Internal.Escaping
 
 -- | This is an auxiliary function to fix the type of attributes, because type
 --   inference comes up with too general types.

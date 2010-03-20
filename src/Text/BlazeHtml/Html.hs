@@ -183,6 +183,7 @@ module Text.BlazeHtml.Html
     , ul
     , u
     , unescapedText
+    , text
     ) where
 
 import Prelude hiding (div, head, span)
@@ -383,3 +384,7 @@ u = renderElement "u"
 -- | Create a chunk of text with no string escaping.
 unescapedText :: (Html h) => Text -> h
 unescapedText = renderUnescapedText
+
+-- | Create an 'Html' value from a chunk of text, with proper string escaping.
+text :: (Html h) => Text -> h
+text = renderUnescapedText . escapeHtml

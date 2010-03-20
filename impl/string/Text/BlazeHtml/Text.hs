@@ -1,15 +1,12 @@
 -- | String based implementation 
 -- If the export list changes, the other implementation have to be changed too
-
-module Text.BlazeHtml.Text (
-  Text,
-  pack, 
-  empty, singleton, append,
-  map, concat, concatMap
-) where
+module Text.BlazeHtml.Text
+    ( Text, pack, empty, singleton
+    , append, map, concat, concatMap, replicate
+    ) where
 
 import qualified Prelude as P
-import Prelude(String, Char)
+import Prelude(String, Char, Int, (.))
 
 type Text = String
 
@@ -34,3 +31,5 @@ concat = P.concat
 concatMap :: (Char -> Text) -> Text -> Text
 concatMap = P.concatMap
 
+replicate :: Int -> Text -> Text
+replicate number = concat . P.replicate number

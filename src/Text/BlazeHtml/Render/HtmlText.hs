@@ -13,11 +13,11 @@ import Text.BlazeHtml.Internal.Html
 import qualified Text.BlazeHtml.Text as T
 
 newtype HtmlText = HtmlText
-    { runHtmlText :: Reader Attributes Text
+    { runHtmlText :: Reader [Attribute] Text
     }
 
 -- | Simple helper function to render the attributes.
-renderAttributes :: Attributes -> Text
+renderAttributes :: [Attribute] -> Text
 renderAttributes [] = T.empty
 renderAttributes t  = foldr append mempty t
   where

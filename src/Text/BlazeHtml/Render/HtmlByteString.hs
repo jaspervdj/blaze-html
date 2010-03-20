@@ -14,7 +14,7 @@ import Text.BlazeHtml.Internal.Html
 
 -- | A html document that concatenates text in a builder.
 newtype HtmlByteString = HtmlByteString
-    { getHtmlByteString :: Attributes -> Builder
+    { getHtmlByteString :: [Attribute] -> Builder
     }
 
 -- | Output an HtmlByteString value using the given text output function.
@@ -25,7 +25,7 @@ buildHtmlByteString :: HtmlByteString -> Builder
 buildHtmlByteString = ($ []) . getHtmlByteString
 
 -- | Helper function to render attributes.
-renderUnescapedAttributes :: Attributes -> Builder
+renderUnescapedAttributes :: [Attribute] -> Builder
 renderUnescapedAttributes attrs = mconcat $ flip map attrs $ \(k,v) -> 
     textToBuilder " " `mappend` textToBuilder k
                       `mappend` textToBuilder "=\""
@@ -33,7 +33,7 @@ renderUnescapedAttributes attrs = mconcat $ flip map attrs $ \(k,v) ->
                       `mappend` textToBuilder "\""
 
 -- | Render a begin tag except for its end.
-renderBeginTag :: Text -> Attributes -> Builder
+renderBeginTag :: Text -> [Attribute] -> Builder
 renderBeginTag tag attrs =
     textToBuilder "<" `mappend` textToBuilder tag
                       `mappend` renderUnescapedAttributes attrs

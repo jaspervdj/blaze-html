@@ -17,11 +17,11 @@ import qualified Text.BlazeHtml.Text as T
 type IndentLevel = Int
 
 newtype HtmlPrettyText = HtmlPrettyText
-    { runHtmlPrettyText :: StateT IndentLevel (Reader Attributes) Text
+    { runHtmlPrettyText :: StateT IndentLevel (Reader [Attribute]) Text
     }
 
 -- | Simple helper function to render the attributes.
-renderAttributes :: Attributes -> Text
+renderAttributes :: [Attribute]-> Text
 renderAttributes [] = T.empty
 renderAttributes t  = foldr append mempty t
   where

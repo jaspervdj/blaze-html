@@ -609,7 +609,7 @@ img_ = renderLeafElement "img"
 
 -- | Render an @img@ element with mandatory data
 img :: (Html h)=> Text -> Text -> h
-img src alt = img_ !  attrs [("src", src), ("alt", alt)]
+img src alt = img_ !: attrs [("src", src), ("alt", alt)]
 
 -- | Render a @input@ leaf element.
 input :: (Html h)=> h

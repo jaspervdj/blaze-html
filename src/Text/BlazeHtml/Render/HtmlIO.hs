@@ -20,19 +20,19 @@ import Text.BlazeHtml.Internal.Html
 --type TextOutputter = Text -> IO ()
 
 -- | A html document that gets output over IO.
-newtype HtmlIO = HtmlIO {getHtmlIO :: Handle -> Attributes -> IO ()}
+newtype HtmlIO = HtmlIO {getHtmlIO :: Handle -> [Attribute] -> IO ()}
 
 -- | Output an HtmlIO value using the given text output function.
 renderHtmlIO :: Handle -> HtmlIO -> IO ()
 renderHtmlIO h html = getHtmlIO html h []
 
 -- | Helper function to render attributes.
-renderUnescapedAttributes :: Handle -> Attributes -> IO ()
+renderUnescapedAttributes :: Handle -> [Attribute] -> IO ()
 renderUnescapedAttributes h = mapM_ $ \(k,v) -> 
     hPutStr h " " >> hPutStr h k >> hPutStr h "=\"" >> hPutStr h v >> hPutStr h "\""
 
 -- | Render a begin tag except for its end.
-renderBeginTag :: Handle -> Text -> Attributes -> IO ()
+renderBeginTag :: Handle -> Text -> [Attribute] -> IO ()
 renderBeginTag h t attrs =
     hPutStr h "<" >> hPutStr h t >> renderUnescapedAttributes h attrs
 

@@ -9,10 +9,10 @@ import Prelude hiding (replicate)
 import Control.Monad.Writer
 import Control.Monad.Reader
 import Control.Monad.State
-import Data.Text (Text,replicate)
-import qualified Data.Text as T
 
+import Text.BlazeHtml.Text (Text)
 import Text.BlazeHtml.Internal.Html
+import qualified Text.BlazeHtml.Text as T
 
 type IndentLevel = Int
 
@@ -37,9 +37,9 @@ instance Html HtmlPrettyText where
     renderLeafElement t = HtmlPrettyText $ do
         attrs <- ask
         indent <- get
-        return $ replicate indent " " `mappend` "<" `mappend` t
-                                      `mappend` renderAttributes attrs
-                                      `mappend` "/>\n"
+        return $ T.replicate indent " " `mappend` "<" `mappend` t
+                                        `mappend` renderAttributes attrs
+                                        `mappend` "/>\n"
     modifyUnescapedAttributes f =
         HtmlPrettyText . local (f id) . runHtmlPrettyText
     renderElement t h = HtmlPrettyText $ do

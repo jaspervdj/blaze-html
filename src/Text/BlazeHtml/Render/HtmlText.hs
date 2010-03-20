@@ -7,10 +7,10 @@ module Text.BlazeHtml.Render.HtmlText
 
 import Control.Monad.Writer
 import Control.Monad.Reader
-import Data.Text (Text)
-import qualified Data.Text as T
 
+import Text.BlazeHtml.Text (Text)
 import Text.BlazeHtml.Internal.Html
+import qualified Text.BlazeHtml.Text as T
 
 newtype HtmlText = HtmlText
     { runHtmlText :: Reader Attributes Text

@@ -3,8 +3,8 @@ module Text.BlazeHtml.Internal.Escaping
     ( escapeHtml
     ) where
 
-import Data.Text (Text)
-import qualified Data.Text as T
+import Text.BlazeHtml.Text (Text)
+import qualified Text.BlazeHtml.Text as T
 
 escapeHtml :: Text -> Text
 escapeHtml = T.concatMap escape

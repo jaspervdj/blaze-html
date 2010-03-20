@@ -9,7 +9,7 @@ module Text.BlazeHtml.Internal.Html
     ) where
 
 import Data.Monoid
-import Data.Text (Text)
+import Text.BlazeHtml.Text (Text)
 
 -- | Attributes as an association list. 
 --   Please do not rely on the fact that this is an association list - this is

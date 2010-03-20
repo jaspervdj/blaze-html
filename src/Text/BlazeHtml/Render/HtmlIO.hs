@@ -11,7 +11,7 @@ module Text.BlazeHtml.Render.HtmlIO
     ) where
 
 import Data.Monoid
-import Data.Text (Text)
+import Text.BlazeHtml.Text (Text)
 
 import Text.BlazeHtml.Internal.Html
 

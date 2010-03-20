@@ -10,29 +10,35 @@ module Text.BlazeHtml.Render.HtmlIO
     , renderHtmlIO
     ) where
 
+import Prelude hiding (putStr)
 import Data.Monoid
+<<<<<<< HEAD
 import Text.BlazeHtml.Text (Text)
+=======
+import Data.Text.IO
+import System.IO (Handle)
+>>>>>>> Changed HtmlIO to output to a Handle rather than an arbitrary (Text -> IO ()) function.
 
 import Text.BlazeHtml.Internal.Html
 
-type TextOutputter = Text -> IO ()
+--type TextOutputter = Text -> IO ()
 
 -- | A html document that gets output over IO.
-newtype HtmlIO = HtmlIO {getHtmlIO :: TextOutputter -> Attributes -> IO ()}
+newtype HtmlIO = HtmlIO {getHtmlIO :: Handle -> Attributes -> IO ()}
 
 -- | Output an HtmlIO value using the given text output function.
-renderHtmlIO :: (Text -> IO ()) -> HtmlIO -> IO ()
-renderHtmlIO out h = getHtmlIO h out []
+renderHtmlIO :: Handle -> HtmlIO -> IO ()
+renderHtmlIO h html = getHtmlIO html h []
 
 -- | Helper function to render attributes.
-renderUnescapedAttributes :: TextOutputter -> Attributes -> IO ()
-renderUnescapedAttributes out = mapM_ $ \(k,v) -> 
-    out " " >> out k >> out "=\"" >> out v >> out "\""
+renderUnescapedAttributes :: Handle -> Attributes -> IO ()
+renderUnescapedAttributes h = mapM_ $ \(k,v) -> 
+    hPutStr h " " >> hPutStr h k >> hPutStr h "=\"" >> hPutStr h v >> hPutStr h "\""
 
 -- | Render a begin tag except for its end.
-renderBeginTag :: Text -> TextOutputter -> Attributes -> IO ()
-renderBeginTag t out attrs =
-    out "<" >> out t >> renderUnescapedAttributes out attrs
+renderBeginTag :: Handle -> Text -> Attributes -> IO ()
+renderBeginTag h t attrs =
+    hPutStr h "<" >> hPutStr h t >> renderUnescapedAttributes h attrs
 
 instance Monoid HtmlIO where
     mempty        = HtmlIO . const . const $ return ()
@@ -40,11 +46,11 @@ instance Monoid HtmlIO where
         getHtmlIO h1 out attrs >> getHtmlIO h2 out attrs
 
 instance Html HtmlIO where
-    renderUnescapedText t = HtmlIO $ \out _ -> out t
-    renderLeafElement t   = HtmlIO $ \out attrs ->
-        renderBeginTag t out attrs >> out "/>"
-    modifyUnescapedAttributes f h = HtmlIO $ \out -> getHtmlIO h out . f id
-    renderElement t h = HtmlIO $ \out attrs -> do
-        renderBeginTag t out attrs >> out ">"
-        getHtmlIO h out []
-        out "</" >> out t >> out ">"
+    renderUnescapedText t = HtmlIO $ \h _ -> hPutStr h t
+    renderLeafElement t   = HtmlIO $ \h attrs -> 
+        renderBeginTag h t attrs >> hPutStr h "/>"
+    modifyUnescapedAttributes f htmlio = HtmlIO $ \h -> getHtmlIO htmlio h . f id 
+    renderElement t htmlio = HtmlIO $ \h attrs -> do
+        renderBeginTag h t attrs >> hPutStr h ">"
+        getHtmlIO htmlio h []
+        hPutStr h "</" >> hPutStr h t >> hPutStr h ">"

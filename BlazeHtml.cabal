@@ -43,6 +43,7 @@ library
                     Text.BlazeHtml.Render.HtmlByteString
   other-modules:    Text.BlazeHtml.Internal.Html
                     Text.BlazeHtml.Internal.Escaping
+                    Text.BlazeHtml.Internal.HtmlMonad
   if flag(text)
     hs-source-dirs: impl/text
   if flag(string)

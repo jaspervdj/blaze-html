@@ -139,9 +139,10 @@
 
 
 module Text.BlazeHtml.Html
-    ( 
-     -- * Basic combinators
-     module Text.BlazeHtml.Internal.Html
+    ( -- * Basic combinators
+      module Text.BlazeHtml.Internal.Html
+    , -- * Do notation.
+      module Text.BlazeHtml.Internal.HtmlMonad
     -- * Text chunks
     , text, emptyText
     -- * Elements
@@ -363,6 +364,7 @@ import Data.Monoid
 import Text.BlazeHtml.Text (Text)
 import Text.BlazeHtml.Internal.Html 
     hiding (modifyAttributes, clearAttributes)
+import Text.BlazeHtml.Internal.HtmlMonad
 import Text.BlazeHtml.Internal.Escaping
 
 -- | This is an auxiliary function to fix the type of attributes, because type

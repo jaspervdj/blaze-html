@@ -13,11 +13,11 @@ instance (Monoid h) => Monoid (HtmlMonad h a) where
     mappend (HtmlMonad h1) (HtmlMonad h2) = HtmlMonad $ h1 `mappend` h2
 
 instance (Html h) => Html (HtmlMonad h a) where
-    renderUnescapedText t = HtmlMonad $ renderUnescapedText t
-    renderLeafElement t = HtmlMonad $ renderLeafElement t
-    renderElement t (HtmlMonad h) = HtmlMonad $ renderElement t h
-    modifyUnescapedAttributes f (HtmlMonad h) =
-        HtmlMonad $ modifyUnescapedAttributes f h
+    unescapedText t = HtmlMonad $ unescapedText t
+    leafElement t = HtmlMonad $ leafElement t
+    nodeElement t (HtmlMonad h) = HtmlMonad $ nodeElement t h
+    modifyAttributes f (HtmlMonad h) =
+        HtmlMonad $ modifyAttributes f h
     
 instance (Monoid h) => Monad (HtmlMonad h) where
     return   = mempty

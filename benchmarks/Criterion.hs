@@ -1,4 +1,4 @@
-module Main where
+module Criterion where
 
 import Control.Concurrent (forkIO,killThread)
 import Control.Monad (forever)

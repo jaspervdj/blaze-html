@@ -356,6 +356,8 @@ module Text.BlazeHtml.Html
 		, atVersion
 		, atVlink
 		, atVspace    
+                , atWidth
+                , (<>), (|-|), space
     ) where
 
 import Prelude hiding (div, head, span, map)
@@ -1236,4 +1238,15 @@ atVspace val = ("vspace", val)
 atWidth :: Text -> Attribute
 atWidth val = ("width", val)
 
+-- | Concatenate two @Html h => h@ values with no space inbetween.
+(<>) :: Monoid h => h -> h -> h
+(<>) = mappend
+
+-- | Concatenate two @Html h => h@ values with whitespace inbetween.
+(|-|) :: Html h => h -> h -> h
+a |-| b = a <> space <> b
+
+-- | Create an 'Html' value containing just a space.
+space :: Html h => h
+space = text " "
 

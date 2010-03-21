@@ -81,7 +81,7 @@ appendBench = bench "appendBench" $ flip whnf () $ \() ->
 -- | Benchmark for appending two simple elements using the old library.
 appendBenchOld :: Benchmark
 appendBenchOld = bench "appendBenchOld" $ flip whnf () $ \() ->
-   Html.renderHtml $ applyntimes (a +++) a 50
+   length $ Html.renderHtml $ applyntimes (a +++) a 50
        where a = Html.p << simpleTestString
 
 -- | Benchmark for nesting elements.
@@ -95,7 +95,7 @@ nestingElements = bench "insertElements" $ flip whnf () $ \() ->
 -- | Benchmark for nesting elements using the old library.
 nestingElementsOld :: Benchmark
 nestingElementsOld = bench "insertElementsOld" $ flip whnf () $ \() ->
-    Html.renderHtml $ applyntimes adopt str 20
+    length $ Html.renderHtml $ applyntimes adopt str 20
         where adopt = Html.thediv
               str = Html.toHtml simpleTestString
 

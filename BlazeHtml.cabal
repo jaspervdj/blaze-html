@@ -34,7 +34,7 @@ library
                     containers >= 0.1,
                     mtl >= 1.1,
                     binary >= 0.5.0.2,
-                    bytestring >= 0.9.1.5
+                    bytestring >= 0.9.1.4
   exposed-modules:  Text.BlazeHtml.Text
                     Text.BlazeHtml.Html
                     Text.BlazeHtml.Render.HtmlIO

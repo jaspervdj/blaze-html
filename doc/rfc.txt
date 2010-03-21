@@ -40,13 +40,13 @@ them as good as possible.
 Proposed Solution
 =================
 
-Our solution called 'BlazeHtml' is based on a type-class 'Html' which defines a
-set of core combinators. The instances of the 'Html' type-class correspond to
+Our solution called 'BlazeHtml' is based on a typeclass 'Html' which defines a
+set of core combinators. The instances of the 'Html' typeclass correspond to
 concrete output formats. We call such an instances a 'Renderer'. Using the core
-combinators provided by the 'Html' type-class, we build concrete combinators
+combinators provided by the 'Html' typeclass, we build concrete combinators
 for the various flavours of Html-like documents on top.
 
-In the following sections, we present the 'Html' type-class, the efficient
+In the following sections, we present the 'Html' typeclass, the efficient
 rendering instances, and the concrete document combinators.
 
 
@@ -64,8 +64,10 @@ to be applied to a html element.
 
   type AttributeManipulation = [Attribute] -> [Attribute]
 
-An html document is a value of a type which is an instance of the 'Html'
-type-class. 
+We define an //html document// to be a value of a type which is an instance of
+the 'Html' typeclass. We call the methods of the 'Monoid' and the 'Html'
+typeclasses the //core combinators//. These are the ones which are actually
+used in a compiled executable to represent a html document.
 
   class Monoid h => Html h where
       -- | A text leaf -- no escaping is done.
@@ -78,57 +80,103 @@ type-class.
       modifyAttributes ::
           (AttributeManipulation -> AttributeManipulation) -> h -> h
 
-Let us give an example
+Let us give an example based on the core combinators. Assuming that
 
+  (<>) :: Monoid m => m -> m -> m
+  (<>) = mappend
 
+The HTML code
 
--- | Any Html document is a monoid. Furthermore, the following equalities hold.
---
---    renderUnescapedText mempty = mempty
---
---    renderUnescapedText t1 `mappend` renderUnescapedText t2 = renderText (t1 `mappend` t2)
---
---    setUnescapedAttributes a (renderUnescapedText t) = renderUnescapedText t
---
---    addUnescapedAttributes a (renderUnescapedText t) = renderUnescapedText t
---
---    setUnescapedAttributes a1 (setUnescapedAttributes a2 h) = setUnescapedAttributes a2 h
---
---    addUnescapedAttributes a1 (setUnescapedAttributes a2 h) = setUnescapedAttributes a2 h
---
---    addUnescapedAttributes a1 (addUnescapedAttributes a2 h) = addUnescapedAttributes (a2 `mappend` a1) h 
---
---    renderElement t h = renderElement t (modifyUnescapedAttributes (const []) h)
---
----------------------------------------------------------------------
---
---    The following need to be tested in a more compreensive way:
---  
---    modifyUnescapedAttributes f (t1 `mappend` t2) = 
---    modifyUnescapedAttributes t1 `mappend` modifyUnescapedAttributes t2
---
---    modifyUnescapedAttributes f (modifyUnescapedAttributes g h) = modifyUnescapedAttributes (g.f) h
---
---    modifyUnescapedAttributes f (renderUnescapedText t) = renderUnescapedText t
---
---  Note that the interface below may be extended, if a performing
---  implementation requires it.
---
+  <h1>BlazeHtml</h1>
+  <img href="logo.png"/>
+  <p> is a <em>blazingly</em>fast HTML generation library</p>
+
+would be represented using the core combinators as
+
+  (nodeElement "h1" $ unescapedText "BlazeHtml") <>
+  (modifyAttributes (("href","logo.png"):) .) $ leafElement "img") <>
+  (nodeElement "p" $ 
+       unescapedText " is a " <>
+       (nodeElement "em" $ unescapedText "blazingly") <>
+       unescapedText " fast HTML generation library")
+
+Obiviously, this is a quite wordy way to express Html documents. Therefore, we
+build a whole set of actual combinators atop of these to conventiently write
+html documents. We present the design of these //concrete combinators// [better
+name needed here] in the in section 'Specyfing Html Documents'.
+
+Here, we are interested in the semantics of the core combinators. Apart from
+the 'Monoid' laws, each instance of the Html document satisfies at least the
+following laws.
+      
+  unescapedText mempty = mempty
+  unescapedText (t1 <> t2) = unescaptedText t1 <> unescapedText t2
+
+  modifyAttributes f mempty = mempty
+  modifyAttributes f (h1 <> h2) = modifyAttributes f h1 <> modifyAttributes f h2
+
+  modifyAttributes f (unescapedText t) = unescapedText t
+  modifyAttributes f2 (modifyAttributes f1 t) = modifyAttributes (f1.f2) t
+
+Note that the equation
+
+  nodeElement n mempty = leafElement n
+
+is NOT guaranteed to hold. [FIX: Justify decision]
+
 
 Rendering
 ---------
 
 
+Encoding
+--------
+
+Analyze and specify problem first!
+
 
 Specifying Html documents
 -------------------------
+
+HtmlMonad construction
+Attribute setting/adding
+Clash resolution
+
+
+Our Implementation
+==================
+
+Explain how the implementation works like.
+
+Measurements
+------------
 
 
 Conclusion
 ==========
 
+Make clear what are the open questions.
+
 
 Acknowledgments
 ===============
+
+[In Chronological Order]
+
+Thanks to Johan Tibell for coming up with this nice summer of code proposal.
+Jasper van der Jeugt for putting it on the ZuriHac project list
+
+The BlazeHtml team 
+
+  Chris Done
+  Jim Whitehead
+  Japser van der Jeught
+  Harald ...
+  Oliver ..
+  Simon Meier
+  Tom Harper
+
+at ZuriHac for making the first version of BlazeHtml real.
+
 
 

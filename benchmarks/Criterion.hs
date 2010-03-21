@@ -2,6 +2,7 @@ module Main where
 
 import Control.Concurrent (forkIO,killThread)
 import Control.Monad (forever)
+import Data.List
 import Data.Monoid (mappend)
 import Network (PortID(PortNumber),Socket)
 import qualified Network as N
@@ -10,7 +11,7 @@ import System.Console.GetOpt
 import System.Directory (getCurrentDirectory,removeFile)
 import System.Environment
 
-import Criterion.Main (defaultMain,bench,Benchmark,whnf)
+import Criterion.Main (defaultMain,bench,Benchmark)
 
 import Text.Html ((<<),(+++))
 import qualified Text.Html as Html
@@ -59,43 +60,31 @@ benchmarkOpts argv =
 getOptions :: [String] -> Options
 getOptions = fst . benchmarkOpts
 
--- | Run benchmarks with options.
-runBenchmarks :: Options -> IO ()
-runBenchmarks opts = do
-  if (options_iobaseline opts) then withIoBaselineTest else runTests
-      where runTests = defaultMain $ pureTests
-
--- | All pure tests which nmeed no initialisation or IO.
-pureTests :: [Benchmark]
-pureTests = oldhtmltests ++ blazetests where
-    blazetests = [appendBench,nestingElements]
-    oldhtmltests = [appendBenchOld,nestingElementsOld]
-
 -- | Benchmark for appending two simple elements.
-appendBench :: Benchmark
-appendBench = bench "appendBench" $ flip whnf () $ \() ->
-    renderHtmlText $ applyntimes (a `mappend`) a 50
+appendBench :: Text
+appendBench = 
+    renderHtmlText $ applyntimes (a `mappend`) a 3
         where a = renderElement (T.pack "p") (renderUnescapedText string)
               string = T.pack simpleTestString
 
 -- | Benchmark for appending two simple elements using the old library.
-appendBenchOld :: Benchmark
-appendBenchOld = bench "appendBenchOld" $ flip whnf () $ \() ->
-   length $ Html.renderHtml $ applyntimes (a +++) a 50
+appendBenchOld :: String
+appendBenchOld =
+   Html.renderHtml $ applyntimes (a +++) a 3
        where a = Html.p << simpleTestString
 
 -- | Benchmark for nesting elements.
-nestingElements :: Benchmark
-nestingElements = bench "insertElements" $ flip whnf () $ \() ->
-    renderHtmlText $ applyntimes adopt str 20
+nestingElements :: Text
+nestingElements =
+    renderHtmlText $ applyntimes adopt str 3
         where adopt = renderElement (T.pack "div")
               str = renderUnescapedText string
               string = T.pack simpleTestString
 
 -- | Benchmark for nesting elements using the old library.
-nestingElementsOld :: Benchmark
-nestingElementsOld = bench "insertElementsOld" $ flip whnf () $ \() ->
-    length $ Html.renderHtml $ applyntimes adopt str 20
+nestingElementsOld :: String
+nestingElementsOld =
+   Html.renderHtml $ applyntimes adopt str 3
         where adopt = Html.thediv
               str = Html.toHtml simpleTestString
 
@@ -103,17 +92,17 @@ nestingElementsOld = bench "insertElementsOld" $ flip whnf () $ \() ->
 applyntimes :: (a -> a) -> a -> Int -> a
 applyntimes f start = (iterate f start!!)
 
--- | Just a 10KB text string.
+-- | Just a 1KB text string.
 simpleTestString :: String
-simpleTestString = replicate (1024*1024*10 :: Int) 'a'
+simpleTestString = replicate (1024*1024 :: Int) 'a'
 
 -- | Include the IO baseline tests with the rest.
-withIoBaselineTest :: IO ()
-withIoBaselineTest = do
+runBenchmarks :: Options -> IO ()
+runBenchmarks opts = do
   N.withSocketsDo   $
     withSocketTests $ \socketTests ->
     withFileTests   $ \fileTests   -> do
-      defaultMain $ socketTests ++ fileTests ++ pureTests
+      defaultMain $ socketTests ++ fileTests
 
 -- | With a set of file writing tests, perform IO action.
 withFileTests :: ([Benchmark] -> IO ()) -> IO ()
@@ -126,18 +115,12 @@ withFileTests m = do
 
 -- | Simple writing to file benchmarks.
 fileIO :: Handle -> [Benchmark]
-fileIO h = [bench "file io test" $ fileTest h largeText]
+fileIO h = map (bench "fileIO appendBench" . fileTest h) benches where
+    benches = [appendBench,nestingElements]
 
 -- | Straight writing the given data to the given handle.
 fileTest :: Handle -> Text -> IO ()
 fileTest h t = T.hPutStr h t
-
--- | A simple large set.
-largeText :: Text
-largeText =
-    renderHtmlText $ renderElement "p" $
-      renderUnescapedText $ T.pack $ replicate largeSize 'a'
-          where largeSize = 1024 * 1024
 
 -- | Initialise the socket tests.
 withSocketTests :: ([Benchmark] -> IO ()) -> IO ()
@@ -145,9 +128,10 @@ withSocketTests m = do
   server <- N.listenOn portID
   sid <- forkIO $ runSocketServer server
   handle <- N.connectTo "127.0.0.1" portID
-  m [bench "streamIO" $ streamIO handle largeText]
+  m . map (bench "streamIO appendBench" . streamIO handle) $ sources
   N.sClose server
   killThread sid
+      where sources = [appendBench,nestingElements]
 
 -- | Run a simple fileIO test.
 streamIO :: Handle -> Text -> IO ()

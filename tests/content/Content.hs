@@ -116,6 +116,7 @@ genAPIBadgeInner (x:xs) = [li <! ("class", "api_badge") $ a href $ text x] ++ (g
 genAPIListing :: (Html h) => h
 genAPIListing = mconcat . P.map genAPIRow $ dataAPI
 
+
 main :: IO ()
 main = do
     putStr $ htmlByteString content

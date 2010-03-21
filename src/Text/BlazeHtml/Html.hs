@@ -369,15 +369,6 @@ import Text.BlazeHtml.Internal.Html
 import Text.BlazeHtml.Internal.HtmlMonad
 import Text.BlazeHtml.Internal.Escaping
 
--- | This is an auxiliary function to fix the type of attributes, because type
---   inference comes up with too general types.
-attrs :: [(Text, Text)] -> [(Text, Text)]
-attrs = id
-
--- | This is a function comparable to @attrs@, but supporting one argument.
-attr :: (Text, Text) -> (Text, Text)
-attr = id
-
 -- | Create an 'Html' value from a chunk of text, with proper string escaping.
 text :: (Html h) => Text -> h
 text = unescapedText . escapeHtml
@@ -393,7 +384,7 @@ a_ :: (Html h)=> h -> h
 a_ = nodeElement "a"
 
 a :: (Html h)=> Text -> h -> h
-a href = a_ <! attr ("href", href)
+a href = a_ <!  ("href", href)
 
 -- | Render a @abbr@ element
 abbr :: (Html h)=> h -> h
@@ -738,7 +729,7 @@ img_ = leafElement "img"
 
 -- | Render an @img@ element with mandatory data
 img :: (Html h)=> Text -> Text -> h
-img src alt = img_ !: attrs [("src", src), ("alt", alt)]
+img src alt = img_ !: [("src", src), ("alt", alt)]
 
 -- | Render a @input@ leaf element.
 input :: (Html h)=> h

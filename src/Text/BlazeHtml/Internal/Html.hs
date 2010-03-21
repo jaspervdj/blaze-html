@@ -6,8 +6,6 @@ module Text.BlazeHtml.Internal.Html
     , addUnescapedAttribute
     , addUnescapedAttributes
     , clearAttributes
-    , (!)
-    , (!:)
     , (<!)
     , (<!:)
     , (</)
@@ -62,17 +60,23 @@ type AttributeManipulation = [Attribute] -> [Attribute]
 --  Note that the interface below may be extended, if a performing
 --  implementation requires it.
 --
-class Monoid h => Html h where
+class (Monoid h) => Html h where
     -- | Render text -- no escaping is done.
-    unescapedText       :: Text -> h
+    unescapedText    :: Text -> h
     -- | Render a leaf element with the given tag name.
-    leafElement         :: Text -> h
+    leafElement      :: Text -> h
     -- | Render an element with the given tag name and the given inner html.
-    nodeElement             :: Text -> h -> h
+    nodeElement      :: Text -> h -> h
     -- | Set the attributes of the outermost element.
     modifyAttributes ::
         (AttributeManipulation -> AttributeManipulation) -> h -> h
 
+    (!)  :: h -> Attribute   -> h    
+    (!:) :: h -> [Attribute] -> h
+    el !  attr  = addUnescapedAttributes [attr] el
+    el !: attrs = addUnescapedAttributes attrs  el
+    
+    
 -- | Set the attributes all outermost elements to the given list of
 -- unescaped HTML attributes.
 setUnescapedAttributes :: (Html h) => [Attribute] -> h -> h
@@ -93,22 +97,23 @@ addUnescapedAttribute key value = modifyAttributes (((key, value) :) .)
 -- | Remove the HTML attributes of all outermost elements.
 clearAttributes :: (Html h) => h -> h
 clearAttributes = setUnescapedAttributes []
+ 
+instance (Html b) => Html (a -> b) where
+    unescapedText txt _       = unescapedText txt
+    leafElement   txt _       = leafElement txt   
+    nodeElement   txt  fn val = nodeElement txt $ fn val
+    modifyAttributes f fn val = modifyAttributes f $ fn val
+        
+    fn !  attr  = \arg -> fn arg !  attr
+    fn !: attrs = \arg -> fn arg !: attrs    
+ 
+-- | Just a synonym for (!). TODO: remove
+(<!) :: (Html h)=> h -> Attribute -> h
+(<!) = (!)
 
--- | Set an attribute on an (Html h)
-(!) :: Html h => h -> Attribute -> h
-el ! a = addUnescapedAttributes [a] el
-
--- | Set a list of attributes on an (Html h)
-(!:) :: Html h => h -> [Attribute] -> h
-el !: a = addUnescapedAttributes a el
-
--- | Add attributes to a node element.
-(<!) :: (Html h) => (h -> h) -> Attribute -> h -> h
-el <! a = \inner -> (el inner) ! a
-
--- | Add attributes to a node element.
-(<!:) :: (Html h) => (h -> h) -> [Attribute] -> h -> h
-el <!: a = \inner -> (el inner) !: a
+-- | Just a synonym for (!:). TODO: remove
+(<!:) :: (Html h)=> h -> [Attribute] -> h
+(<!:) = (!:)
 
 -- | Build a node element with a list of inner HTML documents.
 (</) :: (Html h) => (h -> h) -> [h] -> h

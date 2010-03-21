@@ -240,6 +240,7 @@ module Text.BlazeHtml.Html
 
 import Prelude hiding (div, head, span, map)
 
+import Data.Monoid (mempty)
 import Text.BlazeHtml.Text (Text)
 import Text.BlazeHtml.Internal.Html 
     hiding (modifyUnescapedAttributes, clearAttributes)

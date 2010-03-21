@@ -51,7 +51,7 @@
 --
 -- In our example HTML, 'em' contains only one value, which fits its type 'Html h => h -> h'.  'p' has the same type, but takes three values.  How does this work?
 --
--- This situation occurs often enough to Haskell to have a definitive solution.  Instead of writing separate functions that do the same thing, but on inputs @a@ and @[a]@, we make the type into a monoid.  A monoid is any type with a sensible values corresponding to zero (denoted 'mempty'), and a way of "adding" values (denoted 'mappend').  The numbers 0, 1, 2, ... are the classical example of a monoid.  Lists are a monoid with @[]@ playing the role of zero and concatenation as addition.
+-- This situation occurs often enough to Haskell to have a definitive solution.  Instead of writing separate functions that do the same thing, but on inputs @a@ and @[a]@, we make the type into a monoid.  A monoid is any type with a sensible values corresponding to zero (denoted 'mempty'), and a way of \"adding\" values (denoted 'mappend').  The numbers 0, 1, 2, ... are the classical example of a monoid.  Lists are a monoid with @[]@ playing the role of zero and concatenation as addition.
 --
 -- 'Html' is a monoid with an empty chunk of text as zero and concatenation as addition.  We can pass the three chunks to 'p' by first adding them,
 --
@@ -140,10 +140,10 @@
 --
 -- Finally, here are some examples of pages encoded in BlazeHtml:
 --
--- > html </ [ head </ [ link "stylesheet" "default.css"
--- >                   , title $ text "Hello!" ]
--- >         , body </ [ h1 $ text "Hello!"
--- >                   , p $ text "Welcome to BlazeHtml." ]]
+-- > html $ head $ do link "stylesheet" "default.css"
+-- >                  title $ text "Hello!"
+-- >        body $ do h1 $ text "Hello!"
+-- >                , p $ text "Welcome to BlazeHtml."
 --
 
 

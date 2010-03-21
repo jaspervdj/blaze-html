@@ -2,7 +2,7 @@ module Criterion.Benchmarks
     (benchmarks)
 where
 
-import Data.Monoid (mappend)
+import Data.Monoid (mappend,mconcat)
 
 import Text.BlazeHtml.Internal.Html
 import qualified Text.BlazeHtml.Text as T
@@ -15,7 +15,7 @@ import Criterion.Main (bench,Benchmark,nf)
 import Criterion.Utilities
 
 benchmarks :: [Benchmark]
-benchmarks = [appendBench,appendBenchOld
+benchmarks = [appendBench,appendBenchOld,tableBench
              ,nestingElements,nestingElementsOld]
 
 -- | Benchmark for appending two simple elements.
@@ -49,3 +49,11 @@ nestingElementsOld = bench "nestingElementsOld" $ flip nf () $ \() ->
 -- | Just a 1KB text string.
 simpleTestString :: String
 simpleTestString = replicate (1024*1024 :: Int) 'a'
+
+
+tableBench :: Benchmark
+tableBench = bench "table benchmark" $ flip nf () $ \() ->
+    htmlText $ applyntimes (a `mappend`) a 1000
+        where a = nodeElement (T.pack "tr") b
+              b = mconcat $ replicate 10 $ nodeElement (T.pack "td") (unescapedText string)
+              string = T.pack "winter"

@@ -1,4 +1,5 @@
 {-# LANGUAGE TypeSynonymInstances #-}
+module HtmlProperties where
 
 import Test.QuickCheck
 import Data.Monoid
@@ -14,7 +15,7 @@ import System.IO.Unsafe (unsafePerformIO)
 
 -- Must implement an Eq instance for each Html instance we test
 instance Eq HtmlText where
-    a == b = renderHtmlText a == renderHtmlText b
+    a == b = htmlText a == htmlText b
 
 instance Eq HtmlIO where
     a == b = unsafePerformIO $ fileCompare a b
@@ -22,10 +23,10 @@ instance Eq HtmlIO where
         fileCompare a b = do
             -- Output the HTML to temp files
             (aname, ahandle) <- openTempFile "/tmp" "htmliotest.html"
-            renderHtmlIO ahandle a
+            htmlIO ahandle a
             hFlush ahandle
             (bname, bhandle) <- openTempFile "/tmp" "htmliotest.html"
-            renderHtmlIO bhandle b
+            htmlIO bhandle b
             hFlush bhandle
             -- Read in the resulting data and compare it
             adata <- hGetContents ahandle
@@ -35,10 +36,10 @@ instance Eq HtmlIO where
             return (adata == bdata)
 
 instance Eq HtmlPrettyText where
-    a == b = renderHtmlPrettyText a == renderHtmlPrettyText b
+    a == b = htmlPrettyText a == htmlPrettyText b
 
 instance Eq HtmlByteString where
-    a == b = renderHtmlByteString a == renderHtmlByteString b
+    a == b = htmlByteString a == htmlByteString b
 
 newtype SpecialChar = SC { unSC :: Char } deriving Show
 instance Arbitrary SpecialChar where
@@ -57,25 +58,25 @@ instance Arbitrary Text where
 -- Quickcheck property definitions
 
 prop_RenderEmpty :: (Html h, Eq h) => h -> Bool
-prop_RenderEmpty h = renderUnescapedText mempty == h
+prop_RenderEmpty h = unescapedText mempty == h
 
 prop_RenderDistrib :: (Html h, Eq h) => h -> Text -> Text -> Bool
 prop_RenderDistrib h t1 t2 = left == right
   where
-    left = h `mappend` renderUnescapedText t1 `mappend` renderUnescapedText t2
-    right = h `mappend` renderUnescapedText (t1 `mappend` t2)
+    left = h `mappend` unescapedText t1 `mappend` unescapedText t2
+    right = h `mappend` unescapedText (t1 `mappend` t2)
 
 prop_SetAttribUnescaped :: (Html h, Eq h) => h -> [Attribute] -> Text -> Bool
 prop_SetAttribUnescaped h a t = left == right
   where
-    left = h `mappend` setUnescapedAttributes a (renderUnescapedText t)
-    right = h `mappend` (renderUnescapedText t)
+    left = h `mappend` setUnescapedAttributes a (unescapedText t)
+    right = h `mappend` (unescapedText t)
 
 prop_AddAttribUnescaped :: (Html h, Eq h) => h -> [Attribute] -> Text -> Bool
 prop_AddAttribUnescaped h a t = left == right
   where
-    left = h `mappend` addUnescapedAttributes a (renderUnescapedText t)
-    right = h `mappend` (renderUnescapedText t)
+    left = h `mappend` addUnescapedAttributes a (unescapedText t)
+    right = h `mappend` (unescapedText t)
 
 -- The Html object passed in MUST have an outer tag, so attributes can be set
 prop_SetAttribOverwrite :: (Html h, Eq h) => h -> [Attribute] -> [Attribute] -> Text -> Bool
@@ -111,25 +112,27 @@ orangeAttribs = [(T.pack("orange"), T.pack("mandarin"))]
 appleAttribs = [(T.pack("apple"), T.pack("bramley"))]
 
 pHtmlText :: HtmlText
-pHtmlText = renderLeafElement $ T.pack "p"
+pHtmlText = leafElement $ T.pack "p"
 
 pHtmlIO :: HtmlIO
-pHtmlIO = renderLeafElement $ T.pack "p"
+pHtmlIO = leafElement $ T.pack "p"
 
 pHtmlPrettyText :: HtmlPrettyText
-pHtmlPrettyText = renderLeafElement $ T.pack "p"
+pHtmlPrettyText = leafElement $ T.pack "p"
 
 pHtmlByteString :: HtmlByteString
-pHtmlByteString = renderLeafElement $ T.pack "p"
+pHtmlByteString = leafElement $ T.pack "p"
 
-runHtmlTests empty pelem = do
-    quickCheck $ prop_RenderEmpty empty
-    quickCheck $ prop_RenderDistrib empty
-    quickCheck $ prop_SetAttribUnescaped empty orangeAttribs
-    quickCheck $ prop_AddAttribUnescaped empty orangeAttribs
-    quickCheck $ prop_SetAttribOverwrite pelem orangeAttribs appleAttribs
-    quickCheck $ prop_AddSetAttribOverwrite pelem orangeAttribs appleAttribs
-    quickCheck $ prop_AddAddAttrib pelem orangeAttribs appleAttribs
+runHtmlTests empty pelem = sequence $ collectTests empty pelem
+
+collectTests empty pelem = 
+    [quickCheck $ prop_RenderEmpty empty
+    ,quickCheck $ prop_RenderDistrib empty
+    ,quickCheck $ prop_SetAttribUnescaped empty orangeAttribs
+    ,quickCheck $ prop_AddAttribUnescaped empty orangeAttribs
+    ,quickCheck $ prop_SetAttribOverwrite pelem orangeAttribs appleAttribs
+    ,quickCheck $ prop_AddSetAttribOverwrite pelem orangeAttribs appleAttribs
+    ,quickCheck $ prop_AddAddAttrib pelem orangeAttribs appleAttribs]
      
 runTests = do
     runHtmlTests (mempty :: HtmlText) pHtmlText
@@ -138,6 +141,6 @@ runTests = do
     runHtmlTests (mempty :: HtmlByteString) pHtmlByteString
  
 printTests = do
-    putStrLn $ T.unpack $ renderHtmlText $ setUnescapedAttributes orangeAttribs pHtmlText
-    putStrLn $ T.unpack $ renderHtmlText $ setUnescapedAttributes appleAttribs (setUnescapedAttributes orangeAttribs pHtmlText)
-    putStrLn $ T.unpack $ renderHtmlText $ addUnescapedAttributes (appleAttribs `mappend` orangeAttribs) pHtmlText
+    putStrLn $ T.unpack $ htmlText $ setUnescapedAttributes orangeAttribs pHtmlText
+    putStrLn $ T.unpack $ htmlText $ setUnescapedAttributes appleAttribs (setUnescapedAttributes orangeAttribs pHtmlText)
+    putStrLn $ T.unpack $ htmlText $ addUnescapedAttributes (appleAttribs `mappend` orangeAttribs) pHtmlText

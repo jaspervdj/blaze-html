@@ -1,8 +1,14 @@
 -- | String based implementation 
 -- If the export list changes, the other implementation have to be changed too
 module Text.BlazeHtml.Text
+<<<<<<< Updated upstream
     ( Text, pack, unpack, empty, singleton, P.hPutStr, P.putStr
     , append, map, concat, concatMap, replicate, textToBuilder
+=======
+    ( Text, pack, unpack, empty, singleton
+    , append, map, concat, concatMap, replicate
+    , hPutStr, hGetContents
+>>>>>>> Stashed changes
     ) where
 
 import qualified Data.ByteString.Lazy as LB
@@ -36,6 +42,14 @@ concatMap = P.concatMap
 replicate :: Int -> Text -> Text
 replicate number = concat . P.replicate number
 
+<<<<<<< Updated upstream
 -- | TODO: Investigate encoding correctness. It should be UTF-8 encoded.
 textToBuilder :: Text -> Builder
 textToBuilder = fromLazyByteString . LB.pack
+=======
+hPutStr :: Handle -> Text -> IO Text
+hPutStr = T.hPutStr
+
+hGetContents :: Handle -> Text -> IO Text
+hGetContents = T.hGetContents
+>>>>>>> Stashed changes

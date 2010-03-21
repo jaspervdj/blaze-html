@@ -43,18 +43,7 @@ library
                     Text.BlazeHtml.Render.HtmlByteString
   other-modules:    Text.BlazeHtml.Internal.Html
                     Text.BlazeHtml.Internal.Escaping
-  if flag(text) 
-    hs-source-dirs: impl/text
-  if flag(string)
-    hs-source-dirs: impl/string
-  
-executable benchmark
-  ghc-options:      -Wall
-  hs-source-dirs:   src benchmarks
-  build-depends:    base >= 4 && < 5, criterion, network
-  main-is:          Criterion.hs
-  extensions:       OverloadedStrings
-  if flag(text) 
+  if flag(text)
     hs-source-dirs: impl/text
   if flag(string)
     hs-source-dirs: impl/string

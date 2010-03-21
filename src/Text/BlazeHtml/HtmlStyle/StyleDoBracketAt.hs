@@ -11,13 +11,12 @@ import Data.Text.IO (putStr)
 (<>) :: Monoid h => h -> h -> h
 (<>) = mappend
 
-(|-|) :: Html h => h -> h -> h
+--(|-|) :: Html h => h -> h -> h
 a |-| b = a <> space <> b
 
-space :: Html h => h
 space = text " "
 
-content :: (Html h) => h
+--content :: (Html h) => h
 content = html <! ("xmlns", "http://www.w3.org/1999/xhtml") $ do 
             head $ do 
               title $ text "docs/api - World of Warcraft Programming: A Guide and Reference for Creating WoW Addons"
@@ -63,9 +62,9 @@ content = html <! ("xmlns", "http://www.w3.org/1999/xhtml") $ do
                                                 li $ a "http://wowprogramming.com/about/terms_of_service" $ text "Terms of Service" 
                                               p $ text "World of Warcraft™ and Blizzard Entertainment™ are trademarks or registered trademarks \
                                                         \of Blizzard Entertainment, Inc. in the U.S. and/or other countries.  The original materials \
-                                                        \contained in the" |-| em $ text "API Reference" |-| text "section of this website are \
+                                                        \contained in the" |-| (em $ text "API Reference") |-| text "section of this website are \
                                                         \copyright John Wiley & Sons.  Other copyrights on this page are owned by their respective \
-                                                        \owners.  All other content © 2008-2009" |-| a "/about" $ text "wowprogramming.com" |-| text "."
+                                                        \owners.  All other content © 2008-2009" |-| (a "/about" $ text "wowprogramming.com") |-| text "."
               script <!: [atType "text/javascript", atSrc "http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"] $ emptyText
               script <!: [atType "text/javascript", atSrc "http://wowprogramming.com/js/wowprogramming.js"] $ emptyText
               script <!: [atType "text/javascript", atSrc "http://wowprogramming.com/js/jquery.overlay-1.0.1.pack.js"] $ emptyText
@@ -73,4 +72,4 @@ content = html <! ("xmlns", "http://www.w3.org/1999/xhtml") $ do
               script <! atType "text/javascript" $ unescapedText "var gaJsHost = ((\"https:\" == document.location.protocol) ? \"https://ssl.\" : \"http://www.\"); document.write(unescape(\"%3Cscript src='\" + gaJsHost + \"google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E\"));"
               script <! atType "text/javascript" $ unescapedText "try {var pageTracker = _gat._getTracker(\"UA-8605143-1\"); pageTracker._trackPageview();} catch(err) {}"
 
-testPrint = putStr $ htmlPrettyText content
+testPrint = putStr $ htmlPrettyText $ runHtmlMonad content

@@ -59,7 +59,11 @@ content = html <! ("xmlns", "http://www.w3.org/1999/xhtml") </
                             [ li $ a "http://wowprogramming.com/docs/api.rss" <! ("title", "RSS for edits to this node") $ 
                                 img "http://wowprogramming.com/images/rss_icon_small.png" "Button"]
                         , div <! ("id", "content") </
-                            [
+                            [ table <! ("class", "api-alpha") </
+                                [ thead $ tr </
+                                    [ th $ text "Name"
+                                    , th $ text "Description"]]
+                                , genAPIListing
                             ] -- content
                         , div <! ("id", "footer") </
                             [ ul </ 
@@ -92,5 +96,8 @@ content = html <! ("xmlns", "http://www.w3.org/1999/xhtml") </
                         unescapedText "try {var pageTracker = _gat._getTracker(\"UA-8605143-1\"); pageTracker._trackPageview();} catch(err) {}"
                     ] -- body
             ] -- html
+
+genAPIListing :: (Html h) => h
+genAPIListing = emptyText
 
 testPrint = putStr $ renderHtmlPrettyText content

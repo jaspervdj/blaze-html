@@ -77,7 +77,7 @@ hex c = map toUpper $ showHex (fromEnum c) []
 entityMap :: I.IntMap Text
 entityMap = I.fromList [
     (34,   "quot")     {- quotation mark -},                             
-    (38,   "amb")      {- ampersand -},                                  
+    (38,   "amp")      {- ampersand -},                                  
     (60,   "lt")       {- less-than sign -},                             
     (62,   "gt")       {- greater-than sign -},                          
     (160,  "nbsp")     {- no-break space -},                             

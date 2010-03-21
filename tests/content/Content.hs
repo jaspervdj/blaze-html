@@ -4,10 +4,15 @@ import Prelude hiding (div, head, span, putStr)
 import qualified Prelude as P
 import Text.BlazeHtml.Html
 import Text.BlazeHtml.Render.HtmlByteString
+import Text.BlazeHtml.Render.HtmlPrettyText
+import Text.BlazeHtml.Render.HtmlText
 import Text.BlazeHtml.Text (Text)
 import Data.ByteString.Lazy (putStr)
 import Data.Monoid (mappend, mconcat)
 import BlazeHtmlContentData (dataAPI)
+import Criterion
+import Criterion.Main
+import System.Console.GetOpt
 
 content :: (Html h) => h
 content = html <! ("xmlns", "http://www.w3.org/1999/xhtml") </ 
@@ -116,7 +121,28 @@ genAPIBadgeInner (x:xs) = [li <! ("class", "api_badge") $ a href $ text x] ++ (g
 genAPIListing :: (Html h) => h
 genAPIListing = mconcat . P.map genAPIRow $ dataAPI
 
+runBenchmarks :: IO ()
+runBenchmarks = defaultMain [
+    bgroup "simple"
+        [ bench "render_byteString" $ render_byteString 1000
+        , bench "render_text" $ render_text 1000
+        , bench "render_prettyText" $ render_prettyText 1000
+        ]
+    ]
 
+render_byteString :: Int -> IO ()
+render_byteString 0 = return ()
+render_byteString n = (htmlByteString content) `seq` render_byteString (n - 1)
+
+render_prettyText :: Int -> IO ()
+render_prettyText 0 = return () 
+render_prettyText n = (htmlPrettyText content) `seq` render_prettyText (n - 1)
+
+render_text :: Int -> IO ()
+render_text 0 = return () 
+render_text n = (htmlText content) `seq` render_text (n - 1)
+
+-- | Use the benchmark definition to run benchmarks
 main :: IO ()
-main = do
-    putStr $ htmlByteString content
+--main = runBenchmarks
+main = putStr $ htmlByteString content

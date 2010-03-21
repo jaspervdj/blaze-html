@@ -23,7 +23,7 @@ flag string
 executable blazehtml_contenttest
   ghc-options:      -Wall -O2
   hs-source-dirs:   . ../../src ../../impl/text
-  build-depends:    base >= 4 && < 5, containers, network, directory, text, mtl,
+  build-depends:    base >= 4 && < 5, criterion, containers, network, directory, text, mtl,
                     binary, bytestring, html
   main-is:          Content.hs
   extensions:       OverloadedStrings

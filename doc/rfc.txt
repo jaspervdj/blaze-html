@@ -38,15 +38,77 @@ them as good as possible.
 Proposed Solution
 =================
 
-Our solution called 'BlazeHtml' is based on a type-class 'Html' which defines
-the core combinators. The instances of the 'Html' type-class correspond to
-concrete output formats. We call theses instances 'Renderers'.
+Our solution called 'BlazeHtml' is based on a type-class 'Html' which defines a
+set of core combinators. The instances of the 'Html' type-class correspond to
+concrete output formats. We call such an instances a 'Renderer'. Using the core
+combinators provided by the 'Html' type-class, we build concrete combinators
+for the various flavours of Html-like documents on top.
+
+In the following sections, we present the 'Html' type-class, the efficient
+rendering instances, and the concrete document combinators.
 
 
 Core Combinators
 ----------------
 
+We fix the representation of text to the 'Text' type provided by 'Data.Text'.
+An attributes is just a tuple of a text representing the key and a text
+representing the value.
 
+> type Attribute = (Text,Text)
+
+We use a difference list of attributes to represent the accumulated attributes
+to be applied to a html element.
+
+> type AttributeManipulation = [Attribute] -> [Attribute]
+
+An html document is then a value of a type which is an instance of the 'Html'
+type-class. It is 
+
+class Monoid h => Html h where
+    -- | Insert a text leaf text -- no escaping is done.
+    unescapedText       :: Text -> h
+    -- | Render a leaf element with the given tag name.
+    renderLeafElement         :: Text -> h
+    -- | Render an element with the given tag name and the given inner html.
+    renderElement             :: Text -> h -> h
+    -- | Set the attributes of the outermost element.
+    modifyUnescapedAttributes ::
+        (AttributeManipulation -> AttributeManipulation) -> h -> h
+
+
+-- | Any Html document is a monoid. Furthermore, the following equalities hold.
+--
+--    renderUnescapedText mempty = mempty
+--
+--    renderUnescapedText t1 `mappend` renderUnescapedText t2 = renderText (t1 `mappend` t2)
+--
+--    setUnescapedAttributes a (renderUnescapedText t) = renderUnescapedText t
+--
+--    addUnescapedAttributes a (renderUnescapedText t) = renderUnescapedText t
+--
+--    setUnescapedAttributes a1 (setUnescapedAttributes a2 h) = setUnescapedAttributes a2 h
+--
+--    addUnescapedAttributes a1 (setUnescapedAttributes a2 h) = setUnescapedAttributes a2 h
+--
+--    addUnescapedAttributes a1 (addUnescapedAttributes a2 h) = addUnescapedAttributes (a2 `mappend` a1) h 
+--
+--    renderElement t h = renderElement t (modifyUnescapedAttributes (const []) h)
+--
+---------------------------------------------------------------------
+--
+--    The following need to be tested in a more compreensive way:
+--  
+--    modifyUnescapedAttributes f (t1 `mappend` t2) = 
+--    modifyUnescapedAttributes t1 `mappend` modifyUnescapedAttributes t2
+--
+--    modifyUnescapedAttributes f (modifyUnescapedAttributes g h) = modifyUnescapedAttributes (g.f) h
+--
+--    modifyUnescapedAttributes f (renderUnescapedText t) = renderUnescapedText t
+--
+--  Note that the interface below may be extended, if a performing
+--  implementation requires it.
+--
 
 Rendering
 ---------

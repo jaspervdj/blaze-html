@@ -27,9 +27,11 @@ the following additional goals:
 
   * static ensurance of syntactic well-formedness
 
+  * light-weight syntax for specifying Html documents
+
   * support for other Html-like document formats (e.g.  XHtml, XML)
 
-  * light-weight syntax for specifying Html documents
+  * html documents should be first-class values; i.e. we want composability
 
 As long as these goals don't conflict with our main goal, we try to satisfy
 them as good as possible.
@@ -55,26 +57,29 @@ We fix the representation of text to the 'Text' type provided by 'Data.Text'.
 An attributes is just a tuple of a text representing the key and a text
 representing the value.
 
-> type Attribute = (Text,Text)
+  type Attribute = (Text,Text)
 
 We use a difference list of attributes to represent the accumulated attributes
 to be applied to a html element.
 
-> type AttributeManipulation = [Attribute] -> [Attribute]
+  type AttributeManipulation = [Attribute] -> [Attribute]
 
-An html document is then a value of a type which is an instance of the 'Html'
-type-class. It is 
+An html document is a value of a type which is an instance of the 'Html'
+type-class. 
 
-class Monoid h => Html h where
-    -- | Insert a text leaf text -- no escaping is done.
-    unescapedText       :: Text -> h
-    -- | Render a leaf element with the given tag name.
-    renderLeafElement         :: Text -> h
-    -- | Render an element with the given tag name and the given inner html.
-    renderElement             :: Text -> h -> h
-    -- | Set the attributes of the outermost element.
-    modifyUnescapedAttributes ::
-        (AttributeManipulation -> AttributeManipulation) -> h -> h
+  class Monoid h => Html h where
+      -- | A text leaf -- no escaping is done.
+      unescapedText    :: Text -> h
+      -- | A leaf element with the given tag name.
+      leafElement      :: Text -> h
+      -- | A node element with the given tag and inner document.
+      nodeElement      :: Text -> h -> h
+      -- | Modify the attributes of the outermost elements in the .
+      modifyAttributes ::
+          (AttributeManipulation -> AttributeManipulation) -> h -> h
+
+Let us give an example
+
 
 
 -- | Any Html document is a monoid. Furthermore, the following equalities hold.

@@ -98,8 +98,9 @@ content = html <! ("xmlns", "http://www.w3.org/1999/xhtml") </
 
 genAPIRow :: (Html h) => (Text, Text, [Text]) -> h
 genAPIRow (name, desc, badges) = tr </ [lcol, rcol]
-td $ a href $ text name, td text desc, (genAPIBadges badges)]
   where
+    lcol = td </ [a href $ text name, genAPIBadges badges]
+    rcol = td $ text desc
     href = "http://wowprogramming.com/docs/api/" `mappend` name
 
 genAPIBadges :: (Html h) => [Text] -> h

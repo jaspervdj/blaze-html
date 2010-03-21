@@ -5,18 +5,21 @@ where
 
 import Test.HUnit
 import Test.QuickCheck
-import Text.BlazeHtml.Text
+import Text.BlazeHtml.Text(pack)
 import qualified Text.BlazeHtml.Html as A
-import Text.BlazeHtml.Render.HtmlText
+import Text.BlazeHtml.Render.HtmlText(HtmlText,renderHtmlText)
 import Data.List(foldl')
-import System.IO
+import qualified Data.Text.IO as TIO
+import qualified Data.Text as T
+import Data.Monoid(mappend)
 
+modelFile = "./model.txt"
 test1 model = TestCase (assertEqual "should stay the same" model (renderHtmlText simpleText))
 tests model = TestList [TestLabel "test1" $ test1 model]
 
 simpleText :: HtmlText
 simpleText = let x = A.blockquote $ A.img "foo.png" "Foo Illustration"
-                 y = addNumberedAttrs 3 (nestElements x 5) in
+                 y = addNumberedAttrs 3 (nestElements x 5) `mappend` addNumberedAttrs 3 (nestElements x 5)  in
                A.b y
 
 nestElements x n
@@ -34,8 +37,9 @@ prop_dummy xs =
     reverse (reverse xs) == xs
 
 main = do
-  content <- readFile "./model.txt"
-  runTestTT $ tests $ pack (take (length content - 1) content)
+  content <- TIO.readFile modelFile
+  runTestTT $ tests content
 
--- setup = do
---   writeFile "./model.txt" $ simpleText
+setup = do
+  print $ renderHtmlText simpleText
+  TIO.writeFile modelFile $ renderHtmlText simpleText

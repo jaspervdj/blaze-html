@@ -26,6 +26,7 @@ executable benchmark
   build-depends:    base >= 4 && < 5, criterion, network, directory, text, mtl,
                     binary, bytestring, html
   main-is:          Criterion.hs
+  other-modules:    Criterion.Benchmarks, Criterion.Utilities
   extensions:       OverloadedStrings
   if flag(text) 
     hs-source-dirs: ../impl/text

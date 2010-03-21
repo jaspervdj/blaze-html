@@ -143,7 +143,7 @@ module Text.BlazeHtml.Html
      -- * Basic combinators
      module Text.BlazeHtml.Internal.Html
     -- * Text chunks
-    , text, unescapedText, emptyText
+    , text, emptyText
     -- * Elements
     , a_, a
     , abbr
@@ -360,10 +360,9 @@ module Text.BlazeHtml.Html
 import Prelude hiding (div, head, span, map)
 import Data.Monoid
 
-import Data.Monoid (mempty)
 import Text.BlazeHtml.Text (Text)
 import Text.BlazeHtml.Internal.Html 
-    hiding (modifyUnescapedAttributes, clearAttributes)
+    hiding (modifyAttributes, clearAttributes)
 import Text.BlazeHtml.Internal.Escaping
 
 -- | This is an auxiliary function to fix the type of attributes, because type
@@ -375,13 +374,9 @@ attrs = id
 attr :: (Text, Text) -> (Text, Text)
 attr = id
 
--- | Create a chunk of text with no string escaping.
-unescapedText :: (Html h) => Text -> h
-unescapedText = renderUnescapedText
-
 -- | Create an 'Html' value from a chunk of text, with proper string escaping.
 text :: (Html h) => Text -> h
-text = renderUnescapedText . escapeHtml
+text = unescapedText . escapeHtml
 
 -- | 'emptyText' is an empty chunk of text with no tags.
 emptyText :: (Html h) => h
@@ -391,351 +386,351 @@ emptyText = mempty
 
 -- | Render an @a@ element.
 a_ :: (Html h)=> h -> h
-a_ = renderElement "a"
+a_ = nodeElement "a"
 
 a :: (Html h)=> Text -> h -> h
 a href = a_ <! attr ("href", href)
 
 -- | Render a @abbr@ element
 abbr :: (Html h)=> h -> h
-abbr = renderElement "abbr"
+abbr = nodeElement "abbr"
 
 -- | Render a @acronym@ element
 acronym :: (Html h)=> h -> h
-acronym = renderElement "acronym"
+acronym = nodeElement "acronym"
 
 -- | Render a @address@ element
 address :: (Html h)=> h -> h
-address = renderElement "address"
+address = nodeElement "address"
 
 -- | Render a @applet@ element
 applet :: (Html h)=> h -> h
-applet = renderElement "applet"
+applet = nodeElement "applet"
 
 -- | Render a @b@ element
 b :: (Html h)=> h -> h
-b = renderElement "b"
+b = nodeElement "b"
 
 -- | Render a @bdo@ element
 bdo :: (Html h)=> h -> h
-bdo = renderElement "bdo"
+bdo = nodeElement "bdo"
 
 -- | Render a @big@ element
 big :: (Html h)=> h -> h
-big = renderElement "big"
+big = nodeElement "big"
 
 -- | Render a @blockquote@ element
 blockquote :: (Html h)=> h -> h
-blockquote = renderElement "blockquote"
+blockquote = nodeElement "blockquote"
 
 -- | Render a @body@ element
 body :: (Html h)=> h -> h
-body = renderElement "body"
+body = nodeElement "body"
 
 -- | Render a @button@ element
 button :: (Html h)=> h -> h
-button = renderElement "button"
+button = nodeElement "button"
 
 -- | Render a @caption@ element
 caption :: (Html h)=> h -> h
-caption = renderElement "caption"
+caption = nodeElement "caption"
 
 -- | Render a @center@ element
 center :: (Html h)=> h -> h
-center = renderElement "center"
+center = nodeElement "center"
 
 -- | Render a @cite@ element
 cite :: (Html h)=> h -> h
-cite = renderElement "cite"
+cite = nodeElement "cite"
 
 -- | Render a @code@ element
 code :: (Html h)=> h -> h
-code = renderElement "code"
+code = nodeElement "code"
 
 -- | Render a @colgroup@ element
 colgroup :: (Html h)=> h -> h
-colgroup = renderElement "colgroup"
+colgroup = nodeElement "colgroup"
 
 -- | Render a @dd@ element
 dd :: (Html h)=> h -> h
-dd = renderElement "dd"
+dd = nodeElement "dd"
 
 -- | Render a @del@ element
 del :: (Html h)=> h -> h
-del = renderElement "del"
+del = nodeElement "del"
 
 -- | Render a @dfn@ element
 dfn :: (Html h)=> h -> h
-dfn = renderElement "dfn"
+dfn = nodeElement "dfn"
 
 -- | Render a @dir@ element
 dir :: (Html h)=> h -> h
-dir = renderElement "dir"
+dir = nodeElement "dir"
 
 -- | Render a @div@ element
 div :: (Html h)=> h -> h
-div = renderElement "div"
+div = nodeElement "div"
 
 -- | Render a @dl@ element
 dl :: (Html h)=> h -> h
-dl = renderElement "dl"
+dl = nodeElement "dl"
 
 -- | Render a @dt@ element
 dt :: (Html h)=> h -> h
-dt = renderElement "dt"
+dt = nodeElement "dt"
 
 -- | Render a @em@ element
 em :: (Html h)=> h -> h
-em = renderElement "em"
+em = nodeElement "em"
 
 -- | Render a @fieldset@ element
 fieldset :: (Html h)=> h -> h
-fieldset = renderElement "fieldset"
+fieldset = nodeElement "fieldset"
 
 -- | Render a @font@ element
 font :: (Html h)=> h -> h
-font = renderElement "font"
+font = nodeElement "font"
 
 -- | Render a @form@ element
 form :: (Html h)=> h -> h
-form = renderElement "form"
+form = nodeElement "form"
 
 -- | Render a @frameset@ element
 frameset :: (Html h)=> h -> h
-frameset = renderElement "frameset"
+frameset = nodeElement "frameset"
 
 -- | Render a @h1@ element
 h1 :: (Html h)=> h -> h
-h1 = renderElement "h1"
+h1 = nodeElement "h1"
 
 -- | Render a @h2@ element
 h2 :: (Html h)=> h -> h
-h2 = renderElement "h2"
+h2 = nodeElement "h2"
 
 -- | Render a @h3@ element
 h3 :: (Html h)=> h -> h
-h3 = renderElement "h3"
+h3 = nodeElement "h3"
 
 -- | Render a @h4@ element
 h4 :: (Html h)=> h -> h
-h4 = renderElement "h4"
+h4 = nodeElement "h4"
 
 -- | Render a @h5@ element
 h5 :: (Html h)=> h -> h
-h5 = renderElement "h5"
+h5 = nodeElement "h5"
 
 -- | Render a @h6@ element
 h6 :: (Html h)=> h -> h
-h6 = renderElement "h6"
+h6 = nodeElement "h6"
 
 -- | Render a @head@ element
 head :: (Html h)=> h -> h
-head = renderElement "head"
+head = nodeElement "head"
 
 -- | Render a @html@ element
 html :: (Html h)=> h -> h
-html = renderElement "html"
+html = nodeElement "html"
 
 -- | Render a @i@ element
 i :: (Html h)=> h -> h
-i = renderElement "i"
+i = nodeElement "i"
 
 -- | Render a @iframe@ element
 iframe :: (Html h)=> h -> h
-iframe = renderElement "iframe"
+iframe = nodeElement "iframe"
 
 -- | Render a @ins@ element
 ins :: (Html h)=> h -> h
-ins = renderElement "ins"
+ins = nodeElement "ins"
 
 -- | Render a @kbd@ element
 kbd :: (Html h)=> h -> h
-kbd = renderElement "kbd"
+kbd = nodeElement "kbd"
 
 -- | Render a @label@ element
 label :: (Html h)=> h -> h
-label = renderElement "label"
+label = nodeElement "label"
 
 -- | Render a @legend@ element
 legend :: (Html h)=> h -> h
-legend = renderElement "legend"
+legend = nodeElement "legend"
 
 -- | Render a @li@ element
 li :: (Html h)=> h -> h
-li = renderElement "li"
+li = nodeElement "li"
 
 -- | Render a @map@ element
 map :: (Html h)=> h -> h
-map = renderElement "map"
+map = nodeElement "map"
 
 -- | Render a @menu@ element
 menu :: (Html h)=> h -> h
-menu = renderElement "menu"
+menu = nodeElement "menu"
 
 -- | Render a @noframes@ element
 noframes :: (Html h)=> h -> h
-noframes = renderElement "noframes"
+noframes = nodeElement "noframes"
 
 -- | Render a @noscript@ element
 noscript :: (Html h)=> h -> h
-noscript = renderElement "noscript"
+noscript = nodeElement "noscript"
 
 -- | Render a @object@ element
 object :: (Html h)=> h -> h
-object = renderElement "object"
+object = nodeElement "object"
 
 -- | Render a @ol@ element
 ol :: (Html h)=> h -> h
-ol = renderElement "ol"
+ol = nodeElement "ol"
 
 -- | Render a @optgroup@ element
 optgroup :: (Html h)=> h -> h
-optgroup = renderElement "optgroup"
+optgroup = nodeElement "optgroup"
 
 -- | Render a @option@ element
 option :: (Html h)=> h -> h
-option = renderElement "option"
+option = nodeElement "option"
 
 -- | Render a @p@ element
 p :: (Html h)=> h -> h
-p = renderElement "p"
+p = nodeElement "p"
 
 -- | Render a @pre@ element
 pre :: (Html h)=> h -> h
-pre = renderElement "pre"
+pre = nodeElement "pre"
 
 -- | Render a @q@ element
 q :: (Html h)=> h -> h
-q = renderElement "q"
+q = nodeElement "q"
 
 -- | Render a @s@ element
 s :: (Html h)=> h -> h
-s = renderElement "s"
+s = nodeElement "s"
 
 -- | Render a @samp@ element
 samp :: (Html h)=> h -> h
-samp = renderElement "samp"
+samp = nodeElement "samp"
 
 -- | Render a @script@ element
 script :: (Html h)=> h -> h
-script = renderElement "script"
+script = nodeElement "script"
 
 -- | Render a @select@ element
 select :: (Html h)=> h -> h
-select = renderElement "select"
+select = nodeElement "select"
 
 -- | Render a @small@ element
 small :: (Html h)=> h -> h
-small = renderElement "small"
+small = nodeElement "small"
 
 -- | Render a @span@ element
 span :: (Html h)=> h -> h
-span = renderElement "span"
+span = nodeElement "span"
 
 -- | Render a @strike@ element
 strike :: (Html h)=> h -> h
-strike = renderElement "strike"
+strike = nodeElement "strike"
 
 -- | Render a @strong@ element
 strong :: (Html h)=> h -> h
-strong = renderElement "strong"
+strong = nodeElement "strong"
 
 -- | Render a @style@ element
 style :: (Html h)=> h -> h
-style = renderElement "style"
+style = nodeElement "style"
 
 -- | Render a @sub@ element
 sub :: (Html h)=> h -> h
-sub = renderElement "sub"
+sub = nodeElement "sub"
 
 -- | Render a @sup@ element
 sup :: (Html h)=> h -> h
-sup = renderElement "sup"
+sup = nodeElement "sup"
 
 -- | Render a @table@ element
 table :: (Html h)=> h -> h
-table = renderElement "table"
+table = nodeElement "table"
 
 -- | Render a @tbody@ element
 tbody :: (Html h)=> h -> h
-tbody = renderElement "tbody"
+tbody = nodeElement "tbody"
 
 -- | Render a @td@ element
 td :: (Html h)=> h -> h
-td = renderElement "td"
+td = nodeElement "td"
 
 -- | Render a @textarea@ element
 textarea :: (Html h)=> h -> h
-textarea = renderElement "textarea"
+textarea = nodeElement "textarea"
 
 -- | Render a @tfoot@ element
 tfoot :: (Html h)=> h -> h
-tfoot = renderElement "tfoot"
+tfoot = nodeElement "tfoot"
 
 -- | Render a @th@ element
 th :: (Html h)=> h -> h
-th = renderElement "th"
+th = nodeElement "th"
 
 -- | Render a @thead@ element
 thead :: (Html h)=> h -> h
-thead = renderElement "thead"
+thead = nodeElement "thead"
 
 -- | Render a @title@ element
 title :: (Html h)=> h -> h
-title = renderElement "title"
+title = nodeElement "title"
 
 -- | Render a @tr@ element
 tr :: (Html h)=> h -> h
-tr = renderElement "tr"
+tr = nodeElement "tr"
 
 -- | Render a @tt@ element
 tt :: (Html h)=> h -> h
-tt = renderElement "tt"
+tt = nodeElement "tt"
 
 -- | Render a @u@ element
 u :: (Html h)=> h -> h
-u = renderElement "u"
+u = nodeElement "u"
 
 -- | Render a @ul@ element
 ul :: (Html h)=> h -> h
-ul = renderElement "ul"
+ul = nodeElement "ul"
 
 -- | Render a @var@ element
 var :: (Html h)=> h -> h
-var = renderElement "var"
+var = nodeElement "var"
 
 
 -- | Render a @area@ leaf element.
 area :: (Html h)=> h
-area = renderLeafElement "area"
+area = leafElement "area"
 
 -- | Render a @base@ leaf element.
 base :: (Html h)=> h
-base = renderLeafElement "base"
+base = leafElement "base"
 
 -- | Render a @basefont@ leaf element.
 basefont :: (Html h)=> h
-basefont = renderLeafElement "basefont"
+basefont = leafElement "basefont"
 
 -- | Render a @br@ leaf element.
 br :: (Html h)=> h
-br = renderLeafElement "br"
+br = leafElement "br"
 
 -- | Render a @col@ leaf element.
 col :: (Html h)=> h
-col = renderLeafElement "col"
+col = leafElement "col"
 
 -- | Render a @frame@ leaf element.
 frame :: (Html h)=> h
-frame = renderLeafElement "frame"
+frame = leafElement "frame"
 
 -- | Render a @hr@ leaf element.
 hr :: (Html h)=> h
-hr = renderLeafElement "hr"
+hr = leafElement "hr"
 
 -- | Render a @img@ leaf element, without any attribute
 img_ :: (Html h)=> h
-img_ = renderLeafElement "img"
+img_ = leafElement "img"
 
 -- | Render an @img@ element with mandatory data
 img :: (Html h)=> Text -> Text -> h
@@ -743,23 +738,23 @@ img src alt = img_ !: attrs [("src", src), ("alt", alt)]
 
 -- | Render a @input@ leaf element.
 input :: (Html h)=> h
-input = renderLeafElement "input"
+input = leafElement "input"
 
 -- | Render a @isindex@ leaf element.
 isindex :: (Html h)=> h
-isindex = renderLeafElement "isindex"
+isindex = leafElement "isindex"
 
 -- | Render a @link@ leaf element.
 link :: (Html h)=> h
-link = renderLeafElement "link"
+link = leafElement "link"
 
 -- | Render a @meta@ leaf element.
 meta :: (Html h)=> h
-meta = renderLeafElement "meta"
+meta = leafElement "meta"
 
 -- | Render a @param@ leaf element.
 param :: (Html h)=> h
-param = renderLeafElement "param"
+param = leafElement "param"
 
 -- Attributes
 

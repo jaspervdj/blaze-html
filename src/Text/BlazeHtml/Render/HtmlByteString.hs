@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Text.BlazeHtml.Render.HtmlByteString
     ( HtmlByteString
-    , renderHtmlByteString
+    , htmlByteString
     , buildHtmlByteString
     ) where
 
@@ -18,25 +18,25 @@ newtype HtmlByteString = HtmlByteString
     }
 
 -- | Output an HtmlByteString value using the given text output function.
-renderHtmlByteString :: HtmlByteString -> LB.ByteString
-renderHtmlByteString = toLazyByteString . buildHtmlByteString
+htmlByteString :: HtmlByteString -> LB.ByteString
+htmlByteString = toLazyByteString . buildHtmlByteString
 
 buildHtmlByteString :: HtmlByteString -> Builder
 buildHtmlByteString = ($ []) . getHtmlByteString
 
 -- | Helper function to render attributes.
-renderUnescapedAttributes :: [Attribute] -> Builder
-renderUnescapedAttributes attrs = mconcat $ flip map attrs $ \(k,v) -> 
+attributes :: [Attribute] -> Builder
+attributes attrs = mconcat $ flip map attrs $ \(k,v) -> 
     textToBuilder " " `mappend` textToBuilder k
                       `mappend` textToBuilder "=\""
                       `mappend` textToBuilder v
                       `mappend` textToBuilder "\""
 
 -- | Render a begin tag except for its end.
-renderBeginTag :: Text -> [Attribute] -> Builder
-renderBeginTag tag attrs =
+beginTag :: Text -> [Attribute] -> Builder
+beginTag tag attrs =
     textToBuilder "<" `mappend` textToBuilder tag
-                      `mappend` renderUnescapedAttributes attrs
+                      `mappend` attributes attrs
 
 instance Monoid HtmlByteString where
     mempty        = HtmlByteString $ const mempty
@@ -44,14 +44,14 @@ instance Monoid HtmlByteString where
         getHtmlByteString h1 attrs `mappend` getHtmlByteString h2 attrs
 
 instance Html HtmlByteString where
-    renderUnescapedText = HtmlByteString . const . textToBuilder
-    renderLeafElement t   = HtmlByteString $ \attrs -> 
-        renderBeginTag t attrs `mappend` textToBuilder "/>"
-    modifyUnescapedAttributes f html = HtmlByteString $ \attrs ->
+    unescapedText = HtmlByteString . const . textToBuilder
+    leafElement t   = HtmlByteString $ \attrs -> 
+        beginTag t attrs `mappend` textToBuilder "/>"
+    nodeElement t html = HtmlByteString $ \attrs ->
+        beginTag t attrs `mappend` textToBuilder ">"
+                         `mappend` getHtmlByteString html []
+                         `mappend` textToBuilder "</"
+                         `mappend` textToBuilder t
+                         `mappend` textToBuilder ">"
+    modifyAttributes f html = HtmlByteString $ \attrs ->
         getHtmlByteString html (f id attrs)
-    renderElement t html = HtmlByteString $ \attrs ->
-        renderBeginTag t attrs `mappend` textToBuilder ">"
-                               `mappend` getHtmlByteString html []
-                               `mappend` textToBuilder "</"
-                               `mappend` textToBuilder t
-                               `mappend` textToBuilder ">"

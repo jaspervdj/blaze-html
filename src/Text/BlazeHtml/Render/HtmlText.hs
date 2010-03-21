@@ -2,7 +2,7 @@
 -- | This module exports a pure renderer that produces Text.
 module Text.BlazeHtml.Render.HtmlText
     ( HtmlText
-    , renderHtmlText
+    , htmlText
     ) where
 
 import Control.Monad.Writer
@@ -17,9 +17,9 @@ newtype HtmlText = HtmlText
     }
 
 -- | Simple helper function to render the attributes.
-renderAttributes :: [Attribute] -> Text
-renderAttributes [] = T.empty
-renderAttributes t  = foldr append mempty t
+attributes :: [Attribute] -> Text
+attributes [] = T.empty
+attributes t  = foldr append mempty t
   where
     append (k, v) = mappend (mconcat [" ", k, "=\"", v, "\""])
 
@@ -28,20 +28,20 @@ instance Monoid HtmlText where
     mappend m1 m2 = HtmlText $ liftM2 mappend (runHtmlText m1) (runHtmlText m2)
 
 instance Html HtmlText where
-    renderUnescapedText = HtmlText . return
-    renderLeafElement t = HtmlText $ do
+    unescapedText = HtmlText . return
+    leafElement t = HtmlText $ do
         attrs <- ask
         return $ "<" `mappend` t
-                     `mappend` renderAttributes attrs `mappend` "/>"
-    modifyUnescapedAttributes f = HtmlText . local (f id) . runHtmlText
-    renderElement t h = HtmlText $ do
+                     `mappend` attributes attrs `mappend` "/>"
+    nodeElement t h = HtmlText $ do
         attrs <- ask
         inner <- runHtmlText $ clearAttributes h
         return $ "<" `mappend` t
-                     `mappend` renderAttributes attrs `mappend` ">"
+                     `mappend` attributes attrs `mappend` ">"
                      `mappend` inner
                      `mappend` "</" `mappend` t `mappend` ">"
+    modifyAttributes f = HtmlText . local (f id) . runHtmlText
 
 -- | Render the html to text.
-renderHtmlText :: HtmlText -> Text
-renderHtmlText = (`runReader` []) . runHtmlText
+htmlText :: HtmlText -> Text
+htmlText = (`runReader` []) . runHtmlText

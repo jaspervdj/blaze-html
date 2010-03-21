@@ -64,32 +64,31 @@ type AttributeManipulation = [Attribute] -> [Attribute]
 --
 class Monoid h => Html h where
     -- | Render text -- no escaping is done.
-    renderUnescapedText       :: Text -> h
+    unescapedText       :: Text -> h
     -- | Render a leaf element with the given tag name.
-    renderLeafElement         :: Text -> h
+    leafElement         :: Text -> h
     -- | Render an element with the given tag name and the given inner html.
-    renderElement             :: Text -> h -> h
+    nodeElement             :: Text -> h -> h
     -- | Set the attributes of the outermost element.
-    modifyUnescapedAttributes ::
+    modifyAttributes ::
         (AttributeManipulation -> AttributeManipulation) -> h -> h
 
 -- | Set the attributes all outermost elements to the given list of
 -- unescaped HTML attributes.
 setUnescapedAttributes :: (Html h) => [Attribute] -> h -> h
-setUnescapedAttributes = modifyUnescapedAttributes . (.) . const
+setUnescapedAttributes = modifyAttributes . (.) . const
 
 -- | Add a single unescaped HTML attribute to all outermost elements.
 --
 -- > addAttribute "src" "foo.png"
 addUnescapedAttributes :: (Html h) => [Attribute] -> h -> h
-addUnescapedAttributes = modifyUnescapedAttributes . (.) . (++)
+addUnescapedAttributes = modifyAttributes . (.) . (++)
 
 -- | Add a single HTML attribute to all outermost elements.
 --
 -- > addAttribute "src" "foo.png"
 addUnescapedAttribute :: (Html h) => Text -> Text -> h -> h
-addUnescapedAttribute key value =
-    modifyUnescapedAttributes (((key, value) :) .)
+addUnescapedAttribute key value = modifyAttributes (((key, value) :) .)
 
 -- | Remove the HTML attributes of all outermost elements.
 clearAttributes :: (Html h) => h -> h

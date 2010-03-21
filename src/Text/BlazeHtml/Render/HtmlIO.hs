@@ -7,7 +7,7 @@
 -- for each function producing values of the 'HtmlIO' type.
 module Text.BlazeHtml.Render.HtmlIO
     ( HtmlIO
-    , renderHtmlIO
+    , htmlIO
     ) where
 
 import Prelude hiding (putStr)
@@ -23,18 +23,18 @@ import Text.BlazeHtml.Internal.Html
 newtype HtmlIO = HtmlIO {getHtmlIO :: Handle -> [Attribute] -> IO ()}
 
 -- | Output an HtmlIO value using the given text output function.
-renderHtmlIO :: Handle -> HtmlIO -> IO ()
-renderHtmlIO h html = getHtmlIO html h []
+htmlIO :: Handle -> HtmlIO -> IO ()
+htmlIO h html = getHtmlIO html h []
 
 -- | Helper function to render attributes.
-renderUnescapedAttributes :: Handle -> [Attribute] -> IO ()
-renderUnescapedAttributes h = mapM_ $ \(k,v) -> 
-    hPutStr h " " >> hPutStr h k >> hPutStr h "=\"" >> hPutStr h v >> hPutStr h "\""
+attributes :: Handle -> [Attribute] -> IO ()
+attributes h = mapM_ $ \(k,v) -> 
+    hPutStr h " " >> hPutStr h k >> hPutStr h "=\""
+                  >> hPutStr h v >> hPutStr h "\""
 
 -- | Render a begin tag except for its end.
-renderBeginTag :: Handle -> Text -> [Attribute] -> IO ()
-renderBeginTag h t attrs =
-    hPutStr h "<" >> hPutStr h t >> renderUnescapedAttributes h attrs
+beginTag :: Handle -> Text -> [Attribute] -> IO ()
+beginTag h t attrs = hPutStr h "<" >> hPutStr h t >> attributes h attrs
 
 instance Monoid HtmlIO where
     mempty        = HtmlIO . const . const $ return ()
@@ -42,11 +42,11 @@ instance Monoid HtmlIO where
         getHtmlIO h1 out attrs >> getHtmlIO h2 out attrs
 
 instance Html HtmlIO where
-    renderUnescapedText t = HtmlIO $ \h _ -> hPutStr h t
-    renderLeafElement t   = HtmlIO $ \h attrs -> 
-        renderBeginTag h t attrs >> hPutStr h "/>"
-    modifyUnescapedAttributes f htmlio = HtmlIO $ \h -> getHtmlIO htmlio h . f id 
-    renderElement t htmlio = HtmlIO $ \h attrs -> do
-        renderBeginTag h t attrs >> hPutStr h ">"
+    unescapedText t = HtmlIO $ \h _ -> hPutStr h t
+    leafElement t   = HtmlIO $ \h attrs -> 
+        beginTag h t attrs >> hPutStr h "/>"
+    nodeElement t htmlio = HtmlIO $ \h attrs -> do
+        beginTag h t attrs >> hPutStr h ">"
         getHtmlIO htmlio h []
         hPutStr h "</" >> hPutStr h t >> hPutStr h ">"
+    modifyAttributes f htmlio = HtmlIO $ \h -> getHtmlIO htmlio h . f id 

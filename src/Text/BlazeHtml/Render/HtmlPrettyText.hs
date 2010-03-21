@@ -2,7 +2,7 @@
 -- | This module exports a pure renderer that produces Text.
 module Text.BlazeHtml.Render.HtmlPrettyText
     ( HtmlPrettyText
-    , renderHtmlPrettyText
+    , htmlPrettyText
     ) where
 
 import Prelude hiding (replicate)
@@ -21,9 +21,9 @@ newtype HtmlPrettyText = HtmlPrettyText
     }
 
 -- | Simple helper function to render the attributes.
-renderAttributes :: [Attribute]-> Text
-renderAttributes [] = T.empty
-renderAttributes t  = foldr append mempty t
+attributes :: [Attribute]-> Text
+attributes [] = T.empty
+attributes t  = foldr append mempty t
   where
     append (k, v) = mappend (mconcat [" ", k, "=\"", v, "\""])
 
@@ -33,27 +33,27 @@ instance Monoid HtmlPrettyText where
                                                     (runHtmlPrettyText m2)
 
 instance Html HtmlPrettyText where
-    renderUnescapedText = HtmlPrettyText . return
-    renderLeafElement t = HtmlPrettyText $ do
+    unescapedText = HtmlPrettyText . return
+    leafElement t = HtmlPrettyText $ do
         attrs <- ask
         indent <- get
         return $ T.replicate indent " " `mappend` "<" `mappend` t
-                                        `mappend` renderAttributes attrs
+                                        `mappend` attributes attrs
                                         `mappend` "/>\n"
-    modifyUnescapedAttributes f =
-        HtmlPrettyText . local (f id) . runHtmlPrettyText
-    renderElement t h = HtmlPrettyText $ do
+    nodeElement t h = HtmlPrettyText $ do
         attrs <- ask
         indent <- get
         put (indent + 2)
         inner <- runHtmlPrettyText $ clearAttributes h
         put indent
         return $ "<" `mappend` t
-                     `mappend` renderAttributes attrs `mappend` ">\n"
+                     `mappend` attributes attrs `mappend` ">\n"
                      `mappend` inner
                      `mappend` "</" `mappend` t `mappend` ">\n"
+    modifyAttributes f =
+        HtmlPrettyText . local (f id) . runHtmlPrettyText
 
 -- | Render the html to text.
-renderHtmlPrettyText :: HtmlPrettyText -> Text
-renderHtmlPrettyText x =
+htmlPrettyText :: HtmlPrettyText -> Text
+htmlPrettyText x =
     (`runReader` []) $ liftM fst $ runStateT (runHtmlPrettyText x) 0

@@ -1,17 +1,24 @@
+module Main where
+
 import Control.Concurrent (forkIO,killThread)
 import Control.Monad (forever)
-import Criterion.Main (defaultMain,bench,Benchmark,whnf)
 import Data.Monoid (mappend)
 import Network (PortID(PortNumber),Socket)
 import qualified Network as N
-import Text.BlazeHtml.Internal.Html
-import Text.BlazeHtml.Text (Text)
-import qualified Text.BlazeHtml.Text as T
-import Text.BlazeHtml.Render.HtmlText
 import System.IO
 import System.Console.GetOpt
 import System.Directory (getCurrentDirectory,removeFile)
 import System.Environment
+
+import Criterion.Main (defaultMain,bench,Benchmark,whnf)
+
+import Text.Html ((<<),(+++))
+import qualified Text.Html as Html
+
+import Text.BlazeHtml.Internal.Html
+import Text.BlazeHtml.Text (Text)
+import qualified Text.BlazeHtml.Text as T
+import Text.BlazeHtml.Render.HtmlText
 
 -- | See the results of --help for information on what each option means.
 data Options = Options
@@ -19,11 +26,18 @@ data Options = Options
  , options_iobaseline  :: Bool
  } deriving Show
 
+-- | No configuration, straight run sockets followed by file tests.
+main :: IO ()
+main = do args <- getArgs
+          let opts = getOptions args
+          runBenchmarks opts
+
 -- | Default command line options.
 defaultOptions :: Options
 defaultOptions = Options { options_appendScale = 100
                          , options_iobaseline  = False }
 
+-- | Options menu-type-thing.
 options :: [OptDescr (Options -> Options)]
 options = [Option [] ["append-scale"]
           (ReqArg (\e opts -> opts {options_appendScale = read e }) "SCALE")
@@ -32,7 +46,8 @@ options = [Option [] ["append-scale"]
           (ReqArg (\e opts -> opts {options_iobaseline  = e=="yes"}) "YESNO")
           "Perform the IO baseline test."]
 
--- | Grab the options.
+-- | Grab the options. This is yet to work properly (i.e. as I expect.).
+--   Just edit the code to change the options for now.
 benchmarkOpts :: [String] -> (Options, [String])
 benchmarkOpts argv =
     case getOpt Permute options argv of
@@ -44,40 +59,53 @@ benchmarkOpts argv =
 getOptions :: [String] -> Options
 getOptions = fst . benchmarkOpts
 
--- | No configuration, straight run sockets followed by file tests.
-main :: IO ()
-main = do args <- getArgs
-          let opts = getOptions args
-          runBenchmarks opts
-
 -- | Run benchmarks with options.
 runBenchmarks :: Options -> IO ()
 runBenchmarks opts = do
   if (options_iobaseline opts) then withIoBaselineTest else runTests
       where runTests = defaultMain $ pureTests
 
+-- | All pure tests which nmeed no initialisation or IO.
 pureTests :: [Benchmark]
-pureTests = [appendBench,nestingElements]
+pureTests = oldhtmltests ++ blazetests where
+    blazetests = [appendBench,nestingElements]
+    oldhtmltests = [appendBenchOld,nestingElementsOld]
 
 -- | Benchmark for appending two simple elements.
 appendBench :: Benchmark
 appendBench = bench "appendBench" $ flip whnf () $ \() ->
-    renderHtmlText $ a `mappend` a
-        where a = renderElement (T.pack "p") (renderUnescapedText simpleTestString)
+    renderHtmlText $ applyntimes (a `mappend`) a 50
+        where a = renderElement (T.pack "p") (renderUnescapedText string)
+              string = T.pack simpleTestString
+
+-- | Benchmark for appending two simple elements using the old library.
+appendBenchOld :: Benchmark
+appendBenchOld = bench "appendBenchOld" $ flip whnf () $ \() ->
+   Html.renderHtml $ applyntimes (a +++) a 50
+       where a = Html.p << simpleTestString
 
 -- | Benchmark for nesting elements.
 nestingElements :: Benchmark
 nestingElements = bench "insertElements" $ flip whnf () $ \() ->
     renderHtmlText $ applyntimes adopt str 20
         where adopt = renderElement (T.pack "div")
-              str = renderUnescapedText simpleTestString
+              str = renderUnescapedText string
+              string = T.pack simpleTestString
 
+-- | Benchmark for nesting elements using the old library.
+nestingElementsOld :: Benchmark
+nestingElementsOld = bench "insertElementsOld" $ flip whnf () $ \() ->
+    Html.renderHtml $ applyntimes adopt str 20
+        where adopt = Html.thediv
+              str = Html.toHtml simpleTestString
+
+-- | Utility function to apply a function to a value n times.
 applyntimes :: (a -> a) -> a -> Int -> a
 applyntimes f start = (iterate f start!!)
 
--- | Just a 1KB text string.
-simpleTestString :: Text
-simpleTestString = T.pack $ replicate (1024*1024*100 :: Int) 'a'
+-- | Just a 10KB text string.
+simpleTestString :: String
+simpleTestString = replicate (1024*1024*10 :: Int) 'a'
 
 -- | Include the IO baseline tests with the rest.
 withIoBaselineTest :: IO ()

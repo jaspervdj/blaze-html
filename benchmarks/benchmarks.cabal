@@ -23,7 +23,8 @@ flag string
 executable benchmark
   ghc-options:      -Wall -O2
   hs-source-dirs:   . ../src ../impl/text
-  build-depends:    base >= 4 && < 5, criterion, network, directory, text, mtl, bytestring,binary
+  build-depends:    base >= 4 && < 5, criterion, network, directory, text, mtl,
+                    binary, bytestring, html
   main-is:          Criterion.hs
   extensions:       OverloadedStrings
   if flag(text) 

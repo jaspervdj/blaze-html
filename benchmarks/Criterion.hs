@@ -63,8 +63,8 @@ getOptions = fst . benchmarkOpts
 -- | Benchmark for appending two simple elements.
 appendBench :: Text
 appendBench = 
-    renderHtmlText $ applyntimes (a `mappend`) a 3
-        where a = renderElement (T.pack "p") (renderUnescapedText string)
+    htmlText $ applyntimes (a `mappend`) a 3
+        where a = nodeElement (T.pack "p") (unescapedText string)
               string = T.pack simpleTestString
 
 -- | Benchmark for appending two simple elements using the old library.
@@ -76,9 +76,9 @@ appendBenchOld =
 -- | Benchmark for nesting elements.
 nestingElements :: Text
 nestingElements =
-    renderHtmlText $ applyntimes adopt str 3
-        where adopt = renderElement (T.pack "div")
-              str = renderUnescapedText string
+    htmlText $ applyntimes adopt str 3
+        where adopt = nodeElement (T.pack "div")
+              str = unescapedText string
               string = T.pack simpleTestString
 
 -- | Benchmark for nesting elements using the old library.

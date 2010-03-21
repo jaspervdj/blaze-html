@@ -1,4 +1,4 @@
-module Criterion where
+module Main where
 
 import Criterion.Main (defaultMain)
 import Criterion.Benchmarks

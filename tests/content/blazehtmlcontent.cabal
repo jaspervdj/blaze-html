@@ -21,14 +21,14 @@ flag string
   default:     False
 
 executable blazehtml_contenttest
-  ghc-options:      -Wall -O
-  hs-source-dirs:   . ../src ../impl/text
+  ghc-options:      -Wall -O2
+  hs-source-dirs:   . ../../src ../../impl/text
   build-depends:    base >= 4 && < 5, containers, network, directory, text, mtl,
                     binary, bytestring, html
   main-is:          Content.hs
   extensions:       OverloadedStrings
   if flag(text) 
-    hs-source-dirs: ../impl/text
+    hs-source-dirs: ../../impl/text
   if flag(string)
-    hs-source-dirs: ../impl/string
+    hs-source-dirs: ../../impl/string
 

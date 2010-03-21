@@ -1,14 +1,13 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 import Prelude hiding (div, head, span, putStr)
+import qualified Prelude as P
 import Text.BlazeHtml.Html
-import Text.BlazeHtml.Render.HtmlPrettyText
-import Text.BlazeHtml.Text (putStr)
-
-foo = "hello"
-
-bar :: (Html h) => h
-bar = text "monkey"
+import Text.BlazeHtml.Render.HtmlByteString
+import Text.BlazeHtml.Text (Text)
+import Data.ByteString.Lazy (putStr)
+import Data.Monoid (mappend, mconcat)
+import BlazeHtmlContentData (dataAPI)
 
 content :: (Html h) => h
 content = html <! ("xmlns", "http://www.w3.org/1999/xhtml") </ 
@@ -62,8 +61,8 @@ content = html <! ("xmlns", "http://www.w3.org/1999/xhtml") </
                             [ table <! ("class", "api-alpha") </
                                 [ thead $ tr </
                                     [ th $ text "Name"
-                                    , th $ text "Description"]]
-                                , genAPIListing
+                                    , th $ text "Description"]
+                                , genAPIListing]
                             ] -- content
                         , div <! ("id", "footer") </
                             [ ul </ 
@@ -97,7 +96,25 @@ content = html <! ("xmlns", "http://www.w3.org/1999/xhtml") </
                     ] -- body
             ] -- html
 
-genAPIListing :: (Html h) => h
-genAPIListing = emptyText
+genAPIRow :: (Html h) => (Text, Text, [Text]) -> h
+genAPIRow (name, desc, badges) = tr </ [lcol, rcol]
+td $ a href $ text name, td text desc, (genAPIBadges badges)]
+  where
+    href = "http://wowprogramming.com/docs/api/" `mappend` name
 
-testPrint = putStr $ renderHtmlPrettyText content
+genAPIBadges :: (Html h) => [Text] -> h
+genAPIBadges [] = emptyText
+genAPIBadges x = ul <! ("class", "api_badge") </ (genAPIBadgeInner x)
+
+genAPIBadgeInner :: (Html h) => [Text] -> [h]
+genAPIBadgeInner [] = []
+genAPIBadgeInner (x:xs) = [li <! ("class", "api_badge") $ a href $ text x] ++ (genAPIBadgeInner xs)
+  where
+    href = "http://wowprogramming.com/docs/api_flags#" `mappend` x
+
+genAPIListing :: (Html h) => h
+genAPIListing = mconcat . P.map genAPIRow $ dataAPI
+
+main :: IO ()
+main = do
+    putStr $ htmlByteString content

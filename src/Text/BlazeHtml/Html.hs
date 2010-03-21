@@ -53,60 +53,69 @@
 --
 -- This situation occurs often enough to Haskell to have a definitive solution.  Instead of writing separate functions that do the same thing, but on inputs @a@ and @[a]@, we make the type into a monoid.  A monoid is any type with a sensible values corresponding to zero (denoted 'mempty'), and a way of "adding" values (denoted 'mappend').  The numbers 0, 1, 2, ... are the classical example of a monoid.  Lists are a monoid with @[]@ playing the role of zero and concatenation as addition.
 --
--- 'Html' is a monoid with an empty chunk of text as zero and concatenation as addition.  The concatenation never adds whitespace.  We can pass the three chunks to 'p' by first adding them,
+-- 'Html' is a monoid with an empty chunk of text as zero and concatenation as addition.  We can pass the three chunks to 'p' by first adding them,
 --
--- > p $ text "This is a " `mappend` (em $ text "very") `mappend` text " important paragraph."
+-- > p $ text "This is a " <> (em $ text "very") <> text " important paragraph."
+-- 
+-- but keeping track of the spaces at boundaries between chunks is annoying.  Instead use the '(|.|)' combinator to append 'Html' values with space between.  Then the example becomes
 --
--- BlazeHtml provides a combinator @(\</) :: Html h => (h -> h) -> [h] -> h@ for this ubiquitous pattern
+-- > p $ text "This is a" |.| (em $ text "very") |.| text "important paragraph."
 --
--- > p </ [text "This is a ", em $ text "very", text " important paragraph"]
+-- or a longer example which gives a feel for really using this notation,
 --
--- The semantics of '(</)' were chosen to permit defining composite elements that behave exactly like the primitive ones, as in
+-- > p $ text "World of Warcraft™ and Blizzard Entertainment™ are trademarks or \
+-- >           \registered trademarks of Blizzard Entertainment, Inc. in the U.S.\
+-- >           \and/or other countries.  The original materials contained in the" |-|
+-- >           (em $ text "API Reference") |-| text "section of this website are \
+-- >           \copyright John Wiley & Sons.  Other copyrights on this page are \
+-- >           \owned by their respective owners.  All other content © 2008-2009" |-| 
+-- >           (a "/about" $ text "wowprogramming.com") |-| text "."
+--
+-- '(<>)' and '(|.|)' are convenient for small pieces, but are awkward for nesting large elements.  BlazeHtml defines 'Html' to be a monad so you can concatenate elements with Haskell's do notation.
+--
+-- > body $ do div $ text "First div..."
+-- >           div $ text "Second div..."
+-- >           div $ text "Third div..."
+--
+--  It should be obvious 
+--
+-- The semantics of elements were chosen to permit defining composite elements that behave exactly like the primitive ones, as in
 --
 -- > remark :: Html h -> h -> h
--- > remark t = p </ [ strong $ text "Remark. ", t, strong $ text " End Remark." ]
+-- > remark t = p $ (strong $ text "Remark.") |.| t |.| (strong $ text " End Remark.")
 --
 -- then in GHCi,
 --
 -- > > putHtml $ remark $ text "This is a remark."
--- > <p><strong>Remark. </strong>This is a remark.<strong> End Remark.</strong></p>@
+-- > <p><strong>Remark.</strong> This is a remark. <strong>End Remark.</strong></p>@
 --
 -- /Remark/. All of HTML's elements retain their name in BlazeHtml.  @\<strong>\<\/strong>@ is 'strong'; @\<div>\<\/div>@ is 'div'; etc.  Most have type 'Html h => h -> h', but not all.  'img', for example, has type @Html h => String -> String -> h -> h@ to set the @src@ and @alt@ attributes.  You will profit from looking over the types of all the standard elements. /End Remark/
 --
--- With 'text', the element functions, and '(</)' you can construct the hierarchy of any HTML document.  We must now add attributes to element.
+-- With 'text', the element functions, @do@ notation, '(<>)' and '(|.|)', you can construct the hierarchy of any HTML document.  We must now add attributes to element.
 --
 -- @p :: Html h => h -> h@ has no attributes.  A paragraph element with a set of attributes has the same time.  How do we turn one into the other?
 --
 -- First, all attributes in BlazeHtml have type 'Attribute', a synonym for @(Text,Text)@.  The first field is the attribute's key, the second it's value.  The library provides a combinator
 --
--- > (<!) :: Html h => (h -> h) -> Attribute -> h -> h
+-- > (!) :: Html h => (h -> h) -> Attribute -> h -> h
 --
 -- which adds an attribute to an element, as in
 --
 -- > > putHtml $ p <! ("id","myparagraph") "Hello, world!"
 -- > <p id="myparagraph">Hello, world!</p>
 --
--- Very often you will want to set a list of attributes.  BlazeHtml provides a combinator '(<!:)' that differs from '(<!)' only in that it takes a list of attributes instead of a single attribute.  For example,
+-- Very often you will want to set a list of attributes.  BlazeHtml provides a combinator '(!:)' that differs from '(!)' only in that it takes a list of attributes instead of a single attribute.  For example,
 --
--- > > putHtml $ p <!: [("id","myparagraph"), ("style","color: green")] "Hello, world!"
+-- > > putHtml $ p !: [("id","myparagraph"), ("style","color: green")] text "Hello, world!"
 -- > <p id="myparagraph" style="color: green">Hello, world!</p>
 --
--- /Warning./ Attribute values added with '(<!)' are added verbatim.  There is no escaping.  To prevent security flaws, you should never, ever manually set attributes with dynamic data.  BlazeHtml provides attribute combinators like 'href' and 'charset' which take care of escaping data.  Use them instead. /End Warning./
+-- /Warning./ Attribute values added with '(!)' are added verbatim.  There is no escaping.  To prevent security flaws, you should never, ever manually set attributes with dynamic data.  BlazeHtml provides attribute combinators like 'hrefA' and 'charsetA' (always the attribute name in lowercase, followed by @A@) which take care of escaping data.  Use them instead. /End Warning./
 --
--- Attribute combinators have the same name in HTML and in BlazeHtml - 'href' for @href@, 'id' for @id@ - with three exceptions: @class@, @type@, and @data@ are called 'class'', 'type'', and 'data'' in BlazeHtml since they clash with Haskell reserved keywords.
---
--- '(<!)' operates on functions.  You may need to add attributes to an 'Html' value directly, for which BlazeHtml provides the 
--- 
--- > (!) :: Html h => h -> Attribute -> h
---
--- operator.  Again, there is an operator '(!:)' which takes a list of 'Attribute' instead of a single one.  For example,
---
--- > > putHtml $ (p $ text "Hello, world!") ! ("id","myparagraph") !: [("style","color: blue"), ("class", "ugly")]
--- > <p id="myparagraph" style="color: blue" class="ugly">Hello, world!</p>
+-- '(!)' is overloaded to operate on functions @Html h => h -> h@ and directly on values of type @Html h => h@.
 --
 -- /Warning./ If you add the same attribute twice to the same element, it will appear twice in that element.  BlazeHtml does no checking of uniqueness or merging of elements, since the correct behavior is not obvious.  Should an @id@ attribute be overridden?  Should multiple @class@ attributes be merged?  It is the user's responsibility to ensure their attribute lists are valid. /End Warning./
 --
--- Unlike '(<!)', '(!)' has several corner cases you should be aware of.
+-- '(!)' has several corner cases you should be aware of.
 --
 -- First, 'Html' is a monoid, so its values may be a sequence of elements.  '(!)' adds attributes to each top level element of such compound values.  That is,
 --

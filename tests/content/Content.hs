@@ -12,7 +12,7 @@ import BlazeHtmlContentData (dataAPI)
 content :: (Html h) => h
 content = html <! ("xmlns", "http://www.w3.org/1999/xhtml") </ 
             [ head </ 
-                [ title $ text "docs/api - World of Warcraft Programming: A Guide and Reference for Creating WoW Addons"
+                [ title $ unescapedText "docs/api - World of Warcraft Programming: A Guide and Reference for Creating WoW Addons"
                 , link !: [ ("type", "text/css"), ("rel", "stylesheet"), ("href", "http://wowprogramming.com/css/blueprint/reset.css")
                           , ("media", "screen, projection")]
                 , link !: [ ("type", "text/css"), ("rel", "stylesheet"), ("href", "http://wowprogramming.com/css/blueprint/typography.css")
@@ -100,7 +100,7 @@ genAPIRow :: (Html h) => (Text, Text, [Text]) -> h
 genAPIRow (name, desc, badges) = tr </ [lcol, rcol]
   where
     lcol = td </ [a href $ text name, genAPIBadges badges]
-    rcol = td $ text desc
+    rcol = td $ unescapedText desc
     href = "http://wowprogramming.com/docs/api/" `mappend` name
 
 genAPIBadges :: (Html h) => [Text] -> h

@@ -150,7 +150,7 @@ abbr value = ("abbr", value)
 
 -- | Set the @accept_charset@ attribute.
 accept_charset :: Text -> Attribute
-accept_charset value = ("accept_charset", value)
+accept_charset value = ("accept-charset", value)
 
 -- | Set the @accept@ attribute.
 accept :: Text -> Attribute
@@ -226,7 +226,7 @@ cite value = ("cite", value)
 
 -- | Set the @class_@ attribute.
 class_ :: Text -> Attribute
-class_ value = ("class_", value)
+class_ value = ("class", value)
 
 -- | Set the @classid@ attribute.
 classid :: Text -> Attribute
@@ -274,7 +274,7 @@ coords value = ("coords", value)
 
 -- | Set the @data_@ attribute.
 data_ :: Text -> Attribute
-data_ value = ("data_", value)
+data_ value = ("data", value)
 
 -- | Set the @datetime@ attribute.
 datetime :: Text -> Attribute
@@ -338,7 +338,7 @@ hspace value = ("hspace", value)
 
 -- | Set the @http_equiv@ attribute.
 http_equiv :: Text -> Attribute
-http_equiv value = ("http_equiv", value)
+http_equiv value = ("http-equiv", value)
 
 -- | Set the @id@ attribute.
 id :: Text -> Attribute
@@ -586,7 +586,7 @@ title value = ("title", value)
 
 -- | Set the @type_@ attribute.
 type_ :: Text -> Attribute
-type_ value = ("type_", value)
+type_ value = ("type", value)
 
 -- | Set the @usemap@ attribute.
 usemap :: Text -> Attribute

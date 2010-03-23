@@ -84,6 +84,13 @@ class (Monoid h) => Html h where
     (!) :: (AttributeList l) => h -> l -> h    
     el ! attr = addUnescapedAttributes (toAttributeList attr) el
     
+-- | Trick to allow attribute setting on nested HTML elements. 
+instance (Html b) => Html (a -> b) where
+    unescapedText txt _ = unescapedText txt
+    leafElement   txt _ = leafElement txt   
+    nodeElement         = (.) . nodeElement
+    modifyAttributes    = (.) . modifyAttributes
+    (fn ! attr) arg     = fn arg ! attr
     
 -- | Set the attributes all outermost elements to the given list of
 -- unescaped HTML attributes.
@@ -109,11 +116,3 @@ clearAttributes = setUnescapedAttributes []
 -- | Create an 'Html' value from a chunk of text, with proper string escaping.
 text :: (Html h) => Text -> h
 text = unescapedText . escapeHtml
- 
-instance (Html b) => Html (a -> b) where
-    unescapedText txt _       = unescapedText txt
-    leafElement   txt _       = leafElement txt   
-    nodeElement   txt  fn val = nodeElement txt $ fn val
-    modifyAttributes f fn val = modifyAttributes f $ fn val
-        
-    fn ! attr = \arg -> fn arg ! attr

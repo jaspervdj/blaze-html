@@ -154,7 +154,7 @@ module Text.BlazeHtml.Html
       module Text.BlazeHtml.Internal.HtmlMonad
       -- * Additional combinators.
     , (<>)
-    , (|-|)
+    , (<->)
     , space
     -- * Text chunks
     , emptyText
@@ -266,8 +266,8 @@ import Text.BlazeHtml.Internal.Escaping
 (<>) = mappend
 
 -- | Concatenate two @Html h => h@ values with whitespace inbetween.
-(|-|) :: Html h => h -> h -> h
-a |-| b = a <> space <> b
+(<->) :: Html h => h -> h -> h
+a <-> b = a <> space <> b
 
 -- | 'emptyText' is an empty chunk of text with no tags.
 emptyText :: (Html h) => h
@@ -588,7 +588,6 @@ ul = nodeElement "ul"
 -- | Render a @var@ element
 var :: (Html h) => h -> h
 var = nodeElement "var"
-
 
 -- | Render a @area@ leaf element.
 area :: (Html h) => h

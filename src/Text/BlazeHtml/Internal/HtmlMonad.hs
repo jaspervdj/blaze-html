@@ -3,6 +3,7 @@ module Text.BlazeHtml.Internal.HtmlMonad
     ) where
 
 import Data.Monoid
+import GHC.Exts (IsString (..))
 
 import Text.BlazeHtml.Internal.Html
 
@@ -11,6 +12,9 @@ newtype HtmlMonad h a = HtmlMonad { runHtmlMonad :: h }
 instance (Monoid h) => Monoid (HtmlMonad h a) where
     mempty                                = HtmlMonad mempty
     mappend (HtmlMonad h1) (HtmlMonad h2) = HtmlMonad $ h1 `mappend` h2
+
+instance (Html h) => IsString (HtmlMonad h a) where
+    fromString = text . fromString
 
 instance (Html h) => Html (HtmlMonad h a) where
     unescapedText t = HtmlMonad $ unescapedText t

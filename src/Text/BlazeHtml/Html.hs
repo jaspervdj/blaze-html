@@ -153,7 +153,7 @@ module Text.BlazeHtml.Html
     , -- * Do notation.
       module Text.BlazeHtml.Internal.HtmlMonad
     -- * Text chunks
-    , text, emptyText
+    , emptyText
     -- * Elements
     , a_, a
     , abbr
@@ -377,10 +377,6 @@ import Text.BlazeHtml.Internal.Html
     hiding (modifyAttributes, clearAttributes)
 import Text.BlazeHtml.Internal.HtmlMonad
 import Text.BlazeHtml.Internal.Escaping
-
--- | Create an 'Html' value from a chunk of text, with proper string escaping.
-text :: (Html h) => Text -> h
-text = unescapedText . escapeHtml
 
 -- | 'emptyText' is an empty chunk of text with no tags.
 emptyText :: (Html h) => h

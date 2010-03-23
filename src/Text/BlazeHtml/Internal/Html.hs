@@ -6,13 +6,16 @@ module Text.BlazeHtml.Internal.Html
     , addUnescapedAttribute
     , addUnescapedAttributes
     , clearAttributes
+    , text
     , (<!)
     , (<!:)
     , (</)
     ) where
 
 import Data.Monoid
+
 import Text.BlazeHtml.Text (Text)
+import Text.BlazeHtml.Internal.Escaping
 
 infixl 2 !
 infixl 2 !:
@@ -97,6 +100,10 @@ addUnescapedAttribute key value = modifyAttributes (((key, value) :) .)
 -- | Remove the HTML attributes of all outermost elements.
 clearAttributes :: (Html h) => h -> h
 clearAttributes = setUnescapedAttributes []
+
+-- | Create an 'Html' value from a chunk of text, with proper string escaping.
+text :: (Html h) => Text -> h
+text = unescapedText . escapeHtml
  
 instance (Html b) => Html (a -> b) where
     unescapedText txt _       = unescapedText txt

@@ -7,9 +7,6 @@ module Text.BlazeHtml.Internal.Html
     , addUnescapedAttributes
     , clearAttributes
     , text
-    , (<!)
-    , (<!:)
-    , (</)
     ) where
 
 import Data.Monoid
@@ -18,15 +15,23 @@ import Text.BlazeHtml.Text (Text)
 import Text.BlazeHtml.Internal.Escaping
 
 infixl 2 !
-infixl 2 !:
-infixl 2 <!
-infixl 2 <!:
-infix 1 </
 
 -- | Attribute as a tuple 
---   Please do not rely on the fact that this is an association list - this is
---   subject to change.
+-- Please do not rely on the fact that this is an association list - this is
+-- subject to change.
 type Attribute = (Text,Text)
+
+-- | A class for types you can add as an Attribute to HTML elements.
+class AttributeList a where
+    toAttributeList :: a -> [Attribute]
+
+-- | You can add a single attribute to an HTML element.
+instance AttributeList Attribute where
+    toAttributeList = return
+
+-- | You can add a list of attributes to an HTML element.
+instance AttributeList [Attribute] where
+    toAttributeList = id
 
 -- | Function that manipulates attributes. This is used for the CPS.
 type AttributeManipulation = [Attribute] -> [Attribute]
@@ -74,10 +79,10 @@ class (Monoid h) => Html h where
     modifyAttributes ::
         (AttributeManipulation -> AttributeManipulation) -> h -> h
 
-    (!)  :: h -> Attribute   -> h    
-    (!:) :: h -> [Attribute] -> h
-    el !  attr  = addUnescapedAttributes [attr] el
-    el !: attrs = addUnescapedAttributes attrs  el
+    -- | An operator to add attributes. This has a sensible default
+    -- implementation.
+    (!) :: (AttributeList l) => h -> l -> h    
+    el ! attr = addUnescapedAttributes (toAttributeList attr) el
     
     
 -- | Set the attributes all outermost elements to the given list of
@@ -111,17 +116,4 @@ instance (Html b) => Html (a -> b) where
     nodeElement   txt  fn val = nodeElement txt $ fn val
     modifyAttributes f fn val = modifyAttributes f $ fn val
         
-    fn !  attr  = \arg -> fn arg !  attr
-    fn !: attrs = \arg -> fn arg !: attrs    
- 
--- | Just a synonym for (!). TODO: remove
-(<!) :: (Html h)=> h -> Attribute -> h
-(<!) = (!)
-
--- | Just a synonym for (!:). TODO: remove
-(<!:) :: (Html h)=> h -> [Attribute] -> h
-(<!:) = (!:)
-
--- | Build a node element with a list of inner HTML documents.
-(</) :: (Html h) => (h -> h) -> [h] -> h
-el </ inner = el (mconcat inner)
+    fn ! attr = \arg -> fn arg ! attr

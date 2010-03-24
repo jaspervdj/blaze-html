@@ -2,11 +2,10 @@
 % Simon Meier on behalf of the BlazeHtml team
 % March 21, 2010
 
-Introduction
-============
+# Introduction
 
 This RFC describes the problem of efficiently generating Html responses for
-sending them over the network and our proposed solution called 'BlazeHtml'.
+sending them over the network and our proposed solution called "BlazeHtml".
 The goal of this RFC is to gather feedback from the community about its design
 before publishing the first implementation.
 
@@ -15,9 +14,7 @@ want to solve. Then, we describe the design that we developed and prototyped at
 the ZuriHac'10. Finally, we discuss further open questions not related directly
 to one of the library's components.
 
-
-Problem
-=======
+# Problem
 
 The problem we want to solve is how to efficiently generate Html responses for
 sending them over the network.
@@ -25,102 +22,96 @@ sending them over the network.
 The above goal is the main motivation behind our work. However, we also pursue
 the following additional goals:
 
-  * static ensurance of syntactic well-formedness
-
-  * light-weight syntax for specifying Html documents
-
-  * support for other Html-like document formats (e.g.  XHtml, XML)
-
-  * html documents should be first-class values; i.e. we want composability
+- static ensurance of syntactic well-formedness
+- light-weight syntax for specifying Html documents
+- support for other Html-like document formats (e.g.  XHtml, XML)
+- html documents should be first-class values; i.e. we want composability
 
 As long as these goals don't conflict with our main goal, we will try to satisfy
 them as good as possible.
 
+# Proposed Solution
 
-Proposed Solution
-=================
-
-Our solution called 'BlazeHtml' is based on a typeclass 'Html' which defines a
-set of core combinators. The instances of the 'Html' typeclass correspond to
-concrete output formats. We call such an instances a 'Renderer'. Using the core
-combinators provided by the 'Html' typeclass, we build concrete combinators
+Our solution called "BlazeHtml" is based on a typeclass `Html` which defines a
+set of core combinators. The instances of the `Html` typeclass correspond to
+concrete output formats. We call such an instances a "Renderer". Using the core
+combinators provided by the `Html` typeclass, we build concrete combinators
 for the various flavours of Html-like documents on top.
 
-In the following sections, we present the 'Html' typeclass, the efficient
+In the following sections, we present the `Html` typeclass, the efficient
 rendering instances, and the concrete document combinators.
 
 
-Core Combinators
-----------------
+## Core Combinators
 
-We fix the representation of text to the 'Text' type provided by 'Data.Text'.
+We fix the representation of text to the `Text` type provided by `Data.Text`.
 An attributes is just a tuple of a text representing the key and a text
 representing the value.
 
-  type Attribute = (Text,Text)
+    type Attribute = (Text,Text)
 
 We use a difference list of attributes to represent the accumulated attributes
 to be applied to a html element.
 
-  type AttributeManipulation = [Attribute] -> [Attribute]
+    type AttributeManipulation = [Attribute] -> [Attribute]
 
-We define an //html document// to be a value of a type which is an instance of
-the 'Html' typeclass. We call the methods of the 'Monoid' and the 'Html'
-typeclasses the //core combinators//. These are the ones which are actually
+We define an _html document_ to be a value of a type which is an instance of
+the `Html` typeclass. We call the methods of the `Monoid` and the `Html`
+typeclasses the _core combinators_. These are the ones which are actually
 used in a compiled executable to represent a html document.
 
-  class Monoid h => Html h where
-      -- | A text leaf -- no escaping is done.
-      unescapedText    :: Text -> h
-      -- | A leaf element with the given tag name.
-      leafElement      :: Text -> h
-      -- | A node element with the given tag and inner document.
-      nodeElement      :: Text -> h -> h
-      -- | Modify the attributes of the outermost elements in the .
-      modifyAttributes ::
-          (AttributeManipulation -> AttributeManipulation) -> h -> h
+    class Monoid h => Html h where
+        -- | A text leaf -- no escaping is done.
+        unescapedText    :: Text -> h
+        -- | A leaf element with the given tag name.
+        leafElement      :: Text -> h
+        -- | A node element with the given tag and inner document.
+        nodeElement      :: Text -> h -> h
+        -- | Modify the attributes of the outermost elements in the .
+        modifyAttributes ::
+            (AttributeManipulation -> AttributeManipulation) -> h -> h
 
 Let us give an example based on the core combinators. Assuming that
 
-  (<>) :: Monoid m => m -> m -> m
-  (<>) = mappend
+    (<>) :: Monoid m => m -> m -> m
+    (<>) = mappend
 
 The HTML code
 
-  <h1>BlazeHtml</h1>
-  <img href="logo.png"/>
-  <p> is a <em>blazingly</em>fast HTML generation library</p>
+    <h1>BlazeHtml</h1>
+    <img href="logo.png"/>
+    <p> is a <em>blazingly</em>fast HTML generation library</p>
 
 would be represented using the core combinators as
 
-  (nodeElement "h1" $ unescapedText "BlazeHtml") <>
-  (modifyAttributes (("href","logo.png"):) .) $ leafElement "img") <>
-  (nodeElement "p" $ 
-       unescapedText " is a " <>
-       (nodeElement "em" $ unescapedText "blazingly") <>
-       unescapedText " fast HTML generation library")
+    (nodeElement "h1" $ unescapedText "BlazeHtml") <>
+    (modifyAttributes (("href","logo.png"):) .) $ leafElement "img") <>
+    (nodeElement "p" $ 
+        unescapedText " is a " <>
+        (nodeElement "em" $ unescapedText "blazingly") <>
+        unescapedText " fast HTML generation library")
 
 Obiviously, this is a quite wordy way to express Html documents. Therefore, we
 build a whole set of actual combinators atop of these to conventiently write
-html documents. We present the design of these //concrete combinators// [better
-name needed here] in the in section 'Specyfing Html Documents'.
+html documents. We present the design of these _concrete combinators_ [better
+name needed here] in the in section "Specyfing Html Documents".
 
 Here, we are interested in the semantics of the core combinators. Apart from
-the 'Monoid' laws, each instance of the Html document satisfies at least the
+the `Monoid` laws, each instance of the Html document satisfies at least the
 following laws.
       
-  unescapedText mempty = mempty
-  unescapedText (t1 <> t2) = unescaptedText t1 <> unescapedText t2
+    unescapedText mempty = mempty
+    unescapedText (t1 <> t2) = unescaptedText t1 <> unescapedText t2
 
-  modifyAttributes f mempty = mempty
-  modifyAttributes f (h1 <> h2) = modifyAttributes f h1 <> modifyAttributes f h2
+    modifyAttributes f mempty = mempty
+    modifyAttributes f (h1 <> h2) = modifyAttributes f h1 <> modifyAttributes f h2
 
-  modifyAttributes f (unescapedText t) = unescapedText t
-  modifyAttributes f2 (modifyAttributes f1 t) = modifyAttributes (f1.f2) t
+    modifyAttributes f (unescapedText t) = unescapedText t
+    modifyAttributes f2 (modifyAttributes f1 t) = modifyAttributes (f1.f2) t
 
 Note that the equation
 
-  nodeElement n mempty = leafElement n
+    nodeElement n mempty = leafElement n
 
 is NOT guaranteed to hold, because `nodeElement n mempty` would produce
 something of the form:
@@ -132,18 +123,15 @@ Whereas `leafElement n` would rather produce something like:
     <tag />
 
 
-Rendering
----------
+## Rendering
 
 
-Encoding
---------
+## Encoding
 
 Analyze and specify problem first!
 
 
-Specifying Html documents
--------------------------
+## Specifying Html documents
 
 We think the syntax for HTML pages should be as light-weight as possible, this
 will greatly improve readability. This is why we propose to define a Monad
@@ -202,23 +190,18 @@ instance of `GHC.Exts.IsString`. This results in the fact that you can drop the
         p $ "This is a first paragraph."
         "This text is not inside any tag for now."
 
-Our Implementation
-==================
+# Our Implementation
 
 Explain how the implementation works like.
 
-Measurements
-------------
+## Measurements
 
-
-Conclusion
-==========
+# Conclusion
 
 Make clear what are the open questions.
 
 
-Acknowledgments
-===============
+# Acknowledgments
 
 [In Chronological Order]
 
@@ -229,13 +212,10 @@ The BlazeHtml team
 
   Chris Done
   Jim Whitehead
-  Japser van der Jeught
+  Japser van der Jeugt
   Harald ...
   Oliver Mueller
   Simon Meier
   Tom Harper
 
 at ZuriHac for making the first version of BlazeHtml real.
-
-
-

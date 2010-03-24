@@ -101,10 +101,11 @@ the `Monoid` laws, each instance of the Html document satisfies at least the
 following laws.
       
     unescapedText mempty = mempty
-    unescapedText (t1 <> t2) = unescaptedText t1 <> unescapedText t2
+    unescapedText (t1 <> t2) = unescapedText t1 <> unescapedText t2
 
     modifyAttributes f mempty = mempty
-    modifyAttributes f (h1 <> h2) = modifyAttributes f h1 <> modifyAttributes f h2
+    modifyAttributes f (h1 <> h2) =
+        modifyAttributes f h1 <> modifyAttributes f h2
 
     modifyAttributes f (unescapedText t) = unescapedText t
     modifyAttributes f2 (modifyAttributes f1 t) = modifyAttributes (f1.f2) t
@@ -125,10 +126,38 @@ Whereas `leafElement n` would rather produce something like:
 
 ## Rendering
 
+As we said before, a "Renderer" is basically an instance of the `Html`
+typeclass. Our main focus will be `HtmlText`, which will render the HTML to a
+Lazy `Data.Text` value, through the use of a Builder Monoid.
+
+We will also offer an `HtmlPrettyText` renderer, which takes care of proper
+intendation. But this should not be our main focus, for the following reasons:
+
+- Efficiency is our main goal. The more bytes we can spare, the better.
+- For the debugging the output, one can always run the output through a HTML
+  formatter to achieve the same goal.
+
+Furthermore, we can add more specific renderers (e.g. one writing directly to a
+`Socket` in a certain encoding). This is probably a trivial task, since they can
+make use of the `Data.Text` renderer.
+
 
 ## Encoding
 
-Analyze and specify problem first!
+HTML documents can be sent in many encodings these days. We want to ease this
+task, too, in BlazeHtml. Unfortunately, we cannot guarantee the correct sending
+of the encoding. The final encoding will be determined by the way the end user
+sends the `Data.Text` value over the `Socket` or to the file.
+
+But since the encoding module will be loosely coupled to the others, we cannot
+automatically set the encoding using a tag like the following:
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+This is because inserting such an element would require traversing of the entire
+HTML document again. Therefore, this will be up to the user to either set the
+correct tag here (we will provide combinators for the common encodings) or send
+the encoding directly in the server response headers.
 
 
 ## Specifying Html documents
@@ -189,6 +218,10 @@ instance of `GHC.Exts.IsString`. This results in the fact that you can drop the
         h1 $ "This is a header"
         p $ "This is a first paragraph."
         "This text is not inside any tag for now."
+
+Of course, `unescapedText` will also be exported, as a back door for inserting
+raw chunks of HTML, since skipping the escape function is obviously faster.
+
 
 # Our Implementation
 

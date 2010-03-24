@@ -12,10 +12,11 @@ module Text.BlazeHtml.Render.HtmlIO
 
 import Prelude hiding (putStr)
 import Data.Monoid
-import Text.BlazeHtml.Text (Text,hPutStr)
 import System.IO (Handle)
+import Control.Monad (forM_)
 
 import Text.BlazeHtml.Internal.Html
+import Text.BlazeHtml.Text (Text,hPutStr)
 
 --type TextOutputter = Text -> IO ()
 
@@ -28,7 +29,8 @@ htmlIO h html = getHtmlIO html h []
 
 -- | Helper function to render attributes.
 attributes :: Handle -> [Attribute] -> IO ()
-attributes h = mapM_ $ \(k,v) -> 
+attributes h [] = hPutStr h " "
+attributes h attrs = forM_ attrs $ \(k,v) -> 
     hPutStr h " " >> hPutStr h k >> hPutStr h "=\""
                   >> hPutStr h v >> hPutStr h "\""
 

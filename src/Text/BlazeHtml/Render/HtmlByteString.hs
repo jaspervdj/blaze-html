@@ -26,6 +26,7 @@ buildHtmlByteString = ($ []) . getHtmlByteString
 
 -- | Helper function to render attributes.
 attributes :: [Attribute] -> Builder
+attributes []    = textToBuilder " "
 attributes attrs = mconcat $ flip map attrs $ \(k,v) -> 
     textToBuilder " " `mappend` textToBuilder k
                       `mappend` textToBuilder "=\""

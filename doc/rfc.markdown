@@ -1,5 +1,5 @@
 % BlazeHtml RFC
-% Simon Meier on behalf of the BlazeHtml team
+% Authors: Jasper van der Jeught and Simon Meier
 % March 21, 2010
 
 # Introduction
@@ -28,7 +28,7 @@ the following additional goals:
 - html documents should be first-class values; i.e. we want composability
 
 As long as these goals don't conflict with our main goal, we will try to satisfy
-them as good as possible.
+them as well as possible.
 
 # Proposed Solution
 
@@ -45,7 +45,7 @@ rendering instances, and the concrete document combinators.
 ## Core Combinators
 
 We fix the representation of text to the `Text` type provided by `Data.Text`.
-An attributes is just a tuple of a text representing the key and a text
+An attribute is just a tuple of a text representing the key and a text
 representing the value.
 
     type Attribute = (Text,Text)
@@ -159,6 +159,8 @@ HTML document again. Therefore, this will be up to the user to either set the
 correct tag here (we will provide combinators for the common encodings) or send
 the encoding directly in the server response headers.
 
+[Needs to be expanded / describe problem more clearly]
+
 
 ## Specifying Html documents
 
@@ -178,6 +180,10 @@ For setting attributes, we propose to use the `!` operator, like the old `HTML`
 package does. We overloaded this operator so you can use it in different
 situations:
 
+[Open question: Should we move to another operator with less use in other
+libraries? Moreover, `!` somehow always reminds me of indexing, which does not
+agree with its semantics in this context.]
+
 - Setting a single attribute.
 - Setting a list of attributes.
 - Setting a single attribute for a nested HTML element.
@@ -195,7 +201,7 @@ Examples for all these cases:
             text "Some paragraph."
 
 Because the HTML elements all have short and general names, there are a lot of
-naming clashes, between the elements and the `Prelude` (e.g. `id`), between the
+name clashes between the elements and the `Prelude` (e.g. `id`,`div`), between the
 elements and the attributes (e.g. `style`), and between the elements and
 standard Haskell keywords (e.g. `class`).
 

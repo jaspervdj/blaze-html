@@ -33,7 +33,7 @@ the following additional goals:
 
   * html documents should be first-class values; i.e. we want composability
 
-As long as these goals don't conflict with our main goal, we try to satisfy
+As long as these goals don't conflict with our main goal, we will try to satisfy
 them as good as possible.
 
 
@@ -122,7 +122,14 @@ Note that the equation
 
   nodeElement n mempty = leafElement n
 
-is NOT guaranteed to hold. [FIX: Justify decision]
+is NOT guaranteed to hold, because `nodeElement n mempty` would produce
+something of the form:
+
+    <tag></tag>
+
+Whereas `leafElement n` would rather produce something like:
+
+    <tag />
 
 
 Rendering
@@ -138,10 +145,62 @@ Analyze and specify problem first!
 Specifying Html documents
 -------------------------
 
-HtmlMonad construction
-Attribute setting/adding
-Clash resolution
+We think the syntax for HTML pages should be as light-weight as possible, this
+will greatly improve readability. This is why we propose to define a Monad
+wrapping the `Html` typeclass. The `>>` operator will be implemented as
+`mappend`, so it is possible to write, for example:
 
+    myHtml :: (Html h) => h
+    myHtml = runHtmlMonad $ do
+        p $ text "This is a first paragraph."
+        p $ text "This is a second."
+
+The `text` function here is defined as `unescapedText . escapeHtml`.
+
+For setting attributes, we propose to use the `!` operator, like the old `HTML`
+package does. We overloaded this operator so you can use it in different
+situations:
+
+- Setting a single attribute.
+- Setting a list of attributes.
+- Setting a single attribute for a nested HTML element.
+- Setting a list of attribute for a nested HTML element.
+
+Examples for all these cases:
+
+    myHtml :: (Html h) => h
+    myHtml = runHtmlMonad $ do
+        img ! src "logo.png"
+        img ! [src "logo.png", alt "Logo of the company"]
+        p ! name "fancy" $ do
+            text "Some paragraph."
+        p ! [name "fancy", id "second"] $ do
+            text "Some paragraph."
+
+Because the HTML elements all have short and general names, there are a lot of
+naming clashes, between the elements and the `Prelude` (e.g. `id`), between the
+elements and the attributes (e.g. `style`), and between the elements and
+standard Haskell keywords (e.g. `class`).
+
+This is why we need a strict and clear naming policy. We propose the following:
+
+Elements and attributes are stored in two separated modules. If you import
+them with an alias, you can use them safely. (e.g. `E.style` and `A.style`). If
+possible, the HTML elements and BlazeHtml combinators should have the same name.
+There are, unfortunately, a few exceptions we need to make:
+
+- We append `_` to Haskell keywords (e.g. `class_`).
+- We change `-` into `_` (e.g. `http_equiv`).
+
+Finally, we add a last bit of syntactic sugar. In the `HtmlMonad`, we make an
+instance of `GHC.Exts.IsString`. This results in the fact that you can drop the
+`text` function when using the monadic notation. An example:
+
+    myHtml :: (Html h) => h
+    myHtml = runHtmlMonad $ do
+        h1 $ "This is a header"
+        p $ "This is a first paragraph."
+        "This text is not inside any tag for now."
 
 Our Implementation
 ==================
@@ -172,7 +231,7 @@ The BlazeHtml team
   Jim Whitehead
   Japser van der Jeught
   Harald ...
-  Oliver ..
+  Oliver Mueller
   Simon Meier
   Tom Harper
 

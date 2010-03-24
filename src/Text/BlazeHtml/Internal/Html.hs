@@ -85,7 +85,7 @@ class (Monoid h) => Html h where
     el ! attr = addUnescapedAttributes (toAttributeList attr) el
     
 -- | Trick to allow attribute setting on nested HTML elements. 
-instance (Html b) => Html (a -> b) where
+instance (Html b) => Html (b -> b) where
     unescapedText txt _ = unescapedText txt
     leafElement   txt _ = leafElement txt   
     nodeElement         = (.) . nodeElement

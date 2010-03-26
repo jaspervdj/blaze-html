@@ -75,7 +75,7 @@ prop_SetAttribUnescaped h a t = left == right
 prop_AddAttribUnescaped :: (Html h, Eq h) => h -> [Attribute] -> Text -> Bool
 prop_AddAttribUnescaped h a t = left == right
   where
-    left = h `mappend` addUnescapedAttributes a (unescapedText t)
+    left = h `mappend` addAttributable a (unescapedText t)
     right = h `mappend` (unescapedText t)
 
 -- The Html object passed in MUST have an outer tag, so attributes can be set
@@ -97,15 +97,15 @@ prop_SetAttribOverwrite h a1 a2 t = left == right
 prop_AddSetAttribOverwrite :: (Html h, Eq h) => h -> [Attribute] -> [Attribute] -> Text -> Bool
 prop_AddSetAttribOverwrite h a1 a2 t = left == right
   where
-    left = addUnescapedAttributes a1 (setUnescapedAttributes a2 h)
+    left = addAttributable a1 (setUnescapedAttributes a2 h)
     right = setUnescapedAttributes a2 h
 
 
 prop_AddAddAttrib :: (Html h, Eq h) => h -> [Attribute]-> [Attribute] -> Text -> Bool
 prop_AddAddAttrib h a1 a2 t = left == right
   where
-    left = addUnescapedAttributes a1 (addUnescapedAttributes a2 h)
-    right = addUnescapedAttributes (a2 `mappend` a1) h
+    left = addAttributable a1 (addAttributable a2 h)
+    right = addAttributable (a2 `mappend` a1) h
 
 -- Utility functions
 orangeAttribs = [(T.pack("orange"), T.pack("mandarin"))]
@@ -143,4 +143,4 @@ runTests = do
 printTests = do
     putStrLn $ T.unpack $ htmlText $ setUnescapedAttributes orangeAttribs pHtmlText
     putStrLn $ T.unpack $ htmlText $ setUnescapedAttributes appleAttribs (setUnescapedAttributes orangeAttribs pHtmlText)
-    putStrLn $ T.unpack $ htmlText $ addUnescapedAttributes (appleAttribs `mappend` orangeAttribs) pHtmlText
+    putStrLn $ T.unpack $ htmlText $ addAttributable (appleAttribs `mappend` orangeAttribs) pHtmlText

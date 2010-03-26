@@ -1,42 +1,42 @@
-{-# LANGUAGE FlexibleInstances, TypeSynonymInstances #-}
+{-# LANGUAGE OverloadedStrings, FlexibleInstances, TypeSynonymInstances #-}
 module Text.BlazeHtml.Internal.Html
     ( Attribute
+    , Attributable
     , Html (..)
     , setUnescapedAttributes
-    , addUnescapedAttribute
-    , addUnescapedAttributes
     , clearAttributes
-    , text
     ) where
 
 import Data.Monoid
 
 import Text.BlazeHtml.Text (Text)
-import Text.BlazeHtml.Internal.Escaping
 
-infixl 2 !
-
--- | Attribute as a tuple 
--- Please do not rely on the fact that this is an association list - this is
--- subject to change.
+-- | An attribute as a tuple of a key and a value.
 type Attribute = (Text,Text)
 
--- | A class for types you can add as an Attribute to HTML elements.
-class AttributeList a where
-    toAttributeList :: a -> [Attribute]
+-- | A function modifying a list of attributes. This is used for the efficient
+-- concatenation of attributes. 
+type AttributeModifier = [Attribute] -> [Attribute]
 
--- | You can add a single attribute to an HTML element.
-instance AttributeList Attribute where
-    toAttributeList = return
+-- | A class for types you can add as an attribute to HTML elements.
+--
+-- TODO: Decide whether this class should be exported openly; e.g. to allow making
+-- Data.Map attributable.
+class Attributable a where
+     attributeModifier :: a -> AttributeModifier -> AttributeModifier
 
--- | You can add a list of attributes to an HTML element.
-instance AttributeList [Attribute] where
-    toAttributeList = id
+-- | Adding single attributes to HTML elements. No escaping is done.
+instance Attributable Attribute where
+    attributeModifier attr = ((attr:) .)
 
--- | Function that manipulates attributes. This is used for the CPS.
-type AttributeManipulation = [Attribute] -> [Attribute]
+-- | Adding lists of attributes HTML elements. No escaping is done.
+instance Attributable [Attribute] where
+    attributeModifier attrs = ((attrs++) .)
+
 
 -- | Any Html document is a monoid. Furthermore, the following equalities hold.
+--
+--   TODO: Clean up the equalities.
 --
 --    renderUnescapedText mempty = mempty
 --
@@ -65,54 +65,63 @@ type AttributeManipulation = [Attribute] -> [Attribute]
 --
 --    modifyUnescapedAttributes f (renderUnescapedText t) = renderUnescapedText t
 --
+---------------------------------------------------------------------
+--
+--  Defining separate
+--
+--    (h1 `separate` mempty) `separate` h2 = h1 `separate h2
+--    h1 `separate` (mempty `separate` h2) = h1 `separate h2
+--    (h1 `separate` h2) `mappend`  h3 = h1 `separate (h2 `mappend  h3)
+--    (h1 `mappend`  h2) `separate` h3 = h1 `mappend  (h2 `separate h3)
+--    (h1 `separate` h2) `separate` h3 = h1 `separate (h2 `separate h3)
+--
+--    modifyAttributes f (h1 `separate` h2) = 
+--    modifyAttributes f h1 `separate` modifyAttributes f h2
+--
+--
 --  Note that the interface below may be extended, if a performing
 --  implementation requires it.
 --
 class (Monoid h) => Html h where
-    -- | Render text -- no escaping is done.
-    unescapedText    :: Text -> h
+    -- | Compose two html documents separated by whitespace.
+    separate                :: h -> h -> h
+    separate h1 h2          = h1 `mappend` unescapedText " " `mappend` h2
+    -- | Render text witout any escaping.
+    unescapedText           :: Text -> h
     -- | Render a leaf element with the given tag name.
-    leafElement      :: Text -> h
+    leafElement             :: Text -> h
     -- | Render an element with the given tag name and the given inner html.
-    nodeElement      :: Text -> h -> h
-    -- | Set the attributes of the outermost element.
-    modifyAttributes ::
-        (AttributeManipulation -> AttributeManipulation) -> h -> h
+    nodeElement             :: Text -> h -> h
+    -- | Modify the attributes of the outermost elements.
+    modifyAttributeModifier ::
+        (AttributeModifier -> AttributeModifier) -> h -> h
 
-    -- | An operator to add attributes. This has a sensible default
-    -- implementation.
-    (!) :: (AttributeList l) => h -> l -> h    
-    el ! attr = addUnescapedAttributes (toAttributeList attr) el
+    -- | Add an attributable value to the attributes of the outermost element.
+    -- Escaping depends on the type of the attributable value. For 'Attribute'
+    -- and '[Attribute]' no escaping is done.
+    addAttributable         :: Attributable a => a -> h -> h    
+    addAttributable attr    = modifyAttributeModifier (attributeModifier attr)
     
--- | Trick to allow attribute setting on nested HTML elements. 
-instance (Html b) => Html (b -> b) where
-    unescapedText txt _ = unescapedText txt
-    leafElement   txt _ = leafElement txt   
-    nodeElement         = (.) . nodeElement
-    modifyAttributes    = (.) . modifyAttributes
-    (fn ! attr) arg     = fn arg ! attr
+-- | Allow attribute setting on nested HTML elements. 
+--
+-- TODO: 
+-- Give instance definition for separate.
+--
+-- Explain the precise semantics for the individual combinators in this
+-- context.
+instance (Html h) => Html (h -> h) where
+    separate _ _          = error "Html (h -> h): separate not yet defined"
+    unescapedText txt _     = unescapedText txt
+    leafElement   txt _     = leafElement txt   
+    nodeElement             = (.) . nodeElement
+    modifyAttributeModifier = (.) . modifyAttributeModifier
+    addAttributable attr nest inner = addAttributable attr (nest inner)
     
 -- | Set the attributes all outermost elements to the given list of
 -- unescaped HTML attributes.
 setUnescapedAttributes :: (Html h) => [Attribute] -> h -> h
-setUnescapedAttributes = modifyAttributes . (.) . const
-
--- | Add a single unescaped HTML attribute to all outermost elements.
---
--- > addAttribute "src" "foo.png"
-addUnescapedAttributes :: (Html h) => [Attribute] -> h -> h
-addUnescapedAttributes = modifyAttributes . (.) . (++)
-
--- | Add a single HTML attribute to all outermost elements.
---
--- > addAttribute "src" "foo.png"
-addUnescapedAttribute :: (Html h) => Text -> Text -> h -> h
-addUnescapedAttribute key value = modifyAttributes (((key, value) :) .)
+setUnescapedAttributes = modifyAttributeModifier . (.) . const
 
 -- | Remove the HTML attributes of all outermost elements.
 clearAttributes :: (Html h) => h -> h
 clearAttributes = setUnescapedAttributes []
-
--- | Create an 'Html' value from a chunk of text, with proper string escaping.
-text :: (Html h) => Text -> h
-text = unescapedText . escapeHtml

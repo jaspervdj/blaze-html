@@ -50,7 +50,7 @@ instance Html HtmlPrettyText where
                      `mappend` attributes attrs `mappend` ">\n"
                      `mappend` inner
                      `mappend` "</" `mappend` t `mappend` ">\n"
-    modifyAttributes f =
+    modifyAttributeModifier f =
         HtmlPrettyText . local (f id) . runHtmlPrettyText
 
 -- | Render the html to text.

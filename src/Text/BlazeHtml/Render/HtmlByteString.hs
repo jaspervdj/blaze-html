@@ -26,7 +26,7 @@ buildHtmlByteString = ($ []) . getHtmlByteString
 
 -- | Helper function to render attributes.
 attributes :: [Attribute] -> Builder
-attributes []    = textToBuilder " "
+attributes []    = mempty
 attributes attrs = mconcat $ flip map attrs $ \(k,v) -> 
     textToBuilder " " `mappend` textToBuilder k
                       `mappend` textToBuilder "=\""
@@ -45,6 +45,9 @@ instance Monoid HtmlByteString where
         getHtmlByteString h1 attrs `mappend` getHtmlByteString h2 attrs
 
 instance Html HtmlByteString where
+    separate h1 h2 = HtmlByteString $ \attrs ->
+      getHtmlByteString h1 attrs `mappend` textToBuilder " " 
+                                 `mappend` getHtmlByteString h2 attrs
     unescapedText = HtmlByteString . const . textToBuilder
     leafElement t   = HtmlByteString $ \attrs -> 
         beginTag t attrs `mappend` textToBuilder "/>"
@@ -54,5 +57,5 @@ instance Html HtmlByteString where
                          `mappend` textToBuilder "</"
                          `mappend` textToBuilder t
                          `mappend` textToBuilder ">"
-    modifyAttributes f html = HtmlByteString $ \attrs ->
+    modifyAttributeModifier f html = HtmlByteString $ \attrs ->
         getHtmlByteString html (f id attrs)

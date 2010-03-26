@@ -41,6 +41,7 @@ library
                     Text.BlazeHtml.Render.HtmlText
                     Text.BlazeHtml.Render.HtmlPrettyText
                     Text.BlazeHtml.Render.HtmlByteString
+                    Text.BlazeHtml.Render.Indent
   other-modules:    Text.BlazeHtml.Internal.Html
                     Text.BlazeHtml.Internal.Escaping
                     Text.BlazeHtml.Internal.HtmlMonad

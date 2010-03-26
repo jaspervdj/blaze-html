@@ -137,6 +137,7 @@ module Text.BlazeHtml.Attributes
     , vlink
     , vspace    
     , width
+    , xmlns
     ) where
 
 import Prelude ()
@@ -619,3 +620,7 @@ vspace value = ("vspace", value)
 -- | Set the @width@ attribute.
 width :: Text -> Attribute
 width value = ("width", value)
+
+-- | Set the @xmlns@ attribute.
+xmlns :: Text -> Attribute
+xmlns value = ("xmlns", value)

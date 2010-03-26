@@ -51,4 +51,4 @@ instance Html HtmlIO where
         beginTag h t attrs >> hPutStr h ">"
         getHtmlIO htmlio h []
         hPutStr h "</" >> hPutStr h t >> hPutStr h ">"
-    modifyAttributes f htmlio = HtmlIO $ \h -> getHtmlIO htmlio h . f id 
+    modifyAttributeModifier f htmlio = HtmlIO $ \h -> getHtmlIO htmlio h . f id 

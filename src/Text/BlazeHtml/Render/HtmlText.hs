@@ -40,7 +40,7 @@ instance Html HtmlText where
                      `mappend` attributes attrs `mappend` ">"
                      `mappend` inner
                      `mappend` "</" `mappend` t `mappend` ">"
-    modifyAttributes f = HtmlText . local (f id) . runHtmlText
+    modifyAttributeModifier f = HtmlText . local (f id) . runHtmlText
 
 -- | Render the html to text.
 htmlText :: HtmlText -> Text

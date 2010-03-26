@@ -153,9 +153,10 @@ module Text.BlazeHtml.Html
     , -- * Do notation.
       module Text.BlazeHtml.Internal.HtmlMonad
       -- * Additional combinators.
+    , (!)
     , (<>)
     , (<->)
-    , space
+    , text
     -- * Text chunks
     , emptyText
     -- * Elements
@@ -253,13 +254,36 @@ module Text.BlazeHtml.Html
     ) where
 
 import Prelude hiding (div, head, span, map)
+import GHC.Exts (IsString(..))
 import Data.Monoid
 
 import Text.BlazeHtml.Text (Text)
 import Text.BlazeHtml.Internal.Html 
-    hiding (modifyAttributes, clearAttributes)
+    hiding (modifyAttributeModifier, clearAttributes)
 import Text.BlazeHtml.Internal.HtmlMonad
 import Text.BlazeHtml.Internal.Escaping
+
+infixl 2 !
+
+-- NOTE: Somehow it makes more sense to define this instance here, because the
+-- proper escaping depends on the document format and cannot be decided once an
+-- forall. To avoid the orphan instances we should consider the following two
+-- options:
+--
+--   1. Each document format could define its own composition monad using a
+--      newtype by wrappin the prototype in Internal.HtmlMonad.
+--
+--   2. Each document format could define its own composition Monad by copying
+--      the monad code from HtmlMonad.
+--
+-- Simon: I currently don't know which solution is better. For now it seems as
+-- if (2) would be simpler. Moreover, switching to the first solution is easily
+-- possible afterwards.
+instance (Html h) => IsString (HtmlMonad h a) where
+    fromString = text . fromString
+
+(!) :: (Html h, Attributable a) => h -> a -> h
+(!) = flip addAttributable
 
 -- | Concatenate two @Html h => h@ values with no space inbetween.
 (<>) :: Monoid h => h -> h -> h
@@ -267,15 +291,15 @@ import Text.BlazeHtml.Internal.Escaping
 
 -- | Concatenate two @Html h => h@ values with whitespace inbetween.
 (<->) :: Html h => h -> h -> h
-a <-> b = a <> space <> b
+(<->) = separate
 
 -- | 'emptyText' is an empty chunk of text with no tags.
 emptyText :: (Html h) => h
 emptyText = mempty
 
--- | Create an 'Html' value containing just a space.
-space :: Html h => h
-space = text " "
+-- | Escaped text.
+text :: Html h => Text -> h
+text = unescapedText . escapeHtml
 
 -- | Render an @a@ element.
 a :: (Html h) => h -> h
@@ -485,9 +509,12 @@ option = nodeElement "option"
 p :: (Html h) => h -> h
 p = nodeElement "p"
 
--- | Render a @pre@ element
-pre :: (Html h) => h -> h
-pre = nodeElement "pre"
+-- | Render a @pre@ element with the given literal escaped text.
+--
+-- Carriage returns are added after the begin tag <pre> and before the end tag
+-- </pre> in order to allow for correct indenting semantics with 'Indent'.
+pre :: (Html h) => Text -> h
+pre t = unescapedText "<pre>\n" `mappend` text t `mappend` unescapedText "\n</pre>"
 
 -- | Render a @q@ element
 q :: (Html h) => h -> h

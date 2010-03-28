@@ -147,480 +147,480 @@ import Text.BlazeHtml.Internal.Html (Attribute)
 
 -- | Set the @abbr@ attribute.
 abbr :: Text -> Attribute
-abbr value = ("abbr", value)
+abbr v = ("abbr", v)
 
 -- | Set the @accept_charset@ attribute.
 accept_charset :: Text -> Attribute
-accept_charset value = ("accept-charset", value)
+accept_charset v = ("accept-charset", v)
 
 -- | Set the @accept@ attribute.
 accept :: Text -> Attribute
-accept value = ("accept", value)
+accept v = ("accept", v)
 
 -- | Set the @accesskey@ attribute.
 accesskey :: Text -> Attribute
-accesskey value = ("accesskey", value)
+accesskey v = ("accesskey", v)
 
 -- | Set the @action@ attribute.
 action :: Text -> Attribute
-action value = ("action", value)
+action v = ("action", v)
 
 -- | Set the @align@ attribute.
 align :: Text -> Attribute
-align value = ("align", value)
+align v = ("align", v)
 
 -- | Set the @alink@ attribute.
 alink :: Text -> Attribute
-alink value = ("alink", value)
+alink v = ("alink", v)
 
 -- | Set the @alt@ attribute.
 alt :: Text -> Attribute
-alt value = ("alt", value)
+alt v = ("alt", v)
 
 -- | Set the @archive@ attribute.
 archive :: Text -> Attribute
-archive value = ("archive", value)
+archive v = ("archive", v)
 
 -- | Set the @axis@ attribute.
 axis :: Text -> Attribute
-axis value = ("axis", value)
+axis v = ("axis", v)
 
 -- | Set the @background@ attribute.
 background :: Text -> Attribute
-background value = ("background", value)
+background v = ("background", v)
 
 -- | Set the @bgcolor@ attribute.
 bgcolor :: Text -> Attribute
-bgcolor value = ("bgcolor", value)
+bgcolor v = ("bgcolor", v)
 
 -- | Set the @border@ attribute.
 border :: Text -> Attribute
-border value = ("border", value)
+border v = ("border", v)
 
 -- | Set the @cellpadding@ attribute.
 cellpadding :: Text -> Attribute
-cellpadding value = ("cellpadding", value)
+cellpadding v = ("cellpadding", v)
 
 -- | Set the @cellspacing@ attribute.
 cellspacing :: Text -> Attribute
-cellspacing value = ("cellspacing", value)
+cellspacing v = ("cellspacing", v)
 
 -- | Set the @char@ attribute.
 char :: Text -> Attribute
-char value = ("char", value)
+char v = ("char", v)
 
 -- | Set the @charoff@ attribute.
 charoff :: Text -> Attribute
-charoff value = ("charoff", value)
+charoff v = ("charoff", v)
 
 -- | Set the @charset@ attribute.
 charset :: Text -> Attribute
-charset value = ("charset", value)
+charset v = ("charset", v)
 
 -- | Set the @checked@ attribute.
 checked :: Text -> Attribute
-checked value = ("checked", value)
+checked v = ("checked", v)
 
 -- | Set the @cite@ attribute.
 cite :: Text -> Attribute
-cite value = ("cite", value)
+cite v = ("cite", v)
 
 -- | Set the @class_@ attribute.
 class_ :: Text -> Attribute
-class_ value = ("class", value)
+class_ v = ("class", v)
 
 -- | Set the @classid@ attribute.
 classid :: Text -> Attribute
-classid value = ("classid", value)
+classid v = ("classid", v)
 
 -- | Set the @clear@ attribute.
 clear :: Text -> Attribute
-clear value = ("clear", value)
+clear v = ("clear", v)
 
 -- | Set the @code@ attribute.
 code :: Text -> Attribute
-code value = ("code", value)
+code v = ("code", v)
 
 -- | Set the @codebase@ attribute.
 codebase :: Text -> Attribute
-codebase value = ("codebase", value)
+codebase v = ("codebase", v)
 
 -- | Set the @codetype@ attribute.
 codetype :: Text -> Attribute
-codetype value = ("codetype", value)
+codetype v = ("codetype", v)
 
 -- | Set the @color@ attribute.
 color :: Text -> Attribute
-color value = ("color", value)
+color v = ("color", v)
 
 -- | Set the @cols@ attribute.
 cols :: Text -> Attribute
-cols value = ("cols", value)
+cols v = ("cols", v)
 
 -- | Set the @colspan@ attribute.
 colspan :: Text -> Attribute
-colspan value = ("colspan", value)
+colspan v = ("colspan", v)
 
 -- | Set the @compact@ attribute.
 compact :: Text -> Attribute
-compact value = ("compact", value)
+compact v = ("compact", v)
 
 -- | Set the @content@ attribute.
 content :: Text -> Attribute
-content value = ("content", value)
+content v = ("content", v)
 
 -- | Set the @coords@ attribute.
 coords :: Text -> Attribute
-coords value = ("coords", value)
+coords v = ("coords", v)
 
 -- | Set the @data_@ attribute.
 data_ :: Text -> Attribute
-data_ value = ("data", value)
+data_ v = ("data", v)
 
 -- | Set the @datetime@ attribute.
 datetime :: Text -> Attribute
-datetime value = ("datetime", value)
+datetime v = ("datetime", v)
 
 -- | Set the @declare@ attribute.
 declare :: Text -> Attribute
-declare value = ("declare", value)
+declare v = ("declare", v)
 
 -- | Set the @defer@ attribute.
 defer :: Text -> Attribute
-defer value = ("defer", value)
+defer v = ("defer", v)
 
 -- | Set the @dir@ attribute.
 dir :: Text -> Attribute
-dir value = ("dir", value)
+dir v = ("dir", v)
 
 -- | Set the @disabled@ attribute.
 disabled :: Text -> Attribute
-disabled value = ("disabled", value)
+disabled v = ("disabled", v)
 
 -- | Set the @enctype@ attribute.
 enctype :: Text -> Attribute
-enctype value = ("enctype", value)
+enctype v = ("enctype", v)
 
 -- | Set the @face@ attribute.
 face :: Text -> Attribute
-face value = ("face", value)
+face v = ("face", v)
 
 -- | Set the @for@ attribute.
 for :: Text -> Attribute
-for value = ("for", value)
+for v = ("for", v)
 
 -- | Set the @frame@ attribute.
 frame :: Text -> Attribute
-frame value = ("frame", value)
+frame v = ("frame", v)
 
 -- | Set the @frameborder@ attribute.
 frameborder :: Text -> Attribute
-frameborder value = ("frameborder", value)
+frameborder v = ("frameborder", v)
 
 -- | Set the @headers@ attribute.
 headers :: Text -> Attribute
-headers value = ("headers", value)
+headers v = ("headers", v)
 
 -- | Set the @height@ attribute.
 height :: Text -> Attribute
-height value = ("height", value)
+height v = ("height", v)
 
 -- | Set the @href@ attribute.
 href :: Text -> Attribute
-href value = ("href", value)
+href v = ("href", v)
 
 -- | Set the @hreflang@ attribute.
 hreflang :: Text -> Attribute
-hreflang value = ("hreflang", value)
+hreflang v = ("hreflang", v)
 
 -- | Set the @hspace@ attribute.
 hspace :: Text -> Attribute
-hspace value = ("hspace", value)
+hspace v = ("hspace", v)
 
 -- | Set the @http_equiv@ attribute.
 http_equiv :: Text -> Attribute
-http_equiv value = ("http-equiv", value)
+http_equiv v = ("http-equiv", v)
 
 -- | Set the @id@ attribute.
 id :: Text -> Attribute
-id value = ("id", value)
+id v = ("id", v)
 
 -- | Set the @ismap@ attribute.
 ismap :: Text -> Attribute
-ismap value = ("ismap", value)
+ismap v = ("ismap", v)
 
 -- | Set the @label@ attribute.
 label :: Text -> Attribute
-label value = ("label", value)
+label v = ("label", v)
 
 -- | Set the @lang@ attribute.
 lang :: Text -> Attribute
-lang value = ("lang", value)
+lang v = ("lang", v)
 
 -- | Set the @language@ attribute.
 language :: Text -> Attribute
-language value = ("language", value)
+language v = ("language", v)
 
 -- | Set the @link@ attribute.
 link :: Text -> Attribute
-link value = ("link", value)
+link v = ("link", v)
 
 -- | Set the @longdesc@ attribute.
 longdesc :: Text -> Attribute
-longdesc value = ("longdesc", value)
+longdesc v = ("longdesc", v)
 
 -- | Set the @marginheight@ attribute.
 marginheight :: Text -> Attribute
-marginheight value = ("marginheight", value)
+marginheight v = ("marginheight", v)
 
 -- | Set the @marginwidth@ attribute.
 marginwidth :: Text -> Attribute
-marginwidth value = ("marginwidth", value)
+marginwidth v = ("marginwidth", v)
 
 -- | Set the @maxlength@ attribute.
 maxlength :: Text -> Attribute
-maxlength value = ("maxlength", value)
+maxlength v = ("maxlength", v)
 
 -- | Set the @media@ attribute.
 media :: Text -> Attribute
-media value = ("media", value)
+media v = ("media", v)
 
 -- | Set the @method@ attribute.
 method :: Text -> Attribute
-method value = ("method", value)
+method v = ("method", v)
 
 -- | Set the @multiple@ attribute.
 multiple :: Text -> Attribute
-multiple value = ("multiple", value)
+multiple v = ("multiple", v)
 
 -- | Set the @name@ attribute.
 name :: Text -> Attribute
-name value = ("name", value)
+name v = ("name", v)
 
 -- | Set the @nohref@ attribute.
 nohref :: Text -> Attribute
-nohref value = ("nohref", value)
+nohref v = ("nohref", v)
 
 -- | Set the @noresize@ attribute.
 noresize :: Text -> Attribute
-noresize value = ("noresize", value)
+noresize v = ("noresize", v)
 
 -- | Set the @noshade@ attribute.
 noshade :: Text -> Attribute
-noshade value = ("noshade", value)
+noshade v = ("noshade", v)
 
 -- | Set the @nowrap@ attribute.
 nowrap :: Text -> Attribute
-nowrap value = ("nowrap", value)
+nowrap v = ("nowrap", v)
 
 -- | Set the @object@ attribute.
 object :: Text -> Attribute
-object value = ("object", value)
+object v = ("object", v)
 
 -- | Set the @onblur@ attribute.
 onblur :: Text -> Attribute
-onblur value = ("onblur", value)
+onblur v = ("onblur", v)
 
 -- | Set the @onchange@ attribute.
 onchange :: Text -> Attribute
-onchange value = ("onchange", value)
+onchange v = ("onchange", v)
 
 -- | Set the @onclick@ attribute.
 onclick :: Text -> Attribute
-onclick value = ("onclick", value)
+onclick v = ("onclick", v)
 
 -- | Set the @ondblclick@ attribute.
 ondblclick :: Text -> Attribute
-ondblclick value = ("ondblclick", value)
+ondblclick v = ("ondblclick", v)
 
 -- | Set the @onfocus@ attribute.
 onfocus :: Text -> Attribute
-onfocus value = ("onfocus", value)
+onfocus v = ("onfocus", v)
 
 -- | Set the @onkeydown@ attribute.
 onkeydown :: Text -> Attribute
-onkeydown value = ("onkeydown", value)
+onkeydown v = ("onkeydown", v)
 
 -- | Set the @onkeypress@ attribute.
 onkeypress :: Text -> Attribute
-onkeypress value = ("onkeypress", value)
+onkeypress v = ("onkeypress", v)
 
 -- | Set the @onkeyup@ attribute.
 onkeyup :: Text -> Attribute
-onkeyup value = ("onkeyup", value)
+onkeyup v = ("onkeyup", v)
 
 -- | Set the @onload@ attribute.
 onload :: Text -> Attribute
-onload value = ("onload", value)
+onload v = ("onload", v)
 
 -- | Set the @onmousedown@ attribute.
 onmousedown :: Text -> Attribute
-onmousedown value = ("onmousedown", value)
+onmousedown v = ("onmousedown", v)
 
 -- | Set the @onmousemove@ attribute.
 onmousemove :: Text -> Attribute
-onmousemove value = ("onmousemove", value)
+onmousemove v = ("onmousemove", v)
 
 -- | Set the @onmouseout@ attribute.
 onmouseout :: Text -> Attribute
-onmouseout value = ("onmouseout", value)
+onmouseout v = ("onmouseout", v)
 
 -- | Set the @onmouseover@ attribute.
 onmouseover :: Text -> Attribute
-onmouseover value = ("onmouseover", value)
+onmouseover v = ("onmouseover", v)
 
 -- | Set the @onmouseup@ attribute.
 onmouseup :: Text -> Attribute
-onmouseup value = ("onmouseup", value)
+onmouseup v = ("onmouseup", v)
 
 -- | Set the @onreset@ attribute.
 onreset :: Text -> Attribute
-onreset value = ("onreset", value)
+onreset v = ("onreset", v)
 
 -- | Set the @onselect@ attribute.
 onselect :: Text -> Attribute
-onselect value = ("onselect", value)
+onselect v = ("onselect", v)
 
 -- | Set the @onsubmit@ attribute.
 onsubmit :: Text -> Attribute
-onsubmit value = ("onsubmit", value)
+onsubmit v = ("onsubmit", v)
 
 -- | Set the @onunload@ attribute.
 onunload :: Text -> Attribute
-onunload value = ("onunload", value)
+onunload v = ("onunload", v)
 
 -- | Set the @profile@ attribute.
 profile :: Text -> Attribute
-profile value = ("profile", value)
+profile v = ("profile", v)
 
 -- | Set the @prompt@ attribute.
 prompt :: Text -> Attribute
-prompt value = ("prompt", value)
+prompt v = ("prompt", v)
 
 -- | Set the @readonly@ attribute.
 readonly :: Text -> Attribute
-readonly value = ("readonly", value)
+readonly v = ("readonly", v)
 
 -- | Set the @rel@ attribute.
 rel :: Text -> Attribute
-rel value = ("rel", value)
+rel v = ("rel", v)
 
 -- | Set the @rev@ attribute.
 rev :: Text -> Attribute
-rev value = ("rev", value)
+rev v = ("rev", v)
 
 -- | Set the @rows@ attribute.
 rows :: Text -> Attribute
-rows value = ("rows", value)
+rows v = ("rows", v)
 
 -- | Set the @rowspan@ attribute.
 rowspan :: Text -> Attribute
-rowspan value = ("rowspan", value)
+rowspan v = ("rowspan", v)
 
 -- | Set the @rules@ attribute.
 rules :: Text -> Attribute
-rules value = ("rules", value)
+rules v = ("rules", v)
 
 -- | Set the @scheme@ attribute.
 scheme :: Text -> Attribute
-scheme value = ("scheme", value)
+scheme v = ("scheme", v)
 
 -- | Set the @scope@ attribute.
 scope :: Text -> Attribute
-scope value = ("scope", value)
+scope v = ("scope", v)
 
 -- | Set the @scrolling@ attribute.
 scrolling :: Text -> Attribute
-scrolling value = ("scrolling", value)
+scrolling v = ("scrolling", v)
 
 -- | Set the @selected@ attribute.
 selected :: Text -> Attribute
-selected value = ("selected", value)
+selected v = ("selected", v)
 
 -- | Set the @shape@ attribute.
 shape :: Text -> Attribute
-shape value = ("shape", value)
+shape v = ("shape", v)
 
 -- | Set the @size@ attribute.
 size :: Text -> Attribute
-size value = ("size", value)
+size v = ("size", v)
 
 -- | Set the @span@ attribute.
 span :: Text -> Attribute
-span value = ("span", value)
+span v = ("span", v)
 
 -- | Set the @src@ attribute.
 src :: Text -> Attribute
-src value = ("src", value)
+src v = ("src", v)
 
 -- | Set the @standby@ attribute.
 standby :: Text -> Attribute
-standby value = ("standby", value)
+standby v = ("standby", v)
 
 -- | Set the @start@ attribute.
 start :: Text -> Attribute
-start value = ("start", value)
+start v = ("start", v)
 
 -- | Set the @style@ attribute.
 style :: Text -> Attribute
-style value = ("style", value)
+style v = ("style", v)
 
 -- | Set the @summary@ attribute.
 summary :: Text -> Attribute
-summary value = ("summary", value)
+summary v = ("summary", v)
 
 -- | Set the @tabindex@ attribute.
 tabindex :: Text -> Attribute
-tabindex value = ("tabindex", value)
+tabindex v = ("tabindex", v)
 
 -- | Set the @target@ attribute.
 target :: Text -> Attribute
-target value = ("target", value)
+target v = ("target", v)
 
 -- | Set the @text@ attribute.
 text :: Text -> Attribute
-text value = ("text", value)
+text v = ("text", v)
 
 -- | Set the @title@ attribute.
 title :: Text -> Attribute
-title value = ("title", value)
+title v = ("title", v)
 
 -- | Set the @type_@ attribute.
 type_ :: Text -> Attribute
-type_ value = ("type", value)
+type_ v = ("type", v)
 
 -- | Set the @usemap@ attribute.
 usemap :: Text -> Attribute
-usemap value = ("usemap", value)
+usemap v = ("usemap", v)
 
 -- | Set the @valign@ attribute.
 valign :: Text -> Attribute
-valign value = ("valign", value)
+valign v = ("valign", v)
 
 -- | Set the @value@ attribute.
 value :: Text -> Attribute
-value value = ("value", value)
+value v = ("value", v)
 
 -- | Set the @valuetype@ attribute.
 valuetype :: Text -> Attribute
-valuetype value = ("valuetype", value)
+valuetype v = ("valuetype", v)
 
 -- | Set the @version@ attribute.
 version :: Text -> Attribute
-version value = ("version", value)
+version v = ("version", v)
 
 -- | Set the @vlink@ attribute.
 vlink :: Text -> Attribute
-vlink value = ("vlink", value)
+vlink v = ("vlink", v)
 
 -- | Set the @vspace@ attribute.
 vspace :: Text -> Attribute
-vspace value = ("vspace", value)
+vspace v = ("vspace", v)
 
 -- | Set the @width@ attribute.
 width :: Text -> Attribute
-width value = ("width", value)
+width v = ("width", v)
 
 -- | Set the @xmlns@ attribute.
 xmlns :: Text -> Attribute
-xmlns value = ("xmlns", value)
+xmlns v = ("xmlns", v)

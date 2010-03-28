@@ -47,7 +47,7 @@ escapeJavaScript = T.concatMap $ escapeChar javaScriptImmune encode
   
     javaScriptImmune = ",._"
     
-    pad n hex = reverse . take n $ reverse hex ++ repeat '0'
+    pad n hex' = reverse . take n $ reverse hex' ++ repeat '0'
 
 -- | Escape text for CSS (style) data            
 escapeCSS :: Text -> Text

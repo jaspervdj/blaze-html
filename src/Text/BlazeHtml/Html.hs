@@ -279,6 +279,9 @@ infixl 2 !
 -- Simon: I currently don't know which solution is better. For now it seems as
 -- if (2) would be simpler. Moreover, switching to the first solution is easily
 -- possible afterwards.
+--
+-- Jasper: If we split encoding and escaping, I think we can move this back to
+-- the HtmlMonad module, since escaping is the same for Html/XHtml/Xml.
 instance (Html h) => IsString (HtmlMonad h a) where
     fromString = text . fromString
 

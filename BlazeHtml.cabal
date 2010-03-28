@@ -37,6 +37,7 @@ library
                     bytestring >= 0.9.1.4
   exposed-modules:  Text.BlazeHtml.Text
                     Text.BlazeHtml.Html
+                    Text.BlazeHtml.Attributes
                     Text.BlazeHtml.Render.HtmlIO
                     Text.BlazeHtml.Render.HtmlText
                     Text.BlazeHtml.Render.HtmlPrettyText

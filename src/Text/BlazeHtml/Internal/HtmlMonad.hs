@@ -4,6 +4,8 @@ module Text.BlazeHtml.Internal.HtmlMonad
 
 import Data.Monoid
 
+import GHC.Exts (IsString (..))
+
 import Text.BlazeHtml.Internal.Html
 
 newtype HtmlMonad h a = HtmlMonad { runHtmlMonad :: h }
@@ -27,3 +29,6 @@ instance (Monoid h) => Monad (HtmlMonad h) where
                            in HtmlMonad $ h1 `mappend` h2
       where
         errorMessage = error "HtmlMonad: >>= returning values not supported."
+
+instance (Html h) => IsString (HtmlMonad h a) where
+    fromString = text . fromString

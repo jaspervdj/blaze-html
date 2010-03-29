@@ -156,7 +156,6 @@ module Text.BlazeHtml.Html
     , (!)
     , (<>)
     , (<->)
-    , text
     -- * Text chunks
     , emptyText
     -- * Elements
@@ -254,36 +253,14 @@ module Text.BlazeHtml.Html
     ) where
 
 import Prelude hiding (div, head, span, map)
-import GHC.Exts (IsString(..))
 import Data.Monoid
 
 import Text.BlazeHtml.Text (Text)
 import Text.BlazeHtml.Internal.Html 
     hiding (modifyAttributeModifier, clearAttributes)
 import Text.BlazeHtml.Internal.HtmlMonad
-import Text.BlazeHtml.Internal.Escaping
 
 infixl 2 !
-
--- NOTE: Somehow it makes more sense to define this instance here, because the
--- proper escaping depends on the document format and cannot be decided once an
--- forall. To avoid the orphan instances we should consider the following two
--- options:
---
---   1. Each document format could define its own composition monad using a
---      newtype by wrappin the prototype in Internal.HtmlMonad.
---
---   2. Each document format could define its own composition Monad by copying
---      the monad code from HtmlMonad.
---
--- Simon: I currently don't know which solution is better. For now it seems as
--- if (2) would be simpler. Moreover, switching to the first solution is easily
--- possible afterwards.
---
--- Jasper: If we split encoding and escaping, I think we can move this back to
--- the HtmlMonad module, since escaping is the same for Html/XHtml/Xml.
-instance (Html h) => IsString (HtmlMonad h a) where
-    fromString = text . fromString
 
 (!) :: (Html h, Attributable a) => h -> a -> h
 (!) = flip addAttributable
@@ -299,10 +276,6 @@ instance (Html h) => IsString (HtmlMonad h a) where
 -- | 'emptyText' is an empty chunk of text with no tags.
 emptyText :: (Html h) => h
 emptyText = mempty
-
--- | Escaped text.
-text :: Html h => Text -> h
-text = unescapedText . escapeHtml
 
 -- | Render an @a@ element.
 a :: (Html h) => h -> h

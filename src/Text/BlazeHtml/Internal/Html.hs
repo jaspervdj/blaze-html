@@ -5,11 +5,13 @@ module Text.BlazeHtml.Internal.Html
     , Html (..)
     , setUnescapedAttributes
     , clearAttributes
+    , text
     ) where
 
 import Data.Monoid
 
 import Text.BlazeHtml.Text (Text)
+import Text.BlazeHtml.Escaping.Standard (escapeHtml)
 
 -- | An attribute as a tuple of a key and a value.
 type Attribute = (Text,Text)
@@ -125,3 +127,7 @@ setUnescapedAttributes = modifyAttributeModifier . (.) . const
 -- | Remove the HTML attributes of all outermost elements.
 clearAttributes :: (Html h) => h -> h
 clearAttributes = setUnescapedAttributes []
+
+-- | Escaped text.
+text :: Html h => Text -> h
+text = unescapedText . escapeHtml

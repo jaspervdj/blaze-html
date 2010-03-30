@@ -22,7 +22,7 @@ newtype HtmlPrettyText = HtmlPrettyText
 
 -- | Simple helper function to render the attributes.
 attributes :: [Attribute]-> Text
-attributes [] = T.singleton ' '
+attributes [] = T.empty
 attributes t  = foldr append mempty t
   where
     append (k, v) = mappend (mconcat [" ", k, "=\"", v, "\""])
@@ -39,7 +39,7 @@ instance Html HtmlPrettyText where
         indent <- get
         return $ T.replicate indent " " `mappend` "<" `mappend` t
                                         `mappend` attributes attrs
-                                        `mappend` "/>\n"
+                                        `mappend` " />\n"
     nodeElement t h = HtmlPrettyText $ do
         attrs <- ask
         indent <- get

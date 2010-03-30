@@ -261,6 +261,7 @@ import Text.BlazeHtml.Internal.Html
 import Text.BlazeHtml.Internal.HtmlMonad
 
 infixl 2 !
+infixl 1 <->
 
 (!) :: (Html h, Attributable a) => h -> a -> h
 (!) = flip addAttributable

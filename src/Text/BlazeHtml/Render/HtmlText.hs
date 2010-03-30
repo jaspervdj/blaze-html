@@ -18,7 +18,7 @@ newtype HtmlText = HtmlText
 
 -- | Simple helper function to render the attributes.
 attributes :: [Attribute] -> Text
-attributes [] = T.singleton ' '
+attributes [] = T.empty
 attributes t  = foldr append mempty t
   where
     append (k, v) = mappend (mconcat [" ", k, "=\"", v, "\""])
@@ -32,7 +32,7 @@ instance Html HtmlText where
     leafElement t = HtmlText $ do
         attrs <- ask
         return $ "<" `mappend` t
-                     `mappend` attributes attrs `mappend` "/>"
+                     `mappend` attributes attrs `mappend` " />"
     nodeElement t h = HtmlText $ do
         attrs <- ask
         inner <- runHtmlText $ clearAttributes h

@@ -29,7 +29,7 @@ htmlIO h html = getHtmlIO html h []
 
 -- | Helper function to render attributes.
 attributes :: Handle -> [Attribute] -> IO ()
-attributes h [] = hPutStr h " "
+attributes h [] = return ()
 attributes h attrs = forM_ attrs $ \(k,v) -> 
     hPutStr h " " >> hPutStr h k >> hPutStr h "=\""
                   >> hPutStr h v >> hPutStr h "\""
@@ -46,7 +46,7 @@ instance Monoid HtmlIO where
 instance Html HtmlIO where
     unescapedText t = HtmlIO $ \h _ -> hPutStr h t
     leafElement t   = HtmlIO $ \h attrs -> 
-        beginTag h t attrs >> hPutStr h "/>"
+        beginTag h t attrs >> hPutStr h " />"
     nodeElement t htmlio = HtmlIO $ \h attrs -> do
         beginTag h t attrs >> hPutStr h ">"
         getHtmlIO htmlio h []

@@ -130,4 +130,4 @@ clearAttributes = setUnescapedAttributes []
 
 -- | Escaped text.
 text :: Html h => Text -> h
-text = unescapedText . escapeHtml
+text = escapeHtml unescapedText

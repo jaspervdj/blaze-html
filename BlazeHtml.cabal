@@ -45,7 +45,6 @@ library
                     Text.BlazeHtml.Render.Indent
                     Text.BlazeHtml.Escaping.Standard
   other-modules:    Text.BlazeHtml.Internal.Html
-                    Text.BlazeHtml.Internal.Escaping
                     Text.BlazeHtml.Internal.HtmlMonad
   if flag(text)
     hs-source-dirs: impl/text

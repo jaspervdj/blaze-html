@@ -3,6 +3,7 @@
 module Text.BlazeHtml.Text
     ( Text, T.pack, T.unpack, T.empty, T.singleton
     , T.append, T.map, T.concat, T.concatMap
+    , T.foldr
     , T.replicate
     , TIO.putStr
     , TIO.hPutStr

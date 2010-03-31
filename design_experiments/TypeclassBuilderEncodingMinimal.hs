@@ -1,8 +1,10 @@
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE OverloadedStrings, MultiParamTypeClasses, FlexibleInstances, FlexibleContexts, Rank2Types #-}
 import Prelude hiding (head)
+import Data.List (foldl')
 import Data.Text (Text)
 import qualified Data.Text as T
 import qualified Data.Text.IO as T
+import GHC.Exts (IsString(..))
 import Data.Monoid
 import Data.Binary.Builder
 import Control.Monad (liftM)
@@ -66,6 +68,7 @@ class Monoid h => Html h where
     nodeElement      :: h -> h -> h
     -- | Key, value, html taking attributes
     addAttribute     :: h -> h -> h -> h
+
 
 
 -----------------------------------------------------------------------------
@@ -195,14 +198,13 @@ instance Html HtmlByteString where
         ]
     addAttribute key value h = HB $ \enc as -> 
         runHB h enc $ mconcat
-            [ as
-            , enc ' '
+            [ enc ' '
             , runHB key enc mempty
             , enc '='
             , enc '"'
             , runHB value enc mempty
             , enc '"'
-            ]
+            ] `mappend` as
 
 -- NOTE that there are two alternatives for providing this typeclass instance:
 --
@@ -232,6 +234,9 @@ instance Html HtmlByteString where
 (<->) :: Html h => h -> h -> h
 (<->) = separate
 
+separated :: Html h => [h] -> h
+separated = foldr (<->) mempty
+
 unescapedString :: Html h => String -> h
 unescapedString = mconcat . map unescapedChar
 
@@ -252,8 +257,8 @@ head = nodeElement (unescapedString "head")
 h1 :: (Html h) => h -> h
 h1 = nodeElement (unescapedString "h1")
 
-href :: (Html h) => Text -> h -> h
-href v = addAttribute (unescapedText "href") (unescapedText v)
+href :: Text -> Attribute Url
+href = attribute "href" . Url
 
 img :: (Html h) => h
 img = leafElement (unescapedString "img")
@@ -301,7 +306,7 @@ encodingTag = EE id
 -- html, head, and body tag.
 html :: Html h => h -> h -> EncodingExplicit h
 html hd b = encodingImplicitHtml $
-    (head $ encodingTag <> EE (const hd)) <> EE (const b)
+    (head $ encodingTag <> EE (const hd)) <> EE (const (body b))
 
 -- | Now we can render an encoding explicit document using the HtmlByteString
 -- renderer.
@@ -333,39 +338,6 @@ encodeCharUtf8 = stringToB . return
 
 
     
------------------------------------------------------------------------------
--- An example document
------------------------------------------------------------------------------
-
--- | NOTE that most document fragments are unaware of the explicit encoding
--- tag. They work both with and without this tag.
-testBody :: Html h => h
-testBody = 
-    (h1 $ unescapedText "BlazeHtml") <>
-    (href "logo.png" $ img) <>
-    (p $ unescapedText "is a" <->
-         (em $ unescapedText "blazingly") <->
-         unescapedText "fast HTML generation library." <->
-         unescapedText "Note that it handles also unicode: └─╼ "
-    )
-
--- | However the 'html' combinator will always build an encoding explicit
--- document with the encodingTag put as the first tag of the head.
-testDoc :: Html h => EncodingExplicit h
-testDoc = html mempty testBody
-
--- NOTE that the the conversion below is a bit complicated (and would be slow
--- for large data) because Data.Text does not support decoding from a
--- lazy-bytestring.
-testText :: Text
-testText = decodeUtf8 . mconcat . BL.toChunks $ htmlUtf8 testDoc
-
--- To see that the UTF-8 roundtrip works we have to output the text as
--- otherwise the characters get escaped.
-testTextIO :: IO ()
-testTextIO = T.putStrLn testText
-
-
 ------------------------------------------------------------------------------
 -- Escaping characters that would otherwise be parsed wrongly
 ------------------------------------------------------------------------------
@@ -380,6 +352,27 @@ testTextIO = T.putStrLn testText
 -- a bit of this escaping can be done using the corresponding unicode
 -- characters.
 
+-- | A dummy implementation. Actually the char is inspected and either several
+-- unescapedChar's are mconcatenated in the Html monad or a corresponding
+-- unescapedText is used for the Html entity.
+char :: Html h => Char -> h
+char = unescapedChar
+
+-- | A dummy implementation. Actually this needs to be implemented such that it
+-- makes use of the internal representation of 'Text' in order to gain maximal
+-- speed. Depending on the requirements here a more precise interface for
+-- injecting unicode characters into a Html document will be required.
+text :: Html h => Text -> h
+text = unescapedText
+
+-- | Convert a string to a Html document.
+string :: Html h => String -> h
+string = mconcat . map char
+
+-- | Convert a showable value to a Html document. Will be renamed to 'show'
+-- once it is in the right module.
+showH :: (Show a, Html h) => a -> h
+showH = string . show
     
 ------------------------------------------------------------------------------
 -- Setting attributes both for leaf and node elements using the same operator
@@ -397,6 +390,255 @@ testTextIO = T.putStrLn testText
 -- a route quite viable.
 
 
+-- Use cases:
+--
+--    leafElement "blah" ! attr
+--    leafElement "blah" ! [attr]
+--    nodeElement "blah" ! attr
+--    nodeElement "blah" ! [attr]
 
+instance Html h => Html (h -> h) where
+  -- Simon: Think about throwing errors in all cases except addAttribute.
+  unescapedChar c  = const $ unescapedChar c
+  unescapedText t  = const $ unescapedText t
+  h1 `separate` h2 = const $ h1 mempty `separate` h2 mempty
+  leafElement tag  = const $ leafElement (tag mempty)
+  nodeElement tag inner = const $ nodeElement (tag mempty) (inner mempty)
+  addAttribute key value node inner = 
+    addAttribute (key mempty) (value mempty) (node inner) 
+
+-- NOTE: I'm not sure if this is any good. I tend to discourage support for
+-- creating attributes explicitly. Concrete combinators should be used as they
+-- guarantee the correct escaping.
+
+class UnescapedData a where
+  unescapedData :: Html h => a -> h
+
+instance UnescapedData Text where
+  unescapedData = unescapedText
+
+instance UnescapedData Char where
+  unescapedData = unescapedChar
+
+instance UnescapedData a => UnescapedData [a] where
+  unescapedData = mconcat . map unescapedData
+
+instance UnescapedData Int where
+  unescapedData = unescapedData . show
+
+class Attributable a where
+  (!) :: Html h => h -> a -> h
+
+instance UnescapedData a => Attributable (a, a) where
+  h ! (key, value) = addAttribute (unescapedData key) (unescapedData value) h
+
+instance Attributable a => Attributable [a] where
+  h ! attrs = foldl' (!) h attrs
+
+
+-- Escaped attribute values
+---------------------------
+
+-- NOTE: Here the escaping should possibly be a bit different for the default
+-- case.
+
+class AttributeValue a where
+  attributeValue :: Html h => a -> h
+
+instance AttributeValue Text where
+  attributeValue = text
+
+instance AttributeValue a => AttributeValue [a] where
+  attributeValue = mconcat . map attributeValue
+
+instance AttributeValue Char where
+  attributeValue = char
+
+-- Here we can save some energy as show for strings will always produce
+-- properly escaped values.
+instance AttributeValue Int where
+  attributeValue = unescapedString . show
+
+-- will be escaped according to URL escaping rules.
+newtype Url = Url { getUrl :: Text }
+
+instance AttributeValue Url where
+  attributeValue = escapeUrl . getUrl
+    where
+    -- dummy escaping
+    escapeUrl = text
+
+data Attribute a = Attribute !Text !a
+
+instance AttributeValue a => Attributable (Attribute a) where
+  h ! (Attribute key value) = 
+    addAttribute (unescapedText key) (attributeValue value) h
+
+attribute :: Text -> a -> Attribute a
+attribute key value = Attribute key value
+
+idA :: a -> Attribute a
+idA = attribute "id" 
+
+idA' :: Text -> Attribute Text
+idA' = idA
+
+
+newtype Attrib h = Attrib (h -> h)
+
+-- testAttrib :: Html h => Attrib h
+-- testAttrib = Attrib "blah" (unescapedString "world")
+
+-- instance Attributable Attrib where
+  -- h ! (Attrib key value) = addAttribute (unescapedText key) value
+
+-- does not really work because inferred types are too general
+class Html h => Attributable2 a h where
+  (<!) :: h -> a -> h
+
+instance (AttributeValue a, Html h) => Attributable2 (a,a) h where
+  h <! (k,v) = addAttribute (attributeValue k) (attributeValue v) h
+
+instance (Attributable2 a h) => Attributable2 [a] h where
+  h <! attrs = foldl' (<!) h attrs
+
+instance Html h => Attributable2 (Attrib h) h where
+  h <! (Attrib f) = f h
+
+-- the whole fuss because we want to save a single operator?
+
+attrib :: Html h => Text -> h -> Attrib h
+attrib key value = Attrib $ addAttribute (unescapedText key) value
+
+href2 :: Html h => Text -> Attrib h
+href2 = attrib "href" . text  -- should be URL escaping
+
+id2 :: (Html h, AttributeValue a) => a -> Attrib h
+id2 = attrib "id" . attributeValue
+
+
+class Attributable3 a where
+  (#!) :: Html h => h -> a h -> h
+
+
+-- Hmm, now we lost the ability to make lists of attributes an instance.
+-- instance (Attributable3 a) => Attributable3 ??? ([Attrib a]) where
+--   ???
+
+instance Attributable3 Attrib where
+  h #! (Attrib f) = f h
+
+
+-- QUINTESSENCE
+
+-- I would go for two separate operators now one for adding lists of
+-- attributes (<!) and one for adding a single attribute (!). Attributes
+-- are just functions from 'h -> h' wrapped in a newtype.
+
+-- Then we can ask the mailing list if they have a nice solution for collapsing
+-- the two operators into one without giving up functionality.
+
+-- NOTE the reason for using 'Attrib h' as a type instead of '(Text,Text)' is
+-- that the escaping needs to be done directly on the Html layer in order to
+-- avoid expensive intermediate 'Text's for escaped attribute values. The
+-- decision of how to do escaping lies with the attribute generator and not the
+-- consumer.
+--
+-- Having this polymorphic 'h' in there is the origin of all trouble.
+
+-- It is an open question whether polymorphic variants of the attribute
+-- values are required. Due to the different escaping that is needed for
+-- different attribute values I tend to rather go for the simple solution that
+-- each attribute 'att' has the form
+--
+--      att :: Html h => Text -> h
+--      att' :: Html h => String -> h
+--
+--    and for names clashing with Haskell keywords (e.g. class) it would be
+--
+--      class_ :: Html h => Text -> h
+--      class' :: Html h => String -> h
+--
+-- But I'm not yet sure. If we can make a good design where the conversion
+-- semantics for an attribute is always clear, then I would be in for a
+-- polymorphic attribute setting variant along the lines of
+-- 'AttributeValue'. Obviously, we would still have to provide a binding
+-- that has its type fixed to 'Text' or 'String' as otherwise overloaded
+-- string literals lead to too generic types.
+--
+--   An example for polymorphic attribute values. 
+--
+--      att :: (Html h, AttributeValue a) => a -> h
+--      att' :: Html h => Text -> h
+--
+--   It seems as if this construction fixes the escaping to be used to the one
+--   chosen in the instances of the 'AttributValue' class. One way out would be
+--   to use separate typeclasses for every relevant escaping. This could even
+--   be viable as there are few such escapings and for most of them the actual
+--   implementation can be shared.
+
+
+------------------------------------------------------------------------------
+-- Html Monad
+------------------------------------------------------------------------------
+
+newtype HtmlMonad h a = HtmlMonad { runHtmlMonad :: h }
+
+instance (Monoid h) => Monoid (HtmlMonad h a) where
+    mempty                        = HtmlMonad mempty
+    mappend (HtmlMonad h1) (HtmlMonad h2) = HtmlMonad $ h1 `mappend` h2
+
+instance (Html h) => Html (HtmlMonad h a) where
+    separate (HtmlMonad h1) (HtmlMonad h2) = HtmlMonad $ h1 `separate` h2
+    unescapedChar c = HtmlMonad $ unescapedChar c
+    unescapedText t = HtmlMonad $ unescapedText t
+    leafElement (HtmlMonad t) = HtmlMonad $ leafElement t
+    nodeElement (HtmlMonad t) (HtmlMonad h) = HtmlMonad $ nodeElement t h
+    addAttribute (HtmlMonad k) (HtmlMonad v) (HtmlMonad h) =
+        HtmlMonad $ addAttribute k v h
+    
+instance (Monoid h) => Monad (HtmlMonad h) where
+    return   = mempty
+    (HtmlMonad h1) >> (HtmlMonad h2) = HtmlMonad $ h1 `mappend` h2
+    (HtmlMonad h1) >>= f = let HtmlMonad h2 = f errorMessage
+                           in HtmlMonad $ h1 `mappend` h2
+      where
+        errorMessage = error "HtmlMonad: >>= returning values not supported."
+
+instance Html h => IsString (HtmlMonad h a) where
+    fromString = string
+
+-----------------------------------------------------------------------------
+-- An example document
+-----------------------------------------------------------------------------
+
+-- | NOTE that most document fragments are unaware of the explicit encoding
+-- tag. They work both with and without this tag.
+testBody :: Html h => h
+testBody = runHtmlMonad $ do
+    h1 $ unescapedText "BlazeHtml"
+    img ! href "logo.png" ! idA (1::Int)
+    p ! idA' "main" $ separated
+        [ "is a"
+        , (em $ unescapedText "blazingly")
+        , "fast HTML generation library."
+        , "Note that it also handles unicode: └─╼ "
+        ]
+
+-- | However the 'html' combinator will always build an encoding explicit
+-- document with the encodingTag put as the first tag of the head.
+testDoc :: Html h => EncodingExplicit h
+testDoc = html mempty testBody
+
+-- NOTE that the the conversion below is a bit complicated (and would be slow
+-- for large data) because Data.Text does not support decoding from a
+-- lazy-bytestring.
+testText :: Text
+testText = decodeUtf8 . mconcat . BL.toChunks $ htmlUtf8 testDoc
+
+-- To see that the UTF-8 roundtrip works we have to output the text as
+-- otherwise the characters get escaped.
+testTextIO :: IO ()
+testTextIO = T.putStrLn testText
 
 

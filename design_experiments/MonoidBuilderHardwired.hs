@@ -109,22 +109,12 @@ Assumption 5. is similar to assumption 3. It stems from your fixing of the `Html
 type constructor. I currently, cannot tell how bad it is. At least any special
 dealing with attributes is excluded.
 
-
 The assumption I am most unsure about is assumption 1., which both approaches
 make. Somehow, it feels strange that we have to restrict ourselves to a fixed
 representation for the input data.
 
-Couldn't we get rid of it using the following construction:
-
-
-class HtmlData a h where
-    unescapedHtml :: a -> h
-
-class Monoid h => Html h where
-    separate         :: h -> h -> h
-    leafElement      :: h -> h
-    nodeElement      :: h -> h -> h
-    modifyAttributes :: (h -> h) -> h -> h
+Hmm... I got carried away by the idea and implemented all of it in the file
+'TypeclassBuilderEncodingMinimal.hs'. Have a look at it.
 
 
 -}

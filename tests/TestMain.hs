@@ -15,17 +15,15 @@ import Text.BlazeHtml.Render.HtmlText(HtmlText)
 import SimpleHtmlExamples (simpleHtmlExamples)
 
 
-main = do 
-  model <- testContent
-  defaultMain $ blazeTests model
+main = defaultMain blazeTests
 
-blazeTests model =
+blazeTests =
     [ simpleHtmlExamples
-    , testGroup "unittest Group" [ testCase "simple text compare" $ testForSameOutput model ]
-    , testGroup "properties using HtmlText" $ buildTestGroup (mempty :: HtmlText) pHtmlText
-    , testGroup "properties using HtmlPrettyText" $ buildTestGroup (mempty :: HtmlPrettyText) pHtmlPrettyText
-    , testGroup "properties using HtmlByteString" $ buildTestGroup (mempty :: HtmlByteString) pHtmlByteString
-    , testGroup "properties using HtmlIO" $ buildTestGroup (mempty :: HtmlIO) pHtmlIO
+    -- , testGroup "unittest Group" [ testCase "simple text compare" $ testForSameOutput model ]
+    -- , testGroup "properties using HtmlText" $ buildTestGroup (mempty :: HtmlText) pHtmlText
+    -- , testGroup "properties using HtmlPrettyText" $ buildTestGroup (mempty :: HtmlPrettyText) pHtmlPrettyText
+    -- , testGroup "properties using HtmlByteString" $ buildTestGroup (mempty :: HtmlByteString) pHtmlByteString
+    -- , testGroup "properties using HtmlIO" $ buildTestGroup (mempty :: HtmlIO) pHtmlIO
     ]
 
 buildTestGroup empty pelem = 

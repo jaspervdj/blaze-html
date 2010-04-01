@@ -23,7 +23,7 @@ simpleHtmlExamples = testGroup "SimpleHtmlExamples"
     ]
 
 -- | A first simple example.
-simpleHtmlExample1 = fromString expected @?= htmlText html
+simpleHtmlExample1 = htmlText html @?= fromString expected
   where
     html = runHtmlMonad $ do
         h1 "BlazeHtml"
@@ -36,14 +36,13 @@ simpleHtmlExample1 = fromString expected @?= htmlText html
              ++ "This is a second sentence. Should be spaces in between.</div>"
 
 -- | Test some attribute setting.
-simpleHtmlExample2 = fromString expected @?= htmlText html
+simpleHtmlExample2 = htmlText html @?= fromString expected
   where
     html = runHtmlMonad $ do
         h1 ! A.class_ "fancy" $ "Title here."
         p ! A.id "first-paragraph" $ do
             "No attributes."
-            space
-            em ! [A.id "nested", width "4"] $ "And nested thingies."
+            <-> (em ! [A.id "nested", width "4"] $ "And nested thingies.")
         H.div ! [A.id "div-foo", A.class_ "small"] $ do
             "Hello there!"
             <-> "Nesting and multiple attributes."

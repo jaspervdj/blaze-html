@@ -16,8 +16,8 @@ import Data.Text.Encoding (encodeUtf8,decodeUtf8)
 infixr 3 <> 
 infixr 3 <->
 
--- Author: Simon Meier, March 31th, 2010
-----------------------------------------
+-- Authors: Simon Meier, Jasper Van der Jeugt, March 31th, 2010
+---------------------------------------------------------------
 
 {- Introduction:
 
@@ -720,39 +720,51 @@ instance Attributable3 Attrib where
 
 
 ------------------------------------------------------------------------------
--- Html Monad
+-- Html Monad. This monad is abstracted over the concrete type of appending to
+-- use with `>>`. We provide concrete instances in the next section.
 ------------------------------------------------------------------------------
 
-newtype HtmlMonad h a = HtmlMonad { runHtmlMonad :: h }
+newtype HtmlMonad h a = HtmlMonad { runHtmlMonad :: Reader (h -> h -> h) h }
 
 instance (Monoid h) => Monoid (HtmlMonad h a) where
-    mempty                        = HtmlMonad mempty
-    mappend (HtmlMonad h1) (HtmlMonad h2) = HtmlMonad $ h1 `mappend` h2
+    mempty                        = HtmlMonad $ return mempty
+    mappend (HtmlMonad h1) (HtmlMonad h2) = HtmlMonad $ liftM2 mappend h1 h2
 
 instance UnicodeSequence h => UnicodeSequence (HtmlMonad h a) where
-    unicodeChar c = HtmlMonad $ unicodeChar c
-    unicodeText t = HtmlMonad $ unicodeText t
+    unicodeChar c = HtmlMonad $ return $ unicodeChar c
+    unicodeText t = HtmlMonad $ return $ unicodeText t
 
 instance Attributable h => Attributable (HtmlMonad h a) where
     addAttribute (HtmlMonad k) (HtmlMonad v) (HtmlMonad h) =
-        HtmlMonad $ addAttribute k v h
+        HtmlMonad $ liftM3 addAttribute k v h
 
 instance (Html h) => Html (HtmlMonad h a) where
-    separate (HtmlMonad h1) (HtmlMonad h2) = HtmlMonad $ h1 `separate` h2
-    leafElement (HtmlMonad t) = HtmlMonad $ leafElement t
-    nodeElement (HtmlMonad t) (HtmlMonad h) = HtmlMonad $ nodeElement t h
+    separate (HtmlMonad h1) (HtmlMonad h2) = HtmlMonad $ liftM2 separate h1 h2
+    leafElement (HtmlMonad t) = HtmlMonad $ liftM leafElement t
+    nodeElement (HtmlMonad t) (HtmlMonad h) = HtmlMonad $ liftM2 nodeElement t h
     
     
 instance (Monoid h) => Monad (HtmlMonad h) where
     return   = mempty
-    (HtmlMonad h1) >> (HtmlMonad h2) = HtmlMonad $ h1 `mappend` h2
+    (HtmlMonad h1) >> (HtmlMonad h2) = HtmlMonad $ do appender <- ask
+                                                      liftM2 appender h1 h2
     (HtmlMonad h1) >>= f = let HtmlMonad h2 = f errorMessage
-                           in HtmlMonad $ h1 `mappend` h2
+                           in HtmlMonad h1 >> HtmlMonad h2
       where
         errorMessage = error "HtmlMonad: >>= returning values not supported."
 
 instance Html h => IsString (HtmlMonad h a) where
     fromString = string
+
+-----------------------------------------------------------------------------
+-- Concrete examples for running the Html monad
+-----------------------------------------------------------------------------
+
+concatenatedHtml :: Html h => HtmlMonad h a -> h
+concatenatedHtml = flip runReader mappend . runHtmlMonad
+
+separatedHtml :: Html h => HtmlMonad h a -> h
+separatedHtml = flip runReader separate . runHtmlMonad
 
 -----------------------------------------------------------------------------
 -- An example document
@@ -761,15 +773,14 @@ instance Html h => IsString (HtmlMonad h a) where
 -- | NOTE that most document fragments are unaware of the explicit encoding
 -- tag. They work both with and without this tag.
 testBody :: Html h => h
-testBody = runHtmlMonad $ do
+testBody = concatenatedHtml $ do
     h1 $ unescapedText "BlazeHtml"
     img ! href "logo.png" ! idA (1::Int)
-    p ! idA' "main" $ separated
-        [ "is a"
-        , (em $ unescapedText "blazingly")
-        , "fast HTML generation library."
-        , "Note that it also handles unicode: └─╼ "
-        ]
+    p ! idA' "main" $ separatedHtml $ do
+        "is a"
+        (em $ unescapedText "blazingly")
+        "fast HTML generation library."
+        "Note that it also handles unicode: └─╼ "
 
 -- | However the 'html' combinator will always build an encoding explicit
 -- document with the encodingTag put as the first tag of the head.

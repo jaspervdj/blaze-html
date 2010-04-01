@@ -45,31 +45,55 @@ decisions that are involved.
 
 -}
 
+-----------------------------------------------------------------------------
+-- A type-class for abstracting sequences of unicode characters
+-----------------------------------------------------------------------------
+
+
+-- | A UnicodeSequence s is a type that can represent sequences built from
+-- unicode chars and texts.
+--
+-- This is the core interface against which we serialize a Html document.
+-- All the concrete encoders implement this interface.
+class Monoid s => UnicodeSequence s where
+    -- | Character to be converted
+    unicodeChar    :: Char -> s
+    -- | Text to be converted to html
+    unicodeText    :: Text -> s
+
+    -- We will add additional methods that help improve the performance here.
+    --
+    -- For example a way to encode a 7-bit ASCII char (can be used for all html
+    -- control characters and possibly also for all tags).
+    --
+    -- unicodeASCII :: Word8 -> h
+
+-----------------------------------------------------------------------------
+-- A type-class for abstracting values that can take attributes
+-----------------------------------------------------------------------------
+
+class Attributable h where
+    -- | Key, value, html taking attributes
+    addAttribute     :: h -> h -> h -> h
+
 
 -----------------------------------------------------------------------------
 -- A type-class for abstracting Html documents
 -----------------------------------------------------------------------------
 
-class Monoid h => Html h where
-    -- | Character to be converted
-    --
-    -- NOTE: I'm not sure if this is well-defined as unicode characters are of
-    -- unbounded width in general. Perhaps we should only offer the Text
-    -- interface.
-    --   => Investigate what a Haskell 'Char' is and decide this matter!
-    unescapedChar    :: Char -> h
-    -- | Text to be converted to html
-    unescapedText    :: Text -> h
+class (Attributable h, UnicodeSequence h) => Html h where
     -- | Left html, right html
     separate         :: h -> h -> h
     -- | Tag
     leafElement      :: h -> h
     -- | Tag, inner html
     nodeElement      :: h -> h -> h
-    -- | Key, value, html taking attributes
-    addAttribute     :: h -> h -> h -> h
 
+unescapedChar :: UnicodeSequence s => Char -> s
+unescapedChar = unicodeChar
 
+unescapedText :: UnicodeSequence s => Text -> s
+unescapedText = unicodeText
 
 -----------------------------------------------------------------------------
 -- A minimal type-class for abstracting Html documents
@@ -108,9 +132,25 @@ instance Monoid h => Monoid (EmulateHtml h) where
     mempty          = EH mempty
     h1 `mappend` h2 = EH $ runEH h1 `mappend` runEH h2
 
+instance MinimalHtml h => UnicodeSequence (EmulateHtml h) where
+    unicodeChar = EH . unescapedCharM
+    unicodeText = EH . mconcat . map unescapedCharM . T.unpack
+
+instance MinimalHtml h => Attributable (EmulateHtml h) where
+    addAttribute key value h = EH $ 
+        addAttributeM
+          (mconcat
+              [ unescapedCharM ' '
+              , runEH key
+              , unescapedCharM '='
+              , unescapedCharM '"'
+              , runEH value
+              , unescapedCharM '"'
+              ]
+          )
+          (runEH h)
+
 instance MinimalHtml h => Html (EmulateHtml h) where
-    unescapedChar    = EH . unescapedCharM
-    unescapedText    = EH . mconcat . map unescapedCharM . T.unpack
     h1 `separate` h2 = EH $ mconcat [runEH h1, unescapedCharM ' ', runEH h2]
     leafElement tag  = EH $ mconcat 
         [ unescapedCharM '<'
@@ -131,18 +171,6 @@ instance MinimalHtml h => Html (EmulateHtml h) where
         , runEH tag 
         , unescapedCharM '>'
         ]
-    addAttribute key value h = EH $ 
-        addAttributeM
-          (mconcat
-              [ unescapedCharM ' '
-              , runEH key
-              , unescapedCharM '='
-              , unescapedCharM '"'
-              , runEH value
-              , unescapedCharM '"'
-              ]
-          )
-          (runEH h)
 
 -- I (Simon) don't like that we fix ourself to a concrete representation for
 -- attributes and tags. I can very well imagine that other formats could also
@@ -168,11 +196,24 @@ instance Monoid HtmlByteString where
     h1 `mappend` h2 = HB $ \enc as -> 
         runHB h1 enc as `mappend` runHB h2 enc as
 
-instance Html HtmlByteString where
-    unescapedChar c = HB $ \enc _ -> enc c
+instance UnicodeSequence HtmlByteString where
+    unicodeChar c = HB $ \enc _ -> enc c
     -- here we should be passing also a special text encoder or use an encoding
     -- function from Data.Text parametrized over the char encoder.
-    unescapedText t = HB $ \enc _ -> mconcat . map enc . T.unpack $ t
+    unicodeText t = HB $ \enc _ -> mconcat . map enc . T.unpack $ t
+
+instance Attributable HtmlByteString where
+    addAttribute key value h = HB $ \enc as -> 
+        runHB h enc $ mconcat
+            [ enc ' '
+            , runHB key enc mempty
+            , enc '='
+            , enc '"'
+            , runHB value enc mempty
+            , enc '"'
+            ] `mappend` as
+
+instance Html HtmlByteString where
     h1 `separate` h2 = HB $ \enc as -> mconcat
         [ runHB h1 enc as 
         , enc ' '
@@ -196,15 +237,6 @@ instance Html HtmlByteString where
         , runHB tag enc mempty
         , enc '>'
         ]
-    addAttribute key value h = HB $ \enc as -> 
-        runHB h enc $ mconcat
-            [ enc ' '
-            , runHB key enc mempty
-            , enc '='
-            , enc '"'
-            , runHB value enc mempty
-            , enc '"'
-            ] `mappend` as
 
 -- NOTE that there are two alternatives for providing this typeclass instance:
 --
@@ -257,9 +289,6 @@ head = nodeElement (unescapedString "head")
 h1 :: (Html h) => h -> h
 h1 = nodeElement (unescapedString "h1")
 
-href :: Text -> Attribute Url
-href = attribute "href" . Url
-
 img :: (Html h) => h
 img = leafElement (unescapedString "img")
 
@@ -280,16 +309,20 @@ instance Monoid h => Monoid (EncodingExplicit h) where
     mempty          = EE $ const mempty
     h1 `mappend` h2 = EE $ \eTag -> runEE h1 eTag `mappend` runEE h2 eTag
 
+instance UnicodeSequence h => UnicodeSequence (EncodingExplicit h) where
+    unicodeChar = EE . const . unicodeChar
+    unicodeText = EE . const . unicodeText
+
+instance Attributable h => Attributable (EncodingExplicit h) where
+    addAttribute key value h = EE $ \eTag ->
+        addAttribute (runEE key eTag) (runEE value eTag) (runEE h eTag)
+
 instance Html h => Html (EncodingExplicit h) where
-    unescapedChar = EE . const . unescapedChar
-    unescapedText = EE . const . unescapedText
     h1 `separate` h2 = EE $ \eTag -> runEE h1 eTag `separate` runEE h2 eTag
     leafElement tag = EE $ \_ -> 
         leafElement (runEE tag mempty)
     nodeElement tag inner = EE $ \eTag -> 
         nodeElement (runEE tag mempty) (runEE inner eTag)
-    addAttribute key value h = EE $ \eTag ->
-        addAttribute (runEE key mempty) (runEE value mempty) (runEE h eTag)
 
 -- Let's see the benefit of this construction
 ---------------------------------------------
@@ -397,22 +430,20 @@ showH = string . show
 --    nodeElement "blah" ! attr
 --    nodeElement "blah" ! [attr]
 
-instance Html h => Html (h -> h) where
-  -- Simon: Think about throwing errors in all cases except addAttribute.
-  unescapedChar c  = const $ unescapedChar c
-  unescapedText t  = const $ unescapedText t
-  h1 `separate` h2 = const $ h1 mempty `separate` h2 mempty
-  leafElement tag  = const $ leafElement (tag mempty)
-  nodeElement tag inner = const $ nodeElement (tag mempty) (inner mempty)
-  addAttribute key value node inner = 
-    addAttribute (key mempty) (value mempty) (node inner) 
+instance UnicodeSequence h => UnicodeSequence (h -> h) where
+    unicodeChar = const . unicodeChar 
+    unicodeText = const . unicodeText
+
+instance Attributable h => Attributable (h -> h) where
+    addAttribute key value node inner = 
+      addAttribute (key inner) (value inner) (node inner) 
 
 -- NOTE: I'm not sure if this is any good. I tend to discourage support for
 -- creating attributes explicitly. Concrete combinators should be used as they
 -- guarantee the correct escaping.
 
 class UnescapedData a where
-  unescapedData :: Html h => a -> h
+  unescapedData :: UnicodeSequence h => a -> h
 
 instance UnescapedData Text where
   unescapedData = unescapedText
@@ -426,6 +457,83 @@ instance UnescapedData a => UnescapedData [a] where
 instance UnescapedData Int where
   unescapedData = unescapedData . show
 
+
+newtype Attribute h = Attribute (h -> h)
+
+attribute :: (UnicodeSequence h, Attributable h) => Text -> h -> Attribute h
+attribute key value = Attribute $ addAttribute (unescapedText key) value
+
+-- | Add a single attribute to some html.
+(!) :: h -> Attribute h -> h
+h ! (Attribute a) = a h
+
+-- | Add a list of attributes to some html.
+(<!) :: h -> [Attribute h] -> h
+h <! attrs = foldl' (!) h attrs
+
+href :: (UnicodeSequence h, Attributable h) => Text -> Attribute h
+href = attribute "href" . escapeUrl 
+  where
+  -- dummy: needs to be implemented
+  escapeUrl = unescapedText
+
+-- | The 'id' attribute. The name will be A.id once this combinator resides in
+-- the right module.
+idA :: (UnicodeSequence h, Attributable h, UnescapedData a) => a -> Attribute h
+idA = attribute "id" . unescapedData
+
+idA' :: (UnicodeSequence h, Attributable h) => Text -> Attribute h
+idA' = idA
+
+-- QUINTESSENCE OF THE EXPERIMENTS BELOW
+
+-- I would go for two separate operators now one for adding lists of
+-- attributes (<!) and one for adding a single attribute (!). Attributes
+-- are just functions from 'h -> h' wrapped in a newtype.
+
+-- Then we can ask the mailing list if they have a nice solution for collapsing
+-- the two operators into one without giving up functionality.
+
+-- NOTE the reason for using 'Attrib h' as a type instead of '(Text,Text)' is
+-- that the escaping needs to be done directly on the Html layer in order to
+-- avoid expensive intermediate 'Text's for escaped attribute values. The
+-- decision of how to do escaping lies with the attribute generator and not the
+-- consumer.
+--
+-- Having this polymorphic 'h' in there is the origin of all trouble.
+
+-- It is an open question whether polymorphic variants of the attribute
+-- values are required. Due to the different escaping that is needed for
+-- different attribute values I tend to rather go for the simple solution that
+-- each attribute 'att' has the form
+--
+--      att :: Html h => Text -> h
+--      att' :: Html h => String -> h
+--
+--    and for names clashing with Haskell keywords (e.g. class) it would be
+--
+--      class_ :: Html h => Text -> h
+--      class' :: Html h => String -> h
+--
+-- But I'm not yet sure. If we can make a good design where the conversion
+-- semantics for an attribute is always clear, then I would be in for a
+-- polymorphic attribute setting variant along the lines of
+-- 'AttributeValue'. Obviously, we would still have to provide a binding
+-- that has its type fixed to 'Text' or 'String' as otherwise overloaded
+-- string literals lead to too generic types.
+--
+--   An example for polymorphic attribute values. 
+--
+--      att :: (Html h, AttributeValue a) => a -> h
+--      att' :: Html h => Text -> h
+--
+--   It seems as if this construction fixes the escaping to be used to the one
+--   chosen in the instances of the 'AttributValue' class. One way out would be
+--   to use separate typeclasses for every relevant escaping. This could even
+--   be viable as there are few such escapings and for most of them the actual
+--   implementation can be shared.
+
+{-
 class Attributable a where
   (!) :: Html h => h -> a -> h
 
@@ -434,6 +542,7 @@ instance UnescapedData a => Attributable (a, a) where
 
 instance Attributable a => Attributable [a] where
   h ! attrs = foldl' (!) h attrs
+
 
 
 -- Escaped attribute values
@@ -528,54 +637,8 @@ class Attributable3 a where
 instance Attributable3 Attrib where
   h #! (Attrib f) = f h
 
+-}
 
--- QUINTESSENCE
-
--- I would go for two separate operators now one for adding lists of
--- attributes (<!) and one for adding a single attribute (!). Attributes
--- are just functions from 'h -> h' wrapped in a newtype.
-
--- Then we can ask the mailing list if they have a nice solution for collapsing
--- the two operators into one without giving up functionality.
-
--- NOTE the reason for using 'Attrib h' as a type instead of '(Text,Text)' is
--- that the escaping needs to be done directly on the Html layer in order to
--- avoid expensive intermediate 'Text's for escaped attribute values. The
--- decision of how to do escaping lies with the attribute generator and not the
--- consumer.
---
--- Having this polymorphic 'h' in there is the origin of all trouble.
-
--- It is an open question whether polymorphic variants of the attribute
--- values are required. Due to the different escaping that is needed for
--- different attribute values I tend to rather go for the simple solution that
--- each attribute 'att' has the form
---
---      att :: Html h => Text -> h
---      att' :: Html h => String -> h
---
---    and for names clashing with Haskell keywords (e.g. class) it would be
---
---      class_ :: Html h => Text -> h
---      class' :: Html h => String -> h
---
--- But I'm not yet sure. If we can make a good design where the conversion
--- semantics for an attribute is always clear, then I would be in for a
--- polymorphic attribute setting variant along the lines of
--- 'AttributeValue'. Obviously, we would still have to provide a binding
--- that has its type fixed to 'Text' or 'String' as otherwise overloaded
--- string literals lead to too generic types.
---
---   An example for polymorphic attribute values. 
---
---      att :: (Html h, AttributeValue a) => a -> h
---      att' :: Html h => Text -> h
---
---   It seems as if this construction fixes the escaping to be used to the one
---   chosen in the instances of the 'AttributValue' class. One way out would be
---   to use separate typeclasses for every relevant escaping. This could even
---   be viable as there are few such escapings and for most of them the actual
---   implementation can be shared.
 
 
 ------------------------------------------------------------------------------
@@ -588,14 +651,19 @@ instance (Monoid h) => Monoid (HtmlMonad h a) where
     mempty                        = HtmlMonad mempty
     mappend (HtmlMonad h1) (HtmlMonad h2) = HtmlMonad $ h1 `mappend` h2
 
-instance (Html h) => Html (HtmlMonad h a) where
-    separate (HtmlMonad h1) (HtmlMonad h2) = HtmlMonad $ h1 `separate` h2
-    unescapedChar c = HtmlMonad $ unescapedChar c
-    unescapedText t = HtmlMonad $ unescapedText t
-    leafElement (HtmlMonad t) = HtmlMonad $ leafElement t
-    nodeElement (HtmlMonad t) (HtmlMonad h) = HtmlMonad $ nodeElement t h
+instance UnicodeSequence h => UnicodeSequence (HtmlMonad h a) where
+    unicodeChar c = HtmlMonad $ unicodeChar c
+    unicodeText t = HtmlMonad $ unicodeText t
+
+instance Attributable h => Attributable (HtmlMonad h a) where
     addAttribute (HtmlMonad k) (HtmlMonad v) (HtmlMonad h) =
         HtmlMonad $ addAttribute k v h
+
+instance (Html h) => Html (HtmlMonad h a) where
+    separate (HtmlMonad h1) (HtmlMonad h2) = HtmlMonad $ h1 `separate` h2
+    leafElement (HtmlMonad t) = HtmlMonad $ leafElement t
+    nodeElement (HtmlMonad t) (HtmlMonad h) = HtmlMonad $ nodeElement t h
+    
     
 instance (Monoid h) => Monad (HtmlMonad h) where
     return   = mempty

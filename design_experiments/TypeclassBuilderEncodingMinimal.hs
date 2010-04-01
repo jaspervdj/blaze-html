@@ -1,4 +1,4 @@
-{-# LANGUAGE OverloadedStrings, MultiParamTypeClasses, FlexibleInstances, FlexibleContexts, Rank2Types #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving, OverloadedStrings, MultiParamTypeClasses, FlexibleInstances, FlexibleContexts, Rank2Types #-}
 import Prelude hiding (head)
 import Data.List (foldl')
 import Data.Text (Text)
@@ -42,6 +42,11 @@ My suggestion for further completion is that, we complete all designs of
 interest in a single file with a set of example combinators and an expressive
 enough example. This way we get a much better overview over the design
 decisions that are involved.
+
+NOTE (April, 1st, 2010): Currently, this document contains several design
+iterations at once and may be hard to interpret. I will soon create a single
+version that represents the favored design together with comments explaining
+the design decisions.
 
 -}
 
@@ -178,7 +183,78 @@ instance MinimalHtml h => Html (EmulateHtml h) where
 
 
 ------------------------------------------------------------------------------
--- A Builder Renderer
+-- A UTF-8 Unicode Sequence based on a ByteString Builder
+------------------------------------------------------------------------------
+
+-- We will provide such unicode instances for all the encodings of interest.
+-- The flatteners will then produce code that repeatedly calls the
+-- corresponding methods from the UnicodeSequence dictionary. This should be
+-- faster than threading the concrete encoding functions through explicitely
+-- because for method dictionaries the compiler always knows that they and
+-- their entries are defined.
+
+newtype Utf8ByteString = Utf8 { runUtf8 :: Builder }
+  deriving( Monoid )
+
+instance UnicodeSequence Utf8ByteString where
+    unicodeChar c = Utf8 $ encodeCharUtf8 c
+    -- here we should be passing also a special text encoder or use an encoding
+    -- function from Data.Text parametrized over the char encoder.
+    unicodeText t = Utf8 $ mconcat . map encodeCharUtf8 . T.unpack $ t
+
+
+------------------------------------------------------------------------------
+-- A Flattener
+------------------------------------------------------------------------------
+
+-- | represent a Html document as a single line without line-breaks.
+newtype OneLineHtml s = OLH {runOLH :: s -> s}
+
+instance Monoid m => Monoid (OneLineHtml m) where
+    mempty = OLH $ const mempty
+    (OLH m1) `mappend` (OLH m2) = OLH $ m1 `mappend` m2
+
+instance UnicodeSequence s => UnicodeSequence (OneLineHtml s) where
+    unicodeChar = OLH . const . unicodeChar
+    unicodeText = OLH . const . unicodeText
+
+instance UnicodeSequence s => Attributable (OneLineHtml s) where
+    addAttribute key value h = OLH $ \attrs -> 
+        runOLH h $ mconcat
+            [ unicodeChar ' '
+            , runOLH key mempty
+            , unicodeChar '='
+            , unicodeChar '"'
+            , runOLH value mempty
+            , unicodeChar '"'
+            ] `mappend` attrs
+
+instance UnicodeSequence s => Html (OneLineHtml s) where
+    h1 `separate` h2 = OLH $ \attrs -> mconcat
+        [ runOLH h1 attrs 
+        , unicodeChar ' '
+        , runOLH h2 attrs
+        ]
+    leafElement tag = OLH $ \attrs -> mconcat
+        [ unicodeChar '<'
+        , runOLH tag mempty
+        , attrs
+        , unicodeChar '/'
+        , unicodeChar '>'
+        ]
+    nodeElement tag inner = OLH $ \attrs -> mconcat
+        , attrs
+        , unicodeChar '>'
+        , runOLH inner mempty
+        , unicodeChar '<'
+        , unicodeChar '/'
+        , runOLH tag mempty
+        , unicodeChar '>'
+        ]
+
+
+------------------------------------------------------------------------------
+-- A direct instance of a Html document using a ByteString Builder
 ------------------------------------------------------------------------------
 
 -- Here I demonstrate how to use 'Data.Binary.Builder' to implement an
@@ -348,9 +424,9 @@ html hd b = encodingImplicitHtml $
 -- However this is not enforced, as any html document could be handed over
 -- here.  The enforcment happens only indirectly in the form of the combinators
 -- presented to the library user.
-htmlUtf8 :: EncodingExplicit HtmlByteString -> BL.ByteString
+htmlUtf8 :: EncodingExplicit (OneLineHtml Utf8ByteString) -> BL.ByteString
 htmlUtf8 h = 
-  toLazyByteString $ runHB (runEE h utf8tag) encodeCharUtf8 mempty
+  toLazyByteString $ runUtf8 (runOLH (runEE h utf8tag) mempty)
   where
     utf8tag = unescapedText 
        "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>"

@@ -243,6 +243,8 @@ instance UnicodeSequence s => Html (OneLineHtml s) where
         , unicodeChar '>'
         ]
     nodeElement tag inner = OLH $ \attrs -> mconcat
+        [ unicodeChar '<'
+        , runOLH tag mempty
         , attrs
         , unicodeChar '>'
         , runOLH inner mempty

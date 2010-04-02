@@ -259,62 +259,67 @@ instance UnicodeSequence s => Html (OneLineHtml s) where
 -- A direct instance of a Html document using a ByteString Builder
 ------------------------------------------------------------------------------
 
--- Here I demonstrate how to use 'Data.Binary.Builder' to implement an
--- efficient conversion from the internal representation as calls to methods of
--- the 'Html' typeclass to an encoded bytestream represented as a lazy
--- ByteString.
+-- Here, we have an implementation of the Html typeclass, parameterized over a
+-- Monoid. This Builder should be a fast Builder Monoid -- either the
+-- Data.Binary.Builder Monoid, or the Data.Text.Builder Monoid. Of course, we
+-- will provide instances for both.
 --
 -- The conversion is parameterized over the concrete encoding to be used.
 -- Currently we only parameterize over the 'Char' encoder. This is subject to
 -- change.
-newtype HtmlByteString = HB { runHB :: (Char -> Builder) -> Builder -> Builder }
+newtype HtmlBuilder m = HtmlBuilder
+    { runHtmlBuilder :: (Char -> m) -> m -> m
+    }
 
-instance Monoid HtmlByteString where
-    mempty          = HB $ \_ _    -> mempty
-    h1 `mappend` h2 = HB $ \enc as -> 
-        runHB h1 enc as `mappend` runHB h2 enc as
+instance Monoid m => Monoid (HtmlBuilder m) where
+    mempty          = HtmlBuilder $ \_ _ -> mempty
+    (HtmlBuilder h1) `mappend` (HtmlBuilder h2) = HtmlBuilder $
+        \enc as -> h1 enc as `mappend` h2 enc as
 
-instance UnicodeSequence HtmlByteString where
-    unicodeChar c = HB $ \enc _ -> enc c
+instance Monoid m => UnicodeSequence (HtmlBuilder m) where
+    unicodeChar c = HtmlBuilder $ \enc _ -> enc c
     -- here we should be passing also a special text encoder or use an encoding
     -- function from Data.Text parametrized over the char encoder.
-    unicodeText t = HB $ \enc _ -> mconcat . map enc . T.unpack $ t
+    unicodeText t = HtmlBuilder $ \enc _ -> mconcat . map enc . T.unpack $ t
 
-instance Attributable HtmlByteString where
-    addAttribute key value h = HB $ \enc as -> 
-        runHB h enc $ mconcat
-            [ enc ' '
-            , runHB key enc mempty
-            , enc '='
-            , enc '"'
-            , runHB value enc mempty
-            , enc '"'
-            ] `mappend` as
+instance Monoid m => Attributable (HtmlBuilder m) where
+    addAttribute (HtmlBuilder key) (HtmlBuilder value) (HtmlBuilder h) =
+        HtmlBuilder $ \enc as -> h enc $ mconcat [ enc ' '
+                                                 , key enc mempty
+                                                 , enc '='
+                                                 , enc '"'
+                                                 , value enc mempty
+                                                 , enc '"'
+                                                 ] `mappend` as
 
-instance Html HtmlByteString where
-    h1 `separate` h2 = HB $ \enc as -> mconcat
-        [ runHB h1 enc as 
-        , enc ' '
-        , runHB h2 enc as
-        ]
-    leafElement tag = HB $ \enc as -> mconcat
-        [ enc '<'
-        , runHB tag enc mempty
-        , as
-        , enc '/'
-        , enc '>'
-        ]
-    nodeElement tag inner = HB $ \enc as -> mconcat
-        [ enc '<'
-        , runHB tag enc mempty
-        , as
-        , enc '>'
-        , runHB inner enc mempty
-        , enc '<'
-        , enc '/'
-        , runHB tag enc mempty
-        , enc '>'
-        ]
+instance Monoid m => Html (HtmlBuilder m) where
+    (HtmlBuilder h1) `separate` (HtmlBuilder h2) = HtmlBuilder $ \enc as ->
+        mconcat [ h1 enc as 
+                , enc ' '
+                , h2 enc as
+                ]
+    leafElement (HtmlBuilder tag) = HtmlBuilder $ \enc as ->
+        mconcat [ enc '<'
+                , tag enc mempty
+                , as
+                , enc '/'
+                , enc '>'
+                ]
+    nodeElement (HtmlBuilder tag) (HtmlBuilder inner) = HtmlBuilder $ \enc as ->
+        mconcat [ enc '<'
+                , tag enc mempty
+                , as
+                , enc '>'
+                , inner enc mempty
+                , enc '<'
+                , enc '/'
+                , tag enc mempty
+                , enc '>'
+                ]
+
+-- An fast Monoid is of course the Data.Binary.Builder monoid, so I'll just
+-- leave this here:
+type HtmlByteString = HtmlBuilder Builder
 
 -- NOTE that there are two alternatives for providing this typeclass instance:
 --

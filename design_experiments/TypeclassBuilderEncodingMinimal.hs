@@ -338,7 +338,6 @@ type HtmlByteString = HtmlBuilder Builder
 -- equally well. Especially, as we could not even measure the cost of
 -- abstraction.
 
-
 ------------------------------------------------------------------------------
 -- Example combinators built ON TOP of the Html class
 ------------------------------------------------------------------------------
@@ -729,34 +728,34 @@ instance Attributable3 Attrib where
 -- use with `>>`. We provide concrete instances in the next section.
 ------------------------------------------------------------------------------
 
-newtype HtmlMonad h a = HtmlMonad { runHtmlMonad :: Reader (h -> h -> h) h }
+newtype HtmlMonad h a = HtmlMonad { runHtmlMonad :: (h -> h -> h) -> h }
 
 instance (Monoid h) => Monoid (HtmlMonad h a) where
-    mempty                        = HtmlMonad $ return mempty
-    mappend (HtmlMonad h1) (HtmlMonad h2) = HtmlMonad $ liftM2 mappend h1 h2
+    mempty = HtmlMonad $ const mempty
+    mappend (HtmlMonad h1) (HtmlMonad h2) = HtmlMonad $ \appender ->
+        h1 appender `mappend` h2 appender
 
 instance UnicodeSequence h => UnicodeSequence (HtmlMonad h a) where
-    unicodeChar c = HtmlMonad $ return $ unicodeChar c
-    unicodeText t = HtmlMonad $ return $ unicodeText t
+    unicodeChar = HtmlMonad . const . unicodeChar
+    unicodeText = HtmlMonad . const . unicodeText
 
 instance Attributable h => Attributable (HtmlMonad h a) where
-    addAttribute (HtmlMonad k) (HtmlMonad v) (HtmlMonad h) =
-        HtmlMonad $ liftM3 addAttribute k v h
+    addAttribute (HtmlMonad k) (HtmlMonad v) (HtmlMonad h) = HtmlMonad $ \a ->
+        addAttribute (k a) (v a) (h a)
 
-instance (Html h) => Html (HtmlMonad h a) where
-    separate (HtmlMonad h1) (HtmlMonad h2) = HtmlMonad $ liftM2 separate h1 h2
-    leafElement (HtmlMonad t) = HtmlMonad $ liftM leafElement t
-    nodeElement (HtmlMonad t) (HtmlMonad h) = HtmlMonad $ liftM2 nodeElement t h
-    
+instance Html h => Html (HtmlMonad h a) where
+    separate (HtmlMonad h1) (HtmlMonad h2) = HtmlMonad $ \appender ->
+        h1 appender `separate` h2 appender
+    leafElement (HtmlMonad t) = HtmlMonad $ leafElement . t
+    nodeElement (HtmlMonad t) (HtmlMonad h) = HtmlMonad $ \appender ->
+        nodeElement (t appender) (h appender)
     
 instance (Monoid h) => Monad (HtmlMonad h) where
-    return   = mempty
-    (HtmlMonad h1) >> (HtmlMonad h2) = HtmlMonad $ do appender <- ask
-                                                      liftM2 appender h1 h2
-    (HtmlMonad h1) >>= f = let HtmlMonad h2 = f errorMessage
-                           in HtmlMonad h1 >> HtmlMonad h2
-      where
-        errorMessage = error "HtmlMonad: >>= returning values not supported."
+    return   = const mempty
+    (HtmlMonad h1) >> (HtmlMonad h2) = HtmlMonad $ \appender ->
+        h1 appender `appender` h2 appender
+    (HtmlMonad h1) >>= f = HtmlMonad $ \appender ->
+        h1 appender `appender` mempty
 
 instance Html h => IsString (HtmlMonad h a) where
     fromString = string
@@ -766,10 +765,10 @@ instance Html h => IsString (HtmlMonad h a) where
 -----------------------------------------------------------------------------
 
 concatenatedHtml :: Html h => HtmlMonad h a -> h
-concatenatedHtml = flip runReader mappend . runHtmlMonad
+concatenatedHtml = ($ mappend) . runHtmlMonad
 
 separatedHtml :: Html h => HtmlMonad h a -> h
-separatedHtml = flip runReader separate . runHtmlMonad
+separatedHtml = ($ separate) . runHtmlMonad
 
 -----------------------------------------------------------------------------
 -- An example document

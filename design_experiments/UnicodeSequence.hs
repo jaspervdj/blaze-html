@@ -55,9 +55,13 @@ instance UnicodeSequence s => UnicodeSequence (a -> s) where
 
 -- | Build a unicode sequence from a string.
 unicodeString :: UnicodeSequence s => String -> s
-unicodeString s = (trace $ "string: "++s) (mconcat . map unicodeChar $ s)
+unicodeString s = 
+    (trace $ "string: "++s) (mconcat . map unicodeChar $ s)
 
-
+-- | Build a unicode sequence from a value that can be shown.
+unicodeShow :: UnicodeSequence s => String -> s
+unicodeShow x = 
+    (trace $ "show: "++show x) (mconcat . map unicodeChar . show $ x)
 
 -----------------------------------------------------------------------------
 -- a few tests to see what if the sharing really works: it does :-)

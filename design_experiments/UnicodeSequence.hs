@@ -95,7 +95,7 @@ testText2 =
         ]
 
 ------------------------------------------------------------------------------
--- A UTF-8 Unicode Sequence based on a ByteString Builder
+-- A UTF-8 encoded UnicodeSequence based on a ByteString Builder
 ------------------------------------------------------------------------------
 
 -- | An efficient builder for lazy bytestrings representing UTF-8 encoded
@@ -158,3 +158,54 @@ encodeCharUtf8 c =
 encodeTextUtf8 :: Text -> Builder
 encodeTextUtf8 = mconcat . map encodeCharUtf8 . T.unpack
 
+------------------------------------------------------------------------------
+-- An ISO 8859-1 encoded Unicode Sequence based on a ByteString Builder
+------------------------------------------------------------------------------
+
+-- | An efficient builder for lazy bytestrings representing IS0 8859-1 encoded
+-- sequences of Unicode characters -- non-representable characters are dropped.
+--
+-- Use the functions from 'UnicodeSequence' and 'Monoid' to assemble such a
+-- sequence. Convert it to a lazy bytestring using 'toLazyByteStringISO_8859_1'.
+newtype ISO_8859_1Builder = ISO_8859_1Builder { iso_8859_1Builder :: Builder }
+    deriving( Monoid )
+
+-- | Convert a sequence of Unicode characters represented as a
+-- ISO_8859_1Builder to an ISO 8859-1 encoded sequence of bytes represented by a
+-- lazy bytestring. Non-representable characters are dropped.
+toLazyByteStringISO_8859_1 :: ISO_8859_1Builder -> BL.ByteString
+toLazyByteStringISO_8859_1 = toLazyByteString . iso_8859_1Builder
+
+instance UnicodeSequence ISO_8859_1Builder where
+    -- FIXME: Provide more efficient implementation
+    unicodeText   = mconcat . map unicodeChar . T.unpack
+    unicodeChar c = case ord c of
+        x | x <= 0xFF -> ISO_8859_1Builder $ singleton (fromIntegral x)
+          | otherwise -> mempty
+    
+
+------------------------------------------------------------------------------
+-- An US-ASCII 7 encoded Unicode Sequence based on a ByteString Builder
+------------------------------------------------------------------------------
+
+-- | An efficient builder for lazy bytestrings representing US-ASCII (7-bit)
+-- encoded sequences of Unicode characters -- non-representable characters are
+-- dropped.
+--
+-- Use the functions from 'UnicodeSequence' and 'Monoid' to assemble such a
+-- sequence. Convert it to a lazy bytestring using 'toLazyByteStringASCII7'.
+newtype ASCII7Builder = ASCII7Builder { ascii7Builder :: Builder }
+    deriving( Monoid )
+
+-- | Convert a sequence of Unicode characters represented as a ASCII7Builder to
+-- an ASCII7 encoded sequence of bytes represented by a lazy bytestring.
+-- Non-representable characters are dropped.
+toLazyByteStringASCII7 :: ASCII7Builder -> BL.ByteString
+toLazyByteStringASCII7 = toLazyByteString . ascii7Builder
+
+instance UnicodeSequence ASCII7Builder where
+    -- FIXME: Provide more efficient implementation
+    unicodeText   = mconcat . map unicodeChar . T.unpack
+    unicodeChar c = case ord c of
+        x | x <= 0x7F -> ASCII7Builder $ singleton (fromIntegral x)
+          | otherwise -> mempty

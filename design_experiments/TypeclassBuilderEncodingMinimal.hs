@@ -728,36 +728,60 @@ instance Attributable3 Attrib where
 -- use with `>>`. We provide concrete instances in the next section.
 ------------------------------------------------------------------------------
 
-newtype HtmlMonad h a = HtmlMonad { runHtmlMonad :: (h -> h -> h) -> h }
+data StrictPair h a = StrictPair {-# UNPACK #-} !h a
 
-instance (Monoid h) => Monoid (HtmlMonad h a) where
-    mempty = HtmlMonad $ const mempty
-    mappend (HtmlMonad h1) (HtmlMonad h2) = HtmlMonad $ \appender ->
-        h1 appender `mappend` h2 appender
+newtype HtmlMonad h a = HtmlMonad 
+    { runHtmlMonad :: (h -> h -> h) -> StrictPair h a
+    }
 
-instance UnicodeSequence h => UnicodeSequence (HtmlMonad h a) where
-    unicodeChar = HtmlMonad . const . unicodeChar
-    unicodeText = HtmlMonad . const . unicodeText
+instance (Monoid h, Monoid a) => Monoid (HtmlMonad h a) where
+    mempty = HtmlMonad $ const $ StrictPair mempty mempty
+    mappend (HtmlMonad f1) (HtmlMonad f2) = HtmlMonad $ \appender ->
+        let StrictPair h1 a1 = f1 appender
+            StrictPair h2 a2 = f2 appender
+        in StrictPair (h1 `mappend` h2) (a1 `mappend` a2)
+
+instance (UnicodeSequence h, Monoid a) => UnicodeSequence (HtmlMonad h a) where
+    unicodeChar c = HtmlMonad $ const $ StrictPair (unicodeChar c) mempty
+    unicodeText c = HtmlMonad $ const $ StrictPair (unicodeText c) mempty
 
 instance Attributable h => Attributable (HtmlMonad h a) where
-    addAttribute (HtmlMonad k) (HtmlMonad v) (HtmlMonad h) = HtmlMonad $ \a ->
-        addAttribute (k a) (v a) (h a)
+    addAttribute (HtmlMonad k) (HtmlMonad v) (HtmlMonad h) = HtmlMonad $ \app ->
+        let StrictPair kv _ = k app
+            StrictPair vv _ = v app
+            StrictPair hv a = h app
+        in StrictPair (addAttribute kv vv hv) a
 
-instance Html h => Html (HtmlMonad h a) where
-    separate (HtmlMonad h1) (HtmlMonad h2) = HtmlMonad $ \appender ->
-        h1 appender `separate` h2 appender
-    leafElement (HtmlMonad t) = HtmlMonad $ leafElement . t
-    nodeElement (HtmlMonad t) (HtmlMonad h) = HtmlMonad $ \appender ->
-        nodeElement (t appender) (h appender)
+instance (Html h, Monoid a) => Html (HtmlMonad h a) where
+    separate (HtmlMonad f1) (HtmlMonad f2) = HtmlMonad $ \appender ->
+        let StrictPair h1 _ = f1 appender
+            StrictPair h2 a = f2 appender
+        in StrictPair (h1 `separate` h2) a
+    leafElement (HtmlMonad f) = HtmlMonad $ \appender ->
+        let StrictPair h a = f appender
+        in StrictPair (leafElement h) a
+    nodeElement (HtmlMonad f1) (HtmlMonad f2) = HtmlMonad $ \appender ->
+        let StrictPair h1 a = f1 appender
+            StrictPair h2 _ = f2 appender
+        in StrictPair (nodeElement h1 h2) a
     
+-- Note that the monad laws hold true for the HTML monad, meaning:
+--
+--     return a >>= f  = f a
+--     m >>= return    = m
+--     (m >>= f) >>= g = m >>= (\x -> f x >>= g)
 instance (Monoid h) => Monad (HtmlMonad h) where
-    return   = const mempty
-    (HtmlMonad h1) >> (HtmlMonad h2) = HtmlMonad $ \appender ->
-        h1 appender `appender` h2 appender
-    (HtmlMonad h1) >>= f = HtmlMonad $ \appender ->
-        h1 appender `appender` mempty
+    return a = HtmlMonad $ const $ StrictPair mempty a
+    (HtmlMonad f1) >> (HtmlMonad f2) = HtmlMonad $ \appender ->
+        let StrictPair h1 _ = f1 appender
+            StrictPair h2 a = f2 appender
+        in StrictPair (h1 `appender` h2) a
+    (HtmlMonad f1) >>= f = HtmlMonad $ \appender ->
+        let StrictPair h1 a = f1 appender
+            StrictPair h2 b = runHtmlMonad (f a) appender
+        in StrictPair (h1 `appender` h2) b
 
-instance Html h => IsString (HtmlMonad h a) where
+instance (Html h, Monoid a) => IsString (HtmlMonad h a) where
     fromString = string
 
 -----------------------------------------------------------------------------
@@ -765,10 +789,12 @@ instance Html h => IsString (HtmlMonad h a) where
 -----------------------------------------------------------------------------
 
 concatenatedHtml :: Html h => HtmlMonad h a -> h
-concatenatedHtml = ($ mappend) . runHtmlMonad
+concatenatedHtml m = let StrictPair h _ = ($ mappend) $ runHtmlMonad m
+                     in h
 
 separatedHtml :: Html h => HtmlMonad h a -> h
-separatedHtml = ($ separate) . runHtmlMonad
+separatedHtml m = let StrictPair h _ = ($ separate) $ runHtmlMonad m
+                  in h
 
 -----------------------------------------------------------------------------
 -- An example document

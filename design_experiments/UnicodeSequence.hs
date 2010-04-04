@@ -162,29 +162,30 @@ encodeCharUtf8 c =
 encodeTextUtf8 :: Text -> Builder
 encodeTextUtf8 = mconcat . map encodeCharUtf8 . T.unpack
 
-------------------------------------------------------------------------------
--- An ISO 8859-1 encoded Unicode Sequence based on a ByteString Builder
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+-- A Latin-1 (ISO 8859-1) encoded Unicode Sequence based on a ByteString Builder
+--------------------------------------------------------------------------------
 
--- | An efficient builder for lazy bytestrings representing IS0 8859-1 encoded
--- sequences of Unicode characters -- non-representable characters are dropped.
+-- | An efficient builder for lazy bytestrings representing Latin-1 (IS0
+-- 8859-1) encoded sequences of Unicode characters -- non-representable
+-- characters are dropped.
 --
 -- Use the functions from 'UnicodeSequence' and 'Monoid' to assemble such a
--- sequence. Convert it to a lazy bytestring using 'toLazyByteStringISO_8859_1'.
-newtype ISO_8859_1Builder = ISO_8859_1Builder { iso_8859_1Builder :: Builder }
+-- sequence. Convert it to a lazy bytestring using 'toLazyByteStringLatin1'.
+newtype Latin1Builder = Latin1Builder { latin1Builder :: Builder }
     deriving( Monoid )
 
 -- | Convert a sequence of Unicode characters represented as a
--- ISO_8859_1Builder to an ISO 8859-1 encoded sequence of bytes represented by a
+-- Latin1Builder to an ISO 8859-1 encoded sequence of bytes represented by a
 -- lazy bytestring. Non-representable characters are dropped.
-toLazyByteStringISO_8859_1 :: ISO_8859_1Builder -> BL.ByteString
-toLazyByteStringISO_8859_1 = toLazyByteString . iso_8859_1Builder
+toLazyByteStringLatin1 :: Latin1Builder -> BL.ByteString
+toLazyByteStringLatin1 = toLazyByteString . latin1Builder
 
-instance UnicodeSequence ISO_8859_1Builder where
+instance UnicodeSequence Latin1Builder where
     -- FIXME: Provide more efficient implementation
     unicodeText   = mconcat . map unicodeChar . T.unpack
     unicodeChar c = case ord c of
-        x | x <= 0xFF -> ISO_8859_1Builder $ singleton (fromIntegral x)
+        x | x <= 0xFF -> Latin1Builder $ singleton (fromIntegral x)
           | otherwise -> mempty
     
 
@@ -197,19 +198,19 @@ instance UnicodeSequence ISO_8859_1Builder where
 -- dropped.
 --
 -- Use the functions from 'UnicodeSequence' and 'Monoid' to assemble such a
--- sequence. Convert it to a lazy bytestring using 'toLazyByteStringASCII7'.
-newtype ASCII7Builder = ASCII7Builder { ascii7Builder :: Builder }
+-- sequence. Convert it to a lazy bytestring using 'toLazyByteStringAscii7'.
+newtype Ascii7Builder = Ascii7Builder { ascii7Builder :: Builder }
     deriving( Monoid )
 
--- | Convert a sequence of Unicode characters represented as a ASCII7Builder to
--- an ASCII7 encoded sequence of bytes represented by a lazy bytestring.
+-- | Convert a sequence of Unicode characters represented as a Ascii7Builder to
+-- an Ascii7 encoded sequence of bytes represented by a lazy bytestring.
 -- Non-representable characters are dropped.
-toLazyByteStringASCII7 :: ASCII7Builder -> BL.ByteString
-toLazyByteStringASCII7 = toLazyByteString . ascii7Builder
+toLazyByteStringAscii7 :: Ascii7Builder -> BL.ByteString
+toLazyByteStringAscii7 = toLazyByteString . ascii7Builder
 
-instance UnicodeSequence ASCII7Builder where
+instance UnicodeSequence Ascii7Builder where
     -- FIXME: Provide more efficient implementation
     unicodeText   = mconcat . map unicodeChar . T.unpack
     unicodeChar c = case ord c of
-        x | x <= 0x7F -> ASCII7Builder $ singleton (fromIntegral x)
+        x | x <= 0x7F -> Ascii7Builder $ singleton (fromIntegral x)
           | otherwise -> mempty

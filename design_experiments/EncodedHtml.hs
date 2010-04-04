@@ -62,7 +62,7 @@ attributeText :: Html h => Text -> h
 attributeText = undefined
 
 -- | Here, we want to ensure that every char <= 255 is replaced by
--- \nXX and if required every char >= is also replaced by \nXXX.
+-- \xXX and if required every char >= is also replaced by \xXXX.
 --
 -- If the Html parser runs first, why should attribute escaping not work?
 javaScriptText :: Html h => Text -> h
@@ -145,7 +145,7 @@ runHtmlUtf8 :: OneLineHtml (TotalEncoding Utf8Builder) -> BL.ByteString
 runHtmlUtf8 h = toLazyByteStringUtf8 (runTE (runOLH h mempty) utf8tag)
   where
     utf8tag = unicodeString
-       "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>"
+       "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>"
 
 ------------------------------------------------------------------------------
 -- An Encoded instance for Partial encodings
@@ -191,16 +191,6 @@ htmlCharReference = \c -> mconcat [pre , unicodeHexInt $ ord c , post]
     pre  = unicodeString "&#"
     post = unicodeChar ';' 
 
--- It seems that only the above formulation achieves the expected sharing
--- of the static strings among different calls.
-testShared :: Char -> Utf8Builder
-testShared = htmlCharReference
-
--- It seems that only the above formulation achieves the expected sharing
--- of the static strings among different calls.
-testUnShared :: Char -> Utf8Builder
-testUnShared = jsCharReference
-
 -- | Build a JavaScript character reference using hexadecimal notation.
 jsCharReference :: UnicodeSequence s => Char -> s
 jsCharReference c = mconcat [unicodeString "\\x", unicodeHexInt $ ord c]
@@ -212,6 +202,64 @@ cssCharReference c = mconcat [unicodeChar '\\', unicodeHexInt $ ord c]
 -- | Build a URL character reference using hexadecimal notation.
 urlCharReference :: UnicodeSequence s => Char -> s
 urlCharReference c = mconcat [unicodeChar '%', unicodeHexInt $ ord c ]
+
+-- A Latin-1 (IS0 8859-1) encoded Html document
+-----------------------------------------------
+
+-- TODO: For specialization to work nicely it may be required to build
+-- a separate type-class instance for Encoded with fixed values for
+-- the info.
+type HtmlLatin1 = OneLineHtml (PartialEncoding Latin1Builder) 
+
+runHtmlLatin1 :: HtmlLatin1 -> BL.ByteString
+runHtmlLatin1 h = 
+  toLazyByteStringLatin1 (runPE (runOLH h mempty) info unicodeChar)
+  where
+    info = EncodingInfo {
+        eiTag         = unicodeString
+          "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\"/>"
+      , eiUnencodable = (\c -> 0xFF < ord c)
+      }
+
+
+-- Generic ASCII like encodings
+-------------------------------
+
+-- | An ASCII-7 based encoding of a Html document.
+type HtmlAscii7 = OneLineHtml (PartialEncoding Ascii7Builder)
+
+runHtmlAscii7 :: HtmlAscii7 -> BL.ByteString
+runHtmlAscii7 = runHtmlAscii7Like "US-ASCII"
+
+-- | Encode using a character set that agrees on all first 127 characters
+-- (7-bits) with the US-ASCII charset.
+runHtmlAscii7Like :: String -> HtmlAscii7 -> BL.ByteString
+runHtmlAscii7Like charset h = 
+  toLazyByteStringAscii7 (runPE (runOLH h mempty) info unicodeChar)
+  where
+    info = EncodingInfo {
+        eiTag         = mconcat . map unicodeString $
+          [ "<meta http-equiv=\"Content-Type\" content=\"text/html; charset="
+          , charset
+          , "/>" 
+          ]
+      , eiUnencodable = (\c -> 0x7F < ord c)
+      }
+
+
+------------------------------------------------------------------------------
+-- Testing the sharing; i.e. it is hard to get generically... :-(
+------------------------------------------------------------------------------
+
+-- It seems that only the above formulation achieves the expected sharing
+-- of the static strings among different calls.
+testShared :: Char -> Utf8Builder
+testShared = htmlCharReference
+
+-- It seems that only the above formulation achieves the expected sharing
+-- of the static strings among different calls.
+testUnShared :: Char -> Utf8Builder
+testUnShared = jsCharReference
 
 
 ------------------------------------------------------------------------------
@@ -289,7 +337,7 @@ escapeSingleQuotedJSString = (`escape` EscapingInfo escChar escText)
     escText   = mconcat . map escChar . T.unpack
     -- achieving sharing across multiple calls of escChar
     backslash = unicodeString "\\\\"
-    apos      = unicodeString "\\n27"
+    apos      = unicodeString "\\x27"
     slash     = unicodeString "\\x2F"  
     langle    = unicodeString "\\x3C"  
 
@@ -328,11 +376,14 @@ jsString s = mconcat
 -- TODO
 cssString = undefined
 
+testString :: UnicodeSequence s => s
+testString = unicodeString "hello\"'\\'\" world └─╼"
+
 testJS :: Encoded s => s
-testJS = jsString (unicodeString "hello\"'\\'\" world └─╼")
+testJS = jsString testString
 
 testAtt :: Encoded s => s
-testAtt = attributeValue . mconcat $ 
+testAtt = mconcat $ 
     [ unicodeString "alert(", testJS, unicodeString ");" ]
 
 displayTE :: TotalEncoding Utf8Builder -> IO ()
@@ -348,7 +399,12 @@ attributeValue =
 attribute :: (Encoded h, Attributable h) => String -> Unescaped h -> h -> h
 attribute key val = addAttribute (unicodeString key) (attributeValue val)
 
-testDoc = runHtmlUtf8 (html $ attribute "onload" testAtt $ head mempty)
+testDoc :: Html h => h
+testDoc = html $ attribute "onload" testAtt $ head $ htmlContent testString
+
+testDocUtf8 = runHtmlUtf8 testDoc
+testDocLatin1 = runHtmlLatin1 testDoc
+
 ------------------------------------------------------------------------------
 -- Unparsed CDATA escaping (for <script> and <style> tags)
 ------------------------------------------------------------------------------

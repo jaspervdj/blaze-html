@@ -7,7 +7,7 @@
 -- different representations (builders) for sequences of bytes. This way we
 -- could have a unified interface to a byte sequence with and without
 -- compression or whatever binary transformation needs to be done.
-module Text.UnicodeSequence where
+module UnicodeSequence where
 
 import           Control.Exception          (assert)
 
@@ -30,9 +30,8 @@ import           Debug.Trace                (trace)
 
 
 -- | A 'UnicodeSequence' is a type that can represent sequences built from
--- ASCII7 encoded unicode characters, unicode characters represented as
--- standard Haskell Char's, and subsequences represented as 'Text' values from
--- 'Data.Text'.
+-- unicode characters represented as standard Haskell Char's and subsequences
+-- of unicode characters represented as 'Text' values from 'Data.Text'.
 --
 -- NOTE that there is no instance 'UnicodeSequence s => UnicodeSequence [s]'
 -- because then the possibly slow list mappend (++) would be used instead of
@@ -43,9 +42,6 @@ import           Debug.Trace                (trace)
 -- it for now because this way we have a better overview w.r.t. the
 -- optimization GHC is doing.
 class Monoid s => UnicodeSequence s where
-    -- | A byte representing a 7-bit ASCII character. If the 8-bit is set, then
-    -- the character is ignored; i.e. the result is 'mempty'.
-    unicodeASCII7  :: Word8 -> s
     -- | A unicode character in the standard Haskell encoding represented by
     -- 'Char'.
     unicodeChar    :: Char -> s
@@ -53,38 +49,34 @@ class Monoid s => UnicodeSequence s where
     -- 'Data.Text'.
     unicodeText    :: Text -> s
 
+instance UnicodeSequence s => UnicodeSequence (a -> s) where
+    unicodeChar   = const . unicodeChar
+    unicodeText   = const . unicodeText
+
 -- | Build a unicode sequence from a string.
 unicodeString :: UnicodeSequence s => String -> s
-unicodeString = mconcat . map unicodeChar
+unicodeString s = (trace $ "string: "++s) (mconcat . map unicodeChar $ s)
 
 
--- | Build a unicode sequence from a string that consists only of characters
--- that can be encoded as 7-bit ASCII characters. Note that the conversion
--- asserts that the characters really are 7-bit ASCII.
---
--- Use this function to represent static 7-big encodable strings. For static
--- strings the conversion is done once and the result is shared.
-unicodeASCII7String :: UnicodeSequence s => String -> s
-unicodeASCII7String s = 
-    trace ("ascii7: "++s) $ mconcat $ map (unicodeASCII7 . charToASCII7) s
-  where
-    charToASCII7 :: Char -> Word8
-    charToASCII7 c = let x = ord c in assert (x <= 0x7F) (fromIntegral x)
-{-# NOINLINE unicodeASCII7String #-}
-  
 
+-----------------------------------------------------------------------------
 -- a few tests to see what if the sharing really works: it does :-)
+-----------------------------------------------------------------------------
 
 hello :: Utf8Builder
-hello = unicodeASCII7String "hello"
+hello = unicodeString "hello"
 
 world :: UnicodeSequence s => s
-world = unicodeASCII7String "world"
+world = unicodeString "world"
 
-testText1 :: IO ()
+
+displayBL = T.putStrLn . T.decodeUtf8 . mconcat . BL.toChunks
+
+displayUtf8 = displayBL . toLazyByteStringUtf8 
+
+testText1 :: Utf8Builder
 testText1 = 
-    T.putStrLn . T.decodeUtf8 . mconcat . BL.toChunks . 
-    toLazyByteStringUtf8 . mconcat $ 
+    mconcat $ 
         [ unicodeString "äeééé£££!!E+"
         , hello
         , unicodeChar ' '
@@ -92,10 +84,9 @@ testText1 =
         , unicodeString "äeééé£££!!E+"
         ]
 
-testText2 :: IO ()
+testText2 :: Utf8Builder
 testText2 = 
-    T.putStrLn . T.decodeUtf8 . mconcat . BL.toChunks . 
-    toLazyByteStringUtf8 . mconcat $ 
+    mconcat $ 
         [ unicodeString "äeééé£££!!E+"
         , world
         , unicodeChar ' '
@@ -121,16 +112,12 @@ toLazyByteStringUtf8 :: Utf8Builder -> BL.ByteString
 toLazyByteStringUtf8 = toLazyByteString . utf8Builder
 
 instance UnicodeSequence Utf8Builder where
-    unicodeASCII7 = Utf8Builder . encodeASCII7Utf8
     unicodeChar   = Utf8Builder . encodeCharUtf8
     unicodeText   = Utf8Builder . encodeTextUtf8
 
 
 -- Implementations of the encoding functions
 --------------------------------------------
-
-encodeASCII7Utf8 :: Word8 -> Builder
-encodeASCII7Utf8 w = if w <= 0x7F then singleton w else mempty
 
 -- based on: encode_utf8 in GHC.IO.Encoding.UTF8
 encodeCharUtf8 :: Char -> Builder

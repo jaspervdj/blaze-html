@@ -1,4 +1,4 @@
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving, FlexibleInstances #-}
 module EncodedHtml where
 
 import           Prelude             hiding (head)
@@ -7,6 +7,7 @@ import           Control.Exception          (assert)
 
 import qualified Data.ByteString.Lazy as BL
 import           Data.Char                  (ord, chr)
+import           Data.List                  (foldl')
 import           Data.Monoid
 import           Data.Text                  (Text)
 import qualified Data.Text            as T
@@ -26,9 +27,6 @@ import UnicodeSequence
 -- A type-class for abstracting Html documents
 -----------------------------------------------------------------------------
 
-class Attributable h where
-    -- | Key, value, html taking attributes
-    addAttribute :: h -> h -> h -> h
 
 class UnicodeSequence h => Encoded h where
     -- | The tag marking the encoding
@@ -37,13 +35,15 @@ class UnicodeSequence h => Encoded h where
     -- substitution.
     replaceUnencodable :: (Char -> h) -> h -> h
 
-class (Attributable h, Encoded h) => Html h where
+class Encoded h => Html h where
     -- | Left html, right html
-    separate         :: h -> h -> h
+    separate     :: h -> h -> h
     -- | Tag
-    leafElement      :: h -> h
+    leafElement  :: h -> h
     -- | Tag, inner html
-    nodeElement      :: h -> h -> h
+    nodeElement  :: h -> h -> h
+    -- | Key, value, html taking attributes
+    addAttribute :: h -> h -> h -> h
 
 unescapedChar :: UnicodeSequence s => Char -> s
 unescapedChar = unicodeChar
@@ -89,17 +89,6 @@ instance Monoid m => Monoid (OneLineHtml m) where
     -- libraries.
     mconcat hs = OLH $ \attrs -> mconcat $ map (`runOLH` attrs) hs
 
-instance UnicodeSequence s => Attributable (OneLineHtml s) where
-    addAttribute key value h = OLH $ \attrs -> 
-        runOLH h $ mconcat
-            [ unicodeChar ' '
-            , runOLH key mempty
-            , unicodeChar '='
-            , unicodeChar '"'
-            , runOLH value mempty
-            , unicodeChar '"'
-            ] `mappend` attrs
-
 instance Encoded s => Encoded (OneLineHtml s) where
     encodingTag = OLH $ const encodingTag
     replaceUnencodable subst inner = OLH $ \attrs -> 
@@ -127,6 +116,15 @@ instance (Encoded s, UnicodeSequence s) => Html (OneLineHtml s) where
         , runOLH tag mempty
         , unicodeChar '>'
         ]
+    addAttribute key value h = OLH $ \attrs -> 
+        runOLH h $ mconcat
+            [ unicodeChar ' '
+            , runOLH key mempty
+            , unicodeChar '='
+            , unicodeChar '"'
+            , runOLH value mempty
+            , unicodeChar '"'
+            ] `mappend` attrs
 
 ------------------------------------------------------------------------------
 -- An Encoded instance for TOTAL encodings
@@ -392,45 +390,50 @@ displayTE s = displayUtf8 $ runTE s (unicodeString "<TEST-ENCODING-TAG>")
 html :: Html h => h -> h
 html = nodeElement (unicodeString "html")
 
-attributeValue :: (Encoded s) => Unescaped s -> s
-attributeValue = 
-    replaceUnencodable htmlCharReference . escapeDoubleQuotedAttribute
-
-attribute :: (Encoded h, Attributable h) => String -> Unescaped h -> h -> h
-attribute key val = addAttribute (unicodeString key) (attributeValue val)
-
 testDoc :: Html h => h
-testDoc = html $ attribute "onload" testAtt $ head $ htmlContent testString
+testDoc = html $ head ! attribute "onload" testAtt $ htmlContent testString
 
 testDocUtf8 = runHtmlUtf8 testDoc
 testDocLatin1 = runHtmlLatin1 testDoc
 
 ------------------------------------------------------------------------------
--- Unparsed CDATA escaping (for <script> and <style> tags)
+-- Attributes
 ------------------------------------------------------------------------------
 
+instance Encoded h => Encoded (h -> h) where
+    encodingTag = const encodingTag
+    replaceUnencodable subst h = 
+        const $ replaceUnencodable (\c -> subst c mempty) (h mempty)
 
-{-
-
+-- We require this instance for allowing to addAttributes to nesting
+-- html combinators; i.e. combinators of type 'h -> h'. Except for
+-- the third argument of 'addAttribute' the outer argument is not
+-- passed through. This is to avoid unnecessary references to these
+-- arguments.
 --
--- NOTE This needs to be refined to support setting attributes for the
--- html, head, and body tag.
-html :: Html h => h -> h -> EncodingExplicit h
-html hd b = encodingImplicitHtml $
-    (head $ encodingTag <> EE (const hd)) <> EE (const (body b))
+-- TODO: Check what inlining (and if required specialization) is necessary to
+-- get rid of the abstraction cost.
+instance Html h => Html (h -> h) where
+    h1 `separate` h2    = const $ h1 mempty `separate` h2 mempty
+    leafElement h       = const $ h mempty
+    nodeElement h inner = const $ nodeElement (h mempty) (inner mempty)
+    addAttribute key value h = \inner ->
+        addAttribute (key mempty) (value mempty) (h inner)
 
--- | Now we can render an encoding explicit document using the HtmlByteString
--- renderer.
---
--- The type signature reminds us that we need to put the encodingTag somewhere.
--- However this is not enforced, as any html document could be handed over
--- here.  The enforcment happens only indirectly in the form of the combinators
--- presented to the library user.
-htmlUtf8 :: EncodingExplicit (OneLineHtml Utf8ByteString) -> BL.ByteString
-htmlUtf8 h = 
-  toLazyByteString $ runUtf8 (runOLH (runEE h utf8tag) mempty)
+newtype Attribute h = Attribute (h -> h)
+
+-- | Construct an attribute with proper escaping and character replacement for
+-- unencodable characters.
+attribute :: Html h => String -> Unescaped h -> Attribute h
+attribute k v = Attribute $ addAttribute key val
   where
-    utf8tag = unescapedText 
-       "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>"
+    key = unicodeString k
+    val = replaceUnencodable htmlCharReference (escapeDoubleQuotedAttribute v)
 
--}
+
+(!) :: Html h => h -> Attribute h -> h
+h ! Attribute f = f h
+
+(<!) :: Html h => h -> [Attribute h] -> h
+h <! atts = foldl' (!) h atts
+

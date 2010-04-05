@@ -1,4 +1,15 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving, FlexibleInstances #-}
+-- |
+-- Module      : EncodedHtml
+-- Copyright   : Simon Meier
+-- License     : BSD3-style (see LICENSE)
+-- 
+-- Maintainer  : Simon Meier <simon.meier@inf.ethz.ch>
+-- Stability   : unstable
+-- Portability : Portable to Hugs and GHC. Requires some flexible instances.
+--
+-- Encoding and rendering independent first-class values for representing Html
+-- and other tree-like documents.
 module EncodedHtml where
 
 import           Prelude             hiding (head)
@@ -180,7 +191,8 @@ instance UnicodeSequence s => Encoded (PartialEncoding s) where
 unicodeHexInt :: UnicodeSequence s => Int -> s
 unicodeHexInt n = unicodeString $ showHex n ""
 -- FIXME: specialize showHex for max speed and such that underlying character
--- constants are shared as good as possible.
+-- constants are shared as good as possible. This function will be used quite a
+-- bit when converting a Html document to a ASCII7 encoded bytestream.
 
 -- | Build a HTML character reference using hexadecimal notation.
 htmlCharReference :: UnicodeSequence s => Char -> s
@@ -285,6 +297,11 @@ instance Encoded s => Encoded (Unescaped s) where
     replaceUnencodable subst inner = Unescaped $ \ei ->
         replaceUnencodable (\c -> escape (subst c) ei) (escape inner ei)
 
+-- | Escape nothing; needed for some tricks like displaying the result of a
+-- Html document as well as the code.
+escapeNothing :: UnicodeSequence s => Unescaped s -> s
+escapeNothing = (`escape` EscapingInfo unicodeChar unicodeText)
+
 -- | Escape HTML content.
 escapeHtmlContent :: UnicodeSequence s => Unescaped s -> s
 escapeHtmlContent = (`escape` EscapingInfo escChar escText)
@@ -339,6 +356,33 @@ escapeSingleQuotedJSString = (`escape` EscapingInfo escChar escText)
     slash     = unicodeString "\\x2F"  
     langle    = unicodeString "\\x3C"  
 
+-- | Paranoid escaping of all characters below 0xFF that are not alpha-numeric.
+-- This is what the ESAPI project recommends in their XSS article:
+-- http://www.owasp.org/index.php/XSS_(Cross_Site_Scripting)_Prevention_Cheat_Sheet
+-- 
+-- We are currently using it for CSS and URL escaping, as there I do not yet
+-- know what is required to make sure that the parser does not make any
+-- misinterpretation.
+-- 
+-- TODO: Investigate this and check if a more bandwidth efficient escaping is
+-- possible.
+escapeParanoid :: UnicodeSequence s => (Char -> s) -> Unescaped s -> s
+escapeParanoid charRef = (`escape` EscapingInfo escChar escText)
+    where
+    escChar c
+        |    ('0' <= c && c <= '9')
+          || ('A' <= c && c <= 'Z')
+          || ('a' <= c && c <= 'z') = unicodeChar c
+        | otherwise                 = charRef c
+    -- TODO: faster implementation based on text internal representation
+    escText   = mconcat . map escChar . T.unpack
+
+escapeCSS :: UnicodeSequence s => Unescaped s -> s
+escapeCSS = escapeParanoid cssCharReference
+
+escapeURL :: UnicodeSequence s => Unescaped s -> s
+escapeURL = escapeParanoid urlCharReference
+
 ------------------------------------------------------------------------------
 -- Combinators for building properly escaped and encoded content
 ------------------------------------------------------------------------------
@@ -371,9 +415,6 @@ jsString s = mconcat
     , replaceUnencodable jsCharReference $ escapeSingleQuotedJSString s
     , unicodeChar '\'' ]
 
--- TODO
-cssString = undefined
-
 testString :: UnicodeSequence s => s
 testString = unicodeString "hello\"'\\'\" world └─╼"
 
@@ -387,14 +428,31 @@ testAtt = mconcat $
 displayTE :: TotalEncoding Utf8Builder -> IO ()
 displayTE s = displayUtf8 $ runTE s (unicodeString "<TEST-ENCODING-TAG>")
 
+-- | The html combinator for HTML 4.01 strict. 
+--
+-- This conforms to the first milestone of BlazeHtml to achieve a complete set
+-- of combinators for creating encoding independent HTML 4.01 strict documents
+-- with the guarantee that all created documents are well-formed and parsed
+-- back into "the same" structure by a HTML 4.01 strict capable user agent.
 html :: Html h => h -> h
-html = nodeElement (unicodeString "html")
+html = unicodeString "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\"\
+                     \ \"http://www.w3.org/TR/html4/strict.dtd\">\n"
+       `mappend` nodeElement (unicodeString "html")
 
 testDoc :: Html h => h
 testDoc = html $ head ! attribute "onload" testAtt $ htmlContent testString
 
 testDocUtf8 = runHtmlUtf8 testDoc
 testDocLatin1 = runHtmlLatin1 testDoc
+
+urlFragment :: UnicodeSequence s => Unescaped s -> s
+urlFragment = escapeURL
+
+cssFragment :: UnicodeSequence s => Unescaped s -> s
+cssFragment = escapeCSS
+
+href :: Html h => Unescaped h -> Attribute h
+href = attribute "href" . replaceUnencodable urlCharReference
 
 ------------------------------------------------------------------------------
 -- Attributes

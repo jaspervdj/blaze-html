@@ -1,6 +1,14 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
-
--- | An abstract representation of a sequence of Unicode characters with a
+-- |
+-- Module      : UnicodeSequence
+-- Copyright   : Simon Meier
+-- License     : BSD3-style (see LICENSE)
+-- 
+-- Maintainer  : Simon Meier <simon.meier@inf.ethz.ch>
+-- Stability   : unstable
+-- Portability : Portable to Hugs and GHC. Requires some flexible instances.
+--
+-- An abstract representation of a sequence of Unicode characters with a
 -- special focus on allowing for efficient transcoding.
 --
 -- NOTE that the same construction could also be used to abstract over

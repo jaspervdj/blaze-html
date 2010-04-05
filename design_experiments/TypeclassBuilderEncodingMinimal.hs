@@ -12,6 +12,8 @@ import Control.Monad.Reader
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Lazy as BL
 import Data.Text.Encoding (encodeUtf8,decodeUtf8)
+import Criterion.Main
+
 
 infixr 3 <> 
 infixr 3 <->
@@ -742,9 +744,9 @@ newtype HtmlMonad h a = HtmlMonad
 instance Monoid h => Monoid (HtmlMonad h a) where
     mempty = HtmlMonad $ const $ constructBottomPair mempty
     mappend (HtmlMonad f1) (HtmlMonad f2) = HtmlMonad $ \appender ->
-        let StrictPair h1 a1 = f1 appender
-            StrictPair h2 a2 = f2 appender
-        in StrictPair (h1 `mappend` h2) a2
+        let StrictPair h1 _ = f1 appender
+            StrictPair h2 _ = f2 appender
+        in constructBottomPair (h1 `mappend` h2)
 
 instance UnicodeSequence h => UnicodeSequence (HtmlMonad h a) where
     unicodeChar = HtmlMonad . const . constructBottomPair . unicodeChar
@@ -833,4 +835,31 @@ testText = decodeUtf8 . mconcat . BL.toChunks $ htmlUtf8 testDoc
 testTextIO :: IO ()
 testTextIO = T.putStrLn testText
 
+-----------------------------------------------------------------------------
+-- An small benchmark
+-----------------------------------------------------------------------------
 
+table :: (Html h) => h -> h
+table = nodeElement (unescapedString "table")
+
+td :: (Html h) => h -> h
+td = nodeElement (unescapedString "td")
+
+tr :: (Html h) => h -> h
+tr = nodeElement (unescapedString "tr")
+
+main = defaultMain
+    [ bench "render/length" $ whnf (BL.length . renderTable) rows
+    ]
+  where
+    rows :: Int
+    rows = 1000
+
+    renderTable :: Int -> BL.ByteString
+    renderTable n = htmlUtf8 $ doc n
+
+    doc :: Html h => Int -> h
+    doc n = table $ concatenatedHtml $
+        forM_ [1..n] $ \row ->
+            tr $ forM_ (zip ['a'..'j'] [1..10]) $ \col ->
+                td $ text $ T.pack (show col)

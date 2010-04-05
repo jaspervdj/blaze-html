@@ -730,20 +730,25 @@ instance Attributable3 Attrib where
 
 data StrictPair h a = StrictPair {-# UNPACK #-} !h a
 
+-- | Construct a pair with only one element filled in. The second element is
+-- bottom, thus you should make sure the second element is never evaluated.
+constructBottomPair :: h -> StrictPair h a
+constructBottomPair = flip StrictPair $ error "_|_"
+
 newtype HtmlMonad h a = HtmlMonad 
     { runHtmlMonad :: (h -> h -> h) -> StrictPair h a
     }
 
-instance (Monoid h, Monoid a) => Monoid (HtmlMonad h a) where
-    mempty = HtmlMonad $ const $ StrictPair mempty mempty
+instance Monoid h => Monoid (HtmlMonad h a) where
+    mempty = HtmlMonad $ const $ constructBottomPair mempty
     mappend (HtmlMonad f1) (HtmlMonad f2) = HtmlMonad $ \appender ->
         let StrictPair h1 a1 = f1 appender
             StrictPair h2 a2 = f2 appender
-        in StrictPair (h1 `mappend` h2) (a1 `mappend` a2)
+        in StrictPair (h1 `mappend` h2) a2
 
-instance (UnicodeSequence h, Monoid a) => UnicodeSequence (HtmlMonad h a) where
-    unicodeChar c = HtmlMonad $ const $ StrictPair (unicodeChar c) mempty
-    unicodeText c = HtmlMonad $ const $ StrictPair (unicodeText c) mempty
+instance UnicodeSequence h => UnicodeSequence (HtmlMonad h a) where
+    unicodeChar = HtmlMonad . const . constructBottomPair . unicodeChar
+    unicodeText = HtmlMonad . const . constructBottomPair . unicodeText
 
 instance Attributable h => Attributable (HtmlMonad h a) where
     addAttribute (HtmlMonad k) (HtmlMonad v) (HtmlMonad h) = HtmlMonad $ \app ->
@@ -752,7 +757,7 @@ instance Attributable h => Attributable (HtmlMonad h a) where
             StrictPair hv a = h app
         in StrictPair (addAttribute kv vv hv) a
 
-instance (Html h, Monoid a) => Html (HtmlMonad h a) where
+instance Html h => Html (HtmlMonad h a) where
     separate (HtmlMonad f1) (HtmlMonad f2) = HtmlMonad $ \appender ->
         let StrictPair h1 _ = f1 appender
             StrictPair h2 a = f2 appender
@@ -770,7 +775,7 @@ instance (Html h, Monoid a) => Html (HtmlMonad h a) where
 --     return a >>= f  = f a
 --     m >>= return    = m
 --     (m >>= f) >>= g = m >>= (\x -> f x >>= g)
-instance (Monoid h) => Monad (HtmlMonad h) where
+instance Monoid h => Monad (HtmlMonad h) where
     return a = HtmlMonad $ const $ StrictPair mempty a
     (HtmlMonad f1) >> (HtmlMonad f2) = HtmlMonad $ \appender ->
         let StrictPair h1 _ = f1 appender
@@ -781,7 +786,7 @@ instance (Monoid h) => Monad (HtmlMonad h) where
             StrictPair h2 b = runHtmlMonad (f a) appender
         in StrictPair (h1 `appender` h2) b
 
-instance (Html h, Monoid a) => IsString (HtmlMonad h a) where
+instance Html h => IsString (HtmlMonad h a) where
     fromString = string
 
 -----------------------------------------------------------------------------

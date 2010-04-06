@@ -26,6 +26,8 @@ the following additional goals:
 - light-weight syntax for specifying Html documents
 - support for other Html-like document formats (e.g.  XHtml, XML)
 - html documents should be first-class values; i.e. we want composability
+- it should be possible to write a document in an encoding-independent way and
+  fix the encoding later
 
 As long as these goals don't conflict with our main goal, we will try to satisfy
 them as well as possible.
@@ -41,126 +43,104 @@ for the various flavours of Html-like documents on top.
 In the following sections, we present the `Html` typeclass, the efficient
 rendering instances, and the concrete document combinators.
 
-
 ## Core Combinators
 
-We fix the representation of text to the `Text` type provided by `Data.Text`.
-An attribute is just a tuple of a text representing the key and a text
-representing the value.
+Our `Html` typeclass depends on two other typeclasses, `UnicodeSequence` and
+`Attributable`. In the next paragraphs, we will examine these three
+typeclasses.
 
-    type Attribute = (Text,Text)
+### UnicodeSequence
 
-We use a difference list of attributes to represent the accumulated attributes
-to be applied to a html element.
+`UnicodeSequence` is a type that represent sequences of text. They can be built
+from different types, including 7-bit ASCII characters, standard Haskell
+characters, and `Data.Text` strings.
 
-    type AttributeManipulation = [Attribute] -> [Attribute]
+    class Monoid s => UnicodeSequence s where
+        unicodeASCII7  :: Word8 -> s
+        unicodeChar    :: Char  -> s
+        unicodeText    :: Text  -> s
 
-We define an _html document_ to be a value of a type which is an instance of
-the `Html` typeclass. We call the methods of the `Monoid` and the `Html`
-typeclasses the _core combinators_. These are the ones which are actually
-used in a compiled executable to represent a html document.
+Implementations of this `UnicodeSequence` typeclass will use fast builder
+Monoids, like `Data.Binary.Builder`, or the upcoming `Data.Text.Builder` Monoid.
+In the code, we provide an instance for a fast `UnicodeSequence` using the
+`Data.Binary.Builder` monoid. The benefit of this approach is that we can have
+fast, zero-copy construction of our final (encoded) Document representation.
 
-    class Monoid h => Html h where
-        -- | A text leaf -- no escaping is done.
-        unescapedText    :: Text -> h
-        -- | A leaf element with the given tag name.
-        leafElement      :: Text -> h
-        -- | A node element with the given tag and inner document.
-        nodeElement      :: Text -> h -> h
-        -- | Modify the attributes of the outermost elements in the .
-        modifyAttributes ::
-            (AttributeManipulation -> AttributeManipulation) -> h -> h
+### Attributable
 
-Let us give an example based on the core combinators. Assuming that
+We have a separate typeclass to abstract values that can take attributes.
 
-    (<>) :: Monoid m => m -> m -> m
-    (<>) = mappend
+    class Attributable h where
+        addAttribute :: h -- ^ Key.
+                     -> h -- ^ Value.
+                     -> h -- ^ Html taking attributes.
+                     -> h -- ^ Result.
 
-The HTML code
+### Html
 
-    <h1>BlazeHtml</h1>
-    <img href="logo.png"/>
-    <p> is a <em>blazingly</em>fast HTML generation library</p>
+Finally, we have a class for abstracting HTMl documents trough closures.
 
-would be represented using the core combinators as
+    class (Attributable h, UnicodeSequence h) => Html h where
+        separate    :: h -- ^ Left HTML.
+                    -> h -- ^ Right HTML.
+                    -> h -- ^ Result.
+        leafElement :: h -- ^ Tag.
+                    -> h -- ^ Result.
+        nodeElement :: h -- ^ Tag.
+                    -> h -- ^ Inner HTML.
+                    -> h -- ^ Result.
 
-    (nodeElement "h1" $ unescapedText "BlazeHtml") <>
-    (modifyAttributes (("href","logo.png"):) .) $ leafElement "img") <>
-    (nodeElement "p" $ 
-        unescapedText " is a " <>
-        (nodeElement "em" $ unescapedText "blazingly") <>
-        unescapedText " fast HTML generation library")
-
-Obiviously, this is a quite wordy way to express Html documents. Therefore, we
-build a whole set of actual combinators atop of these to conventiently write
-html documents. We present the design of these _concrete combinators_ [better
-name needed here] in the in section "Specyfing Html Documents".
-
-Here, we are interested in the semantics of the core combinators. Apart from
-the `Monoid` laws, each instance of the Html document satisfies at least the
-following laws.
-      
-    unescapedText mempty = mempty
-    unescapedText (t1 <> t2) = unescapedText t1 <> unescapedText t2
-
-    modifyAttributes f mempty = mempty
-    modifyAttributes f (h1 <> h2) =
-        modifyAttributes f h1 <> modifyAttributes f h2
-
-    modifyAttributes f (unescapedText t) = unescapedText t
-    modifyAttributes f2 (modifyAttributes f1 t) = modifyAttributes (f1.f2) t
+The `separate` function is a way to guarantee some spacing between two HTML
+elements. Appending without any space can be done using `mappend`.
 
 Note that the equation
 
-    nodeElement n mempty = leafElement n
+    nodeElement tag mempty = leafElement tag
 
-is NOT guaranteed to hold, because `nodeElement n mempty` would produce
+is NOT guaranteed to hold, because `nodeElement tag mempty` would produce
 something of the form:
 
     <tag></tag>
 
-Whereas `leafElement n` would rather produce something like:
+Whereas `leafElement tag` would rather produce something like:
 
     <tag />
-
 
 ## Rendering
 
 As we said before, a "Renderer" is basically an instance of the `Html`
-typeclass. Our main focus will be `HtmlText`, which will render the HTML to a
-Lazy `Data.Text` value, through the use of a Builder Monoid.
+typeclass, which is able to flatten HTML documents to a sequence of characters.
+We will provide several renderers, and it will be possible to implement your
+own, custom renderer. We want to provide, at least:
 
-We will also offer an `HtmlPrettyText` renderer, which takes care of proper
-intendation. But this should not be our main focus, for the following reasons:
+- A very fast renderer which produces a lazy `ByteString`, by using the
+  `Data.Binary.Builder` Monoid.
+- A very fast renderer which produces lazy `Data.Text`, by using the
+  `Data.Text.Builder` Monoid.
+- A pretty printing library for debugging purposes.
 
-- Efficiency is our main goal. The more bytes we can spare, the better.
-- For the debugging the output, one can always run the output through a HTML
-  formatter to achieve the same goal.
-
-Furthermore, we can add more specific renderers (e.g. one writing directly to a
-`Socket` in a certain encoding). This is probably a trivial task, since they can
-make use of the `Data.Text` renderer.
-
+All of these renderers can be trivially extended to render directly to a socket
+or a file.
 
 ## Encoding
 
 HTML documents can be sent in many encodings these days. We want to ease this
-task, too, in BlazeHtml. Unfortunately, we cannot guarantee the correct sending
-of the encoding. The final encoding will be determined by the way the end user
-sends the `Data.Text` value over the `Socket` or to the file.
-
-But since the encoding module will be loosely coupled to the others, we cannot
-automatically set the encoding using a tag like the following:
+task, too, in BlazeHtml. The goal is that one can specify an entire HTML
+document in an encoding-independent way, and fix the encoding later. For this
+purpose, we have an `Html` instance that gives us the possibility of using
+an arbirtary encoding tag, for example:
 
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
-This is because inserting such an element would require traversing of the entire
-HTML document again. Therefore, this will be up to the user to either set the
-correct tag here (we will provide combinators for the common encodings) or send
-the encoding directly in the server response headers.
+This typeclass is thus specified like:
 
-[Needs to be expanded / describe problem more clearly]
+    newtype EncodingExplicit h = EncodingExplicit
+        { runEncodingExplicit :: h -> h }
 
+And the placeholder for the encoding tag is implemented like this:
+
+    encodingTag :: EncodingExplicit h
+    encodingTag = EncodingExplicit id
 
 ## Specifying Html documents
 

@@ -6,8 +6,6 @@ module Internal.HtmlMonad
 
 import Data.Monoid (Monoid, mappend, mempty)
 
-import GHC.Exts (IsString (..))
-
 import Internal.EncodedHtml
 import Internal.UnicodeSequence
 import Internal.Escaping
@@ -79,9 +77,6 @@ instance Monoid h => Monad (HtmlMonad h) where
             StrictPair h2 b = runHtmlMonad (f a) appender
         in StrictPair (h1 `appender` h2) b
 
-instance Html h => IsString (HtmlMonad h a) where
-    fromString = elementText . fromString
-
 concatenatedHtml :: Html h => HtmlMonad h a -> h
 concatenatedHtml m = let StrictPair h _ = ($ mappend) $ runHtmlMonad m
                      in h
@@ -89,4 +84,3 @@ concatenatedHtml m = let StrictPair h _ = ($ mappend) $ runHtmlMonad m
 separatedHtml :: Html h => HtmlMonad h a -> h
 separatedHtml m = let StrictPair h _ = ($ separate) $ runHtmlMonad m
                   in h
-

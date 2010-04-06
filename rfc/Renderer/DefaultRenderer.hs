@@ -59,5 +59,5 @@ instance (Encoded s, UnicodeSequence s) => Html (DefaultRenderer s) where
             , unicodeChar '"'
             ] `mappend` attrs
 
-renderDefault :: (Html h) => DefaultRenderer h -> h
+renderDefault :: (Encoded s, UnicodeSequence s) => DefaultRenderer s -> s
 renderDefault renderer = runDefaultRenderer renderer mempty

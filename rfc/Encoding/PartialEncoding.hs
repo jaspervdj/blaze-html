@@ -2,6 +2,8 @@ module Encoding.PartialEncoding where
 
 import Data.Monoid (Monoid (..))
 
+import qualified Data.Text as T
+
 import Internal.EncodedHtml
 import Internal.UnicodeSequence
 

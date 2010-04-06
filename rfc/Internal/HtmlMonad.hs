@@ -8,7 +8,6 @@ import Data.Monoid (Monoid, mappend, mempty)
 
 import Internal.EncodedHtml
 import Internal.UnicodeSequence
-import Internal.Escaping
 
 data StrictPair h a = StrictPair {-# UNPACK #-} !h a
 

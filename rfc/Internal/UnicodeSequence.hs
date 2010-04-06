@@ -6,7 +6,6 @@ module Internal.UnicodeSequence where
 import Data.Monoid (Monoid, mconcat)
 
 import Data.Text (Text)
-import Debug.Trace (trace)
 
 -- | A @UnicodeSequence@ is a type that can represent sequences built from
 -- unicode characters represented as standard Haskell Char's and subsequences
@@ -30,9 +29,8 @@ instance UnicodeSequence s => UnicodeSequence (a -> s) where
 
 -- | Build a unicode sequence from a string.
 unicodeString :: UnicodeSequence s => String -> s
-unicodeString s = (trace $ "string: " ++ s) (mconcat . map unicodeChar $ s)
+unicodeString = mconcat . map unicodeChar
 
 -- | Build a unicode sequence from a value that can be shown.
 unicodeShow :: UnicodeSequence s => String -> s
-unicodeShow x = 
-    (trace $ "show: " ++ show x) (mconcat . map unicodeChar . show $ x)
+unicodeShow = unicodeString . show

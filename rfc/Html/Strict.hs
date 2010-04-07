@@ -21,6 +21,9 @@ text = htmlContent . unicodeText
 head :: Html h => h -> h
 head inner = nodeElement (unicodeString "head") (encodingTag `mappend` inner)
 
+body :: Html h => h -> h
+body = nodeElement (unicodeString "body")
+
 -- | c.f. HTML 4.01 Standard, Section 6.2
 script :: Html h => h -> h
 script = 
@@ -47,6 +50,15 @@ html :: Html h => h -> h
 html = unicodeString "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\"\
                      \ \"http://www.w3.org/TR/html4/strict.dtd\">\n"
        `mappend` nodeElement (unicodeString "html")
+
+table :: Html h => h -> h
+table = nodeElement (unicodeString "table")
+
+tr :: Html h => h -> h
+tr = nodeElement (unicodeString "table")
+
+td :: Html h => h -> h
+td = nodeElement (unicodeString "table")
 
 urlFragment :: UnicodeSequence s => Unescaped s -> s
 urlFragment = escapeURL

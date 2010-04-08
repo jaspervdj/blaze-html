@@ -50,8 +50,14 @@ rendering instances, and the concrete document combinators.
 > import Prelude hiding (head)
 > import Data.Monoid (mempty)
 > import Html.Strict
+> import Html.Strict as H
+> import Html.Strict.Attributes
+> import Html.Strict.Attributes as A
 > import Internal.HtmlMonad
 > import Internal.EncodedHtml
+> import Internal.Attributes
+> import Internal.Escaping
+> import Internal.UnicodeSequence
 
 > import Renderer.Utf8HtmlRenderer
 > import Renderer.Latin1HtmlRenderer
@@ -62,10 +68,29 @@ rendering instances, and the concrete document combinators.
 > import Control.Monad (forM_)
 > import qualified Data.Text as T
 
+> testSnippet :: Html h => h
+> testSnippet = concatenatedHtml $ do
+>     let section t = h1 ! (class_ "dumb") $ text t
+> 
+>     section "BlazeHtml -- Introduction"
+>     img ! href "logo here.png"
+> 
+>     H.div ! A.id "fancy" $ separatedHtml $ do
+>         text "A blazingly <fast> HTML combinator library."
+>         text "Based on a Builder Monoid."
+>         em $ text "BlazeHtml also supports a monad interface."
+> 
+>     section "BlazeHtml -- Problem"
+>     text $ "Hello world. λf.(λx.fxx)(λx.fxx)"
+>     text $ "These & those."
+
 > testDoc :: Html h => h
 > testDoc = concatenatedHtml $ do
->    html $ do head mempty
->              body $ text "Hello world. λf.(λx.fxx)(λx.fxx)"
+>     html $ do head mempty
+>               body testSnippet
+
+> t1 :: UnicodeSequence h => h
+> t1 = escapeUrl (unicodeString "foo bar")
 
 Now run in `ghci`:
 

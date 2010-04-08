@@ -1,9 +1,11 @@
+{-# LANGUAGE FlexibleInstances #-}
 module Internal.Escaping where
 
 import Data.Monoid (Monoid, mconcat, mempty, mappend)
 import Data.Char (ord)
 import Numeric (showHex)
 
+import GHC.Exts (IsString (..))
 import Data.Text (Text)
 import qualified Data.Text as T
 
@@ -158,8 +160,8 @@ escapeParanoid charRef = (`escape` EscapingInfo escChar escText)
     -- TODO: faster implementation based on text internal representation
     escText   = mconcat . map escChar . T.unpack
 
-escapeCSS :: UnicodeSequence s => Unescaped s -> s
-escapeCSS = escapeParanoid cssCharReference
+escapeCss :: UnicodeSequence s => Unescaped s -> s
+escapeCss = escapeParanoid cssCharReference
 
-escapeURL :: UnicodeSequence s => Unescaped s -> s
-escapeURL = escapeParanoid urlCharReference
+escapeUrl :: UnicodeSequence s => Unescaped s -> s
+escapeUrl = escapeParanoid urlCharReference

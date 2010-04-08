@@ -1,3 +1,4 @@
+{-# LANGUAGE OverloadedStrings #-}
 module Html.Strict where
 
 import Prelude (String, (.), ($))
@@ -19,20 +20,20 @@ text :: Encoded s => Text -> s
 text = htmlContent . unicodeText
 
 head :: Html h => h -> h
-head inner = nodeElement (unicodeString "head") (encodingTag `mappend` inner)
+head inner = nodeElement (unicodeText "head") (encodingTag `mappend` inner)
 
 body :: Html h => h -> h
-body = nodeElement (unicodeString "body")
+body = nodeElement (unicodeText "body")
 
 -- | c.f. HTML 4.01 Standard, Section 6.2
 script :: Html h => h -> h
 script = 
-    nodeElement (unicodeString "script") . replaceUnencodable jsCharReference
+    nodeElement (unicodeText "script") . replaceUnencodable jsCharReference
 
 -- | c.f. HTML 4.01 Standard, Section 6.2
 style :: Html h => h -> h
 style = 
-    nodeElement (unicodeString "style") . replaceUnencodable cssCharReference
+    nodeElement (unicodeText "style") . replaceUnencodable cssCharReference
 
 jsString :: (Encoded s) => Unescaped s -> s
 jsString s = mconcat 
@@ -47,21 +48,33 @@ jsString s = mconcat
 -- with the guarantee that all created documents are well-formed and parsed
 -- back into "the same" structure by a HTML 4.01 strict capable user agent.
 html :: Html h => h -> h
-html = unicodeString "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\"\
+html = unicodeText "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\"\
                      \ \"http://www.w3.org/TR/html4/strict.dtd\">\n"
-       `mappend` nodeElement (unicodeString "html")
+       `mappend` nodeElement (unicodeText "html")
 
 table :: Html h => h -> h
-table = nodeElement (unicodeString "table")
+table = nodeElement (unicodeText "table")
 
 tr :: Html h => h -> h
-tr = nodeElement (unicodeString "table")
+tr = nodeElement (unicodeText "table")
 
 td :: Html h => h -> h
-td = nodeElement (unicodeString "table")
+td = nodeElement (unicodeText "table")
+
+h1 :: Html h => h -> h
+h1 = nodeElement (unicodeText "h1")
+
+em :: Html h => h -> h
+em = nodeElement (unicodeText "em")
+
+div :: Html h => h -> h
+div = nodeElement (unicodeText "div")
+
+img :: Html h => h
+img = leafElement (unicodeText "img")
 
 urlFragment :: UnicodeSequence s => Unescaped s -> s
-urlFragment = escapeURL
+urlFragment = escapeUrl
 
 cssFragment :: UnicodeSequence s => Unescaped s -> s
-cssFragment = escapeCSS
+cssFragment = escapeCss

@@ -54,6 +54,7 @@ rendering instances, and the concrete document combinators.
 > import Html.Strict.Attributes
 > import Html.Strict.Attributes as A
 > import Internal.Html
+> import Internal.HtmlMonad
 > import Internal.Attributes
 > import Internal.Escaping
 
@@ -67,20 +68,20 @@ rendering instances, and the concrete document combinators.
 > import qualified Data.Text as T
 
 > testSnippet :: Html h => h
-> testSnippet = concatenatedHtml $ do
+> testSnippet = separatedHtml $ do
 >     let section t = h1 ! (class_ "dumb") $ text t
 > 
 >     section "BlazeHtml -- Introduction"
 >     img ! href "logo here.png"
 > 
 >     H.div ! A.id "fancy" $ separatedHtml $ do
->         text "A blazingly <fast> HTML combinator library."
->         text "Based on a Builder Monoid."
->         em $ text "BlazeHtml also supports a monad interface."
+>         "A blazingly <fast> HTML combinator library."
+>         "Based on a Builder Monoid."
+>         em $ "BlazeHtml also supports a monad interface."
 > 
 >     section "BlazeHtml -- Problem"
->     text $ "Hello world. λf.(λx.fxx)(λx.fxx)"
->     text $ "These & those."
+>     "Hello world. λf.(λx.fxx)(λx.fxx)"
+>     "These & those."
 
 > testDoc :: Html h => h
 > testDoc = concatenatedHtml $ do

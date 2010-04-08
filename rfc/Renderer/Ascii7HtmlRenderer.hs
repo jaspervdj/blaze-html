@@ -27,5 +27,5 @@ renderHtmlAscii7Like charset h = toLazyByteStringAscii7 $
           , charset
           , "/>" 
           ]
-        , eiUnencodable = (\c -> 0x7F < ord c)
+        , eiUnencodable = \c -> 0x7F < ord c
         }

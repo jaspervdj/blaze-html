@@ -6,7 +6,6 @@ module Internal.Html where
 import Prelude hiding (head)
 import Data.Monoid (Monoid, mconcat, mempty, mappend)
 
-import GHC.Exts (IsString (..))
 import Data.Text (Text)
 
 -- | A @UnicodeSequence@ is a type that can represent sequences built from
@@ -67,7 +66,7 @@ unescapedText = unicodeText
 instance Encoded h => Encoded (h -> h) where
     encodingTag = const encodingTag
     replaceUnencodable subst h = 
-        const $ replaceUnencodable (\c -> subst c mempty) (h mempty)
+        const $ replaceUnencodable (flip subst mempty) (h mempty)
 
 -- We require this instance for allowing to addAttributes to nesting
 -- html combinators; i.e. combinators of type 'h -> h'. Except for
@@ -81,29 +80,5 @@ instance Html h => Html (h -> h) where
     h1 `separate` h2    = const $ h1 mempty `separate` h2 mempty
     leafElement h       = const $ h mempty
     nodeElement h inner = const $ nodeElement (h mempty) (inner mempty)
-    addAttribute key value h = \inner ->
+    addAttribute key value h inner =
         addAttribute (key mempty) (value mempty) (h inner)
-
-newtype ConcatenatedHtml h a = ConcatenatedHtml 
-    { concatenatedHtml :: h
-    } deriving (Monoid, UnicodeSequence, Encoded, Html, IsString)
-    
-instance Monoid h => Monad (ConcatenatedHtml h) where
-    return a = ConcatenatedHtml mempty
-    (ConcatenatedHtml h1) >> (ConcatenatedHtml h2) =
-        ConcatenatedHtml $ h1 `mappend` h2
-    (ConcatenatedHtml h1) >>= f = ConcatenatedHtml $ 
-        let ConcatenatedHtml h2 = f undefined
-        in h1 `mappend` h2
-
-newtype SeparatedHtml h a = SeparatedHtml 
-    { separatedHtml :: h
-    } deriving (Monoid, UnicodeSequence, Encoded, Html, IsString)
-    
-instance Monoid h => Monad (SeparatedHtml h) where
-    return a = SeparatedHtml mempty
-    (SeparatedHtml h1) >> (SeparatedHtml h2) =
-        SeparatedHtml $ h1 `mappend` h2
-    (SeparatedHtml h1) >>= f = SeparatedHtml $ 
-        let SeparatedHtml h2 = f undefined
-        in h1 `mappend` h2

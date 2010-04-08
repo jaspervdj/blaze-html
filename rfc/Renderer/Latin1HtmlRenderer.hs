@@ -19,7 +19,7 @@ renderHtmlLatin1 h = toLazyByteStringLatin1 $
   where
     info = EncodingInfo
         { eiTag = unicodeString tag
-        , eiUnencodable = (\c -> 0xFF < ord c)
+        , eiUnencodable = \c -> 0xFF < ord c
         }
 
     tag = "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\"/>"

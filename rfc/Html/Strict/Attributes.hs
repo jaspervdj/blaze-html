@@ -10,10 +10,10 @@ import Internal.Escaping
 import Internal.Attributes
 
 href :: Html h => Text -> Attribute h
-href = attribute "href" . escapeUrl . unicodeText
+href = attribute "href" . unicodeText
 
 src :: Html h => Text -> Attribute h
-src = attribute "src" . escapeUrl . unicodeText
+src = attribute "src" . unicodeText
 
 id :: Html h => Text -> Attribute h
 id = attribute "id" . unicodeText

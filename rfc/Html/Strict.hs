@@ -6,9 +6,8 @@ import Data.Monoid (mappend, mconcat)
 
 import Data.Text (Text)
 
-import Internal.EncodedHtml
+import Internal.Html
 import Internal.Escaping
-import Internal.UnicodeSequence
 
 htmlContent :: Encoded s => Unescaped s -> s
 htmlContent = replaceUnencodable htmlCharReference . escapeHtmlContent

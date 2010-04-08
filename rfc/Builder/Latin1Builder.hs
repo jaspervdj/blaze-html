@@ -11,7 +11,7 @@ import Data.Binary.Builder (Builder, singleton, toLazyByteString)
 import qualified Data.ByteString.Lazy as BL
 import qualified Data.Text as T
 
-import Internal.UnicodeSequence
+import Internal.Html
 
 -- | An efficient builder for lazy bytestrings representing Latin-1 (IS0
 -- 8859-1) encoded sequences of Unicode characters -- non-representable

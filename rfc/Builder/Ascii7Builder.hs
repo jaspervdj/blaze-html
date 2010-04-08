@@ -11,7 +11,7 @@ import Data.Binary.Builder (Builder, singleton, toLazyByteString)
 import qualified Data.ByteString.Lazy as BL
 import qualified Data.Text as T
 
-import Internal.UnicodeSequence
+import Internal.Html
 
 -- | An efficient builder for lazy bytestrings representing US-ASCII (7-bit)
 -- encoded sequences of Unicode characters -- non-representable characters are

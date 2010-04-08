@@ -13,7 +13,7 @@ import Data.Text (Text)
 import qualified Data.ByteString.Lazy as BL
 import qualified Data.Text as T
 
-import Internal.UnicodeSequence
+import Internal.Html
 
 -- | An efficient builder for lazy bytestrings representing UTF-8 encoded
 -- sequences of Unicode characters. 

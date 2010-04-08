@@ -4,9 +4,8 @@ import Data.List (foldl')
 
 import Data.Text (Text)
 
-import Internal.EncodedHtml
+import Internal.Html
 import Internal.Escaping
-import Internal.UnicodeSequence (unicodeText)
 
 newtype Attribute h = Attribute (h -> h)
 

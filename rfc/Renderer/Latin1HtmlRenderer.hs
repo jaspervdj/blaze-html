@@ -6,7 +6,7 @@ import Data.Char (ord)
 import Builder.Latin1Builder
 import Encoding.PartialEncoding
 import Renderer.DefaultRenderer
-import Internal.UnicodeSequence
+import Internal.Html
 
 -- TODO: For specialization to work nicely it may be required to build
 -- a separate type-class instance for Encoded with fixed values for

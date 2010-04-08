@@ -53,15 +53,13 @@ rendering instances, and the concrete document combinators.
 > import Html.Strict as H
 > import Html.Strict.Attributes
 > import Html.Strict.Attributes as A
-> import Internal.HtmlMonad
-> import Internal.EncodedHtml
+> import Internal.Html
 > import Internal.Attributes
 > import Internal.Escaping
-> import Internal.UnicodeSequence
 
 > import Renderer.Utf8HtmlRenderer
-> import Renderer.Latin1HtmlRenderer
-> import Renderer.Ascii7HtmlRenderer
+> -- import Renderer.Latin1HtmlRenderer
+> -- import Renderer.Ascii7HtmlRenderer
 
 > import Criterion.Main
 > import qualified Data.ByteString.Lazy as BL

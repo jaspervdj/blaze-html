@@ -5,8 +5,7 @@ import Prelude ((.), String)
 
 import Data.Text (Text)
 
-import Internal.UnicodeSequence
-import Internal.EncodedHtml
+import Internal.Html
 import Internal.Escaping
 import Internal.Attributes
 

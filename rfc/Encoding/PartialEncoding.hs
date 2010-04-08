@@ -4,8 +4,7 @@ import Data.Monoid (Monoid (..))
 
 import qualified Data.Text as T
 
-import Internal.EncodedHtml
-import Internal.UnicodeSequence
+import Internal.Html
 
 data EncodingInfo s = EncodingInfo
     { eiTag         :: !s

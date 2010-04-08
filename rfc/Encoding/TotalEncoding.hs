@@ -3,8 +3,7 @@ module Encoding.TotalEncoding where
 
 import Data.Monoid (Monoid)
 
-import Internal.UnicodeSequence
-import Internal.EncodedHtml
+import Internal.Html
 
 -- | An encoding that never needs to replace a character; eg.g. UTF-8, UTF-16,
 -- and UTF-32.

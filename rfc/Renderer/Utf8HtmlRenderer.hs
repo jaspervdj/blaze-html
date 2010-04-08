@@ -5,7 +5,7 @@ import qualified Data.ByteString.Lazy as BL
 import Renderer.DefaultRenderer
 import Builder.Utf8Builder
 import Encoding.TotalEncoding
-import Internal.UnicodeSequence
+import Internal.Html
 
 renderUtf8Html :: DefaultRenderer (TotalEncoding Utf8Builder) -> BL.ByteString
 renderUtf8Html h = toLazyByteStringUtf8 $

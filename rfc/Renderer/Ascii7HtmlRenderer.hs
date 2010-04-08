@@ -7,7 +7,7 @@ import Data.Monoid (mconcat)
 import Builder.Ascii7Builder
 import Encoding.PartialEncoding
 import Renderer.DefaultRenderer
-import Internal.UnicodeSequence
+import Internal.Html
 
 -- | An ASCII-7 based encoding of a Html document.
 type HtmlAscii7 = DefaultRenderer (PartialEncoding Ascii7Builder)

@@ -6,8 +6,7 @@ module Renderer.DefaultRenderer
 
 import Data.Monoid (Monoid, mempty, mappend, mconcat)
 
-import Internal.UnicodeSequence
-import Internal.EncodedHtml
+import Internal.Html
 
 -- | represent a Html document as a single line without line-breaks.
 newtype DefaultRenderer s = DefaultRenderer

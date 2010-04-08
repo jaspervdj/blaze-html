@@ -9,8 +9,7 @@ import GHC.Exts (IsString (..))
 import Data.Text (Text)
 import qualified Data.Text as T
 
-import Internal.EncodedHtml
-import Internal.UnicodeSequence
+import Internal.Html
 
 -- | Here we want to ensure that standard Html entity escaping is done
 -- and if required encoding dependent translation also.

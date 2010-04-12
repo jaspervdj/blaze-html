@@ -12,6 +12,9 @@ import Internal.Attributes
 href :: Html h => Text -> Attribute h
 href = attribute "href" . unicodeText
 
+alt :: Html h => Text -> Attribute h
+alt = attribute "alt" . unicodeText
+
 src :: Html h => Text -> Attribute h
 src = attribute "src" . unicodeText
 

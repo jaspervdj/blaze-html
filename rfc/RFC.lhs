@@ -59,8 +59,8 @@ rendering instances, and the concrete document combinators.
 > import Internal.Escaping
 
 > import Renderer.Utf8HtmlRenderer
-> -- import Renderer.Latin1HtmlRenderer
-> -- import Renderer.Ascii7HtmlRenderer
+> import Renderer.Latin1HtmlRenderer
+> import Renderer.Ascii7HtmlRenderer
 
 > import Criterion.Main
 > import qualified Data.ByteString.Lazy as BL
@@ -68,12 +68,21 @@ rendering instances, and the concrete document combinators.
 > import Data.Text (Text)
 > import qualified Data.Text as T
 
+Defining a document
+===================
+
+One of the goals of BlazeHtml is a light-weight syntax. Haskell supports this
+for Monads using the do-notation, so we would like to use this syntax here as
+well. We use `>>` for appending, and this means we can drop an operator for
+concatenating two HTML snippets (which is probably the most common operation
+you use when creating documents).
+
 > testSnippet :: Html h => h
 > testSnippet = separatedHtml $ do
 >     let section t = h1 ! (class_ "dumb") $ text t
 > 
 >     section "BlazeHtml -- Introduction"
->     img ! href "logo here.png"
+>     img ! href "logo here.png" ! alt "Alt text."
 > 
 >     H.div ! A.id "fancy" $ separatedHtml $ do
 >         "A blazingly <fast> HTML combinator library."
@@ -89,10 +98,7 @@ rendering instances, and the concrete document combinators.
 >     html $ do head mempty
 >               body testSnippet
 
-> t1 :: UnicodeSequence h => h
-> t1 = escapeUrl (unicodeString "foo bar")
-
-Now run in `ghci`:
+If you load this file in `ghci`, you can now try:
 
 - `renderUtf8Html testDoc`
 - `renderLatin1Html testDoc`
@@ -100,6 +106,9 @@ Now run in `ghci`:
 
 You will see that, for every renderer used, the output will be in the correct
 format and will contain the correct encoding tag.
+
+__Open Question__: should the head `meta` tag be automatically set, or should we
+solve that with a separate combinator `headWithMetaEncoding`?
 
 Some Benchmarks
 ===============

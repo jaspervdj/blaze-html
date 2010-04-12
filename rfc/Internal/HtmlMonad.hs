@@ -20,8 +20,9 @@ instance Monoid h => Monad (ConcatenatedHtml h) where
         let ConcatenatedHtml h2 = f undefined
         in h1 `mappend` h2
 
-instance Html h => IsString (ConcatenatedHtml h a) where
-    fromString = escapeHtmlContent . unicodeString
+instance (Html h, Encoded h) => IsString (ConcatenatedHtml h a) where
+    fromString = replaceUnencodable htmlCharReference
+               . escapeHtmlContent . unicodeString
 
 newtype SeparatedHtml h a = SeparatedHtml 
     { separatedHtml :: h
@@ -35,5 +36,6 @@ instance Html h => Monad (SeparatedHtml h) where
         let SeparatedHtml h2 = f undefined
         in h1 `separate` h2
 
-instance Html h => IsString (SeparatedHtml h a) where
-    fromString = escapeHtmlContent . unicodeString
+instance (Html h, Encoded h) => IsString (SeparatedHtml h a) where
+    fromString = replaceUnencodable htmlCharReference
+               . escapeHtmlContent . unicodeString

@@ -65,6 +65,7 @@ rendering instances, and the concrete document combinators.
 > import Criterion.Main
 > import qualified Data.ByteString.Lazy as BL
 > import Control.Monad (forM_)
+> import Data.Text (Text)
 > import qualified Data.Text as T
 
 > testSnippet :: Html h => h
@@ -100,21 +101,43 @@ Now run in `ghci`:
 You will see that, for every renderer used, the output will be in the correct
 format and will contain the correct encoding tag.
 
-> main = defaultMain
->     [ bench "render/length" $ whnf (BL.length . renderTable) rows
->     ]
+Some Benchmarks
+===============
+
+> bigTable :: Int -> BL.ByteString
+> bigTable n = renderUtf8Html $ doc n
 >   where
->     rows :: Int
->     rows = 1000
-> 
->     renderTable :: Int -> BL.ByteString
->     renderTable n = renderUtf8Html $ doc n
-> 
 >     doc :: Html h => Int -> h
 >     doc n = table $ concatenatedHtml $
 >         forM_ [1..n] $ \row ->
 >             tr $ forM_ (zip ['a'..'j'] [1..10]) $ \col ->
 >                 td $ text $ T.pack (show col)
+
+> basic :: (Text, Text, [Text]) -- ^ (Title, User, Items)
+>       -> BL.ByteString
+> basic (title', user, items) = renderUtf8Html $ concatenatedHtml $ html $ do
+>     head $ do title (text title')
+>     body $ do H.div ! A.id "header" $ do
+>                   h1 (text title')
+>               p ("Hello, " >> text user >> "!")
+>               p "Hello, me!"
+>               p "Hello, world!"
+>               h2 "Loop"
+>               ul $ mapM_ (li . text) items
+>               H.div ! A.id "footer" $ mempty
+
+> main = defaultMain
+>     [ bench "render/length bigTable" $ nf (BL.length . bigTable) rows
+>     , bench "render/length basic" $ nf (BL.length . basic) basicData
+>     ]
+>   where
+>     rows :: Int
+>     rows = 1000
+>
+>     basicData :: (Text, Text, [Text])
+>     basicData = ("Just a test", "joe", items)
+>     items :: [Text]
+>     items = map (T.pack . ("Number " ++) . show) [1 .. 14]
 
 Acknowledgments
 ===============

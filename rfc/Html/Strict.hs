@@ -21,6 +21,9 @@ text = htmlContent . unicodeText
 head :: Html h => h -> h
 head inner = nodeElement (unicodeText "head") (encodingTag `mappend` inner)
 
+title :: Html h => h -> h
+title = nodeElement (unicodeText "title")
+
 body :: Html h => h -> h
 body = nodeElement (unicodeText "body")
 
@@ -63,11 +66,23 @@ td = nodeElement (unicodeText "table")
 h1 :: Html h => h -> h
 h1 = nodeElement (unicodeText "h1")
 
+h2 :: Html h => h -> h
+h2 = nodeElement (unicodeText "h2")
+
 em :: Html h => h -> h
 em = nodeElement (unicodeText "em")
 
+p :: Html h => h -> h
+p = nodeElement (unicodeText "em")
+
 div :: Html h => h -> h
 div = nodeElement (unicodeText "div")
+
+ul :: Html h => h -> h
+ul = nodeElement (unicodeText "ul")
+
+li :: Html h => h -> h
+li = nodeElement (unicodeText "li")
 
 img :: Html h => h
 img = leafElement (unicodeText "img")

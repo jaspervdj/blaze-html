@@ -2,11 +2,19 @@
 import Text.Html
 import Criterion.Main
 import Debug.Trace
+import Data.List (foldl')
 
 bigTable :: Int -> String
 bigTable n = renderHtml $ table $ concatHtml $ map row [1 .. n]
   where
-    row x = tr $ concatHtml $ map (td . stringToHtml . show) [x .. x + 10]
+    row x = tr $ concatHtml $ map (td . stringToHtml . show) (zip ['a' .. 'j'] [x .. x + 10])
+
+bigTable' :: Int -> String
+bigTable' n = renderHtml $ table $
+    foldl' (\h row -> h +++ (
+        tr $ foldl' (\h' col -> h' +++ td
+            (stringToHtml $ show col))
+                noHtml (zip ['a'..'j'] [row .. row + 10]))) noHtml [1..n]
 
 basic :: (String, String, [String]) -- ^ (Title, User, Items)
       -> String
@@ -25,6 +33,7 @@ basic (title', user, items) = renderHtml $ thehtml $ concatHtml
 
 main = defaultMain
     [ bench "render bigTable" $ nf bigTable rows
+    , bench "render bigTable'" $ nf bigTable' rows
     , bench "render basic" $ nf basic basicData
     ]
   where

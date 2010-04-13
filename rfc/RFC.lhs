@@ -100,9 +100,9 @@ you use when creating documents).
 
 If you load this file in `ghci`, you can now try:
 
-- `renderUtf8Html testDoc`
-- `renderLatin1Html testDoc`
-- `renderAscii7Html testDoc`
+- `renderHtmlUtf8 testDoc`
+- `renderHtmlLatin1 testDoc`
+- `renderHtmlAscii7 testDoc`
 
 You will see that, for every renderer used, the output will be in the correct
 format and will contain the correct encoding tag.
@@ -114,17 +114,17 @@ Some Benchmarks
 ===============
 
 > bigTable :: Int -> BL.ByteString
-> bigTable n = renderUtf8Html $ doc n
+> bigTable n = renderHtmlUtf8 $ doc n
 >   where
 >     doc :: Html h => Int -> h
 >     doc n = table $ concatenatedHtml $
 >         forM_ [1..n] $ \row ->
->             tr $ forM_ [1..10] $ \col ->
+>             tr $ forM_ [row .. row + 10] $ \col ->
 >                 td $ text $ T.pack (show col)
 
 > basic :: (Text, Text, [Text]) -- ^ (Title, User, Items)
 >       -> BL.ByteString
-> basic (title', user, items) = renderUtf8Html $ concatenatedHtml $ html $ do
+> basic (title', user, items) = renderHtmlUtf8 $ concatenatedHtml $ html $ do
 >     head $ do title (text title')
 >     body $ do H.div ! A.id "header" $ do
 >                   h1 (text title')
@@ -136,8 +136,8 @@ Some Benchmarks
 >               H.div ! A.id "footer" $ mempty
 
 > main = defaultMain
->     [ bench "render/length bigTable" $ nf (BL.length . bigTable) rows
->     , bench "render/length basic" $ nf (BL.length . basic) basicData
+>     [ bench "render/length bigTable" $ whnf (BL.length . bigTable) rows
+>     , bench "render/length basic" $ whnf (BL.length . basic) basicData
 >     ]
 >   where
 >     rows :: Int

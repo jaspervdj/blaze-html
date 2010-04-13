@@ -23,39 +23,39 @@ instance Monoid Utf8Html where
 
 -- This is of course an instance of @Encoded@.
 instance Encoded Utf8Html where
-    encodingTag        = Utf8Html $ const $ unicodeString "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>"
+    encodingTag        = Utf8Html $ const $ ascii7String "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>"
     replaceUnencodable = const id
 
 instance Html Utf8Html where
     h1 `separate` h2 = Utf8Html $ \attrs -> mconcat
         [ runUtf8Html h1 attrs 
-        , unicodeChar ' '
+        , ascii7Char ' '
         , runUtf8Html h2 attrs
         ]
     leafElement tag = Utf8Html $ \attrs -> mconcat
-        [ unicodeChar '<'
+        [ ascii7Char '<'
         , runUtf8Html tag mempty
         , attrs
-        , unicodeString "/>"
+        , ascii7Char '/', ascii7Char '>'
         ]
     nodeElement tag inner = Utf8Html $ \attrs -> mconcat
-        [ unicodeChar '<'
+        [ ascii7Char '<'
         , runUtf8Html tag mempty
         , attrs
-        , unicodeChar '>'
+        , ascii7Char '>'
         , runUtf8Html inner mempty
-        , unicodeString "</"
+        , ascii7Char '<', ascii7Char '/'
         , runUtf8Html tag mempty
-        , unicodeChar '>'
+        , ascii7Char '>'
         ]
     addAttribute key value h = Utf8Html $ \attrs -> 
         runUtf8Html h $ mconcat
-            [ unicodeChar ' '
+            [ ascii7Char ' '
             , runUtf8Html key mempty
-            , unicodeChar '='
-            , unicodeChar '"'
+            , ascii7Char '='
+            , ascii7Char '"'
             , runUtf8Html value mempty
-            , unicodeChar '"'
+            , ascii7Char '"'
             ] `mappend` attrs
 
 renderHtmlUtf8 :: Utf8Html -> BL.ByteString

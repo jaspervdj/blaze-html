@@ -8,8 +8,11 @@ import Data.Bits (shiftR, (.&.))
 import Data.Char (ord)
 import Data.Monoid (Monoid (..))
 
-import Data.Binary.Builder (Builder, singleton, toLazyByteString)
+import Data.Binary.Builder ( Builder, singleton, toLazyByteString
+                           , fromByteString
+                           )
 import Data.Text (Text)
+import Data.Text.Encoding (encodeUtf8)
 import qualified Data.ByteString.Lazy as BL
 import qualified Data.Text as T
 
@@ -31,8 +34,9 @@ toLazyByteStringUtf8 :: Utf8Builder -> BL.ByteString
 toLazyByteStringUtf8 = toLazyByteString . utf8Builder
 
 instance UnicodeSequence Utf8Builder where
-    unicodeChar   = Utf8Builder . encodeCharUtf8
-    unicodeText   = Utf8Builder . encodeTextUtf8
+    unicodeChar = Utf8Builder . encodeCharUtf8
+    unicodeText = Utf8Builder . encodeTextUtf8
+    ascii7Char  = Utf8Builder . singleton . fromIntegral . ord
 
 -- based on: encode_utf8 in GHC.IO.Encoding.UTF8
 encodeCharUtf8 :: Char -> Builder
@@ -71,4 +75,4 @@ encodeCharUtf8 c =
 -- FIXME: Use a more efficient implementation based on 'restreamUtf8' from
 -- 'Data.Text.Encoding.Fusion.Common'.
 encodeTextUtf8 :: Text -> Builder
-encodeTextUtf8 = mconcat . map encodeCharUtf8 . T.unpack
+encodeTextUtf8 = fromByteString . encodeUtf8

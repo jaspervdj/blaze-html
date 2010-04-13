@@ -18,10 +18,15 @@ import Data.Text (Text)
 class Monoid s => UnicodeSequence s where
     -- | A unicode character in the standard Haskell encoding represented by
     -- @Char@.
-    unicodeChar    :: Char -> s
+    unicodeChar :: Char -> s
     -- | A sequence of unicode characters represented as @Text@ from
     -- @Data.Text@.
-    unicodeText    :: Text -> s
+    unicodeText :: Text -> s
+    -- | A character that is guaranteed to be in one of the lowest 127
+    -- characters. This method has a default implementation, but can be
+    -- overwritten for performance reasons.
+    ascii7Char :: Char -> s
+    ascii7Char = unicodeChar
 
 -- This instance is needed so we can automatically derive unfolded readers.
 instance UnicodeSequence s => UnicodeSequence (a -> s) where
@@ -33,8 +38,13 @@ unicodeString :: UnicodeSequence s => String -> s
 unicodeString = mconcat . map unicodeChar
 
 -- | Build a unicode sequence from a value that can be shown.
-unicodeShow :: UnicodeSequence s => String -> s
+unicodeShow :: (UnicodeSequence s, Show a) => a -> s
 unicodeShow = unicodeString . show
+
+-- | Build a unicode sequence from a string only containing characters from
+-- the @[0 .. 127]@ range.
+ascii7String :: UnicodeSequence s => String -> s
+ascii7String = mconcat . map ascii7Char
 
 -- | A typeclass represeting a certain encoding.
 class UnicodeSequence h => Encoded h where

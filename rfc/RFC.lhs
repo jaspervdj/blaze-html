@@ -119,7 +119,7 @@ Some Benchmarks
 >     doc :: Html h => Int -> h
 >     doc n = table $ concatenatedHtml $
 >         forM_ [1..n] $ \row ->
->             tr $ forM_ (zip ['a'..'j'] [1..10]) $ \col ->
+>             tr $ forM_ [1..10] $ \col ->
 >                 td $ text $ T.pack (show col)
 
 > basic :: (Text, Text, [Text]) -- ^ (Title, User, Items)

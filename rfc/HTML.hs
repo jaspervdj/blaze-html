@@ -5,19 +5,74 @@ import Debug.Trace
 import Data.List (foldl')
 import Data.Monoid
 import Control.DeepSeq  (deepseq)
+import Control.Parallel.Strategies
 import Control.Exception (evaluate)
 
-bigTable :: Int -> String
-bigTable n = renderHtml $ table $ concatHtml $ map row [1 .. n]
-  where
-    row x = tr $ concatHtml $ map (td . stringToHtml . show) (zip ['a' .. 'j'] [x .. x + 10])
+infixr 5 :#:
+{-
+April 14th, 2010 - Simon Meier - Current State
+==============================================
 
-bigTable' :: Int -> String
-bigTable' n = renderHtml $ table $
+All numbers were measured on an Intel(R) Core(TM)2 Duo CPU T7500  @ 2.20GHz
+laptop with 2GB RAM.
+
+The benchmarks below stem from
+
+  http://code.google.com/p/spitfire/source/browse/#svn/trunk/tests/perf
+
+Genshi tag builder                            480.73 ms
+Genshi template                               325.74 ms
+Genshi template + tag builder                 521.59 ms
+Mako Template                                  41.66 ms
+ClearSilver                                    60.91 ms
+Djange template                               441.88 ms
+Spitfire template                              37.06 ms
+Spitfire template -O1                          19.93 ms
+Spitfire template -O2                           7.74 ms
+Spitfire template -O3                           7.76 ms
+Spitfire template -O4                           5.53 ms
+StringIO                                       59.50 ms
+cStringIO                                      10.08 ms
+list concat                                     6.39 ms
+
+PHP: 6.95916175842 ms
+
+Note that (as far as I can tell) none of the < 60ms engines is doing proper
+HTML escaping. Here, it is not required, but we would like to free the template
+designer from thinking about it. Our current implementations fare as follows:
+
+html/bigTable    12.74035  ms
+cps/bigTable      4.063946 ms 
+strCopy/bigTable  1.137269 ms
+
+html/basic        36.04742 us
+cps/basic         16.75962 us
+strCopy/basic     5.754241 us
+
+Legend: 'html' is the std. Haskell HTML library. 'cps' is my CPS-based
+implementation, and 'strCopy' is the time for copying the whole result string
+(i.e. the best time we can hope for when using Haskell strings). We see that
+the CPS implementation is in both cases at least two times faster and does
+require spend two additional "operations" per character compared to just
+copying the result string.
+
+I think these numbers are very encouraging. Especially, as they do not yet
+include the task of encoding the resulting string. Fusing rendering and
+encoding using a Builder Monoid may again give us a nice speedup compared to
+existing solutions.
+-}
+
+bigTable :: [[Int]] -> String
+bigTable t = renderHtml $ table $ concatHtml $ map row t
+  where
+    row r = tr $ concatHtml $ map (td . stringToHtml . show) r
+
+bigTable' :: [[Int]] -> String
+bigTable' t = renderHtml $ table $
     foldl' (\h row -> h +++ (
         tr $ foldl' (\h' col -> h' +++ td
             (stringToHtml $ show col))
-                noHtml (zip ['a'..'j'] [row .. row + 10]))) noHtml [1..n]
+                noHtml row)) noHtml t
 
 basic :: (String, String, [String]) -- ^ (Title, User, Items)
       -> String
@@ -36,21 +91,34 @@ basic (title', user, items) = renderHtml $ concatHtml
 
 main = 
     defaultMain
-    [ -- bench "render bigTable" $ nf bigTable rows
-    -- , bench "render bigTable'" $ nf bigTable' rows
-    -- , bench "render bigTableH" $ nf bigTableH rows
-      bench "render basic" $ nf basic basicData
-    , bench "render basicH" $ nf basicH basicData
+    [  bench "html/bigTable"   $ nf bigTable  myTable
+    -- , bench "render bigTable'" $ nf bigTable' myTable
+    , bench "cps/bigTable"     $ nf bigTableH myTable
+    , bench "strCopy/bigTable" $ nf strCopy   bigTableString
+    -- , bench "render bigTableHS" $ nf bigTableHS rows
+    , bench "html/basic"       $ nf basic   basicData
+    , bench "cps/basic"        $ nf basicH  basicData
+    , bench "strCopy/basic"    $ nf strCopy basicString
+    -- , bench "render basicHS" $ nf basicHS basicData
     ]
     -- mapM_ (\r -> evaluate (deepseq (bigTable r) ())) (replicate 100 rows)
   where
     rows :: Int
     rows = 1000
 
+    myTable :: [[Int]]
+    myTable = replicate rows [1..10]
+    {-# NOINLINE myTable #-}
+
     basicData :: (String, String, [String])
     basicData = ("Just a test", "joe", items)
     items :: [String]
     items = map (("Number " ++) . show) [1 .. 14]
+
+    bigTableString = bigTableH myTable
+    basicString    = basicH basicData
+    strCopy = foldr (:) []
+    {-# NOINLINE strCopy #-}
 
 
 ------------------------------------------------------------------------------
@@ -110,10 +178,10 @@ instance Monoid H where
   mconcat hs = H $ \attrs k -> foldr (\h k' -> runH h attrs k') k hs
   {-# INLINE mconcat #-}
 
-bigTableH :: Int -> String
-bigTableH n = renderH $ tableH $ mconcat $ map row [1 .. n]
+bigTableH :: [[Int]] -> String
+bigTableH t = renderH $ tableH $ mconcat $ map row t
   where
-    row x = trH $ mconcat $ map (tdH . stringH . show) (zip ['a' .. 'j'] [x .. x + 10])
+    row r = trH $ mconcat $ map (tdH . stringH . show) r
 
 htmlH :: H -> H
 htmlH inner = 
@@ -151,19 +219,123 @@ basicH (title', user, items) = renderH $ htmlH $ mconcat
 -- Context-passing plus strict strings
 ------------------------------------------------------------------------------
 
-data SS = SEmpty | SCons {-# UNPACK #-} !Char {-# UNPACK #-} !SS
-  deriving( Eq, Ord )
+-- OUCH: The current implementation is horribly slow!
+--       I don't know why...but it was also just a blind try...
+
+data SS = SNil | {-# UNPACK #-} !Char :#: {-# UNPACK #-} !SS
+  deriving( Eq, Ord {-! NFData !-} )
+
+instance NFData SS where
+        -- due to the strictness of the constructor WHNF suffices
+        rnf x = x `seq` ()
+
+foldrSS :: (Char -> a -> a) -> a -> SS -> a
+foldrSS fSCons fSNil = go
+  where
+  go SNil     = fSNil
+  go (x:#:xs) = fSCons x (go xs)
 
 toSS :: String -> SS
-toSS = foldr SCons SEmpty
+toSS = foldr (:#:) SNil
+
+toSScont :: String -> SS -> SS
+toSScont str = (\ss -> foldr (:#:) ss str)
+
+fromSS :: SS -> String
+fromSS = foldrSS (:) []
 
 instance Monoid SS where
-  mempty = SEmpty
+  mempty = SNil
   {-# INLINE mempty #-}
-  mappend xs ys = go xs
+  mappend xs ys = foldrSS (:#:) ys xs
+  {-# INLINE mappend #-}
+
+
+newtype HS = HS { runHS :: (SS -> SS) -> (SS -> SS) }
+
+rawStringHS :: String -> HS
+rawStringHS str = HS $ \_ -> toSScont str
+
+stringHS :: String -> HS
+stringHS s = HS $ \_ -> escape
+  where
+  escape k = go s
     where
-    go SEmpty       = ys
-    go (SCons x xs) = SCons x (go xs)
+    go []       = k
+    go ('<':ss) = '&':#:'l':#:'t':#:';'             :#: go ss
+    go ('>':ss) = '&':#:'g':#:'t':#:';'             :#: go ss
+    go ('&':ss) = '&':#:'a':#:'m':#:'p':#:';'       :#: go ss
+    go ('"':ss) = '&':#:'q':#:'u':#:'o':#:'t':#:';' :#: go ss
+    go (c  :ss) = c                                 :#: go ss
 
+tagHS :: String -> HS -> HS
+tagHS tag = \inner -> HS $ \attrs k ->
+  '<':#:(ssTag `mappend` attrs ('>' :#: runHS inner id (endTag `mappend` k)))
+  where
+  ssTag  = toSS tag
+  endTag = toSS $ '<':'/':tag ++ ">"
 
+addAttrHS :: String -> String -> HS -> HS
+addAttrHS key = \value h -> HS $ \attrs k ->
+  runHS h (\a -> attrs (' ':#:(ssKey `mappend` ('=':#:'"':#:escape value a)))) k
+  where
+  ssKey = toSS key
+  escape v a = go v
+    where
+    go []       = '"':#: a
+    go ('&':ss) = '&':#:'a':#:'m':#:'p':#:';'       :#: go ss
+    go ('"':ss) = '&':#:'q':#:'u':#:'o':#:'t':#:';' :#: go ss
+    go (c  :ss) = c                                 :#: go ss
+
+tableHS = tagHS "table"
+trHS    = tagHS "tr"
+tdHS    = tagHS "td"
+
+renderHS :: HS -> SS
+renderHS h = runHS h id SNil
+
+instance Monoid HS where
+  mempty          = HS $ \_ k -> k
+  {-# INLINE mempty #-}
+  h1 `mappend` h2 = HS $ \attrs k -> runHS h1 attrs (runHS h2 attrs k)
+  {-# INLINE mappend #-}
+  mconcat hs = HS $ \attrs k -> foldr (\h k' -> runHS h attrs k') k hs
+  {-# INLINE mconcat #-}
+
+bigTableHS :: Int -> SS
+bigTableHS n = renderHS $ tableHS $ mconcat $ map row [1 .. n]
+  where
+    row x = trHS $ mconcat $ map (tdHS . stringHS . show) ([x .. x + 10])
+
+htmlHS :: HS -> HS
+htmlHS inner = 
+  -- a too long string for the fairness of comparison
+  rawStringHS "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 3.2 FINAL//EN\">\n<!--Rendered using the Haskell Html Library v0.2-->\n"
+  `mappend` tagHS "html" inner
+  
+headerHS = tagHS "header"
+titleHS = tagHS "title"
+bodyHS = tagHS "body"
+divHS = tagHS "div"
+h1HS = tagHS "h1"
+h2HS = tagHS "h2"
+pHS = tagHS "p"
+liHS = tagHS "li"
+
+idAHS = addAttrHS "id"
+
+basicHS :: (String, String, [String]) -- ^ (Title, User, Items)
+      -> SS
+basicHS (title', user, items) = renderHS $ htmlHS $ mconcat
+    [ headerHS $ titleHS $ stringHS title'
+    , bodyHS $ mconcat
+        [ divHS $ idAHS "header" (h1HS $ stringHS title')
+        , pHS $ stringHS $ "Hello, " ++ user ++ "!"
+        , pHS $ stringHS $ "Hello, me!"
+        , pHS $ stringHS $ "Hello, world!"
+        , h2HS $ stringHS "Loop"
+        , mconcat $ map (liHS . stringHS) items
+        , idAHS "footer" (divHS $ mempty)
+        ]
+    ]
 -- TODO: Complete

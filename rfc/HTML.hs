@@ -3,7 +3,7 @@
 module Main where
 import Text.Html
 import Criterion.Main
-import Data.Char (ord)
+import Data.Char (ord, chr)
 import Debug.Trace
 import Data.List (foldl')
 import Data.Bits ((.&.), shiftR)
@@ -13,14 +13,12 @@ import Control.Parallel.Strategies
 import Control.Exception (evaluate)
 import Data.Binary.Builder (Builder, fromByteString, toLazyByteString, singleton)
 import qualified Data.ByteString as B
--- SM: Remove dependency on other packages to improve understanding of
--- optimizations
-import Codec.Binary.UTF8.String (encode)
--- SM: I would also refrain from using this direct Latin1 encoding. This is
--- only a thin wrapper around the core of bytestring. We are targeting UTF-8
--- currently, so we don't need this at all.
-import qualified Data.ByteString.Char8 as BC8
 import qualified Data.ByteString.Lazy as BL
+import Data.Array (Array)
+import qualified Data.Array as A
+
+-- Needed for encoding strings easily. Subject to removal.
+import Codec.Binary.UTF8.String (encode)
 
 infixr 5 :#:
 {-
@@ -103,19 +101,18 @@ basic (title', user, items) = renderHtml $ concatHtml
         ]
     ]
 
-main = 
-    defaultMain
-    [  --bench "html/bigTable"   $ nf (B.length . B.pack . encode . bigTable) myTable
-    -- , bench "render bigTable'" $ nf bigTable' myTable
-    -- , bench "cps/bigTable"     $ nf (B.length . B.pack . encode . bigTableH) myTable
-     bench "builder/bigTable" $ nf (BL.length . bigTableHB) myTable
-    -- , bench "strCopy/bigTable" $ nf (B.length . B.pack . encode . strCopy) bigTableString
-    -- , bench "render bigTableHS" $ nf bigTableHS rows
-    -- , bench "html/basic"       $ nf (B.length . B.pack . encode . basic) basicData
-    -- , bench "cps/basic"        $ nf (B.length . B.pack . encode . basicH)  basicData
-    -- , bench "builder/basic" $ nf (BL.length . basicHB) basicData
-    -- , bench "strCopy/basic"    $ nf (B.length . B.pack . encode . strCopy) basicString
-    -- , bench "render basicHS" $ nf basicHS basicData
+main = defaultMain
+    [ bench "html/bigTable"   $ nf (B.length . B.pack . encode . bigTable) myTable
+    , bench "render bigTable'" $ nf bigTable' myTable
+    , bench "cps/bigTable"     $ nf (B.length . B.pack . encode . bigTableH) myTable
+    , bench "builder/bigTable" $ nf (BL.length . bigTableHB) myTable
+    , bench "strCopy/bigTable" $ nf (B.length . B.pack . encode . strCopy) bigTableString
+    , bench "render bigTableHS" $ nf bigTableHS rows
+    , bench "html/basic"       $ nf (B.length . B.pack . encode . basic) basicData
+    , bench "cps/basic"        $ nf (B.length . B.pack . encode . basicH)  basicData
+    , bench "builder/basic" $ nf (BL.length . basicHB) basicData
+    , bench "strCopy/basic"    $ nf (B.length . B.pack . encode . strCopy) basicString
+    , bench "render basicHS" $ nf basicHS basicData
     ]
     -- mapM_ (\r -> evaluate (deepseq (bigTable r) ())) (replicate 100 rows)
   where
@@ -385,12 +382,17 @@ basicHS (title', user, items) = renderHS $ htmlHS $ mconcat
 
 newtype HB = HB { runHB :: Builder -> Builder }
 
+-- | Builder lookup array for characters <= 0xFF.
+lookupBuilder :: Array Char Builder
+lookupBuilder = A.listArray (chr 0, chr 0xFF) $ map createBuilder [0 .. 0xFF]
+  where
+    createBuilder c = singleton $ fromIntegral c
+
 charToBuilder :: Char -> Builder
-charToBuilder = char8ToBuilder' . ord
+charToBuilder c | c <= chr 0x7F = lookupBuilder A.! c
+                | otherwise = char8ToBuilder' (ord c)
   where
     char8ToBuilder' x
-        | x <= 0x7F =
-             singleton $ fromIntegral x
         | x <= 0x07FF =
              let x1 = fromIntegral $ (x `shiftR` 6) + 0xC0
                  x2 = fromIntegral $ (x .&. 0x3F)   + 0x80
@@ -420,15 +422,23 @@ char8ToBuilder = singleton . fromIntegral . ord
 rawStringHB :: String -> HB
 rawStringHB s = HB $ \_ -> stringToBuilder s
 
+-- | Escaped builder lookup array for characters <= 0xFF.
+lookupEscapedBuilder :: Array Char Builder
+lookupEscapedBuilder = A.listArray (chr 0, chr 0xFF) $
+    map createEscapedBuilder [chr 0 .. chr 0xFF]
+  where
+    createEscapedBuilder '<' = string8ToBuilder "&lt;"
+    createEscapedBuilder '>' = string8ToBuilder "&gt;"
+    createEscapedBuilder '&' = string8ToBuilder "&amp;"
+    createEscapedBuilder '"' = string8ToBuilder "&quot;"
+    createEscapedBuilder c   = charToBuilder c
+
 stringHB :: String -> HB
 stringHB s = HB $ \_ -> escape s
   where
   escape = mconcat . map escape'
-  escape' '<' = string8ToBuilder "&lt;"
-  escape' '>' = string8ToBuilder "&gt;"
-  escape' '&' = string8ToBuilder "&amp;"
-  escape' '"' = string8ToBuilder "&quot;"
-  escape' c   = charToBuilder c
+  escape' c | c <= chr 0xFF = lookupEscapedBuilder A.! c
+            | otherwise     = charToBuilder c
 
 tagHB :: String -> HB -> HB
 tagHB tag inner = HB $ \attrs ->

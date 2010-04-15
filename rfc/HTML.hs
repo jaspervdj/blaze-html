@@ -16,6 +16,8 @@ import qualified Data.ByteString as B
 import qualified Data.ByteString.Lazy as BL
 import Data.Array (Array)
 import qualified Data.Array as A
+import Data.Vector (Vector)
+import qualified Data.Vector as V
 
 -- Needed for encoding strings easily. Subject to removal.
 import Codec.Binary.UTF8.String (encode)
@@ -383,13 +385,14 @@ basicHS (title', user, items) = renderHS $ htmlHS $ mconcat
 newtype HB = HB { runHB :: Builder -> Builder }
 
 -- | Builder lookup array for characters <= 0xFF.
-lookupBuilder :: Array Char Builder
-lookupBuilder = A.listArray (chr 0, chr 0xFF) $ map createBuilder [0 .. 0xFF]
+lookupBuilder :: Vector Builder
+lookupBuilder = V.fromList $ map createBuilder [0 .. 0xFF]
   where
     createBuilder c = singleton $ fromIntegral c
+{-# NOINLINE lookupBuilder #-}
 
 charToBuilder :: Char -> Builder
-charToBuilder c | c <= chr 0x7F = lookupBuilder A.! c
+charToBuilder c | c <= chr 0x7F = lookupBuilder V.! ord c
                 | otherwise = char8ToBuilder' (ord c)
   where
     char8ToBuilder' x
@@ -423,21 +426,21 @@ rawStringHB :: String -> HB
 rawStringHB s = HB $ \_ -> stringToBuilder s
 
 -- | Escaped builder lookup array for characters <= 0xFF.
-lookupEscapedBuilder :: Array Char Builder
-lookupEscapedBuilder = A.listArray (chr 0, chr 0xFF) $
-    map createEscapedBuilder [chr 0 .. chr 0xFF]
+lookupEscapedBuilder :: Vector Builder
+lookupEscapedBuilder = V.fromList $ map createEscapedBuilder [chr 0 .. chr 0xFF]
   where
     createEscapedBuilder '<' = string8ToBuilder "&lt;"
     createEscapedBuilder '>' = string8ToBuilder "&gt;"
     createEscapedBuilder '&' = string8ToBuilder "&amp;"
     createEscapedBuilder '"' = string8ToBuilder "&quot;"
     createEscapedBuilder c   = charToBuilder c
+{-# NOINLINE lookupEscapedBuilder #-}
 
 stringHB :: String -> HB
 stringHB s = HB $ \_ -> escape s
   where
   escape = mconcat . map escape'
-  escape' c | c <= chr 0xFF = lookupEscapedBuilder A.! c
+  escape' c | c <= chr 0xFF = lookupEscapedBuilder V.! ord c
             | otherwise     = charToBuilder c
 
 tagHB :: String -> HB -> HB
@@ -446,12 +449,17 @@ tagHB tag inner = HB $ \attrs ->
                        `mappend` attrs
                        `mappend` close'
                        `mappend` runHB inner mempty
-                       `mappend` string8ToBuilder "</"
-                       `mappend` tag'
-                       `mappend` close'
+                       -- The braces make the compiler treat the last part as a
+                       -- whole, which is useful when this function closes
+                       -- around `tag`.
+                       `mappend` (string8ToBuilder "</" `mappend` tag'
+                                                        `mappend` close')
   where
     tag' = stringToBuilder tag
     close' = char8ToBuilder '>'
+-- By inlining this function, functions calling this (e.g. `tableHB`) will close
+-- around the `tag` variable, which ensures `tag'` is only calculated once.
+{-# INLINE tagHB #-}
 
 addAttrHB :: String -> String -> HB -> HB
 addAttrHB key value h = HB $ \attrs ->
@@ -465,6 +473,8 @@ addAttrHB key value h = HB $ \attrs ->
   escape' '&' = string8ToBuilder "&amp;"
   escape' '"' = string8ToBuilder "&quot;"
   escape' c   = charToBuilder c
+-- Same reasoning here.
+{-# INLINE addAttrHB #-}
 
 tableHB = tagHB "table"
 trHB    = tagHB "tr"

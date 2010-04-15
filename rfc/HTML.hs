@@ -11,7 +11,7 @@ import Control.DeepSeq  (deepseq)
 import Control.Parallel.Strategies
 import Control.Exception (evaluate)
 import Data.Binary.Builder (Builder, fromByteString, toLazyByteString, singleton)
-import Data.ByteString (pack)
+import qualified Data.ByteString as B
 import Codec.Binary.UTF8.String (encode)
 import qualified Data.ByteString.Char8 as BC8
 import qualified Data.ByteString.Lazy as BL
@@ -99,16 +99,16 @@ basic (title', user, items) = renderHtml $ concatHtml
 
 main = 
     defaultMain
-    [  bench "html/bigTable"   $ nf bigTable myTable
+    [  bench "html/bigTable"   $ nf (B.length . B.pack . encode . bigTable) myTable
     -- , bench "render bigTable'" $ nf bigTable' myTable
-    , bench "cps/bigTable"     $ nf bigTableH myTable
-    , bench "cpsbuilder/bigTable" $ nf (BL.length . bigTableHB) myTable
-    , bench "strCopy/bigTable" $ nf strCopy bigTableString
+    , bench "cps/bigTable"     $ nf (B.length . B.pack . encode . bigTableH) myTable
+    , bench "builder/bigTable" $ nf (BL.length . bigTableHB) myTable
+    , bench "strCopy/bigTable" $ nf (B.length . B.pack . encode . strCopy) bigTableString
     -- , bench "render bigTableHS" $ nf bigTableHS rows
-    , bench "html/basic"       $ nf basic   basicData
-    , bench "cps/basic"        $ nf basicH  basicData
-    , bench "cpsbuilder/basic" $ nf (BL.length . basicHB) basicData
-    , bench "strCopy/basic"    $ nf strCopy basicString
+    , bench "html/basic"       $ nf (B.length . B.pack . encode . basic) basicData
+    , bench "cps/basic"        $ nf (B.length . B.pack . encode . basicH)  basicData
+    , bench "builder/basic" $ nf (BL.length . basicHB) basicData
+    , bench "strCopy/basic"    $ nf (B.length . B.pack . encode . strCopy) basicString
     -- , bench "render basicHS" $ nf basicHS basicData
     ]
     -- mapM_ (\r -> evaluate (deepseq (bigTable r) ())) (replicate 100 rows)
@@ -357,7 +357,7 @@ basicHS (title', user, items) = renderHS $ htmlHS $ mconcat
 newtype HB = HB { runHB :: Builder -> Builder }
 
 toBuilder :: String -> Builder
-toBuilder = fromByteString . pack . encode
+toBuilder = fromByteString . B.pack . encode
 
 char8StringToBuilder :: String -> Builder
 char8StringToBuilder = fromByteString . BC8.pack

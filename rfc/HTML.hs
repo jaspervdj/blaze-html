@@ -1,12 +1,20 @@
+{-# LANGUAGE OverloadedStrings #-}
 -- | Two benchmarks using the regular HTML package.
+module Main where
 import Text.Html
 import Criterion.Main
+import Data.Char (ord)
 import Debug.Trace
 import Data.List (foldl')
 import Data.Monoid
 import Control.DeepSeq  (deepseq)
 import Control.Parallel.Strategies
 import Control.Exception (evaluate)
+import Data.Binary.Builder (Builder, fromByteString, toLazyByteString, singleton)
+import Data.ByteString (pack)
+import Codec.Binary.UTF8.String (encode)
+import qualified Data.ByteString.Char8 as BC8
+import qualified Data.ByteString.Lazy as BL
 
 infixr 5 :#:
 {-
@@ -91,13 +99,15 @@ basic (title', user, items) = renderHtml $ concatHtml
 
 main = 
     defaultMain
-    [  bench "html/bigTable"   $ nf bigTable  myTable
+    [  bench "html/bigTable"   $ nf bigTable myTable
     -- , bench "render bigTable'" $ nf bigTable' myTable
     , bench "cps/bigTable"     $ nf bigTableH myTable
-    , bench "strCopy/bigTable" $ nf strCopy   bigTableString
+    , bench "cpsbuilder/bigTable" $ nf (BL.length . bigTableHB) myTable
+    , bench "strCopy/bigTable" $ nf strCopy bigTableString
     -- , bench "render bigTableHS" $ nf bigTableHS rows
     , bench "html/basic"       $ nf basic   basicData
     , bench "cps/basic"        $ nf basicH  basicData
+    , bench "cpsbuilder/basic" $ nf (BL.length . basicHB) basicData
     , bench "strCopy/basic"    $ nf strCopy basicString
     -- , bench "render basicHS" $ nf basicHS basicData
     ]
@@ -339,3 +349,107 @@ basicHS (title', user, items) = renderHS $ htmlHS $ mconcat
         ]
     ]
 -- TODO: Complete
+
+------------------------------------------------------------------------------
+-- An implementation using a Builder monoid and UTF8
+------------------------------------------------------------------------------
+
+newtype HB = HB { runHB :: Builder -> Builder }
+
+toBuilder :: String -> Builder
+toBuilder = fromByteString . pack . encode
+
+char8StringToBuilder :: String -> Builder
+char8StringToBuilder = fromByteString . BC8.pack
+
+char8ToBuilder :: Char -> Builder
+char8ToBuilder = singleton . fromIntegral . ord
+
+rawStringHB :: String -> HB
+rawStringHB s = HB $ \_ -> toBuilder s
+
+stringHB :: String -> HB
+stringHB s = HB $ \_ -> escape s
+  where
+  escape = mconcat . map escape'
+  escape' '<' = char8StringToBuilder "&lt;"
+  escape' '>' = char8StringToBuilder "&gt;"
+  escape' '&' = char8StringToBuilder "&amp;"
+  escape' '"' = char8StringToBuilder "&quot;"
+  escape' c   = toBuilder (c:[])
+
+tagHB :: String -> HB -> HB
+tagHB tag inner = HB $ \attrs ->
+  mconcat $ [ char8ToBuilder '<'
+            , toBuilder tag
+            , attrs
+            , char8ToBuilder '>'
+            , runHB inner mempty
+            , endTag
+            ]
+  where
+    endTag = mconcat [ char8StringToBuilder "</", toBuilder tag, char8ToBuilder '>']
+
+addAttrHB :: String -> String -> HB -> HB
+addAttrHB key = \value h -> HB $ \attrs ->
+  runHB h $ mconcat [ attrs, char8ToBuilder ' ', toBuilder key
+                    , char8StringToBuilder "=\"", escape value
+                    , char8ToBuilder '"'
+                    ]
+  where
+  escape = mconcat . map escape'
+  escape' '&' = char8StringToBuilder "&amp;"
+  escape' '"' = char8StringToBuilder "&quot;"
+  escape' c   = toBuilder (c:[])
+
+tableHB = tagHB "table"
+trHB    = tagHB "tr"
+tdHB    = tagHB "td"
+
+renderHB :: HB -> BL.ByteString
+renderHB h = toLazyByteString $ runHB h mempty
+
+instance Monoid HB where
+  mempty          = HB $ \_ -> mempty
+  {-# INLINE mempty #-}
+  h1 `mappend` h2 = HB $ \attrs -> runHB h1 attrs `mappend` runHB h2 attrs
+  {-# INLINE mappend #-}
+  mconcat hs = HB $ \attrs -> foldr (\h k -> runHB h attrs `mappend` k) mempty hs
+  {-# INLINE mconcat #-}
+
+bigTableHB :: [[Int]] -> BL.ByteString
+bigTableHB t = renderHB $ tableHB $ mconcat $ map row t
+  where
+    row r = trHB $ mconcat $ map (tdHB . stringHB . show) r
+
+htmlHB :: HB -> HB
+htmlHB inner = 
+  -- a too long string for the fairness of comparison
+  rawStringHB "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 3.2 FINAL//EN\">\n<!--Rendered using the Haskell Html Library v0.2-->\n"
+  `mappend` tagHB "html" inner
+  
+headerHB = tagHB "header"
+titleHB = tagHB "title"
+bodyHB = tagHB "body"
+divHB = tagHB "div"
+h1HB = tagHB "h1"
+h2HB = tagHB "h2"
+pHB = tagHB "p"
+liHB = tagHB "li"
+
+idAHB = addAttrHB "id"
+
+basicHB :: (String, String, [String]) -- ^ (Title, User, Items)
+      -> BL.ByteString
+basicHB (title', user, items) = renderHB $ htmlHB $ mconcat
+    [ headerHB $ titleHB $ stringHB title'
+    , bodyHB $ mconcat
+        [ divHB $ idAHB "header" (h1HB $ stringHB title')
+        , pHB $ stringHB $ "Hello, " `mappend` user `mappend` "!"
+        , pHB $ stringHB $ "Hello, me!"
+        , pHB $ stringHB $ "Hello, world!"
+        , h2HB $ stringHB "Loop"
+        , mconcat $ map (liHB . stringHB) items
+        , idAHB "footer" (divHB $ mempty)
+        ]
+    ]

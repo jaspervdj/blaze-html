@@ -6,6 +6,7 @@ import Criterion.Main
 import Data.Char (ord)
 import Debug.Trace
 import Data.List (foldl')
+import Data.Bits ((.&.), shiftR)
 import Data.Monoid
 import Control.DeepSeq  (deepseq)
 import Control.Parallel.Strategies
@@ -104,16 +105,16 @@ basic (title', user, items) = renderHtml $ concatHtml
 
 main = 
     defaultMain
-    [  bench "html/bigTable"   $ nf (B.length . B.pack . encode . bigTable) myTable
+    [  --bench "html/bigTable"   $ nf (B.length . B.pack . encode . bigTable) myTable
     -- , bench "render bigTable'" $ nf bigTable' myTable
-    , bench "cps/bigTable"     $ nf (B.length . B.pack . encode . bigTableH) myTable
-    , bench "builder/bigTable" $ nf (BL.length . bigTableHB) myTable
-    , bench "strCopy/bigTable" $ nf (B.length . B.pack . encode . strCopy) bigTableString
+    -- , bench "cps/bigTable"     $ nf (B.length . B.pack . encode . bigTableH) myTable
+     bench "builder/bigTable" $ nf (BL.length . bigTableHB) myTable
+    -- , bench "strCopy/bigTable" $ nf (B.length . B.pack . encode . strCopy) bigTableString
     -- , bench "render bigTableHS" $ nf bigTableHS rows
-    , bench "html/basic"       $ nf (B.length . B.pack . encode . basic) basicData
-    , bench "cps/basic"        $ nf (B.length . B.pack . encode . basicH)  basicData
-    , bench "builder/basic" $ nf (BL.length . basicHB) basicData
-    , bench "strCopy/basic"    $ nf (B.length . B.pack . encode . strCopy) basicString
+    -- , bench "html/basic"       $ nf (B.length . B.pack . encode . basic) basicData
+    -- , bench "cps/basic"        $ nf (B.length . B.pack . encode . basicH)  basicData
+    -- , bench "builder/basic" $ nf (BL.length . basicHB) basicData
+    -- , bench "strCopy/basic"    $ nf (B.length . B.pack . encode . strCopy) basicString
     -- , bench "render basicHS" $ nf basicHS basicData
     ]
     -- mapM_ (\r -> evaluate (deepseq (bigTable r) ())) (replicate 100 rows)
@@ -384,72 +385,76 @@ basicHS (title', user, items) = renderHS $ htmlHS $ mconcat
 
 newtype HB = HB { runHB :: Builder -> Builder }
 
--- | SM: This is probably quite inefficient. Use a direct conversion using your
--- own Char -> Builder implementation and mconcat. All of this is already
--- implemented in my 'devel' branch in the fast Utf8Builder.
---
--- The problem is 'fromByteString'. It assumes that the bytestring already
--- contains big-enough chunks. This allows for sharing the chunks. However,
--- this is NOT the case for us. Every string we have is too small to be its own
--- Chunk. The only source giving rise to a long enough Chunk would be a long
--- static string. However, I'm pretty sure that they are unlikely to occur for
--- HTML page generation.
-toBuilder :: String -> Builder
-toBuilder = fromByteString . B.pack . encode
+charToBuilder :: Char -> Builder
+charToBuilder = char8ToBuilder' . ord
+  where
+    char8ToBuilder' x
+        | x <= 0x7F =
+             singleton $ fromIntegral x
+        | x <= 0x07FF =
+             let x1 = fromIntegral $ (x `shiftR` 6) + 0xC0
+                 x2 = fromIntegral $ (x .&. 0x3F)   + 0x80
+             in singleton x1 `mappend` singleton x2
+        | x <= 0xFFFF =
+             let x1 = fromIntegral $ (x `shiftR` 12) + 0xE0
+                 x2 = fromIntegral $ ((x `shiftR` 6) .&. 0x3F) + 0x80
+                 x3 = fromIntegral $ (x .&. 0x3F) + 0x80
+             in singleton x1 `mappend` singleton x2 `mappend` singleton x3
+        | otherwise =
+             let x1 = fromIntegral $ (x `shiftR` 18) + 0xF0
+                 x2 = fromIntegral $ ((x `shiftR` 12) .&. 0x3F) + 0x80
+                 x3 = fromIntegral $ ((x `shiftR` 6) .&. 0x3F) + 0x80
+                 x4 = fromIntegral $ (x .&. 0x3F) + 0x80
+             in singleton x1 `mappend` singleton x2 `mappend` singleton x3
+                             `mappend` singleton x4
 
--- | SM: See comment above. Don't use 'fromByteString'. You can actually
--- observer the effect by looking at the Chunks in the rendered bytestring.
-char8StringToBuilder :: String -> Builder
-char8StringToBuilder = fromByteString . BC8.pack
+stringToBuilder :: String -> Builder
+stringToBuilder = mconcat . map charToBuilder
+
+string8ToBuilder :: String -> Builder
+string8ToBuilder = mconcat . map char8ToBuilder
 
 char8ToBuilder :: Char -> Builder
 char8ToBuilder = singleton . fromIntegral . ord
 
 rawStringHB :: String -> HB
-rawStringHB s = HB $ \_ -> toBuilder s
+rawStringHB s = HB $ \_ -> stringToBuilder s
 
 stringHB :: String -> HB
 stringHB s = HB $ \_ -> escape s
   where
   escape = mconcat . map escape'
-  escape' '<' = char8StringToBuilder "&lt;"
-  escape' '>' = char8StringToBuilder "&gt;"
-  escape' '&' = char8StringToBuilder "&amp;"
-  escape' '"' = char8StringToBuilder "&quot;"
-  -- directly encode: every indirection costs.
-  escape' c   = toBuilder (c:[])
+  escape' '<' = string8ToBuilder "&lt;"
+  escape' '>' = string8ToBuilder "&gt;"
+  escape' '&' = string8ToBuilder "&amp;"
+  escape' '"' = string8ToBuilder "&quot;"
+  escape' c   = charToBuilder c
 
 tagHB :: String -> HB -> HB
 tagHB tag inner = HB $ \attrs ->
-  mconcat $ [ char8ToBuilder '<'
-            , toBuilder tag
-            , attrs
-            , char8ToBuilder '>'
-            , runHB inner mempty
-            , endTag
-            ]
+    char8ToBuilder '<' `mappend` tag'
+                       `mappend` attrs
+                       `mappend` close'
+                       `mappend` runHB inner mempty
+                       `mappend` string8ToBuilder "</"
+                       `mappend` tag'
+                       `mappend` close'
   where
-    -- SM: Note that 'endTag' is not shared due to the implicit dependency on
-    -- 'inner'. (There is this technique called let-floating that may introduce
-    -- sharing. However, I'm pretty sure that this is only done for fixed size
-    -- types, as otherwise a memory-leak could be introduced. We have to read
-    -- up on that. ) Compare to my implementation above and test using
-    -- Debug.trace.
-    endTag = mconcat [ char8StringToBuilder "</", toBuilder tag, char8ToBuilder '>']
+    tag' = stringToBuilder tag
+    close' = char8ToBuilder '>'
 
-
--- | SM: For speed this unnecessary 'mconcat' is hurting you. See my implementation above.
 addAttrHB :: String -> String -> HB -> HB
-addAttrHB key = \value h -> HB $ \attrs ->
-  runHB h $ mconcat [ attrs, char8ToBuilder ' ', toBuilder key
-                    , char8StringToBuilder "=\"", escape value
-                    , char8ToBuilder '"'
-                    ]
+addAttrHB key value h = HB $ \attrs ->
+    runHB h $ attrs `mappend` char8ToBuilder ' '
+                    `mappend` stringToBuilder key
+                    `mappend` string8ToBuilder "=\""
+                    `mappend` escape value
+                    `mappend` char8ToBuilder '"'
   where
   escape = mconcat . map escape'
-  escape' '&' = char8StringToBuilder "&amp;"
-  escape' '"' = char8StringToBuilder "&quot;"
-  escape' c   = toBuilder (c:[])
+  escape' '&' = string8ToBuilder "&amp;"
+  escape' '"' = string8ToBuilder "&quot;"
+  escape' c   = charToBuilder c
 
 tableHB = tagHB "table"
 trHB    = tagHB "tr"

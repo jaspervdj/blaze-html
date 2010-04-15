@@ -12,7 +12,12 @@ import Control.Parallel.Strategies
 import Control.Exception (evaluate)
 import Data.Binary.Builder (Builder, fromByteString, toLazyByteString, singleton)
 import qualified Data.ByteString as B
+-- SM: Remove dependency on other packages to improve understanding of
+-- optimizations
 import Codec.Binary.UTF8.String (encode)
+-- SM: I would also refrain from using this direct Latin1 encoding. This is
+-- only a thin wrapper around the core of bytestring. We are targeting UTF-8
+-- currently, so we don't need this at all.
 import qualified Data.ByteString.Char8 as BC8
 import qualified Data.ByteString.Lazy as BL
 
@@ -132,7 +137,7 @@ main =
 
 
 ------------------------------------------------------------------------------
--- A Context passing implementation
+-- A continuation passing implementation for fast String append
 ------------------------------------------------------------------------------
 
 -- Twice as fast as the existing 'html' library.
@@ -354,11 +359,46 @@ basicHS (title', user, items) = renderHS $ htmlHS $ mconcat
 -- An implementation using a Builder monoid and UTF8
 ------------------------------------------------------------------------------
 
+
+
+-- SM: General Overview
+-- --------------------
+--
+-- Hi Jasper,
+--
+-- I commented below what you could improve to make the Builder implementation
+-- faster. Most of the things I found out by experimenting with them during the
+-- two attempts on full speed I made. Try to do the same by making a hypothesis
+-- why a certain change should slow down the execution, changing it, and
+-- verifying your hypothesis. In general, I try to think how to implement the
+-- functionality in C and then map it back to the existing Haskell constructs
+-- and the compiler optimizations necessary to translate these constructs to
+-- the same good code.
+--
+-- Have a go. I'm looking forward to the new performance figures.
+--
+--   Simon
+--
+
+
+
 newtype HB = HB { runHB :: Builder -> Builder }
 
+-- | SM: This is probably quite inefficient. Use a direct conversion using your
+-- own Char -> Builder implementation and mconcat. All of this is already
+-- implemented in my 'devel' branch in the fast Utf8Builder.
+--
+-- The problem is 'fromByteString'. It assumes that the bytestring already
+-- contains big-enough chunks. This allows for sharing the chunks. However,
+-- this is NOT the case for us. Every string we have is too small to be its own
+-- Chunk. The only source giving rise to a long enough Chunk would be a long
+-- static string. However, I'm pretty sure that they are unlikely to occur for
+-- HTML page generation.
 toBuilder :: String -> Builder
 toBuilder = fromByteString . B.pack . encode
 
+-- | SM: See comment above. Don't use 'fromByteString'. You can actually
+-- observer the effect by looking at the Chunks in the rendered bytestring.
 char8StringToBuilder :: String -> Builder
 char8StringToBuilder = fromByteString . BC8.pack
 
@@ -376,6 +416,7 @@ stringHB s = HB $ \_ -> escape s
   escape' '>' = char8StringToBuilder "&gt;"
   escape' '&' = char8StringToBuilder "&amp;"
   escape' '"' = char8StringToBuilder "&quot;"
+  -- directly encode: every indirection costs.
   escape' c   = toBuilder (c:[])
 
 tagHB :: String -> HB -> HB
@@ -388,8 +429,16 @@ tagHB tag inner = HB $ \attrs ->
             , endTag
             ]
   where
+    -- SM: Note that 'endTag' is not shared due to the implicit dependency on
+    -- 'inner'. (There is this technique called let-floating that may introduce
+    -- sharing. However, I'm pretty sure that this is only done for fixed size
+    -- types, as otherwise a memory-leak could be introduced. We have to read
+    -- up on that. ) Compare to my implementation above and test using
+    -- Debug.trace.
     endTag = mconcat [ char8StringToBuilder "</", toBuilder tag, char8ToBuilder '>']
 
+
+-- | SM: For speed this unnecessary 'mconcat' is hurting you. See my implementation above.
 addAttrHB :: String -> String -> HB -> HB
 addAttrHB key = \value h -> HB $ \attrs ->
   runHB h $ mconcat [ attrs, char8ToBuilder ' ', toBuilder key

@@ -104,16 +104,16 @@ basic (title', user, items) = renderHtml $ concatHtml
     ]
 
 main = defaultMain
-    [ bench "html/bigTable"   $ nf (B.length . B.pack . encode . bigTable) myTable
+    [ bench "html/bigTable"   $ nf bigTable myTable
     , bench "render bigTable'" $ nf bigTable' myTable
-    , bench "cps/bigTable"     $ nf (B.length . B.pack . encode . bigTableH) myTable
+    , bench "cps/bigTable"     $ nf bigTableH myTable
     , bench "builder/bigTable" $ nf (BL.length . bigTableHB) myTable
-    , bench "strCopy/bigTable" $ nf (B.length . B.pack . encode . strCopy) bigTableString
+    , bench "strCopy/bigTable" $ nf strCopy bigTableString
     , bench "render bigTableHS" $ nf bigTableHS rows
-    , bench "html/basic"       $ nf (B.length . B.pack . encode . basic) basicData
-    , bench "cps/basic"        $ nf (B.length . B.pack . encode . basicH)  basicData
+    , bench "html/basic"       $ nf basic basicData
+    , bench "cps/basic"        $ nf basicH  basicData
     , bench "builder/basic" $ nf (BL.length . basicHB) basicData
-    , bench "strCopy/basic"    $ nf (B.length . B.pack . encode . strCopy) basicString
+    , bench "strCopy/basic"    $ nf strCopy basicString
     , bench "render basicHS" $ nf basicHS basicData
     ]
     -- mapM_ (\r -> evaluate (deepseq (bigTable r) ())) (replicate 100 rows)

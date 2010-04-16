@@ -104,18 +104,18 @@ basic (title', user, items) = renderHtml $ concatHtml
     ]
 
 main = defaultMain
-    [ bench "html/bigTable"   $ nf bigTable myTable
-    , bench "render bigTable'" $ nf bigTable' myTable
-    , bench "cps/bigTable"     $ nf bigTableH myTable
-    , bench "builder/bigTable" $ nf (BL.length . bigTableHB) myTable
-    , bench "strCopy/bigTable" $ nf strCopy bigTableString
+    {-[ bench "html/bigTable"   $ nf bigTable myTable
+    , bench "render bigTable'" $ nf bigTable' myTable-}
+    [ bench "cps/bigTable"     $ nf bigTableH myTable
+    , bench "builder/bigTable" $ nf (BL.length . bigTableHB) myTable ]
+    {-, bench "strCopy/bigTable" $ nf strCopy bigTableString
     , bench "render bigTableHS" $ nf bigTableHS rows
     , bench "html/basic"       $ nf basic basicData
     , bench "cps/basic"        $ nf basicH  basicData
     , bench "builder/basic" $ nf (BL.length . basicHB) basicData
     , bench "strCopy/basic"    $ nf strCopy basicString
     , bench "render basicHS" $ nf basicHS basicData
-    ]
+    ]-}
     -- mapM_ (\r -> evaluate (deepseq (bigTable r) ())) (replicate 100 rows)
   where
     rows :: Int
@@ -385,6 +385,7 @@ basicHS (title', user, items) = renderHS $ htmlHS $ mconcat
 newtype HB = HB { runHB :: Builder -> Builder }
 
 -- | Builder lookup array for characters <= 0xFF.
+-- TODO: we need more benchmarking on this guy.
 lookupBuilder :: Vector Builder
 lookupBuilder = V.fromList $ map createBuilder [0 .. 0xFF]
   where
@@ -393,9 +394,9 @@ lookupBuilder = V.fromList $ map createBuilder [0 .. 0xFF]
 
 charToBuilder :: Char -> Builder
 charToBuilder c | c <= chr 0x7F = lookupBuilder V.! ord c
-                | otherwise = char8ToBuilder' (ord c)
+                | otherwise = char7ToBuilder' (ord c)
   where
-    char8ToBuilder' x
+    char7ToBuilder' x
         | x <= 0x07FF =
              let x1 = fromIntegral $ (x `shiftR` 6) + 0xC0
                  x2 = fromIntegral $ (x .&. 0x3F)   + 0x80
@@ -412,27 +413,35 @@ charToBuilder c | c <= chr 0x7F = lookupBuilder V.! ord c
                  x4 = fromIntegral $ (x .&. 0x3F) + 0x80
              in singleton x1 `mappend` singleton x2 `mappend` singleton x3
                              `mappend` singleton x4
+-- This is quite a big function, but inlining seems to help a little here as
+-- well.
+{-# INLINE charToBuilder #-}
 
 stringToBuilder :: String -> Builder
 stringToBuilder = mconcat . map charToBuilder
+{-# INLINE stringToBuilder #-}
 
-string8ToBuilder :: String -> Builder
-string8ToBuilder = mconcat . map char8ToBuilder
+string7ToBuilder :: String -> Builder
+string7ToBuilder = mconcat . map char7ToBuilder
+{-# INLINE string7ToBuilder #-}
 
-char8ToBuilder :: Char -> Builder
-char8ToBuilder = singleton . fromIntegral . ord
+char7ToBuilder :: Char -> Builder
+char7ToBuilder = singleton . fromIntegral . ord
+{-# INLINE char7ToBuilder #-}
 
 rawStringHB :: String -> HB
 rawStringHB s = HB $ \_ -> stringToBuilder s
+{-# INLINE rawStringHB #-}
 
 -- | Escaped builder lookup array for characters <= 0xFF.
+-- TODO: we need more benchmarking on this guy.
 lookupEscapedBuilder :: Vector Builder
 lookupEscapedBuilder = V.fromList $ map createEscapedBuilder [chr 0 .. chr 0xFF]
   where
-    createEscapedBuilder '<' = string8ToBuilder "&lt;"
-    createEscapedBuilder '>' = string8ToBuilder "&gt;"
-    createEscapedBuilder '&' = string8ToBuilder "&amp;"
-    createEscapedBuilder '"' = string8ToBuilder "&quot;"
+    createEscapedBuilder '<' = string7ToBuilder "&lt;"
+    createEscapedBuilder '>' = string7ToBuilder "&gt;"
+    createEscapedBuilder '&' = string7ToBuilder "&amp;"
+    createEscapedBuilder '"' = string7ToBuilder "&quot;"
     createEscapedBuilder c   = charToBuilder c
 {-# NOINLINE lookupEscapedBuilder #-}
 
@@ -442,36 +451,37 @@ stringHB s = HB $ \_ -> escape s
   escape = mconcat . map escape'
   escape' c | c <= chr 0xFF = lookupEscapedBuilder V.! ord c
             | otherwise     = charToBuilder c
+{-# INLINE stringHB #-}
 
 tagHB :: String -> HB -> HB
 tagHB tag inner = HB $ \attrs ->
-    char8ToBuilder '<' `mappend` tag'
+    char7ToBuilder '<' `mappend` tag'
                        `mappend` attrs
                        `mappend` close'
                        `mappend` runHB inner mempty
                        -- The braces make the compiler treat the last part as a
                        -- whole, which is useful when this function closes
                        -- around `tag`.
-                       `mappend` (string8ToBuilder "</" `mappend` tag'
+                       `mappend` (string7ToBuilder "</" `mappend` tag'
                                                         `mappend` close')
   where
     tag' = stringToBuilder tag
-    close' = char8ToBuilder '>'
+    close' = char7ToBuilder '>'
 -- By inlining this function, functions calling this (e.g. `tableHB`) will close
 -- around the `tag` variable, which ensures `tag'` is only calculated once.
 {-# INLINE tagHB #-}
 
 addAttrHB :: String -> String -> HB -> HB
 addAttrHB key value h = HB $ \attrs ->
-    runHB h $ attrs `mappend` char8ToBuilder ' '
+    runHB h $ attrs `mappend` char7ToBuilder ' '
                     `mappend` stringToBuilder key
-                    `mappend` string8ToBuilder "=\""
+                    `mappend` string7ToBuilder "=\""
                     `mappend` escape value
-                    `mappend` char8ToBuilder '"'
+                    `mappend` char7ToBuilder '"'
   where
   escape = mconcat . map escape'
-  escape' '&' = string8ToBuilder "&amp;"
-  escape' '"' = string8ToBuilder "&quot;"
+  escape' '&' = string7ToBuilder "&amp;"
+  escape' '"' = string7ToBuilder "&quot;"
   escape' c   = charToBuilder c
 -- Same reasoning here.
 {-# INLINE addAttrHB #-}

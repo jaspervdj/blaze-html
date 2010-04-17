@@ -27,3 +27,29 @@ monoid. We will first examine (and probably patch) this `Builder`.
 
 I'm patching against the binary-0.5.0.2 package on Hackage. I'll put these
 other libraries under `lib/`, so our directory structured stays clean.
+
+Benchmarks
+----------
+
+In `lib/binary-0.5.0.2`, I added a `BlazeBenchmarks.hs` file which will
+benchmark the specifix features of the `Data.Binary.Builder` that we need.
+For now, we will have threee benchmarks, testing the conversion of three
+different types into a `Builder`:
+
+- `[String] -> Builder`
+- `[ByteString] -> Builder` (strict `ByteString`s)
+- `Text -> Builder` (strict `ByteString`s)
+
+The reason to choose for these benchmarks is that either `String` or
+`ByteString` will probably be used for the little static pieces, and `Text` for
+the dynamic, larger text fragments (or that's the plan for now, at least). On a
+sidenote, we'll use criterion for our benchmarks, since that's the standard
+these days.
+
+This means we will have to encode the `Text` to UTF-8, while we can just
+truncate the `String`s (the `ByteString`s are bytes already). With simple, naive
+definitions for both benchmarks, we get:
+
+- `[String] -> Builder`: 803.6914 us (std dev: 11.94165 us)
+- `[ByteString] -> Builder`: 54.93957 us (std dev: 683.2028 ns)
+- `[Text] -> Builder`: 4.196494 ms (std dev: 57.05580 us)

@@ -1,7 +1,6 @@
 dist
-tests/content/dist
 .\#*
 *.o
 *.hi
-*~
-.DS_Store
+
+lib/binary-0.5.0.2/BlazeBenchmarks

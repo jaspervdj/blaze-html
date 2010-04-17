@@ -1,0 +1,74 @@
+
+  binary: efficient, pure binary serialisation using lazy ByteStrings
+------------------------------------------------------------------------
+
+The 'binary' package provides Data.Binary, containing the Binary class,
+and associated methods, for serialising values to and from lazy
+ByteStrings. 
+
+A key feature of 'binary' is that the interface is both pure, and efficient.
+
+The 'binary' package is portable to GHC and Hugs.
+
+Building:
+
+    runhaskell Setup.lhs configure
+    runhaskell Setup.lhs build
+    runhaskell Setup.lhs install
+
+First:
+    import Data.Binary
+
+and then write an instance of Binary for the type you wish to serialise.
+More information in the haddock documentation.
+
+Deriving:
+
+It is possible to mechanically derive new instances of Binary for your
+types, if they support the Data and Typeable classes. A script is
+provided in tools/derive. Here's an example of its use.
+
+    $ cd binary 
+    $ cd tools/derive 
+
+    $ ghci -fglasgow-exts BinaryDerive.hs
+
+    *BinaryDerive> :l Example.hs 
+
+    *Main> deriveM (undefined :: Drinks)
+
+    instance Binary Main.Drinks where
+      put (Beer a) = putWord8 0 >> put a
+      put Coffee = putWord8 1
+      put Tea = putWord8 2
+      put EnergyDrink = putWord8 3
+      put Water = putWord8 4
+      put Wine = putWord8 5
+      put Whisky = putWord8 6
+      get = do
+        tag_ <- getWord8
+        case tag_ of
+          0 -> get >>= \a -> return (Beer a)
+          1 -> return Coffee
+          2 -> return Tea
+          3 -> return EnergyDrink
+          4 -> return Water
+          5 -> return Wine
+          6 -> return Whisky
+
+Contributors:
+
+    Lennart Kolmodin
+    Duncan Coutts
+    Don Stewart
+    Spencer Janssen
+    David Himmelstrup
+    Björn Bringert
+    Ross Paterson
+    Einar Karttunen
+    John Meacham
+    Ulf Norell
+    Tomasz Zielonka
+    Stefan Karrmann
+    Bryan O'Sullivan
+    Florian Weimer

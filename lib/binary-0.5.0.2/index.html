@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <title>Data.Binary - efficient, pure binary serialisation for Haskell</title>
+  <link rel="stylesheet" href="http://www.cse.unsw.edu.au/~dons/main.css" type="text/css" />
+</head>
+
+<body xml:lang="en" lang="en">
+
+  <div id="content">
+
+  <h2>Data.Binary</h2>
+
+<table width="80%" align="center"> <tr><td>
+
+    <h3>About</h3>
+    <p>
+    Data.Binary is a library for high performance binary serialisation
+    of <a href="http://haskell.org">Haskell</a> data. It uses the
+    <a href="http://www.cse.unsw.edu.au/~dons/fps.html"
+        >ByteString</a> library to achieve efficient, lazy reading and
+    writing of structures in binary format.
+    </p>
+
+    <p>
+    Chris Eidhof writes on his use of Data.Binary implementing a
+    full-text search engine:
+    </p>
+    <pre>
+   "The communication with Sphinx is done using a quite low-level binary
+    protocol, but Data.Binary saved the day: it made it very easy for us
+    to parse all the binary things. Especially the use of the Get and
+    Put monads are a big improvement over the manual reading and keeping
+    track of positions, as is done in the PHP/Python clients."
+    </pre>
+
+    <h3>Example</h3>
+    For example, to serialise an interpreter's abstract syntax tree to
+    binary format:
+<pre><span class='keyword'>import</span> <span class='conid'>Data</span><span class='varop'>.</span><span class='conid'>Binary</span>
+<span class='keyword'>import</span> <span class='conid'>Control</span><span class='varop'>.</span><span class='conid'>Monad</span>
+<span class='keyword'>import</span> <span class='conid'>Codec</span><span class='varop'>.</span><span class='conid'>Compression</span><span class='varop'>.</span><span class='conid'>GZip</span>
+
+<span class='comment'>-- A Haskell AST structure</span>
+<span class='keyword'>data</span> <span class='conid'>Exp</span> <span class='keyglyph'>=</span> <span class='conid'>IntE</span> <span class='conid'>Int</span>
+         <span class='keyglyph'>|</span> <span class='conid'>OpE</span>  <span class='conid'>String</span> <span class='conid'>Exp</span> <span class='conid'>Exp</span>
+   <span class='keyword'>deriving</span> <span class='conid'>Eq</span>
+
+<span class='comment'>-- An instance of Binary to encode and decode an Exp in binary</span>
+<span class='keyword'>instance</span> <span class='conid'>Binary</span> <span class='conid'>Exp</span> <span class='keyword'>where</span>
+     <span class='varid'>put</span> <span class='layout'>(</span><span class='conid'>IntE</span> <span class='varid'>i</span><span class='layout'>)</span>          <span class='keyglyph'>=</span> <span class='varid'>put</span> <span class='layout'>(</span><span class='num'>0</span> <span class='keyglyph'>::</span> <span class='conid'>Word8</span><span class='layout'>)</span> <span class='varop'>&gt;&gt;</span> <span class='varid'>put</span> <span class='varid'>i</span>
+     <span class='varid'>put</span> <span class='layout'>(</span><span class='conid'>OpE</span> <span class='varid'>s</span> <span class='varid'>e1</span> <span class='varid'>e2</span><span class='layout'>)</span>     <span class='keyglyph'>=</span> <span class='varid'>put</span> <span class='layout'>(</span><span class='num'>1</span> <span class='keyglyph'>::</span> <span class='conid'>Word8</span><span class='layout'>)</span> <span class='varop'>&gt;&gt;</span> <span class='varid'>put</span> <span class='varid'>s</span> <span class='varop'>&gt;&gt;</span> <span class='varid'>put</span> <span class='varid'>e1</span> <span class='varop'>&gt;&gt;</span> <span class='varid'>put</span> <span class='varid'>e2</span>
+     <span class='varid'>get</span> <span class='keyglyph'>=</span> <span class='keyword'>do</span> <span class='varid'>tag</span> <span class='keyglyph'>&lt;-</span> <span class='varid'>getWord8</span>
+              <span class='keyword'>case</span> <span class='varid'>tag</span> <span class='keyword'>of</span>
+                  <span class='num'>0</span> <span class='keyglyph'>-&gt;</span> <span class='varid'>liftM</span>  <span class='conid'>IntE</span> <span class='varid'>get</span>
+                  <span class='num'>1</span> <span class='keyglyph'>-&gt;</span> <span class='varid'>liftM3</span> <span class='conid'>OpE</span>  <span class='varid'>get</span> <span class='varid'>get</span> <span class='varid'>get</span>
+
+<span class='comment'>-- A test expression</span>
+<span class='varid'>e</span> <span class='keyglyph'>=</span> <span class='conid'>OpE</span> <span class='str'>"*"</span> <span class='layout'>(</span><span class='conid'>IntE</span> <span class='num'>7</span><span class='layout'>)</span> <span class='layout'>(</span><span class='conid'>OpE</span> <span class='str'>"/"</span> <span class='layout'>(</span><span class='conid'>IntE</span> <span class='num'>4</span><span class='layout'>)</span> <span class='layout'>(</span><span class='conid'>IntE</span> <span class='num'>2</span><span class='layout'>)</span><span class='layout'>)</span>
+
+<span class='comment'>-- Serialise and compress with gzip, then decompress and deserialise</span>
+<span class='varid'>main</span> <span class='keyglyph'>=</span> <span class='keyword'>do</span>
+    <span class='keyword'>let</span> <span class='varid'>t</span>  <span class='keyglyph'>=</span> <span class='varid'>compress</span> <span class='layout'>(</span><span class='varid'>encode</span> <span class='varid'>e</span><span class='layout'>)</span>
+    <span class='varid'>print</span> <span class='varid'>t</span>
+    <span class='keyword'>let</span> <span class='varid'>e'</span> <span class='keyglyph'>=</span> <span class='varid'>decode</span> <span class='layout'>(</span><span class='varid'>decompress</span> <span class='varid'>t</span><span class='layout'>)</span>
+    <span class='varid'>print</span> <span class='layout'>(</span><span class='varid'>e</span> <span class='varop'>==</span> <span class='varid'>e'</span><span class='layout'>)</span>
+</pre>
+
+    <h3>Download</h3>
+
+    <table width="100%"><tr valign="top">
+    <td><h4>stable release</h4>
+    <table>
+            <tr><td>
+            <a href="http://hackage.haskell.org/cgi-bin/hackage-scripts/package/binary-0.4.2"
+                >binary 0.4.2</a> 
+            </td><td>(Apr 2008)</td></tr>
+
+            <tr><td>
+            <a href="http://hackage.haskell.org/cgi-bin/hackage-scripts/package/binary-0.4.1"
+                >binary 0.4.1</a> 
+            </td><td>(Oct 2007)</td></tr>
+
+            <tr><td>
+            <a href="http://hackage.haskell.org/cgi-bin/hackage-scripts/package/binary-0.4"
+                >binary 0.4</a> 
+            </td><td>(Oct 2007)</td></tr>
+
+            <tr><td>
+            <a href="http://hackage.haskell.org/cgi-bin/hackage-scripts/package/binary-0.3"
+                >binary 0.3</a> 
+            </td><td>(Mar 2007)</td></tr>
+
+            <tr><td>
+            <a href="http://hackage.haskell.org/cgi-bin/hackage-scripts/package/binary-0.3"
+                >binary 0.2</a> 
+            </td><td>(Jan 2007)</td></tr>
+
+    </table> 
+    </td>
+    <td><h4>development branch</h4>
+    <table>
+        <tr><td>
+        darcs get <a href="http://code.haskell.org/binary"
+                >http://code.haskell.org/binary</a>
+        </td></tr>
+    </table>
+    </td> </tr> </table>
+
+    <h3>Download</h3>
+    <ul>
+        <li>
+        <a href="http://hackage.haskell.org/packages/archive/binary/0.4.1/doc/html/Data-Binary.html">Documentation</a>
+        </li>
+    </ul>
+
+    <h3>Project Activity</h3>
+
+    <center>
+        <img src="http://www.cse.unsw.edu.au/~dons/images/commits/community/binary-commits.png"
+             alt="binary commit statistics" />
+    </center>
+
+    <h3>Starring...</h3>
+
+    The Binary Strike Force
+    <ul>
+        <li>Lennart Kolmodin </li>
+        <li>Duncan Coutts </li>
+        <li>Don Stewart </li>
+        <li>Spencer Janssen </li>
+        <li>David Himmelstrup </li>
+        <li>Björn Bringert </li>
+        <li>Ross Paterson </li>
+        <li>Einar Karttunen </li>
+        <li>John Meacham </li>
+        <li>Ulf Norell </li>
+        <li>Bryan O'Sullivan </li>
+        <li>Tomasz Zielonka </li>
+        <li>Florian Weimer </li>
+        <li>Judah Jacobson </li>
+    </ul>
+
+</td></tr> </table>
+
+<img src="http://xmonad.org/images/HPC.badge.jpg"  alt="covered by HPC" />
+<img src="http://xmonad.org/images/cabal.png"      alt="built with Cabal" />
+<img src="http://xmonad.org/images/quickcheck.png" alt="tested with QuickCheck" />
+
+  </div>
+
+
+  <div id="footer">
+Mon Jul 14 11:37:21 PDT 2008
+  </div>
+
+</body>
+</html>

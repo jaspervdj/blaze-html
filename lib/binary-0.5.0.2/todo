@@ -1,0 +1,28 @@
+layer handling:
+
+    bit packing
+    state parameters
+    string pools
+
+    reading structures from the end of a stream, seek/tell behaviour
+
+seek based protocols are too hard. 
+    hGetContents/ interleaving.
+
+user requests:
+
+    get remaining bytestring after a runGet
+
+    some kind of lookahead, or restoring parsing state, or something with
+      equal functionality. make it another layer on top?
+
+    getLazyByteString takes an Int, which in Haskell98 is only guarantied to
+      be 29 bits, ie. 512 mb.
+      maybe we should have a readN64 for allowing reading of larger stuff?
+      (which could be implemented with readN on 64bit machines)
+      reference: bringerts tar archive decoder would be limitid to 0.5GB
+                 files, alt. 2GB in GHC
+
+SYB-deriving
+
+investigate the UArray instance, it does not seem to compile in GHC 6.4

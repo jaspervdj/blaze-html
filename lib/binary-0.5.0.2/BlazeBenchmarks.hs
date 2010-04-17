@@ -17,6 +17,7 @@ main = defaultMain
     , bench "[ByteString] -> Builder" $ whnf benchByteStrings byteStrings
     , bench "[ByteString] -> Builder'" $ whnf benchByteStrings' byteStrings
     , bench "[Text] -> Builder" $ whnf benchText texts
+    , bench "[Text] -> Builder'" $ whnf benchText' texts
     ]
   where
     strings :: [String]
@@ -58,3 +59,7 @@ benchByteStrings' = BL.length . toLazyByteString
 benchText :: [Text] -> Int64
 benchText = BL.length . toLazyByteString . mconcat
           . map (fromByteString . encodeUtf8)
+
+benchText' :: [Text] -> Int64
+benchText' = BL.length . toLazyByteString . mconcat
+           . map fromTextHtmlUtf8

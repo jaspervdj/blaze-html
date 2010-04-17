@@ -1,5 +1,5 @@
-Saturday, April 17th
-====================
+Saturday, April 17th, midday
+============================
 
 Hello, dear reader. My name is Jasper Van der Jeugt and these are my logs from
 my work on the BlazeHtml project. I started out today cleaning the entire repo,
@@ -86,3 +86,32 @@ slightly better benchmarks:
 - `[Text] -> Builder`: 3.978407 ms (std dev: 255.7193 us)
 
 The second benchmark is definitely faster than the first one.
+
+Saturday, April 17th, evening
+=============================
+
+This evening, I decided to tackle the problem of writing `Text` values in a
+very fast way. Our function pipeline looks more or less like:
+
+    converToBuilder . encodeUtf8 . escapeHtmlCharacters
+
+I don't see an elegant approach here. `escapeHtmlCharacters` cannot be fused
+because `concatMap` cannot be fused. So, since we cannot directly work with the
+string types, we would have a pipeline for every character.
+
+    converToBuilder . encode . escape
+
+Then, it will be concatenated again using `mconcat` or something similar. The
+downside of this approach is, however, that most characters will be dumb, stupid
+characters -- and so our pipeline will cause an overhead. I don't know the exact
+overhead though, a benchmark would be in place here.
+
+But we will choose for effiency, and raw speed. That's why I patched
+`Data.Binary.Builder` with a huge and ugly function that embodies this entire
+pipeline. The gain from our naive approach is huge:
+
+- `[Text] -> Builder`: 3.664167 ms (std dev: 113.5493 us)
+- `[Text] -> Builder'`: 744.9972 us (std dev: 27.23619 us)
+
+And we must note that our naive approach did not include escaping, while the big
+ugly function does.

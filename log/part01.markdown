@@ -50,6 +50,39 @@ This means we will have to encode the `Text` to UTF-8, while we can just
 truncate the `String`s (the `ByteString`s are bytes already). With simple, naive
 definitions for both benchmarks, we get:
 
-- `[String] -> Builder`: 803.6914 us (std dev: 11.94165 us)
-- `[ByteString] -> Builder`: 54.93957 us (std dev: 683.2028 ns)
-- `[Text] -> Builder`: 4.196494 ms (std dev: 57.05580 us)
+- `[String] -> Builder`: 62.99059 us (std dev: 1.608421 us)
+- `[ByteString] -> Builder`: 32.25011 us (std dev: 1.243526 us)
+- `[Text] -> Builder`: 3.717675 ms (std dev: 93.80014 us)
+
+Note that we compile with `-O2`, of course.
+
+Overhead in fromByteString
+--------------------------
+
+First, a little work on the `[ByteString] -> Builder` benchmark. The problem
+here is that we use the `fromByteString` function. These function assumes the
+strict `ByteString`s we append to the builder are already "long enough", so the
+function flushes the buffer. However, in our case, we're dealing with really
+small strings -- so we don't want to flush the buffer, we want to write to the
+buffer. So we patch the builder with a `fromByteString'` function:
+
+    -- | /O(n)./ A Builder taking a 'S.ByteString`, copying it.
+    --
+    fromByteString' :: S.ByteString -> Builder
+    fromByteString' byteString = writeN l f
+      where
+        (fptr, o, l) = S.toForeignPtr byteString
+        f dst = do copyBytes dst (unsafeForeignPtrToPtr ptr `plusPtr` o) l
+                   touchForeignPtr fptr
+        {-# INLINE f #-}
+
+
+This function should be more fitted for small strings. And indeed, we get
+slightly better benchmarks:
+
+- `[String] -> Builder`: 68.73607 us (std dev: 7.898973 us)
+- `[ByteString] -> Builder`: 35.73695 us (std dev: 8.147190 us)
+- `[ByteString] -> Builder'`: 26.59666 us (std dev: 3.947255 us)
+- `[Text] -> Builder`: 3.978407 ms (std dev: 255.7193 us)
+
+The second benchmark is definitely faster than the first one.

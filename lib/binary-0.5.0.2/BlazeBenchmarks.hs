@@ -15,15 +15,16 @@ import qualified Data.Text as T
 main = defaultMain 
     [ bench "[String] -> Builder" $ whnf benchStrings strings
     , bench "[ByteString] -> Builder" $ whnf benchByteStrings byteStrings
+    , bench "[ByteString] -> Builder'" $ whnf benchByteStrings' byteStrings
     , bench "[Text] -> Builder" $ whnf benchText texts
     ]
   where
     strings :: [String]
-    strings = replicate 100 "table" 
+    strings = replicate 100 "<img>" 
     {-# NOINLINE strings #-}
 
     byteStrings :: [S.ByteString]
-    byteStrings = replicate 100 "table"
+    byteStrings = replicate 100 "<img>"
     {-# NOINLINE byteStrings #-}
 
     texts :: [Text]
@@ -49,6 +50,10 @@ benchStrings = BL.length . toLazyByteString . mconcat
 benchByteStrings :: [S.ByteString] -> Int64
 benchByteStrings = BL.length . toLazyByteString
                  . mconcat . map fromByteString
+
+benchByteStrings' :: [S.ByteString] -> Int64
+benchByteStrings' = BL.length . toLazyByteString
+                  . mconcat . map fromByteString'
 
 benchText :: [Text] -> Int64
 benchText = BL.length . toLazyByteString . mconcat

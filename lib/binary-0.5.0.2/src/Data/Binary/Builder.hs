@@ -31,6 +31,7 @@ module Data.Binary.Builder (
     , singleton
     , append
     , fromByteString        -- :: S.ByteString -> Builder
+    , fromByteString'
     , fromLazyByteString    -- :: L.ByteString -> Builder
 
     -- * Flushing the buffer state
@@ -141,6 +142,16 @@ fromByteString bs
   | S.null bs = empty
   | otherwise = flush `append` mapBuilder (bs :)
 {-# INLINE fromByteString #-}
+
+-- | /O(n)./ A Builder taking a 'S.ByteString`, copying it.
+--
+fromByteString' :: S.ByteString -> Builder
+fromByteString' byteString = writeN l f
+  where
+    (fptr, o, l) = S.toForeignPtr byteString
+    f dst = do copyBytes dst (unsafeForeignPtrToPtr fptr `plusPtr` o) l
+               touchForeignPtr fptr
+    {-# INLINE f #-}
 
 -- | /O(1)./ A Builder taking a lazy 'L.ByteString', satisfying
 --

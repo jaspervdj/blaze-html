@@ -34,14 +34,14 @@ fromAscii7Char = singleton . fromIntegral . ord
 --
 fromUnicodeString :: String -> Builder
 fromUnicodeString s =
-    let (l, f) = foldl writeUnicodeChar writeNothing (show s)
+    let (l, f) = foldl writeUnicodeChar writeNothing s
     in fromUnsafeWrite l f
 
 -- | /O(n)./ Convert a Haskell 'String' to a builder, truncating it to bytes.
 --
 fromAscii7String :: String -> Builder
 fromAscii7String s =
-    let (l, f) = foldl writeAscii7Char writeNothing (show s)
+    let (l, f) = foldl writeAscii7Char writeNothing s
     in fromUnsafeWrite l f
 
 -- | /O(n)./ A Builder taking a 'S.ByteString`, copying it. This is a well
@@ -59,17 +59,20 @@ fromSmallByteString byteString = fromUnsafeWrite l f
 
 -- | /O(n)./ Convert a showable datatype to a builder. Use this function when
 -- the result of 'show' will contain Unicode characters.
+--
 fromUnicodeShow :: Show a => a -> Builder
 fromUnicodeShow = fromUnicodeString . show
 {-# INLINE fromUnicodeShow #-}
 
 -- | /O(n)./ Convert a showable datatype to a builder. Use this function when
 -- the result of 'show' will not contain Unicode characters.
+--
 fromAscii7Show :: Show a => a -> Builder
 fromAscii7Show = fromAscii7String . show
 {-# INLINE fromAscii7Show #-}
 
 -- | /O(n)./ Convert a 'Text' value to a Builder, doing HTML escaping as well.
+--
 fromHtmlText :: Text -> Builder
 fromHtmlText text =
     let (l, f) = T.foldl writeHtmlUnicodeChar writeNothing text

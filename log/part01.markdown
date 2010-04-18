@@ -180,7 +180,7 @@ engines, I get the following results:
     Mako Template                                  77.74 ms
     Kid template                                 1805.28 ms
     ClearSilver                                   116.32 ms
-    Djange template                               808.69 ms
+    Django template                               808.69 ms
     Spitfire template                              74.88 ms
     Spitfire template -O1                          39.45 ms
     Spitfire template -O2                          16.05 ms

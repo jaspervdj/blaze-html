@@ -198,3 +198,25 @@ We get the following initial results:
 - `basic`: 32.39297 us (std dev: 684.6011 ns)
 
 I think these results make a good initial baseline.
+
+Sunday, April 18th, evening
+===========================
+
+I discovered a bug in the implementations. The problem was that
+`fromUnicodeString` and `fromAscii7String` (two functions producing a `Builder`)
+would actually `show` the `String` first. This led to two unnecessary quotes in
+most situations.
+
+In our original draft, we spoke of a "monadic" syntax. This is a very nice
+feature to have, but we cannot have it if it makes our implementation less
+efficient. That's why implemented another test in `benchmarks/Utf8Html.hs`,
+using the monadic approach. The results are suprisingly well:
+
+- `bigTable`: 10.84097 ms (std dev: 195.6227 us)
+- `basic`: 32.09416 us (std dev: 368.2538 ns)
+- `bigTableM`: 9.909449 ms (std dev: 126.3776 us)
+- `basicM`: 28.18043 us (std dev: 349.1422 ns)
+
+As you can see, they are even slightly faster than their non-monadic variants.
+I have some theories about why this could happen, but some more research is
+needed there.

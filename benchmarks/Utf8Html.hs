@@ -44,9 +44,10 @@ rawByteString :: ByteString -> Html
 rawByteString = Html . const . fromSmallByteString
 {-# INLINE rawByteString #-}
 
-showAscii7Html :: Show a => a -> Html
-showAscii7Html = Html . const . fromAscii7Show
-{-# INLINE showAscii7Html #-}
+showHtml :: Show a => a -> Html
+showHtml = Html . const . fromHtmlString . show
+{-# INLINE showHtml #-}
+
 
 tag :: ByteString -> Html -> Html
 tag name inner = Html $ \attrs ->
@@ -57,8 +58,6 @@ tag name inner = Html $ \attrs ->
                        `mappend` (fromSmallByteString "</" 
                        `mappend` (fromSmallByteString name
                        `mappend` (fromAscii7Char '>')))))))
--- By inlining this function, functions calling this (e.g. `tableHtml`) will close
--- around the `tag` variable, which ensures `tag'` is only calculated once.
 {-# INLINE tag #-}
 
 addAttr :: ByteString -> Text -> Html -> Html
@@ -89,7 +88,7 @@ instance Monoid Html where
 bigTable :: [[Int]] -> BL.ByteString
 bigTable t = renderHtml $ table $ mconcat $ map row t
   where
-    row r = tr $ mconcat $ map (td . showAscii7Html) r
+    row r = tr $ mconcat $ map (td . showHtml) r
 
 html :: Html -> Html
 html inner = 

@@ -93,13 +93,13 @@ Saturday, April 17th, evening
 This evening, I decided to tackle the problem of writing `Text` values in a
 very fast way. Our function pipeline looks more or less like:
 
-    converToBuilder . encodeUtf8 . escapeHtmlCharacters
+    convertToBuilder . encodeUtf8 . escapeHtmlCharacters
 
 I don't see an elegant approach here. `escapeHtmlCharacters` cannot be fused
 because `concatMap` cannot be fused. So, since we cannot directly work with the
 string types, we would have a pipeline for every character.
 
-    converToBuilder . encode . escape
+    convertToBuilder . encode . escape
 
 Then, it will be concatenated again using `mconcat` or something similar. The
 downside of this approach is, however, that most characters will be dumb, stupid
@@ -210,7 +210,7 @@ most situations.
 In our original draft, we spoke of a "monadic" syntax. This is a very nice
 feature to have, but we cannot have it if it makes our implementation less
 efficient. That's why implemented another test in `benchmarks/Utf8Html.hs`,
-using the monadic approach. The results are suprisingly well:
+using the monadic approach. The results are surprisingly well:
 
 - `bigTable`: 10.84097 ms (std dev: 195.6227 us)
 - `basic`: 32.09416 us (std dev: 368.2538 ns)

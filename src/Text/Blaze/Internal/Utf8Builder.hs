@@ -3,6 +3,7 @@ module Text.Blaze.Internal.Utf8Builder
     , fromSmallByteString
     , fromUnicodeShow
     , fromAscii7Show
+    , fromHtmlString
     , fromHtmlText
     ) where
 

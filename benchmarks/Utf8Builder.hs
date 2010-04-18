@@ -1,16 +1,19 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Main where
 
+import Data.Char (ord)
+import Data.Int (Int64)
+import Data.Monoid (mconcat, mappend)
+
 import Data.Binary.Builder
 import Criterion.Main
-import Data.Char (ord)
-import Data.Monoid (mconcat, mappend)
-import Data.Int (Int64)
 import qualified Data.ByteString.Lazy as BL
 import qualified Data.ByteString as S
 import Data.Text (Text)
 import Data.Text.Encoding (encodeUtf8)
 import qualified Data.Text as T
+
+import Text.Blaze.Internal.Utf8Builder
 
 main = defaultMain 
     [ bench "[String] -> Builder" $ whnf benchStrings strings
@@ -54,7 +57,7 @@ benchByteStrings = BL.length . toLazyByteString
 
 benchByteStrings' :: [S.ByteString] -> Int64
 benchByteStrings' = BL.length . toLazyByteString
-                  . mconcat . map fromByteString'
+                  . mconcat . map fromSmallByteString
 
 benchText :: [Text] -> Int64
 benchText = BL.length . toLazyByteString . mconcat
@@ -62,4 +65,4 @@ benchText = BL.length . toLazyByteString . mconcat
 
 benchText' :: [Text] -> Int64
 benchText' = BL.length . toLazyByteString . mconcat
-           . map fromTextHtmlUtf8
+           . map fromHtmlText

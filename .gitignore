@@ -4,4 +4,4 @@ dist
 *.hi
 *.swp
 
-lib/binary-0.5.0.2/BlazeBenchmarks
+benchmarks/Utf8Builder

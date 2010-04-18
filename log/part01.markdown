@@ -32,8 +32,8 @@ Benchmarks
 ----------
 
 In `lib/binary-0.5.0.2`, I added a `BlazeBenchmarks.hs` file which will
-benchmark the specifix features of the `Data.Binary.Builder` that we need.
-For now, we will have threee benchmarks, testing the conversion of three
+benchmark the specific features of the `Data.Binary.Builder` that we need.
+For now, we will have three benchmarks, testing the conversion of three
 different types into a `Builder`:
 
 - `[String] -> Builder`
@@ -43,7 +43,7 @@ different types into a `Builder`:
 The reason to choose for these benchmarks is that either `String` or
 `ByteString` will probably be used for the little static pieces, and `Text` for
 the dynamic, larger text fragments (or that's the plan for now, at least). On a
-sidenote, we'll use criterion for our benchmarks, since that's the standard
+side note, we'll use criterion for our benchmarks, since that's the standard
 these days.
 
 This means we will have to encode the `Text` to UTF-8, while we can just
@@ -106,7 +106,7 @@ downside of this approach is, however, that most characters will be dumb, stupid
 characters -- and so our pipeline will cause an overhead. I don't know the exact
 overhead though, a benchmark would be in place here.
 
-But we will choose for effiency, and raw speed. That's why I patched
+But we will choose for efficiency, and raw speed. That's why I patched
 `Data.Binary.Builder` with a huge and ugly function that embodies this entire
 pipeline. The gain from our naive approach is huge:
 
@@ -115,3 +115,50 @@ pipeline. The gain from our naive approach is huge:
 
 And we must note that our naive approach did not include escaping, while the big
 ugly function does.
+
+Sunday, April 18th, morning
+===========================
+
+A little abstraction
+--------------------
+
+I decided to refactor some of the code I wrote yesterday. Remember the "big ugly
+function"? I put it in `Data.Binar.Builder`, because it needed some `Builder`
+internals. However, this function was UTF-8 _and_ HTML specific, so putting this
+function there was no option because
+
+- It _really_ doesn't belong there, concept-wise.
+- The Binary Strike Team would never accept such a patch anyway.
+
+First, I added some other functions we would need for producing Builders.
+
+- `fromSmallByteString :: S.ByteString -> Builder` (this is actually the
+  `fromByteString'` function from a little earlier, that I gave a proper name
+  now).
+- `fromUnicodeShow :: Show a => a -> Builder`
+- `fromAscii7Show :: Show a => a -> Builder`
+- `fromHtmlText :: Text -> Builder` (this is the big ugly function).
+
+UTF-8 encoding was needed in both the `fromUnicodeShow` and `fromHtmlText`. And
+very soon, patterns and abstractions started emerging. It turned out that
+`writeN` was actually the only internal function that I needed, but that's not
+really a good name to export, so I patched `Data.Binary.Builder` with
+
+    -- | /O(n)./ A Builder from a raw write to a pointer.
+    fromUnsafeWrite :: Int                  -- ^ Number of bytes to be written.
+                    -> (Ptr Word8 -> IO ()) -- ^ Function that does the write.
+                    -> Builder              -- ^ Resulting 'Builder'.
+    fromUnsafeWrite = writeN
+    {-# INLINE fromUnsafeWrite #-}
+
+Results
+-------
+
+Now, I could write my functions in another file, so I chose
+`Text.Blaze.Internal.Utf8Builder` for now. So I moved the benchmarks to another
+directory as well and made it all work together again.
+
+Initially, the abstraction introduced a small slowdown, unfortunately. But I was
+able to get back to the speed before the abstraction by adding a little
+inlining. If this approach works out in the future, we should probably try to
+get this patch accepted by the Binary Strike Team.

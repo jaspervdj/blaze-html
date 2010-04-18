@@ -31,9 +31,8 @@ module Data.Binary.Builder (
     , singleton
     , append
     , fromByteString        -- :: S.ByteString -> Builder
-    , fromByteString'
     , fromLazyByteString    -- :: L.ByteString -> Builder
-    , fromTextHtmlUtf8
+    , fromUnsafeWrite
 
     -- * Flushing the buffer state
     , flush
@@ -147,16 +146,6 @@ fromByteString bs
   | otherwise = flush `append` mapBuilder (bs :)
 {-# INLINE fromByteString #-}
 
--- | /O(n)./ A Builder taking a 'S.ByteString`, copying it.
---
-fromByteString' :: S.ByteString -> Builder
-fromByteString' byteString = writeN l f
-  where
-    (fptr, o, l) = S.toForeignPtr byteString
-    f dst = do copyBytes dst (unsafeForeignPtrToPtr fptr `plusPtr` o) l
-               touchForeignPtr fptr
-    {-# INLINE f #-}
-
 -- | /O(1)./ A Builder taking a lazy 'L.ByteString', satisfying
 --
 --  * @'toLazyByteString' ('fromLazyByteString' bs) = bs@
@@ -165,62 +154,12 @@ fromLazyByteString :: L.ByteString -> Builder
 fromLazyByteString bss = flush `append` mapBuilder (L.toChunks bss ++)
 {-# INLINE fromLazyByteString #-}
 
-fromTextHtmlUtf8 :: Text -> Builder
-fromTextHtmlUtf8 text = let (l, f) = T.foldl go (0, const $ return ()) text
-                        in writeN l f
-  where
-    lt :: [Word8]
-    lt = map (fromIntegral . ord) "&lt;"
-
-    gt :: [Word8]
-    gt = map (fromIntegral . ord) "&gt;"
-
-    amp :: [Word8]
-    amp = map (fromIntegral . ord) "&amp;"
-
-    quot :: [Word8]
-    quot = map (fromIntegral . ord) "&quot;"
-
-    apos :: [Word8]
-    apos = map (fromIntegral . ord) "&apos;"
-
-    go :: (Int, Ptr Word8 -> IO ()) -> Char -> (Int, Ptr Word8 -> IO ())
-    go (l, f) c = l `seq` case ord c of
-        x | x <= 0xFF -> case c of
-            '<'  -> (l + 4, \ptr -> f ptr >> pokeArray (ptr `plusPtr` l) lt)
-            '>'  -> (l + 4, \ptr -> f ptr >> pokeArray (ptr `plusPtr` l) gt)
-            '&'  -> (l + 5, \ptr -> f ptr >> pokeArray (ptr `plusPtr` l) amp)
-            '"'  -> (l + 6, \ptr -> f ptr >> pokeArray (ptr `plusPtr` l) quot)
-            '\'' -> (l + 6, \ptr -> f ptr >> pokeArray (ptr `plusPtr` l) apos)
-            _    -> (l + 1, \ptr -> f ptr >> poke (ptr `plusPtr` l)
-                                         (fromIntegral x :: Word8))
-          | x <= 0x07FF ->
-               let x1 = fromIntegral $ (x `shiftR` 6) + 0xC0
-                   x2 = fromIntegral $ (x .&. 0x3F)   + 0x80
-               in (l + 2, \ptr ->
-                   let pos = ptr `plusPtr` l
-                   in f ptr >> poke pos (x1 :: Word8)
-                            >> poke (pos `plusPtr` 1) (x2 :: Word8))
-          | x <= 0xFFFF ->
-               let x1 = fromIntegral $ (x `shiftR` 12) + 0xE0
-                   x2 = fromIntegral $ ((x `shiftR` 6) .&. 0x3F) + 0x80
-                   x3 = fromIntegral $ (x .&. 0x3F) + 0x80
-               in (l + 3, \ptr ->
-                   let pos = ptr `plusPtr` l
-                   in f ptr >> poke pos (x1 :: Word8)
-                            >> poke (pos `plusPtr` 1) (x2 :: Word8)
-                            >> poke (pos `plusPtr` 2) (x3 :: Word8))
-          | otherwise ->
-               let x1 = fromIntegral $ (x `shiftR` 18) + 0xF0
-                   x2 = fromIntegral $ ((x `shiftR` 12) .&. 0x3F) + 0x80
-                   x3 = fromIntegral $ ((x `shiftR` 6) .&. 0x3F) + 0x80
-                   x4 = fromIntegral $ (x .&. 0x3F) + 0x80
-               in (l + 4, \ptr ->
-                   let pos = ptr `plusPtr` l
-                   in f ptr >> poke pos (x1 :: Word8)
-                            >> poke (pos `plusPtr` 1) (x2 :: Word8)
-                            >> poke (pos `plusPtr` 2) (x3 :: Word8)
-                            >> poke (pos `plusPtr` 3) (x4 :: Word8))
+-- | /O(n)./ A Builder from a raw write to a pointer.
+fromUnsafeWrite :: Int                  -- ^ Number of bytes to be written.
+                -> (Ptr Word8 -> IO ()) -- ^ Function that does the write.
+                -> Builder              -- ^ Resulting 'Builder'.
+fromUnsafeWrite = writeN
+{-# INLINE fromUnsafeWrite #-}
 
 ------------------------------------------------------------------------
 

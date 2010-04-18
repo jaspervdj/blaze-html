@@ -69,9 +69,43 @@ addAttr key value h = Html $ \attrs ->
                       `mappend` (fromAscii7Char '"')))))
 {-# INLINE addAttr #-}
 
-table = tag "table"
-tr    = tag "tr"
-td    = tag "td"
+tag' :: ByteString -> ByteString -> Html -> Html
+tag' begin end = \inner -> Html $ \attrs ->
+    fromSmallByteString begin
+      `mappend` attrs
+      `mappend` fromAscii7Char '>'
+      `mappend` runHtml inner mempty
+      `mappend` fromSmallByteString end
+{-# INLINE tag' #-}
+
+tableB, tableE :: ByteString 
+tableB = "<table"
+tableE = "</table>"
+
+table :: Html -> Html
+table = tag' tableB tableE
+{-# INLINE table #-}
+
+-- SM: The effect of this inlining has to be investigated carefully w.r.t. code
+-- size. Not inlining it doesn't cost a lot and may well save quite some code.
+-- Moreoever, for bigger templates it may even be beneficial due to the less
+-- trashing 
+
+trB, trE :: ByteString
+trB = "<tr"
+trE = "</tr>"
+
+tr :: Html -> Html
+tr = tag' trB trE
+{-# INLINE tr #-}
+
+tdB, tdE :: ByteString
+tdB = "<td"
+tdE = "</td>"
+
+td :: Html -> Html
+td = tag' tdB tdE
+{-# INLINE td #-}
 
 renderHtml :: Html -> BL.ByteString
 renderHtml h = toLazyByteString $ runHtml h mempty

@@ -1,5 +1,6 @@
 module Text.Blaze.Internal.Utf8Builder 
     ( fromAscii7Char
+    , fromUnicodeString
     , fromSmallByteString
     , fromUnicodeShow
     , fromAscii7Show
@@ -16,11 +17,32 @@ import qualified Data.ByteString.Internal as S
 import Data.Text (Text)
 import qualified Data.Text as T
 
+-- | /O(1)./ Convert a Haskell 'Char' into a builder, encoding it as UTF-8.
+--
+fromUnicodeChar :: Char -> Builder
+fromUnicodeChar c =
+    let (l, f) = writeUnicodeChar writeNothing c
+    in fromUnsafeWrite l f
+
 -- | /O(1)./ Convert a Haskell 'Char' into a builder, truncating it.
 --
 fromAscii7Char :: Char -> Builder
 fromAscii7Char = singleton . fromIntegral . ord
 {-# INLINE fromAscii7Char #-}
+
+-- | /O(n)./ Convert a Haskell 'String' to a builder, encoding it as UTF-8.
+--
+fromUnicodeString :: String -> Builder
+fromUnicodeString s =
+    let (l, f) = foldl writeUnicodeChar writeNothing (show s)
+    in fromUnsafeWrite l f
+
+-- | /O(n)./ Convert a Haskell 'String' to a builder, truncating it to bytes.
+--
+fromAscii7String :: String -> Builder
+fromAscii7String s =
+    let (l, f) = foldl writeAscii7Char writeNothing (show s)
+    in fromUnsafeWrite l f
 
 -- | /O(n)./ A Builder taking a 'S.ByteString`, copying it. This is a well
 -- suited function for strings consisting only of Ascii7 characters. This
@@ -38,22 +60,24 @@ fromSmallByteString byteString = fromUnsafeWrite l f
 -- | /O(n)./ Convert a showable datatype to a builder. Use this function when
 -- the result of 'show' will contain Unicode characters.
 fromUnicodeShow :: Show a => a -> Builder
-fromUnicodeShow s =
-    let (l, f) = foldl writeUnicodeChar (0, const $ return ()) (show s)
-    in fromUnsafeWrite l f
+fromUnicodeShow = fromUnicodeString . show
+{-# INLINE fromUnicodeShow #-}
 
 -- | /O(n)./ Convert a showable datatype to a builder. Use this function when
 -- the result of 'show' will not contain Unicode characters.
 fromAscii7Show :: Show a => a -> Builder
-fromAscii7Show s =
-    let (l, f) = foldl writeAscii7Char (0, const $ return ()) (show s)
-    in fromUnsafeWrite l f
+fromAscii7Show = fromAscii7String . show
+{-# INLINE fromAscii7Show #-}
 
 -- | /O(n)./ Convert a 'Text' value to a Builder, doing HTML escaping as well.
 fromHtmlText :: Text -> Builder
 fromHtmlText text =
-    let (l, f) = T.foldl writeHtmlUnicodeChar (0, const $ return ()) text
+    let (l, f) = T.foldl writeHtmlUnicodeChar writeNothing text
     in fromUnsafeWrite l f
+
+writeNothing :: (Int, Ptr Word8 -> IO ())
+writeNothing = (0, const $ return ())
+{-# INLINE writeNothing #-}
 
 writeUnicodeChar :: (Int, Ptr Word8 -> IO ())
                  -> Char

@@ -81,6 +81,8 @@ tag' begin end = \inner -> Html $ \attrs ->
 tableB, tableE :: ByteString 
 tableB = "<table"
 tableE = "</table>"
+{-# NOINLINE tableB #-}
+{-# NOINLINE tableE #-}
 
 table :: Html -> Html
 table = tag' tableB tableE
@@ -94,6 +96,8 @@ table = tag' tableB tableE
 trB, trE :: ByteString
 trB = "<tr"
 trE = "</tr>"
+{-# NOINLINE trB #-}
+{-# NOINLINE trE #-}
 
 tr :: Html -> Html
 tr = tag' trB trE
@@ -102,6 +106,8 @@ tr = tag' trB trE
 tdB, tdE :: ByteString
 tdB = "<td"
 tdE = "</td>"
+{-# NOINLINE tdB #-}
+{-# NOINLINE tdE #-}
 
 td :: Html -> Html
 td = tag' tdB tdE
@@ -130,16 +136,33 @@ html inner =
   rawByteString "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 3.2 FINAL//EN\">\n<!--Rendered using the Haskell Html Library v0.2-->\n"
   `mappend` tag "html" inner
   
-header = tag "header"
-title = tag "title"
-body = tag "body"
-div = tag "div"
-h1 = tag "h1"
-h2 = tag "h2"
-p = tag "p"
-li = tag "li"
+header = tag' "<header" "</header>"
+title  = tag' "<title"  "</title>"
+body   = tag' "<body"   "</body>"
+div    = tag' "<div"    "</div>"
+h1     = tag' "<h1"     "</h1>"
+h2     = tag' "<h2"     "</h2>"
+li     = tag' "<li"     "</li>"
+
+-- THE following seems to be the desired recipe: sharing of data, inlining of
+-- control.
+pB = "<p"
+pE = "</p>"
+p  = tag' pB pE
+{-# NOINLINE pB #-}
+{-# NOINLINE pE #-}
+{-# INLINE p #-}
 
 idA = addAttr "id"
+
+hello1, hello2, hello3, loop :: ByteString
+hello1 = "Hello, "
+hello2 = "Hello, me!"
+hello3 = "Hello, world!"
+loop   = "Loop"
+
+static = Html . const . fromSmallByteString
+{-# INLINE static #-}
 
 basic :: (Text, Text, [Text]) -- ^ (Title, User, Items)
       -> BL.ByteString
@@ -147,10 +170,10 @@ basic (title', user, items) = renderHtml $ html $ mconcat
     [ header $ title $ text title'
     , body $ mconcat
         [ div $ idA "header" (h1 $ text title')
-        , p $ text $ "Hello, " `mappend` user `mappend` "!"
-        , p $ text $ "Hello, me!"
-        , p $ text $ "Hello, world!"
-        , h2 $ text "Loop"
+        , p $ static hello1 `mappend` text user `mappend` text "!"
+        , p $ static hello2
+        , p $ static hello3
+        , h2 $ static loop
         , mconcat $ map (li . text) items
         , idA "footer" (div $ mempty)
         ]

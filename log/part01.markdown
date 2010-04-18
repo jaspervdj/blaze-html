@@ -162,3 +162,39 @@ Initially, the abstraction introduced a small slowdown, unfortunately. But I was
 able to get back to the speed before the abstraction by adding a little
 inlining. If this approach works out in the future, we should probably try to
 get this patch accepted by the Binary Strike Team.
+
+Sunday, April 18th, around midday
+=================================
+
+Html benchmarks
+---------------
+
+We will start by running some benchmarks for _other_ templating libraries. I do
+all work with an Dell Inspiron 6400 laptop. My CPU is a dual-core i686 32 bit
+model, both cores are 800MHz, and I have 1GB of RAM. For some other templating
+engines, I get the following results:
+
+    Genshi tag builder                            931.63 ms
+    Genshi template                               631.47 ms
+    Genshi template + tag builder                1031.72 ms
+    Mako Template                                  77.74 ms
+    Kid template                                 1805.28 ms
+    ClearSilver                                   116.32 ms
+    Djange template                               808.69 ms
+    Spitfire template                              74.88 ms
+    Spitfire template -O1                          39.45 ms
+    Spitfire template -O2                          16.05 ms
+    Spitfire template -O3                          16.10 ms
+    Spitfire template -O4                          10.03 ms
+    StringIO                                      109.05 ms
+    cStringIO                                      22.27 ms
+    list concat                                    13.79 ms
+
+I wrote a library sketch in `benchmarks/Utf8Html.hs`, based on the previous
+work of Simon Meier and me, but this time using the new `Builder` functionality.
+We get the following initial results:
+
+- `bigTable`: 11.02054 ms (std dev: 200.6569 us)
+- `basic`: 32.39297 us (std dev: 684.6011 ns)
+
+I think these results make a good initial baseline.

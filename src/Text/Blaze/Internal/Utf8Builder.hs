@@ -1,5 +1,6 @@
 module Text.Blaze.Internal.Utf8Builder 
-    ( fromSmallByteString
+    ( fromAscii7Char
+    , fromSmallByteString
     , fromUnicodeShow
     , fromAscii7Show
     , fromHtmlText
@@ -7,12 +8,19 @@ module Text.Blaze.Internal.Utf8Builder
 
 import Foreign
 import Data.Char (ord)
+import Prelude hiding (quot)
 
-import Data.Binary.Builder (Builder, fromUnsafeWrite)
+import Data.Binary.Builder (Builder, fromUnsafeWrite, singleton)
 import qualified Data.ByteString as S
 import qualified Data.ByteString.Internal as S
 import Data.Text (Text)
 import qualified Data.Text as T
+
+-- | /O(1)./ Convert a Haskell 'Char' into a builder, truncating it.
+--
+fromAscii7Char :: Char -> Builder
+fromAscii7Char = singleton . fromIntegral . ord
+{-# INLINE fromAscii7Char #-}
 
 -- | /O(n)./ A Builder taking a 'S.ByteString`, copying it. This is a well
 -- suited function for strings consisting only of Ascii7 characters. This

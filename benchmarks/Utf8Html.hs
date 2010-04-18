@@ -50,29 +50,24 @@ showAscii7Html = Html . const . fromAscii7Show
 
 tag :: ByteString -> Html -> Html
 tag name inner = Html $ \attrs ->
-    fromAscii7Char '<' `mappend` tag'
-                       `mappend` attrs
-                       `mappend` close'
-                       `mappend` runHtml inner mempty
-                       -- The braces make the compiler treat the last part as a
-                       -- whole, which is useful when this function closes
-                       -- around `tag`.
-                       `mappend` (fromSmallByteString "</" `mappend` tag'
-                                                           `mappend` close')
-  where
-    tag' = fromSmallByteString name
-    close' = fromAscii7Char '>'
+    fromAscii7Char '<' `mappend` (fromSmallByteString name
+                       `mappend` (attrs
+                       `mappend` (fromAscii7Char '>'
+                       `mappend` (runHtml inner mempty
+                       `mappend` (fromSmallByteString "</" 
+                       `mappend` (fromSmallByteString name
+                       `mappend` (fromAscii7Char '>')))))))
 -- By inlining this function, functions calling this (e.g. `tableHtml`) will close
 -- around the `tag` variable, which ensures `tag'` is only calculated once.
 {-# INLINE tag #-}
 
 addAttr :: ByteString -> Text -> Html -> Html
 addAttr key value h = Html $ \attrs ->
-    runHtml h $ attrs `mappend` fromAscii7Char ' '
-                      `mappend` fromSmallByteString key
-                      `mappend` fromSmallByteString "=\""
-                      `mappend` fromHtmlText value
-                      `mappend` fromAscii7Char '"'
+    runHtml h $ attrs `mappend` (fromAscii7Char ' '
+                      `mappend` (fromSmallByteString key
+                      `mappend` (fromSmallByteString "=\""
+                      `mappend` (fromHtmlText value
+                      `mappend` (fromAscii7Char '"')))))
 {-# INLINE addAttr #-}
 
 table = tag "table"

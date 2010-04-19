@@ -4,6 +4,7 @@ module Text.Blaze.Internal.Utf8Builder
     , fromSmallByteString
     , fromUnicodeShow
     , fromAscii7Show
+    , fromHtmlString
     , fromHtmlText
     ) where
 
@@ -70,6 +71,13 @@ fromUnicodeShow = fromUnicodeString . show
 fromAscii7Show :: Show a => a -> Builder
 fromAscii7Show = fromAscii7String . show
 {-# INLINE fromAscii7Show #-}
+
+-- | /O(n)./ Convert a showable datatype to a builder. Use this function when
+-- the result of 'show' will not contain Unicode characters.
+fromHtmlString :: String -> Builder
+fromHtmlString s =
+    let (l, f) = foldl writeHtmlUnicodeChar (0, const $ return ()) s
+    in fromUnsafeWrite l f
 
 -- | /O(n)./ Convert a 'Text' value to a Builder, doing HTML escaping as well.
 --

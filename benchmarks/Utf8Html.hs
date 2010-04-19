@@ -47,9 +47,10 @@ rawByteString :: ByteString -> Html
 rawByteString = Html . const . fromSmallByteString
 {-# INLINE rawByteString #-}
 
-showAscii7Html :: Show a => a -> Html
-showAscii7Html = Html . const . fromAscii7Show
-{-# INLINE showAscii7Html #-}
+showHtml :: Show a => a -> Html
+showHtml = Html . const . fromHtmlString . show
+{-# INLINE showHtml #-}
+
 
 tag :: ByteString -> Html -> Html
 tag name inner = Html $ \attrs ->
@@ -60,8 +61,6 @@ tag name inner = Html $ \attrs ->
                        `mappend` (fromSmallByteString "</" 
                        `mappend` (fromSmallByteString name
                        `mappend` (fromAscii7Char '>')))))))
--- By inlining this function, functions calling this (e.g. `tableHtml`) will close
--- around the `tag` variable, which ensures `tag'` is only calculated once.
 {-# INLINE tag #-}
 
 addAttr :: ByteString -> Text -> Html -> Html
@@ -73,9 +72,49 @@ addAttr key value h = Html $ \attrs ->
                       `mappend` (fromAscii7Char '"')))))
 {-# INLINE addAttr #-}
 
-table = tag "table"
-tr    = tag "tr"
-td    = tag "td"
+tag' :: ByteString -> ByteString -> Html -> Html
+tag' begin end = \inner -> Html $ \attrs ->
+    fromSmallByteString begin
+      `mappend` attrs
+      `mappend` fromAscii7Char '>'
+      `mappend` runHtml inner mempty
+      `mappend` fromSmallByteString end
+{-# INLINE tag' #-}
+
+tableB, tableE :: ByteString 
+tableB = "<table"
+tableE = "</table>"
+{-# NOINLINE tableB #-}
+{-# NOINLINE tableE #-}
+
+table :: Html -> Html
+table = tag' tableB tableE
+{-# INLINE table #-}
+
+-- SM: The effect of this inlining has to be investigated carefully w.r.t. code
+-- size. Not inlining it doesn't cost a lot and may well save quite some code.
+-- Moreoever, for bigger templates it may even be beneficial due to the less
+-- trashing 
+
+trB, trE :: ByteString
+trB = "<tr"
+trE = "</tr>"
+{-# NOINLINE trB #-}
+{-# NOINLINE trE #-}
+
+tr :: Html -> Html
+tr = tag' trB trE
+{-# INLINE tr #-}
+
+tdB, tdE :: ByteString
+tdB = "<td"
+tdE = "</td>"
+{-# NOINLINE tdB #-}
+{-# NOINLINE tdE #-}
+
+td :: Html -> Html
+td = tag' tdB tdE
+{-# INLINE td #-}
 
 renderHtml :: Html -> BL.ByteString
 renderHtml h = toLazyByteString $ runHtml h mempty
@@ -92,7 +131,7 @@ instance Monoid Html where
 bigTable :: [[Int]] -> BL.ByteString
 bigTable t = renderHtml $ table $ mconcat $ map row t
   where
-    row r = tr $ mconcat $ map (td . showAscii7Html) r
+    row r = tr $ mconcat $ map (td . showHtml) r
 
 html :: Html -> Html
 html inner = 
@@ -100,16 +139,33 @@ html inner =
   rawByteString "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 3.2 FINAL//EN\">\n<!--Rendered using the Haskell Html Library v0.2-->\n"
   `mappend` tag "html" inner
   
-header = tag "header"
-title = tag "title"
-body = tag "body"
-div = tag "div"
-h1 = tag "h1"
-h2 = tag "h2"
-p = tag "p"
-li = tag "li"
+header = tag' "<header" "</header>"
+title  = tag' "<title"  "</title>"
+body   = tag' "<body"   "</body>"
+div    = tag' "<div"    "</div>"
+h1     = tag' "<h1"     "</h1>"
+h2     = tag' "<h2"     "</h2>"
+li     = tag' "<li"     "</li>"
+
+-- THE following seems to be the desired recipe: sharing of data, inlining of
+-- control.
+pB = "<p"
+pE = "</p>"
+p  = tag' pB pE
+{-# NOINLINE pB #-}
+{-# NOINLINE pE #-}
+{-# INLINE p #-}
 
 idA = addAttr "id"
+
+hello1, hello2, hello3, loop :: ByteString
+hello1 = "Hello, "
+hello2 = "Hello, me!"
+hello3 = "Hello, world!"
+loop   = "Loop"
+
+static = Html . const . fromSmallByteString
+{-# INLINE static #-}
 
 basic :: (Text, Text, [Text]) -- ^ (Title, User, Items)
       -> BL.ByteString
@@ -117,10 +173,10 @@ basic (title', user, items) = renderHtml $ html $ mconcat
     [ header $ title $ text title'
     , body $ mconcat
         [ div $ idA "header" (h1 $ text title')
-        , p $ text $ "Hello, " `mappend` user `mappend` "!"
-        , p $ text $ "Hello, me!"
-        , p $ text $ "Hello, world!"
-        , h2 $ text "Loop"
+        , p $ static hello1 `mappend` text user `mappend` text "!"
+        , p $ static hello2
+        , p $ static hello3
+        , h2 $ static loop
         , mconcat $ map (li . text) items
         , idA "footer" (div $ mempty)
         ]

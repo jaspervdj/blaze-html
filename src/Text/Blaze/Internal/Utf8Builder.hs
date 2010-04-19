@@ -2,16 +2,21 @@
 -- functions than the standard ones, and more HTML-specific functions.
 --
 module Text.Blaze.Internal.Utf8Builder 
-    ( -- * Creating Builders from Text.
+    ( 
+      -- * Creating Builders from Text.
       fromHtmlText
     , fromRawText
+
       -- * Creating Builders from Showable values.
     , fromHtmlShow
     , fromRawShow
+
       -- * Creating Builders from ByteStrings.
     , fromRawByteString
+
       -- * Creating Builders from characters.
     , fromRawAscii7Char
+
       -- * Creating Builders from Strings.
     , fromHtmlString
     , fromRawString
@@ -91,10 +96,6 @@ fromRawString :: String -> Builder
 fromRawString s =
     let (l, f) = foldl writeUnicodeChar writeNothing s
     in fromUnsafeWrite l f
-
---------------------------------------------------------------------------------
--- Internal functions follow.
---------------------------------------------------------------------------------
 
 -- | Function to create an empty write. This is used as initial value for folds.
 writeNothing :: (Int, Ptr Word8 -> IO ())

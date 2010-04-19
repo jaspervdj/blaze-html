@@ -220,3 +220,15 @@ using the monadic approach. The results are surprisingly well:
 As you can see, they are even slightly faster than their non-monadic variants.
 I have some theories about why this could happen, but some more research is
 needed there.
+
+Monday, April 19th, evening
+===========================
+
+Simon discovered some more inlining we could apply to our code, so we made some
+improvements again. I also refactored `Text.Blaze.Internal.Builder` and
+commented it where necessary. The benchmarks currently give me:
+
+- `bigTable`: 7.698022 ms (std dev: 230.3451 us)
+- `basic`: 23.82825 us (std dev: 1.130614 us)
+
+Yay! We seem to be below "Spitfire template -O4" now!

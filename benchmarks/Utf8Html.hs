@@ -81,14 +81,14 @@ tag' begin end = \inner -> Html $ \attrs ->
       `mappend` fromRawByteString end
 {-# INLINE tag' #-}
 
-tableB, tableE :: ByteString 
-tableB = "<table"
-tableE = "</table>"
-{-# NOINLINE tableB #-}
-{-# NOINLINE tableE #-}
 
 table :: Html -> Html
-table = tag' tableB tableE
+table = let tableB, tableE :: ByteString
+            tableB = "<table"
+            tableE = "</table>"
+            {-# NOINLINE tableB #-}
+            {-# NOINLINE tableE #-}
+        in tag' tableB tableE
 {-# INLINE table #-}
 
 -- SM: The effect of this inlining has to be investigated carefully w.r.t. code
@@ -96,24 +96,24 @@ table = tag' tableB tableE
 -- Moreoever, for bigger templates it may even be beneficial due to the less
 -- trashing 
 
-trB, trE :: ByteString
-trB = "<tr"
-trE = "</tr>"
-{-# NOINLINE trB #-}
-{-# NOINLINE trE #-}
 
 tr :: Html -> Html
-tr = tag' trB trE
+tr = let trB, trE :: ByteString
+         trB = "<tr"
+         trE = "</tr>"
+         {-# NOINLINE trB #-}
+         {-# NOINLINE trE #-}
+     in tag' trB trE
 {-# INLINE tr #-}
 
-tdB, tdE :: ByteString
-tdB = "<td"
-tdE = "</td>"
-{-# NOINLINE tdB #-}
-{-# NOINLINE tdE #-}
 
 td :: Html -> Html
-td = tag' tdB tdE
+td = let tdB, tdE :: ByteString
+         tdB = "<td"
+         tdE = "</td>"
+         {-# NOINLINE tdB #-}
+         {-# NOINLINE tdE #-}
+     in tag' tdB tdE
 {-# INLINE td #-}
 
 renderHtml :: Html -> BL.ByteString

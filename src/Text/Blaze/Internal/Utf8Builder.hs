@@ -1,11 +1,20 @@
+-- | A module for efficiently constructing a 'Builder'. This module offers more
+-- functions than the standard ones, and more HTML-specific functions.
+--
 module Text.Blaze.Internal.Utf8Builder 
-    ( fromAscii7Char
-    , fromUnicodeString
-    , fromSmallByteString
-    , fromUnicodeShow
-    , fromAscii7Show
+    ( -- * Creating Builders from Text.
+      fromHtmlText
+    , fromRawText
+      -- * Creating Builders from Showable values.
+    , fromHtmlShow
+    , fromRawShow
+      -- * Creating Builders from ByteStrings.
+    , fromRawByteString
+      -- * Creating Builders from characters.
+    , fromRawAscii7Char
+      -- * Creating Builders from Strings.
     , fromHtmlString
-    , fromHtmlText
+    , fromRawString
     ) where
 
 import Foreign
@@ -18,81 +27,84 @@ import qualified Data.ByteString.Internal as S
 import Data.Text (Text)
 import qualified Data.Text as T
 
--- | /O(1)./ Convert a Haskell 'Char' into a builder, encoding it as UTF-8.
---
-fromUnicodeChar :: Char -> Builder
-fromUnicodeChar c =
-    let (l, f) = writeUnicodeChar writeNothing c
-    in fromUnsafeWrite l f
-
--- | /O(1)./ Convert a Haskell 'Char' into a builder, truncating it.
---
-fromAscii7Char :: Char -> Builder
-fromAscii7Char = singleton . fromIntegral . ord
-{-# INLINE fromAscii7Char #-}
-
--- | /O(n)./ Convert a Haskell 'String' to a builder, encoding it as UTF-8.
---
-fromUnicodeString :: String -> Builder
-fromUnicodeString s =
-    let (l, f) = foldl writeUnicodeChar writeNothing s
-    in fromUnsafeWrite l f
-
--- | /O(n)./ Convert a Haskell 'String' to a builder, truncating it to bytes.
---
-fromAscii7String :: String -> Builder
-fromAscii7String s =
-    let (l, f) = foldl writeAscii7Char writeNothing s
-    in fromUnsafeWrite l f
-
--- | /O(n)./ A Builder taking a 'S.ByteString`, copying it. This is a well
--- suited function for strings consisting only of Ascii7 characters. This
--- function should perform better when dealing with small strings than the
--- fromByteString function from Builder.
---
-fromSmallByteString :: S.ByteString -> Builder
-fromSmallByteString byteString = fromUnsafeWrite l f
-  where
-    (fptr, o, l) = S.toForeignPtr byteString
-    f dst = do copyBytes dst (unsafeForeignPtrToPtr fptr `plusPtr` o) l
-               touchForeignPtr fptr
-    {-# INLINE f #-}
-
--- | /O(n)./ Convert a showable datatype to a builder. Use this function when
--- the result of 'show' will contain Unicode characters.
---
-fromUnicodeShow :: Show a => a -> Builder
-fromUnicodeShow = fromUnicodeString . show
-{-# INLINE fromUnicodeShow #-}
-
--- | /O(n)./ Convert a showable datatype to a builder. Use this function when
--- the result of 'show' will not contain Unicode characters.
---
-fromAscii7Show :: Show a => a -> Builder
-fromAscii7Show = fromAscii7String . show
-{-# INLINE fromAscii7Show #-}
-
--- | /O(n)./ Convert a showable datatype to a builder. Use this function when
--- the result of 'show' will not contain Unicode characters.
-fromHtmlString :: String -> Builder
-fromHtmlString s =
-    let (l, f) = foldl writeHtmlUnicodeChar (0, const $ return ()) s
-    in fromUnsafeWrite l f
-
--- | /O(n)./ Convert a 'Text' value to a Builder, doing HTML escaping as well.
+-- | /O(n)./ Convert a 'Text' value to a 'Builder'. This function does proper
+-- HTML escaping.
 --
 fromHtmlText :: Text -> Builder
 fromHtmlText text =
     let (l, f) = T.foldl writeHtmlUnicodeChar writeNothing text
     in fromUnsafeWrite l f
 
+-- | /O(n)./ Convert a 'Text' value to a 'Builder'. This function will not do
+-- any HTML escaping.
+--
+fromRawText :: Text -> Builder
+fromRawText text =
+    let (l, f) = T.foldl writeUnicodeChar writeNothing text
+    in fromUnsafeWrite l f
+
+-- | /O(n)./ Convert a 'Show'able datatype to a 'Builder', doing HTML escaping.
+--
+fromHtmlShow :: Show a => a -> Builder
+fromHtmlShow = fromHtmlString . show
+{-# INLINE fromHtmlShow #-}
+
+-- | /O(n)./ Convert a 'Show'able datatype to a 'Builder', not doing any
+-- escaping.
+--
+fromRawShow :: Show a => a -> Builder
+fromRawShow = fromRawString . show
+{-# INLINE fromRawShow #-}
+
+-- | /O(n)./ A Builder taking a 'S.ByteString`, copying it. This is a well
+-- suited function for strings consisting only of Ascii7 characters. This
+-- function should perform better when dealing with small strings than the
+-- fromByteString function from Builder.
+--
+fromRawByteString :: S.ByteString -> Builder
+fromRawByteString byteString = fromUnsafeWrite l f
+  where
+    (fptr, o, l) = S.toForeignPtr byteString
+    f dst = do copyBytes dst (unsafeForeignPtrToPtr fptr `plusPtr` o) l
+               touchForeignPtr fptr
+    {-# INLINE f #-}
+
+-- | /O(1)./ Convert a Haskell character to a 'Builder', truncating it to a
+-- byte, and not doing any escaping.
+--
+fromRawAscii7Char :: Char -> Builder
+fromRawAscii7Char = singleton . fromIntegral . ord
+{-# INLINE fromRawAscii7Char #-}
+
+-- | /O(n)./ Convert a Haskell 'String' to a 'Builder'. This function does
+-- proper escaping for HTML entities.
+--
+fromHtmlString :: String -> Builder
+fromHtmlString s =
+    let (l, f) = foldl writeHtmlUnicodeChar writeNothing s
+    in fromUnsafeWrite l f
+
+-- | /O(n)./ Convert a Haskell 'String' to a builder. Unlike 'fromHtmlString',
+-- this function will not do any escaping.
+--
+fromRawString :: String -> Builder
+fromRawString s =
+    let (l, f) = foldl writeUnicodeChar writeNothing s
+    in fromUnsafeWrite l f
+
+--------------------------------------------------------------------------------
+-- Internal functions follow.
+--------------------------------------------------------------------------------
+
+-- | Function to create an empty write. This is used as initial value for folds.
 writeNothing :: (Int, Ptr Word8 -> IO ())
 writeNothing = (0, const $ return ())
 {-# INLINE writeNothing #-}
 
-writeUnicodeChar :: (Int, Ptr Word8 -> IO ())
-                 -> Char
-                 -> (Int, Ptr Word8 -> IO ())
+-- | Write a Unicode character, encoding it as UTF-8.
+writeUnicodeChar :: (Int, Ptr Word8 -> IO ()) -- ^ Current state.
+                 -> Char                      -- ^ Character to write.
+                 -> (Int, Ptr Word8 -> IO ()) -- ^ Resulting state.
 writeUnicodeChar (l, f) c = l `seq` case ord c of
     x | x <= 0xFF -> (l + 1, \ptr -> f ptr >> poke (ptr `plusPtr` l)
                                                    (fromIntegral x :: Word8))
@@ -125,18 +137,10 @@ writeUnicodeChar (l, f) c = l `seq` case ord c of
                         >> poke (pos `plusPtr` 3) (x4 :: Word8))
 {-# INLINE writeUnicodeChar #-}
 
-writeAscii7Char :: (Int, Ptr Word8 -> IO ())
-                 -> Char
-                 -> (Int, Ptr Word8 -> IO ())
-writeAscii7Char (l, f) c =
-    let x = ord c
-    in l `seq` (l + 1, \ptr -> f ptr >> poke (ptr `plusPtr` l)
-                                             (fromIntegral x :: Word8))
-{-# INLINE writeAscii7Char #-}
-
-writeHtmlUnicodeChar :: (Int, Ptr Word8 -> IO ())
-                     -> Char
-                     -> (Int, Ptr Word8 -> IO ())
+-- | Write an unicode character to a 'Builder', doing HTML escaping.
+writeHtmlUnicodeChar :: (Int, Ptr Word8 -> IO ()) -- ^ Current write state.
+                     -> Char                      -- ^ Character to write.
+                     -> (Int, Ptr Word8 -> IO ()) -- ^ Resulting state.
 writeHtmlUnicodeChar (l, f) '<' =
     (l + 4, \ptr -> f ptr >> pokeArray (ptr `plusPtr` l) lt)
   where

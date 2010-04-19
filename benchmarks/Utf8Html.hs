@@ -44,7 +44,7 @@ text = Html . const . fromHtmlText
 {-# INLINE text #-}
 
 rawByteString :: ByteString -> Html
-rawByteString = Html . const . fromSmallByteString
+rawByteString = Html . const . fromRawByteString
 {-# INLINE rawByteString #-}
 
 showHtml :: Show a => a -> Html
@@ -54,31 +54,31 @@ showHtml = Html . const . fromHtmlString . show
 
 tag :: ByteString -> Html -> Html
 tag name inner = Html $ \attrs ->
-    fromAscii7Char '<' `mappend` (fromSmallByteString name
-                       `mappend` (attrs
-                       `mappend` (fromAscii7Char '>'
-                       `mappend` (runHtml inner mempty
-                       `mappend` (fromSmallByteString "</" 
-                       `mappend` (fromSmallByteString name
-                       `mappend` (fromAscii7Char '>')))))))
+    fromRawAscii7Char '<' `mappend` (fromRawByteString name
+                          `mappend` (attrs
+                          `mappend` (fromRawAscii7Char '>'
+                          `mappend` (runHtml inner mempty
+                          `mappend` (fromRawByteString "</" 
+                          `mappend` (fromRawByteString name
+                          `mappend` (fromRawAscii7Char '>')))))))
 {-# INLINE tag #-}
 
 addAttr :: ByteString -> Text -> Html -> Html
 addAttr key value h = Html $ \attrs ->
-    runHtml h $ attrs `mappend` (fromAscii7Char ' '
-                      `mappend` (fromSmallByteString key
-                      `mappend` (fromSmallByteString "=\""
+    runHtml h $ attrs `mappend` (fromRawAscii7Char ' '
+                      `mappend` (fromRawByteString key
+                      `mappend` (fromRawByteString "=\""
                       `mappend` (fromHtmlText value
-                      `mappend` (fromAscii7Char '"')))))
+                      `mappend` (fromRawAscii7Char '"')))))
 {-# INLINE addAttr #-}
 
 tag' :: ByteString -> ByteString -> Html -> Html
 tag' begin end = \inner -> Html $ \attrs ->
-    fromSmallByteString begin
+    fromRawByteString begin
       `mappend` attrs
-      `mappend` fromAscii7Char '>'
+      `mappend` fromRawAscii7Char '>'
       `mappend` runHtml inner mempty
-      `mappend` fromSmallByteString end
+      `mappend` fromRawByteString end
 {-# INLINE tag' #-}
 
 tableB, tableE :: ByteString 
@@ -164,7 +164,7 @@ hello2 = "Hello, me!"
 hello3 = "Hello, world!"
 loop   = "Loop"
 
-static = Html . const . fromSmallByteString
+static = Html . const . fromRawByteString
 {-# INLINE static #-}
 
 basic :: (Text, Text, [Text]) -- ^ (Title, User, Items)
@@ -194,33 +194,33 @@ textM = HtmlM . const . fromHtmlText
 {-# INLINE textM #-}
 
 rawByteStringM :: ByteString -> HtmlM a
-rawByteStringM = HtmlM . const . fromSmallByteString
+rawByteStringM = HtmlM . const . fromRawByteString
 {-# INLINE rawByteStringM #-}
 
 showAscii7HtmlM :: Show a => a -> HtmlM a
-showAscii7HtmlM = HtmlM . const . fromAscii7Show
+showAscii7HtmlM = HtmlM . const . fromHtmlShow
 {-# INLINE showAscii7HtmlM #-}
 
 tagM :: ByteString -> HtmlM a -> HtmlM a
 tagM name inner = HtmlM $ \attrs ->
-    fromAscii7Char '<' `mappend` (fromSmallByteString name
-                       `mappend` (attrs
-                       `mappend` (fromAscii7Char '>'
-                       `mappend` (runHtmlM inner mempty
-                       `mappend` (fromSmallByteString "</" 
-                       `mappend` (fromSmallByteString name
-                       `mappend` (fromAscii7Char '>')))))))
+    fromRawAscii7Char '<' `mappend` (fromRawByteString name
+                          `mappend` (attrs
+                          `mappend` (fromRawAscii7Char '>'
+                          `mappend` (runHtmlM inner mempty
+                          `mappend` (fromRawByteString "</" 
+                          `mappend` (fromRawByteString name
+                          `mappend` (fromRawAscii7Char '>')))))))
 -- By inlining this function, functions calling this (e.g. `tableHtml`) will close
 -- around the `tag` variable, which ensures `tag'` is only calculated once.
 {-# INLINE tagM #-}
 
 addAttrM :: ByteString -> Text -> HtmlM a -> HtmlM a
 addAttrM key value h = HtmlM $ \attrs ->
-    runHtmlM h $ attrs `mappend` (fromAscii7Char ' '
-                       `mappend` (fromSmallByteString key
-                       `mappend` (fromSmallByteString "=\""
+    runHtmlM h $ attrs `mappend` (fromRawAscii7Char ' '
+                       `mappend` (fromRawByteString key
+                       `mappend` (fromRawByteString "=\""
                        `mappend` (fromHtmlText value
-                       `mappend` (fromAscii7Char '"')))))
+                       `mappend` (fromRawAscii7Char '"')))))
 {-# INLINE addAttrM #-}
 
 tableM = tagM "table"

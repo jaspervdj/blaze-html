@@ -18,8 +18,6 @@ import Text.Blaze.Internal.Utf8Builder
 main = defaultMain
     [ bench "bigTable" $ nf (BL.length . bigTable) myTable
     , bench "basic" $ nf (BL.length . basic) myData
-    , bench "bigTableM" $ nf (BL.length . bigTableM) myTable
-    , bench "basicM" $ nf (BL.length . basicM) myData
     ]
   where
     rows :: Int
@@ -37,22 +35,22 @@ main = defaultMain
     items = map (("Number " `mappend`) . T.pack . show) [1 .. 14]
     {-# NOINLINE items #-}
 
-newtype Html = Html { runHtml :: Builder -> Builder }
+newtype Html a = Html { runHtml :: Builder -> Builder }
 
-text :: Text -> Html
+text :: Text -> Html a
 text = Html . const . fromHtmlText
 {-# INLINE text #-}
 
-rawByteString :: ByteString -> Html
+rawByteString :: ByteString -> Html a
 rawByteString = Html . const . fromRawByteString
 {-# INLINE rawByteString #-}
 
-showHtml :: Show a => a -> Html
+showHtml :: Show a => a -> Html a
 showHtml = Html . const . fromHtmlString . show
 {-# INLINE showHtml #-}
 
 
-tag :: ByteString -> Html -> Html
+tag :: ByteString -> Html a -> Html a
 tag name inner = Html $ \attrs ->
     fromRawAscii7Char '<' `mappend` (fromRawByteString name
                           `mappend` (attrs
@@ -63,7 +61,7 @@ tag name inner = Html $ \attrs ->
                           `mappend` (fromRawAscii7Char '>')))))))
 {-# INLINE tag #-}
 
-addAttr :: ByteString -> Text -> Html -> Html
+addAttr :: ByteString -> Text -> Html a -> Html a
 addAttr key value h = Html $ \attrs ->
     runHtml h $ attrs `mappend` (fromRawAscii7Char ' '
                       `mappend` (fromRawByteString key
@@ -72,7 +70,7 @@ addAttr key value h = Html $ \attrs ->
                       `mappend` (fromRawAscii7Char '"')))))
 {-# INLINE addAttr #-}
 
-tag' :: ByteString -> ByteString -> Html -> Html
+tag' :: ByteString -> ByteString -> Html a -> Html a
 tag' begin end = \inner -> Html $ \attrs ->
     fromRawByteString begin
       `mappend` attrs
@@ -81,8 +79,7 @@ tag' begin end = \inner -> Html $ \attrs ->
       `mappend` fromRawByteString end
 {-# INLINE tag' #-}
 
-
-table :: Html -> Html
+table :: Html a -> Html a
 table = let tableB, tableE :: ByteString
             tableB = "<table"
             tableE = "</table>"
@@ -91,13 +88,7 @@ table = let tableB, tableE :: ByteString
         in tag' tableB tableE
 {-# INLINE table #-}
 
--- SM: The effect of this inlining has to be investigated carefully w.r.t. code
--- size. Not inlining it doesn't cost a lot and may well save quite some code.
--- Moreoever, for bigger templates it may even be beneficial due to the less
--- trashing 
-
-
-tr :: Html -> Html
+tr :: Html a -> Html a
 tr = let trB, trE :: ByteString
          trB = "<tr"
          trE = "</tr>"
@@ -106,8 +97,7 @@ tr = let trB, trE :: ByteString
      in tag' trB trE
 {-# INLINE tr #-}
 
-
-td :: Html -> Html
+td :: Html a -> Html a
 td = let tdB, tdE :: ByteString
          tdB = "<td"
          tdE = "</td>"
@@ -116,10 +106,10 @@ td = let tdB, tdE :: ByteString
      in tag' tdB tdE
 {-# INLINE td #-}
 
-renderHtml :: Html -> BL.ByteString
+renderHtml :: Html a -> BL.ByteString
 renderHtml h = toLazyByteString $ runHtml h mempty
 
-instance Monoid Html where
+instance Monoid (Html a) where
     mempty = Html $ \_ -> mempty
     {-# INLINE mempty #-}
     (Html h1) `mappend` (Html h2) = Html $ \attrs -> h1 attrs `mappend` h2 attrs
@@ -128,12 +118,21 @@ instance Monoid Html where
         foldr (\h k -> runHtml h attrs `mappend` k) mempty hs
     {-# INLINE mconcat #-}
 
+instance Monad Html where
+    return a = mempty
+    {-# INLINE return #-}
+    (Html h1) >> (Html h2) = Html $
+        \attrs -> h1 attrs `mappend` h2 attrs
+    {-# INLINE (>>) #-}
+    h1 >>= f = h1 >> f (error "_|_")
+    {-# INLINE (>>=) #-}
+
 bigTable :: [[Int]] -> BL.ByteString
 bigTable t = renderHtml $ table $ mconcat $ map row t
   where
     row r = tr $ mconcat $ map (td . showHtml) r
 
-html :: Html -> Html
+html :: Html a -> Html a
 html inner = 
   -- a too long string for the fairness of comparison
   rawByteString "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 3.2 FINAL//EN\">\n<!--Rendered using the Haskell Html Library v0.2-->\n"
@@ -181,110 +180,3 @@ basic (title', user, items) = renderHtml $ html $ mconcat
         , idA "footer" (div $ mempty)
         ]
     ]
-
--------------------------------------------------------------------------------
--- Below is a monadic implementation. The questions is if we can get this as
--- fast as the non-monadic one.
--------------------------------------------------------------------------------
-
-newtype HtmlM a = HtmlM { runHtmlM :: Builder -> Builder }
-
-textM :: Text -> HtmlM a
-textM = HtmlM . const . fromHtmlText
-{-# INLINE textM #-}
-
-rawByteStringM :: ByteString -> HtmlM a
-rawByteStringM = HtmlM . const . fromRawByteString
-{-# INLINE rawByteStringM #-}
-
-showAscii7HtmlM :: Show a => a -> HtmlM a
-showAscii7HtmlM = HtmlM . const . fromHtmlShow
-{-# INLINE showAscii7HtmlM #-}
-
-tagM :: ByteString -> HtmlM a -> HtmlM a
-tagM name inner = HtmlM $ \attrs ->
-    fromRawAscii7Char '<' `mappend` (fromRawByteString name
-                          `mappend` (attrs
-                          `mappend` (fromRawAscii7Char '>'
-                          `mappend` (runHtmlM inner mempty
-                          `mappend` (fromRawByteString "</" 
-                          `mappend` (fromRawByteString name
-                          `mappend` (fromRawAscii7Char '>')))))))
--- By inlining this function, functions calling this (e.g. `tableHtml`) will close
--- around the `tag` variable, which ensures `tag'` is only calculated once.
-{-# INLINE tagM #-}
-
-addAttrM :: ByteString -> Text -> HtmlM a -> HtmlM a
-addAttrM key value h = HtmlM $ \attrs ->
-    runHtmlM h $ attrs `mappend` (fromRawAscii7Char ' '
-                       `mappend` (fromRawByteString key
-                       `mappend` (fromRawByteString "=\""
-                       `mappend` (fromHtmlText value
-                       `mappend` (fromRawAscii7Char '"')))))
-{-# INLINE addAttrM #-}
-
-tableM = tagM "table"
-trM    = tagM "tr"
-tdM    = tagM "td"
-
-renderHtmlM :: HtmlM a -> BL.ByteString
-renderHtmlM = toLazyByteString . flip runHtmlM mempty
-
-instance Monoid (HtmlM a) where
-    mempty = HtmlM $ \_ -> mempty
-    {-# INLINE mempty #-}
-    (HtmlM h1) `mappend` (HtmlM h2) = HtmlM $
-        \attrs -> h1 attrs `mappend` h2 attrs
-    {-# INLINE mappend #-}
-    mconcat hs = HtmlM $ \attrs ->
-        foldr (\h k -> runHtmlM h attrs `mappend` k) mempty hs
-    {-# INLINE mconcat #-}
-
-instance Monad HtmlM where
-    return a = mempty
-    {-# INLINE return #-}
-    (HtmlM h1) >> (HtmlM h2) = HtmlM $
-        \attrs -> h1 attrs `mappend` h2 attrs
-    {-# INLINE (>>) #-}
-    h1 >>= f = h1 >> f (error "_|_")
-    {-# INLINE (>>=) #-}
-
-instance IsString (HtmlM h) where
-    fromString = HtmlM . const . fromHtmlText . fromString
-    {-# INLINE fromString #-}
-
-bigTableM :: [[Int]] -> BL.ByteString
-bigTableM t = renderHtmlM $ tableM $ mapM_ row t
-  where
-    row r = trM $ mapM_ (tdM . showAscii7HtmlM) r
-
-htmlM :: HtmlM a -> HtmlM a
-htmlM inner = 
-  -- a too long string for the fairness of comparison
-  rawByteStringM "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 3.2 FINAL//EN\">\n<!--Rendered using the Haskell Html Library v0.2-->\n"
-  `mappend` tagM "html" inner
-  
-headerM = tagM "header"
-titleM = tagM "title"
-bodyM = tagM "body"
-divM = tagM "div"
-h1M = tagM "h1"
-h2M = tagM "h2"
-pM = tagM "p"
-liM = tagM "li"
-
-idAM = addAttrM "id"
-
-basicM :: (Text, Text, [Text]) -- ^ (Title, User, Items)
-       -> BL.ByteString
-basicM (title', user, items) = renderHtmlM $ htmlM $ do
-    headerM $ titleM $ textM title'
-    bodyM $ do
-        divM $ idAM "header" (h1M $ textM title')
-        pM $ "Hello, " `mappend` (textM user) `mappend` "!"
-        pM $ "Hello, me!"
-        pM $ "Hello, world!"
-        h2M $ "Loop"
-        mconcat $ map (liM . textM) items
-        idAM "footer" (divM $ mempty)
-        

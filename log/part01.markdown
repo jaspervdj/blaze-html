@@ -232,3 +232,21 @@ commented it where necessary. The benchmarks currently give me:
 - `basic`: 23.82825 us (std dev: 1.130614 us)
 
 Yay! We seem to be below "Spitfire template -O4" now!
+
+Tuesday, April 20th, evening
+============================
+
+So, I splitted our current code out a little, into proper modules. I adapted the
+benchmarks and there is no slowdown, yay. Next task is to write better
+benchmarks. We need specialized benchmarks for at least:
+
+1. leaf tags
+2. nested tags
+3. attributes
+4. static string literals
+5. dynamic strings
+6. dynamic text
+
+Also, I need to write all HTML tag and attribute functions. I will probably use
+a simple automated solution here, since the code for all tags is nearly the
+same.

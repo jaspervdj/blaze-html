@@ -277,3 +277,11 @@ on non-leaf nodes. I think the best way to do this is to creat a
 `class Attributable`, and make two instances, `Html` and `Html -> Html`. I added
 `{-# INLINE #-}` as well as `{-# SPECIALIZE #-}` pragmas for both instances.
 And again, I noticed no slowdown.
+
+Some benchmarks
+---------------
+
+I also added two very simple benchmarks: one creating very wide, shallow tree of
+HTML, and once creating a very deep and small HTML tree. Of course, I can't
+compare them with anything now, but I can use them to check for regressions in
+the future.

@@ -19,24 +19,36 @@ import Text.Blaze.Html.Strict
 import Text.Blaze.Html.Strict.Attributes
 
 main = defaultMain
-    [ bench "bigTable" $ nf (BL.length . bigTable) myTable
-    , bench "basic" $ nf (BL.length . basic) myData
+    [ bench "bigTable" $ nf (BL.length . bigTable) bigTableData
+    , bench "basic" $ nf (BL.length . basic) basicData
+    , bench "wideTree" $ nf (BL.length . wideTree) wideTreeData
+    , bench "deepTree" $ nf (BL.length . deepTree) deepTreeData
     ]
   where
     rows :: Int
     rows = 1000
 
-    myTable :: [[Int]]
-    myTable = replicate rows [1..10]
-    {-# NOINLINE myTable #-}
+    bigTableData :: [[Int]]
+    bigTableData = replicate rows [1..10]
+    {-# NOINLINE bigTableData #-}
 
-    myData :: (Text, Text, [Text])
-    myData = ("Just a test", "joe", items)
-    {-# NOINLINE myData #-}
+    basicData :: (Text, Text, [Text])
+    basicData = ("Just a test", "joe", items)
+    {-# NOINLINE basicData #-}
 
     items :: [Text]
     items = map (("Number " `mappend`) . T.pack . show) [1 .. 14]
     {-# NOINLINE items #-}
+
+    wideTreeData :: [Text]
+    wideTreeData = take 5000 $
+        cycle ["λf.(λx.fxx)(λx.fxx)", "These & Those", "Foobar"]
+    {-# NOINLINE wideTreeData #-}
+
+    deepTreeData :: [Html -> Html]
+    deepTreeData = take 1000 $
+        cycle [table, tr, td, p, div]
+    {-# NOINLINE deepTreeData #-}
 
 bigTable :: [[Int]] -> BL.ByteString
 bigTable t = renderHtml $ table $ mconcat $ map row t
@@ -66,3 +78,11 @@ basic (title', user, items) = renderHtml $ html $ mconcat
         , div ! id "footer" $ mempty
         ]
     ]
+
+-- | A benchmark producing a very wide but very shallow tree.
+wideTree :: [Text] -> BL.ByteString
+wideTree = renderHtml . div . mapM_ (p . text)
+
+-- | Create a very deep tree with the specified tags.
+deepTree :: [Html -> Html] -> BL.ByteString
+deepTree = renderHtml . ($ text "deep") . foldl1 (.)

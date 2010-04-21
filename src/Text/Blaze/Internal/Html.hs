@@ -1,4 +1,4 @@
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE OverloadedStrings, TypeSynonymInstances, FlexibleInstances #-}
 -- | Internal HTML stuff.
 module Text.Blaze.Internal.Html
     ( 
@@ -76,8 +76,17 @@ attribute key value = Attribute $ \(HtmlM h) -> HtmlM $ \attrs ->
               `mappend` (fromRawAscii7Char '"')))))
 {-# INLINE attribute #-}
 
--- | Apply an attribute on an element.
---
-(!) :: Html -> Attribute -> Html
-h ! (Attribute a) = a h
-{-# INLINE (!) #-}
+class Attributable h where
+    -- | Apply an attribute on an element.
+    --
+    (!) :: h -> Attribute -> h
+
+instance Attributable Html where
+    h ! (Attribute a) = a h
+    {-# INLINE (!) #-}
+    {-# SPECIALIZE (!) :: Html -> Attribute -> Html #-}
+
+instance Attributable (Html -> Html) where
+    f ! (Attribute a) = \h -> a (f h)
+    {-# INLINE (!) #-}
+    {-# SPECIALIZE (!) :: (Html -> Html) -> Attribute -> (Html -> Html) #-}

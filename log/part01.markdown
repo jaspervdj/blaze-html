@@ -268,3 +268,12 @@ defined as a simple Html manipulator.
 
 I changed the occurences of `addAttribute` in the code to the `!` operator, and
 there was no slowdown, so I'm comitting it.
+
+Setting attributes on non-leaf nodes
+------------------------------------
+
+We want a situation where you can use the `!` as well on leaf nodes as well as
+on non-leaf nodes. I think the best way to do this is to creat a
+`class Attributable`, and make two instances, `Html` and `Html -> Html`. I added
+`{-# INLINE #-}` as well as `{-# SPECIALIZE #-}` pragmas for both instances.
+And again, I noticed no slowdown.

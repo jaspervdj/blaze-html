@@ -5,6 +5,9 @@ module Text.Blaze.Html.Strict.Attributes
 
 import Prelude hiding (id)
 
+import Data.Text (Text)
+
 import Text.Blaze.Internal.Html
 
-id = addAttribute "id"
+id :: Text -> Attribute
+id = attribute "id"

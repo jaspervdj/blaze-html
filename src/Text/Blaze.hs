@@ -9,6 +9,9 @@ module Text.Blaze
     , rawByteString
     , showHtml
 
+      -- * Setting attributes
+    , (!)
+
       -- * Rendering HTML.
     , renderHtml
     ) where

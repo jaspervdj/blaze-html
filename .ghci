@@ -1,1 +1,1 @@
-:set -isrc -ibenchmarks -itests
+:set -isrc -ibenchmarks -itests -ilib/binary-0.5.0.2/src

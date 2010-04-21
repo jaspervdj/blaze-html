@@ -250,3 +250,21 @@ benchmarks. We need specialized benchmarks for at least:
 Also, I need to write all HTML tag and attribute functions. I will probably use
 a simple automated solution here, since the code for all tags is nearly the
 same.
+
+Wednesday April 21th, evening
+=============================
+
+Bang
+----
+
+I re-introduced the `!` operator for attributes. I'm not sure if this is the
+operator I want to go with because it kind of reminds of indexing. But the old
+HTML library uses this one, so I might as well stick with it for now.
+
+I also added some type safetype by introducing a `newtype Attribute`. It's
+defined as a simple Html manipulator.
+
+> newtype Attribute = Attribute (Html -> Html)
+
+I changed the occurences of `addAttribute` in the code to the `!` operator, and
+there was no slowdown, so I'm comitting it.

@@ -57,12 +57,12 @@ basic :: (Text, Text, [Text]) -- ^ (Title, User, Items)
 basic (title', user, items) = renderHtml $ html $ mconcat
     [ header $ title $ text title'
     , body $ mconcat
-        [ div $ id "header" (h1 $ text title')
+        [ div (h1 $ text title') ! id "header"
         , p $ static hello1 `mappend` text user `mappend` text "!"
         , p $ static hello2
         , p $ static hello3
         , h2 $ static loop
         , mconcat $ map (li . text) items
-        , id "footer" (div $ mempty)
+        , (div $ mempty) ! id "footer"
         ]
     ]

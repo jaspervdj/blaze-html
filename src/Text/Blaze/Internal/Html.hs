@@ -7,7 +7,10 @@ module Text.Blaze.Internal.Html
     , Html
 
     , tag
-    , addAttribute
+
+    , Attribute
+    , attribute
+    , (!)
     ) where
 
 import Data.Monoid (Monoid, mappend, mempty, mconcat)
@@ -41,17 +44,6 @@ tag begin end = \inner -> HtmlM $ \attrs ->
       `mappend` fromRawByteString end
 {-# INLINE tag #-}
 
--- | Add an attribute to the current element.
---
-addAttribute :: ByteString -> Text -> Html -> Html
-addAttribute key value (HtmlM h) = HtmlM $ \attrs ->
-    h attrs `mappend` (fromRawAscii7Char ' '
-            `mappend` (fromRawByteString key
-            `mappend` (fromRawByteString "=\""
-            `mappend` (fromHtmlText value
-            `mappend` (fromRawAscii7Char '"')))))
-{-# INLINE addAttribute #-}
-
 instance Monoid (HtmlM a) where
     mempty = HtmlM $ \_ -> mempty
     {-# INLINE mempty #-}
@@ -70,3 +62,22 @@ instance Monad HtmlM where
     {-# INLINE (>>) #-}
     h1 >>= f = h1 >> f (error "_|_")
     {-# INLINE (>>=) #-}
+
+newtype Attribute = Attribute (Html -> Html)
+
+-- | Add an attribute to the current element.
+--
+attribute :: ByteString -> Text -> Attribute
+attribute key value = Attribute $ \(HtmlM h) -> HtmlM $ \attrs ->
+    h $ attrs `mappend` (fromRawAscii7Char ' '
+              `mappend` (fromRawByteString key
+              `mappend` (fromRawByteString "=\""
+              `mappend` (fromHtmlText value
+              `mappend` (fromRawAscii7Char '"')))))
+{-# INLINE attribute #-}
+
+-- | Apply an attribute on an element.
+--
+(!) :: Html -> Attribute -> Html
+h ! (Attribute a) = a h
+{-# INLINE (!) #-}

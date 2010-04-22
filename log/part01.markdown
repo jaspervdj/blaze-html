@@ -285,3 +285,33 @@ I also added two very simple benchmarks: one creating very wide, shallow tree of
 HTML, and once creating a very deep and small HTML tree. Of course, I can't
 compare them with anything now, but I can use them to check for regressions in
 the future.
+
+Thursday, April 22th, evening
+=============================
+
+I'm currently a bit stuck on a piece of API design. I'll try to explain the
+problem here as well, as clear as possible. Say, you have the regular div tag.
+This would be, in our library, Text.Blaze.Html.Strict.div. That makes sense, but
+it seems possible that a user wants to use a div as a leaf node (e.g.
+`<div />`). I'm not sure what we want to do in that case. There seems to be a
+number of options, as always:
+
+- Provide leaf and non-leaf combinators for every tag. I'm not sure if this
+  is overkill or not, but it is, for example not forbidden to have content in
+  an `<img>` tag. We could have these functions in Text.Blaze.Html.Strict and
+  Text.Blaze.Html.Strict.Leaf, for instance. But it must be kind of annoying
+  for the end user to have to write `L.div` instead of just `div`. On the
+  other hand, if we put the *common* uses for the tags (e.g. `img` as leaf,
+  `div` as non-leaf) in the main module, we would get a very inconsistent
+  mess, I assume.
+
+- Do not provide closing tags for something like `div`, the user would just
+  create `<div></div>` instead. I do not like this option at all for numerous
+  obvious reasons.
+
+- Provide some kind of operator to make a non-leaf node a leaf node and vice
+  versa. Altough, I'm not sure if this would work well.
+
+As you see, none of the options is really *very* convincing, altough the
+first one seems the best for now. I'm not sure on this, so I asked some feedback
+from both Simon and Johan.

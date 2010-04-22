@@ -20,7 +20,6 @@ import Prelude hiding (div)
 
 import Data.ByteString.Char8 (ByteString)
 
-import Text.Blaze.Internal.Html
 import Text.Blaze
 
 table :: Html -> Html

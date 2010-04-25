@@ -315,3 +315,31 @@ number of options, as always:
 As you see, none of the options is really *very* convincing, altough the
 first one seems the best for now. I'm not sure on this, so I asked some feedback
 from both Simon and Johan.
+
+Sunday, April 25th, morning
+===========================
+
+I have found another branch for the leaf/non-leaf problem. We could only support
+parent nodes (of the type `Html -> Html`), and introduce another combinator:
+
+    (/>) :: Html
+    (/>) = mempty
+
+I have chosen `/>` here because it resembles the end of a leaf HTML tag (e.g.
+`<img />`). Then, we would introduce a custom rule.
+
+    {-# RULES
+        "tag/empty" forall x y. tag x y (/>) = leaf x
+        #-}
+
+The `y` here is the closing tag, we pass it as an argument for performance
+reasons, and you can safely ignore it. This code results in the fact that if
+we write
+
+    img (/>)
+
+somewhere in our template, it would be rendered to `<img></img>` when we don't
+pass `-fenable-rewrite-rules` to the compiler, and `<img />` otherwise. Note
+that `-O` implies `-fenable-rewrite-rules`. I'm not sure about this solution
+either, because it sort of feels like a (slightly elegant) hack. That's why
+I'm comitting the code for this to another branch called `rewrite-leafs`.

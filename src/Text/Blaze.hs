@@ -9,6 +9,7 @@ module Text.Blaze
       -- * Creating custom tags and attributes.
     , tag
     , attribute
+    , (/>)
 
       -- * Converting values to HTML.
     , text
@@ -75,6 +76,23 @@ tag begin end = \inner -> HtmlM $ \attrs ->
       `mappend` runHtml inner mempty
       `mappend` fromRawByteString end
 {-# INLINE tag #-}
+
+{-# RULES
+    "tag/empty" forall x y. tag x y (/>) = leaf x
+    #-}
+
+(/>) :: Html
+(/>) = mempty
+{-# INLINE (/>) #-}
+
+-- | Create an HTML tag.
+--
+leaf :: S.ByteString -> Html
+leaf begin = HtmlM $ \attrs ->
+    fromRawByteString begin
+      `mappend` attrs
+      `mappend` fromRawByteString " />"
+{-# INLINE leaf #-}
 
 -- | Add an attribute to the current element.
 --

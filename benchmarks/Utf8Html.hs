@@ -74,6 +74,7 @@ basic (title', user, items) = renderHtml $ html $ mconcat
         , p $ static hello2
         , p $ static hello3
         , h2 $ static loop
+        , img (/>)
         , mconcat $ map (li . text) items
         , div ! id "footer" $ mempty
         ]

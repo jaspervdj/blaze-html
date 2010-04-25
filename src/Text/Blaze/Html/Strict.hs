@@ -12,6 +12,7 @@ module Text.Blaze.Html.Strict
     , h1
     , h2
     , li
+    , img
     , p
     ) where
 
@@ -62,6 +63,7 @@ div    = tag "<div"    "</div>"
 h1     = tag "<h1"     "</h1>"
 h2     = tag "<h2"     "</h2>"
 li     = tag "<li"     "</li>"
+img    = tag "<img"     "</img>"
 
 -- THE following seems to be the desired recipe: sharing of data, inlining of
 -- control.

@@ -343,3 +343,17 @@ pass `-fenable-rewrite-rules` to the compiler, and `<img />` otherwise. Note
 that `-O` implies `-fenable-rewrite-rules`. I'm not sure about this solution
 either, because it sort of feels like a (slightly elegant) hack. That's why
 I'm comitting the code for this to another branch called `rewrite-leafs`.
+
+Sunday, Apr 25th, afternoon
+===========================
+
+I started some simple code in the `util/` directory to generate some code for
+us. I'm talking about the actual HTML combinators -- we don't want to write that
+code by hand. I implemented some very simple naming conventions:
+
+1. When an HTML tag is a Haskell reserved keyword, we append an '_'.
+2. When an HTML tag contains a '-' character, we replace it by an '_'.
+3. No other transformations are applied.
+
+I also made a list of elements that can't be leafs and elements that must be
+leafs, based on the W3C reference.

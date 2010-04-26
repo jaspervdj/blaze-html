@@ -4,6 +4,19 @@ module GenerateTags where
 
 import Sanitize (sanitize)
 
+-- | Generate an export list for a Haskell module.
+--
+exportList :: String   -- ^ Module name.
+           -> [String] -- ^ List of functions.
+           -> String   -- ^ Resulting string.
+exportList name []            = error "exportList without functions."
+exportList name (f:functions) = unlines $
+    [ "module " ++ name
+    , "    ( " ++ f
+    ] ++
+    map ("    , " ++) functions ++
+    [ "    ) where"]
+
 -- | Generate a function for an HTML tag that can be a parent.
 --
 parent :: String -> String

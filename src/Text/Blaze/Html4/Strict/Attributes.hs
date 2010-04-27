@@ -1,5 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
-module Text.Blaze.Html.Strict.Attributes
+module Text.Blaze.Html4.Strict.Attributes
     ( id
     ) where
 

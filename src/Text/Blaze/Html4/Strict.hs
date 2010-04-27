@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 -- | Strict HTML 4.01 combinators.
-module Text.Blaze.Html.Strict
+module Text.Blaze.Html4.Strict
     ( table
     , tr
     , td

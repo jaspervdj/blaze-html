@@ -15,8 +15,8 @@ import qualified Data.Text as T
 
 import Text.Blaze.Internal.Utf8Builder
 import Text.Blaze
-import Text.Blaze.Html.Strict
-import Text.Blaze.Html.Strict.Attributes
+import Text.Blaze.Html4.Strict
+import Text.Blaze.Html4.Strict.Attributes
 
 main = defaultMain
     [ bench "bigTable" $ nf (BL.length . bigTable) bigTableData

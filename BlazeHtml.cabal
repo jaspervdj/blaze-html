@@ -57,8 +57,8 @@ Library
   -- Modules exported by the library.
   Exposed-modules:   Text.Blaze.Internal.Utf8Builder
                      Text.Blaze
-                     Text.Blaze.Html.Strict
-                     Text.Blaze.Html.Strict.Attributes
+                     Text.Blaze.Html4.Strict
+                     Text.Blaze.Html4.Strict.Attributes
   
   -- Packages needed in order to build this package.
   Build-depends:     base >= 4 && < 5,

@@ -4,23 +4,87 @@ module GenerateTags where
 
 import Sanitize (sanitize)
 
+import System.Directory (createDirectoryIfMissing)
+import System.FilePath ((</>), (<.>))
+import Data.List (sort, sortBy)
+import Data.List (intersperse)
+import Data.Ord (comparing)
+
+-- | Datatype for an HTML variant.
+--
+data HtmlVariant = HtmlVariant
+    { attributes :: [String]
+    , parents    :: [String]
+    , leafs      :: [String]
+    , version    :: String
+    , variant    :: String
+    } deriving (Show)
+
+-- | Write an HTML variant.
+--
+writeHtmlVariant :: HtmlVariant -> IO ()
+writeHtmlVariant htmlVariant = do
+    -- Make a directory.
+    createDirectoryIfMissing True $ basePath
+
+    let tags = zip parents' (repeat parent) ++ zip leafs' (repeat leaf)
+        sortedTags = sortBy (comparing fst) tags
+        appliedTags = map (\(x, f) -> f x) sortedTags
+
+    -- Write the main module.
+    writeFile (basePath <.> "hs") $ removeTrailingNewlines $ unlines
+        [ exportList moduleName (map fst sortedTags)
+        , unlines appliedTags
+        ]
+
+    let sortedAttributes = sort attributes'
+
+    -- Write the attribute module.
+    writeFile (basePath </> "Attributes.hs") $ removeTrailingNewlines $ unlines
+        [ exportList attributeModuleName sortedAttributes
+        , unlines (map attribute sortedAttributes)
+        ]
+  where
+    basePath = "src" </> "Text" </> "Blaze" </> version' </> variant'
+    moduleName = "Text.Blaze." ++ version' ++ "." ++ variant'
+    attributeModuleName = moduleName ++ ".Attributes"
+    attributes' = attributes htmlVariant
+    parents'    = parents htmlVariant
+    leafs'      = leafs htmlVariant
+    version'    = version htmlVariant
+    variant'    = variant htmlVariant
+    removeTrailingNewlines = reverse . drop 2 . reverse
+
+test = writeHtmlVariant $ HtmlVariant
+    { attributes = ["id", "class"]
+    , parents = ["parent", "div"]
+    , leafs = ["leaf"]
+    , version = "Html5"
+    , variant = "Transitional"
+    }
+
 -- | Create a string, consisting of @x@ spaces, where @x@ is the length of the
 -- argument.
 --
 spaces :: String -> String
 spaces = flip replicate ' ' . length
 
+-- | Join blocks of code with a newline in between.
+--
+unblocks :: [String] -> String
+unblocks = unlines . intersperse "\n"
+
 -- | Generate an export list for a Haskell module.
 --
 exportList :: String   -- ^ Module name.
-           -> [String] -- ^ List of functions.
+           -> [String] -- ^ List of tags.
            -> String   -- ^ Resulting string.
-exportList name []            = error "exportList without functions."
+exportList _    []            = error "exportList without functions."
 exportList name (f:functions) = unlines $
     [ "module " ++ name
-    , "    ( " ++ f
+    , "    ( " ++ sanitize f
     ] ++
-    map ("    , " ++) functions ++
+    map (("    , " ++) . sanitize) functions ++
     [ "    ) where"]
 
 -- | Generate a function for an HTML tag that can be a parent.
@@ -50,6 +114,12 @@ parent tag = unlines
     ]
   where
     function = sanitize tag
+
+
+-- | Generate a function for an HTML tag that must be a leaf.
+--
+leaf :: String -> String
+leaf = const "foo"
 
 -- | Generate a function for an HTML attribute.
 --

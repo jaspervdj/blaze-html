@@ -357,3 +357,31 @@ code by hand. I implemented some very simple naming conventions:
 
 I also made a list of elements that can't be leafs and elements that must be
 leafs, based on the W3C reference.
+
+Tuesday, April 27th, afternoon
+==============================
+
+I did some further work in the `util/` directory. My current idea is to have a
+data structure called `HtmlVariant`, defined as:
+
+    data HtmlVariant = HtmlVariant
+        { attributes :: [String]
+        , parents    :: [String]
+        , leafs      :: [String]
+        , version    :: String
+        , variant    :: String
+        } deriving (Show)
+
+And then write a function `writeHtmlVariant` which will write the variant to
+the correct modules. For strict HTML 5, for example, `version` would be
+`"Html5"` and `variant` would be `"Strict"`. The code would then be written
+to the modules:
+
+    Text.Blaze.Html5.Strict
+    Text.Blaze.Html5.Strict.Attributes
+
+This seems like pretty good behaviour, since it would be easy to add different
+Html variants later.
+
+On a sidenote, this project got accepted for Google Summer of Code 2010! Woot
+woot woot!

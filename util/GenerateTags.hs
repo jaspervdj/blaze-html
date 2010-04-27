@@ -4,6 +4,12 @@ module GenerateTags where
 
 import Sanitize (sanitize)
 
+-- | Create a string, consisting of @x@ spaces, where @x@ is the length of the
+-- argument.
+--
+spaces :: String -> String
+spaces = flip replicate ' ' . length
+
 -- | Generate an export list for a Haskell module.
 --
 exportList :: String   -- ^ Module name.
@@ -31,8 +37,8 @@ parent tag = unlines
     , "--"
     , "-- > <" ++ tag ++ ">foo</" ++ tag ++ ">"
     , "--"
-    , function         ++ " :: Html -- ^ Inner HTML."
-    , justify function ++ " -> Html -- ^ Resulting HTML."
+    , function        ++ " :: Html -- ^ Inner HTML."
+    , spaces function ++ " -> Html -- ^ Resulting HTML."
     , function ++ " ="
     , "    let begin, end :: ByteString"
     , "        begin = \"<" ++ tag ++ "\""
@@ -44,7 +50,27 @@ parent tag = unlines
     ]
   where
     function = sanitize tag
-    justify = flip replicate ' ' . length
+
+-- | Generate a function for an HTML attribute.
+--
+attribute :: String -> String
+attribute name = unlines
+    [ "-- | Combinator for the @" ++ name ++ "@ attribute."
+    , "--"
+    , "-- Example:"
+    , "--"
+    , "-- > img ! " ++ function ++ " \"bar\""
+    , "--"
+    , "-- Result:"
+    , "--"
+    , "-- > <img " ++ name ++ "=\"bar\" />"
+    , "--"
+    , function        ++ " :: Text      -- ^ Attribute value."
+    , spaces function ++ " -> Attribute -- ^ Resulting attribute."
+    , function ++ " = attribute \"" ++ name ++ "\""
+    ]
+  where
+    function = sanitize name
 
 -- | A list of HTML strict non-leaf nodes.
 --

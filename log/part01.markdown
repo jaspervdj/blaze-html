@@ -385,3 +385,24 @@ Html variants later.
 
 On a sidenote, this project got accepted for Google Summer of Code 2010! Woot
 woot woot!
+
+Wednesday April 28th, afternoon
+===============================
+
+Simon Meier alerted me that there are no variants in HTML 5. This means the code
+I wrote yesterday afternoon is a little incorrect, especially the
+
+    ...
+    , version    :: String
+    , variant    :: String
+    ...
+
+part. I now fixed it by using
+
+    ...
+    , version    :: [String]
+    ...
+
+instead. It's pretty simple, we just have a `[Major, Minor]` and optionally
+`[Major]` version (actually, the lists can be as long as you want). This allows
+us to have different variants of HTML 4 and a single version of HTML 5.

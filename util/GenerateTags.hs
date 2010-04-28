@@ -4,11 +4,11 @@ module GenerateTags where
 
 import Sanitize (sanitize)
 
+import Data.List (sort, sortBy)
+import Data.List (intersperse, intercalate)
+import Data.Ord (comparing)
 import System.Directory (createDirectoryIfMissing)
 import System.FilePath ((</>), (<.>))
-import Data.List (sort, sortBy)
-import Data.List (intersperse)
-import Data.Ord (comparing)
 
 -- | Datatype for an HTML variant.
 --
@@ -16,8 +16,7 @@ data HtmlVariant = HtmlVariant
     { attributes :: [String]
     , parents    :: [String]
     , leafs      :: [String]
-    , version    :: String
-    , variant    :: String
+    , version    :: [String]
     } deriving (Show)
 
 -- | Write an HTML variant.
@@ -45,22 +44,20 @@ writeHtmlVariant htmlVariant = do
         , unlines (map attribute sortedAttributes)
         ]
   where
-    basePath = "src" </> "Text" </> "Blaze" </> version' </> variant'
-    moduleName = "Text.Blaze." ++ version' ++ "." ++ variant'
+    basePath = "src" </> "Text" </> "Blaze" </> foldl1 (</>) version'
+    moduleName = "Text.Blaze." ++ intercalate "." version'
     attributeModuleName = moduleName ++ ".Attributes"
     attributes' = attributes htmlVariant
     parents'    = parents htmlVariant
     leafs'      = leafs htmlVariant
     version'    = version htmlVariant
-    variant'    = variant htmlVariant
     removeTrailingNewlines = reverse . drop 2 . reverse
 
 test = writeHtmlVariant $ HtmlVariant
     { attributes = ["id", "class"]
     , parents = ["parent", "div"]
     , leafs = ["leaf"]
-    , version = "Html5"
-    , variant = "Transitional"
+    , version = ["Html5", "Strict"]
     }
 
 -- | Create a string, consisting of @x@ spaces, where @x@ is the length of the

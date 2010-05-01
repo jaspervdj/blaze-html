@@ -7,10 +7,6 @@ module Text.Blaze.Internal.Utf8Builder
       fromHtmlText
     , fromRawText
 
-      -- * Creating Builders from Showable values.
-    , fromHtmlShow
-    , fromRawShow
-
       -- * Creating Builders from ByteStrings.
     , fromRawByteString
 
@@ -47,19 +43,6 @@ fromRawText :: Text -> Builder
 fromRawText text =
     let (l, f) = T.foldl writeUnicodeChar writeNothing text
     in fromUnsafeWrite l f
-
--- | /O(n)./ Convert a 'Show'able datatype to a 'Builder', doing HTML escaping.
---
-fromHtmlShow :: Show a => a -> Builder
-fromHtmlShow = fromHtmlString . show
-{-# INLINE fromHtmlShow #-}
-
--- | /O(n)./ Convert a 'Show'able datatype to a 'Builder', not doing any
--- escaping.
---
-fromRawShow :: Show a => a -> Builder
-fromRawShow = fromRawString . show
-{-# INLINE fromRawShow #-}
 
 -- | /O(n)./ A Builder taking a 'S.ByteString`, copying it. This is a well
 -- suited function for strings consisting only of Ascii7 characters. This

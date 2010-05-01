@@ -34,8 +34,12 @@ writeHtmlVariant htmlVariant = do
     writeFile (basePath <.> "hs") $ removeTrailingNewlines $ unlines
         [ "{-# LANGUAGE OverloadedStrings #-}"
         , exportList moduleName (map fst sortedTags)
+        , "import Prelude ()"
+        , ""
         , "import Data.Text (Text)"
         , "import Data.ByteString.Char8 (ByteString)"
+        , ""
+        , "import Text.Blaze (Html, parent, leaf)"
         , ""
         , unlines appliedTags
         ]
@@ -46,8 +50,12 @@ writeHtmlVariant htmlVariant = do
     writeFile (basePath </> "Attributes.hs") $ removeTrailingNewlines $ unlines
         [ "{-# LANGUAGE OverloadedStrings #-}"
         , exportList attributeModuleName sortedAttributes
+        , "import Prelude ()"
+        , ""
         , "import Data.Text (Text)"
         , "import Data.ByteString.Char8 (ByteString)"
+        , ""
+        , "import Text.Blaze (Attribute, attribute)"
         , ""
         , unlines (map attribute sortedAttributes)
         ]
@@ -107,7 +115,7 @@ parent tag = unlines
     , "        end = \"</" ++ tag ++ ">\""
     , "        {-# NOINLINE begin #-}"
     , "        {-# NOINLINE end #-}"
-    , "    in tag begin end"
+    , "    in parent begin end"
     , "{-# INLINE " ++ function ++ "#-}"
     ]
   where
@@ -117,7 +125,27 @@ parent tag = unlines
 -- | Generate a function for an HTML tag that must be a leaf.
 --
 leaf :: String -> String
-leaf = const "foo"
+leaf tag = unlines
+    [ "-- | Combinator for the @<" ++ tag ++ " />@ element."
+    , "--"
+    , "-- Example:"
+    , "--"
+    , "-- > " ++ function
+    , "--"
+    , "-- Result:"
+    , "--"
+    , "-- > <" ++ tag ++ " />"
+    , "--"
+    , function        ++ " :: Html -- ^ Resulting HTML."
+    , function ++ " ="
+    , "    let begin :: ByteString"
+    , "        begin = \"<" ++ tag ++ "\""
+    , "        {-# NOINLINE begin #-}"
+    , "    in leaf begin"
+    , "{-# INLINE " ++ function ++ "#-}"
+    ]
+  where
+    function = sanitize tag
 
 -- | Generate a function for an HTML attribute.
 --

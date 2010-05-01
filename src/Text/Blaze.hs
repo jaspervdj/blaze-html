@@ -7,7 +7,8 @@ module Text.Blaze
     , Attribute
 
       -- * Creating custom tags and attributes.
-    , tag
+    , parent
+    , leaf
     , attribute
 
       -- * Converting values to HTML.
@@ -65,18 +66,18 @@ instance Monad HtmlM where
     h1 >>= f = h1 >> f (error "_|_")
     {-# INLINE (>>=) #-}
 
--- | Create an HTML tag.
+-- | Create an HTML parent element.
 --
-tag :: S.ByteString -> S.ByteString -> Html -> Html
-tag begin end = \inner -> HtmlM $ \attrs ->
+parent :: S.ByteString -> S.ByteString -> Html -> Html
+parent begin end = \inner -> HtmlM $ \attrs ->
     fromRawByteString begin
       `mappend` attrs
       `mappend` fromRawAscii7Char '>'
       `mappend` runHtml inner mempty
       `mappend` fromRawByteString end
-{-# INLINE tag #-}
+{-# INLINE parent #-}
 
--- | Create an HTML tag.
+-- | Create an HTML leaf element.
 --
 leaf :: S.ByteString -> Html
 leaf begin = HtmlM $ \attrs ->

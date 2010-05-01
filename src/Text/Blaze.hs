@@ -70,31 +70,31 @@ instance Monad HtmlM where
 --
 parent :: S.ByteString -> S.ByteString -> Html -> Html
 parent begin end = \inner -> HtmlM $ \attrs ->
-    fromRawByteString begin
+    fromEscapedByteString begin
       `mappend` attrs
-      `mappend` fromRawAscii7Char '>'
+      `mappend` fromEscapedAscii7Char '>'
       `mappend` runHtml inner mempty
-      `mappend` fromRawByteString end
+      `mappend` fromEscapedByteString end
 {-# INLINE parent #-}
 
 -- | Create an HTML leaf element.
 --
 leaf :: S.ByteString -> Html
 leaf begin = HtmlM $ \attrs ->
-    fromRawByteString begin
+    fromEscapedByteString begin
       `mappend` attrs
-      `mappend` fromRawByteString " />"
+      `mappend` fromEscapedByteString " />"
 {-# INLINE leaf #-}
 
 -- | Add an attribute to the current element.
 --
 attribute :: S.ByteString -> Text -> Attribute
 attribute key value = Attribute $ \(HtmlM h) -> HtmlM $ \attrs ->
-    h $ attrs `mappend` (fromRawAscii7Char ' '
-              `mappend` (fromRawByteString key
-              `mappend` (fromRawByteString "=\""
-              `mappend` (fromHtmlText value
-              `mappend` (fromRawAscii7Char '"')))))
+    h $ attrs `mappend` (fromEscapedAscii7Char ' '
+              `mappend` (fromEscapedByteString key
+              `mappend` (fromEscapedByteString "=\""
+              `mappend` (fromText value
+              `mappend` (fromEscapedAscii7Char '"')))))
 {-# INLINE attribute #-}
 
 class Attributable h where
@@ -116,7 +116,7 @@ instance Attributable (Html -> Html) where
 --
 text :: Text -- ^ Text to render.
      -> Html -- ^ Resulting HTML fragment.
-text = HtmlM . const . fromHtmlText
+text = HtmlM . const . fromText
 {-# INLINE text #-}
 
 -- | Render a raw 'S.ByteString'. This function will not do any HTML escaping,
@@ -124,13 +124,13 @@ text = HtmlM . const . fromHtmlText
 --
 rawByteString :: S.ByteString -- ^ Raw 'S.ByteString' to render.
               -> Html       -- ^ Resulting HTML fragment.
-rawByteString = HtmlM . const . fromRawByteString
+rawByteString = HtmlM . const . fromEscapedByteString
 {-# INLINE rawByteString #-}
 
 -- | Create a HTML snippet from a 'Show'able type.
 --
 showHtml :: Show a => a -> Html
-showHtml = HtmlM . const . fromHtmlString . show
+showHtml = HtmlM . const . fromString . show
 {-# INLINE showHtml #-}
 
 -- | /O(n)./ Render the HTML fragment to lazy 'L.ByteString'.

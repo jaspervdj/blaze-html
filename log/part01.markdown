@@ -406,3 +406,26 @@ part. I now fixed it by using
 instead. It's pretty simple, we just have a `[Major, Minor]` and optionally
 `[Major]` version (actually, the lists can be as long as you want). This allows
 us to have different variants of HTML 4 and a single version of HTML 5.
+
+Saturday May 1st, midday
+========================
+
+We updated our planning a little yesterday. This is the updated planning:
+
+- Finish metacode to generate tags, so we have the complete HTML 4 spec.
+- Document and clean up the library, release as 0.0, together with a short RFC.
+- Make improvements based on comments. It is hard to estimate how long
+  this phase will will be.
+- Benchmarks: A full set of benchmarks, so every part of the library is tested.
+- Abstraction: I would still like to abstract the library over a
+  typeclass, because this offers a lot more flexibilty. If we have
+  benchmarks, we can see how much this abstraction costs us.
+- Quickcheck and HUnit tests.
+- Tutorials, packaging, etc.
+
+Other than that, I finished the HTML generation code. It should be relatively
+easy to add new HTML versions (the hardest part is really finding al tags and
+attributes). I made sure documentation is generated as well.
+
+The entire HTML 4.01 Strict specification is now available under
+`Text.Blaze.Html4`.

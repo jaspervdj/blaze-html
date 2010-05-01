@@ -97,7 +97,7 @@ exportList name (f:functions) = unlines $
 --
 parent :: String -> String
 parent tag = unlines
-    [ "-- | Combinator for the @<" ++ tag ++ ">@ element."
+    [ "-- | Combinator for the @\\<" ++ tag ++ ">@ element."
     , "--"
     , "-- Example:"
     , "--"
@@ -126,7 +126,7 @@ parent tag = unlines
 --
 leaf :: String -> String
 leaf tag = unlines
-    [ "-- | Combinator for the @<" ++ tag ++ " />@ element."
+    [ "-- | Combinator for the @\\<" ++ tag ++ " />@ element."
     , "--"
     , "-- Example:"
     , "--"

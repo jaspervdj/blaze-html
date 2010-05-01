@@ -13,10 +13,10 @@ import System.FilePath ((</>), (<.>))
 -- | Datatype for an HTML variant.
 --
 data HtmlVariant = HtmlVariant
-    { attributes :: [String]
+    { version    :: [String]
     , parents    :: [String]
     , leafs      :: [String]
-    , version    :: [String]
+    , attributes :: [String]
     } deriving (Show)
 
 -- | Write an HTML variant.
@@ -32,7 +32,11 @@ writeHtmlVariant htmlVariant = do
 
     -- Write the main module.
     writeFile (basePath <.> "hs") $ removeTrailingNewlines $ unlines
-        [ exportList moduleName (map fst sortedTags)
+        [ "{-# LANGUAGE OverloadedStrings #-}"
+        , exportList moduleName (map fst sortedTags)
+        , "import Data.Text (Text)"
+        , "import Data.ByteString.Char8 (ByteString)"
+        , ""
         , unlines appliedTags
         ]
 
@@ -40,7 +44,11 @@ writeHtmlVariant htmlVariant = do
 
     -- Write the attribute module.
     writeFile (basePath </> "Attributes.hs") $ removeTrailingNewlines $ unlines
-        [ exportList attributeModuleName sortedAttributes
+        [ "{-# LANGUAGE OverloadedStrings #-}"
+        , exportList attributeModuleName sortedAttributes
+        , "import Data.Text (Text)"
+        , "import Data.ByteString.Char8 (ByteString)"
+        , ""
         , unlines (map attribute sortedAttributes)
         ]
   where
@@ -52,13 +60,6 @@ writeHtmlVariant htmlVariant = do
     leafs'      = leafs htmlVariant
     version'    = version htmlVariant
     removeTrailingNewlines = reverse . drop 2 . reverse
-
-test = writeHtmlVariant $ HtmlVariant
-    { attributes = ["id", "class"]
-    , parents = ["parent", "div"]
-    , leafs = ["leaf"]
-    , version = ["Html5", "Strict"]
-    }
 
 -- | Create a string, consisting of @x@ spaces, where @x@ is the length of the
 -- argument.
@@ -139,22 +140,41 @@ attribute name = unlines
   where
     function = sanitize name
 
--- | A list of HTML strict non-leaf nodes.
---
-strictParents :: [String]
-strictParents =
-    [ "a", "abbr", "acronym", "address", "b", "bdo", "big", "blockquote", "body"
-    , "button", "caption", "cite", "code", "colgroup", "dd", "del", "dfn", "div"
-    , "dl", "dt", "em", "fieldset", "form", "h1", "head", "html", "i", "ins"
-    , "kbd", "label", "legend", "li", "map", "noscript", "object", "ol"
-    , "optgroup", "option", "p", "pre", "q", "samp", "script", "select", "small"
-    , "span", "strong", "style", "sub", "sup", "table", "tbody", "td"
-    , "textarea", "tfoot", "th", "thead", "title", "tr", "tt", "ul", "var"
-    ]
+-- | HTML 4.01 Strict.
+-- A good reference can be found here: http://www.w3schools.com/tags/default.asp
+html4Strict :: HtmlVariant
+html4Strict = HtmlVariant
+    { version = ["Html4", "Strict"]
+    , parents = 
+        [ "a", "abbr", "acronym", "address", "b", "bdo", "big", "blockquote"
+        , "body" , "button", "caption", "cite", "code", "colgroup", "dd", "del"
+        , "dfn", "div" , "dl", "dt", "em", "fieldset", "form", "h1", "h2", "h3"
+        , "h4", "h5", "h6", "head", "html", "i", "ins" , "kbd", "label"
+        , "legend", "li", "map", "noscript", "object", "ol", "optgroup"
+        , "option", "p", "pre", "q", "samp", "script", "select", "small"
+        , "span", "strong", "style", "sub", "sup", "table", "tbody", "td"
+        , "textarea", "tfoot", "th", "thead", "title", "tr", "tt", "ul", "var"
+        ]
+    , leafs = 
+        [ "img", "input", "area", "br", "col", "hr", "link", "meta", "param"
+        ]
+    , attributes = 
+        [ "abbr", "accept", "accesskey", "action", "align", "alt", "archive"
+        , "axis", "border", "cellpadding", "cellspacing", "char", "charoff"
+        , "charset", "checked", "cite", "class", "classid", "codebase"
+        , "codetype", "cols", "colspan", "content", "coords", "data", "datetime"
+        , "declare", "defer", "dir", "disabled", "for", "frame", "headers"
+        , "height", "href", "hreflang", "http-equiv", "id", "label", "lang"
+        , "maxlength", "media", "multiple", "name", "nohref", "onabort"
+        , "onblur", "onchange", "onclick", "ondblclick", "onfocus", "onkeydown"
+        , "onkeypress", "onkeyup", "onload", "onmousedown", "onmousemove"
+        , "onmouseout", "onmouseover", "onmouseup", "onreset", "onselect"
+        , "onsubmit", "onunload", "profile", "readonly", "rel", "rev", "rows"
+        , "rowspan", "rules", "scheme", "scope", "selected", "shape", "size"
+        , "span", "src", "standby", "style", "summary", "tabindex", "title"
+        , "type", "usemap", "valign", "value", "valuetype", "width"
+        ]
+    }
 
--- | A list of HTML strict leaf nodes.
---
-strictLeafs :: [String]
-strictLeafs =
-    [ "img", "input", "area", "br", "col", "hr", "link", "meta", "param"
-    ]
+main = do
+    writeHtmlVariant html4Strict

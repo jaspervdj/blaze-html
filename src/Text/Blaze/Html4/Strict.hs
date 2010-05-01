@@ -89,11 +89,11 @@ import Text.Blaze (Html, parent, leaf)
 --
 -- Example:
 --
--- > a $ text "foo"
+-- > a $ span $ text "foo"
 --
 -- Result:
 --
--- > <a>foo</a>
+-- > <a><span>foo</span></a>
 --
 a :: Html -- ^ Inner HTML.
   -> Html -- ^ Resulting HTML.
@@ -110,11 +110,11 @@ a =
 --
 -- Example:
 --
--- > abbr $ text "foo"
+-- > abbr $ span $ text "foo"
 --
 -- Result:
 --
--- > <abbr>foo</abbr>
+-- > <abbr><span>foo</span></abbr>
 --
 abbr :: Html -- ^ Inner HTML.
      -> Html -- ^ Resulting HTML.
@@ -131,11 +131,11 @@ abbr =
 --
 -- Example:
 --
--- > acronym $ text "foo"
+-- > acronym $ span $ text "foo"
 --
 -- Result:
 --
--- > <acronym>foo</acronym>
+-- > <acronym><span>foo</span></acronym>
 --
 acronym :: Html -- ^ Inner HTML.
         -> Html -- ^ Resulting HTML.
@@ -152,11 +152,11 @@ acronym =
 --
 -- Example:
 --
--- > address $ text "foo"
+-- > address $ span $ text "foo"
 --
 -- Result:
 --
--- > <address>foo</address>
+-- > <address><span>foo</span></address>
 --
 address :: Html -- ^ Inner HTML.
         -> Html -- ^ Resulting HTML.
@@ -191,11 +191,11 @@ area =
 --
 -- Example:
 --
--- > b $ text "foo"
+-- > b $ span $ text "foo"
 --
 -- Result:
 --
--- > <b>foo</b>
+-- > <b><span>foo</span></b>
 --
 b :: Html -- ^ Inner HTML.
   -> Html -- ^ Resulting HTML.
@@ -212,11 +212,11 @@ b =
 --
 -- Example:
 --
--- > bdo $ text "foo"
+-- > bdo $ span $ text "foo"
 --
 -- Result:
 --
--- > <bdo>foo</bdo>
+-- > <bdo><span>foo</span></bdo>
 --
 bdo :: Html -- ^ Inner HTML.
     -> Html -- ^ Resulting HTML.
@@ -233,11 +233,11 @@ bdo =
 --
 -- Example:
 --
--- > big $ text "foo"
+-- > big $ span $ text "foo"
 --
 -- Result:
 --
--- > <big>foo</big>
+-- > <big><span>foo</span></big>
 --
 big :: Html -- ^ Inner HTML.
     -> Html -- ^ Resulting HTML.
@@ -254,11 +254,11 @@ big =
 --
 -- Example:
 --
--- > blockquote $ text "foo"
+-- > blockquote $ span $ text "foo"
 --
 -- Result:
 --
--- > <blockquote>foo</blockquote>
+-- > <blockquote><span>foo</span></blockquote>
 --
 blockquote :: Html -- ^ Inner HTML.
            -> Html -- ^ Resulting HTML.
@@ -275,11 +275,11 @@ blockquote =
 --
 -- Example:
 --
--- > body $ text "foo"
+-- > body $ span $ text "foo"
 --
 -- Result:
 --
--- > <body>foo</body>
+-- > <body><span>foo</span></body>
 --
 body :: Html -- ^ Inner HTML.
      -> Html -- ^ Resulting HTML.
@@ -314,11 +314,11 @@ br =
 --
 -- Example:
 --
--- > button $ text "foo"
+-- > button $ span $ text "foo"
 --
 -- Result:
 --
--- > <button>foo</button>
+-- > <button><span>foo</span></button>
 --
 button :: Html -- ^ Inner HTML.
        -> Html -- ^ Resulting HTML.
@@ -335,11 +335,11 @@ button =
 --
 -- Example:
 --
--- > caption $ text "foo"
+-- > caption $ span $ text "foo"
 --
 -- Result:
 --
--- > <caption>foo</caption>
+-- > <caption><span>foo</span></caption>
 --
 caption :: Html -- ^ Inner HTML.
         -> Html -- ^ Resulting HTML.
@@ -356,11 +356,11 @@ caption =
 --
 -- Example:
 --
--- > cite $ text "foo"
+-- > cite $ span $ text "foo"
 --
 -- Result:
 --
--- > <cite>foo</cite>
+-- > <cite><span>foo</span></cite>
 --
 cite :: Html -- ^ Inner HTML.
      -> Html -- ^ Resulting HTML.
@@ -377,11 +377,11 @@ cite =
 --
 -- Example:
 --
--- > code $ text "foo"
+-- > code $ span $ text "foo"
 --
 -- Result:
 --
--- > <code>foo</code>
+-- > <code><span>foo</span></code>
 --
 code :: Html -- ^ Inner HTML.
      -> Html -- ^ Resulting HTML.
@@ -416,11 +416,11 @@ col =
 --
 -- Example:
 --
--- > colgroup $ text "foo"
+-- > colgroup $ span $ text "foo"
 --
 -- Result:
 --
--- > <colgroup>foo</colgroup>
+-- > <colgroup><span>foo</span></colgroup>
 --
 colgroup :: Html -- ^ Inner HTML.
          -> Html -- ^ Resulting HTML.
@@ -437,11 +437,11 @@ colgroup =
 --
 -- Example:
 --
--- > dd $ text "foo"
+-- > dd $ span $ text "foo"
 --
 -- Result:
 --
--- > <dd>foo</dd>
+-- > <dd><span>foo</span></dd>
 --
 dd :: Html -- ^ Inner HTML.
    -> Html -- ^ Resulting HTML.
@@ -458,11 +458,11 @@ dd =
 --
 -- Example:
 --
--- > del $ text "foo"
+-- > del $ span $ text "foo"
 --
 -- Result:
 --
--- > <del>foo</del>
+-- > <del><span>foo</span></del>
 --
 del :: Html -- ^ Inner HTML.
     -> Html -- ^ Resulting HTML.
@@ -479,11 +479,11 @@ del =
 --
 -- Example:
 --
--- > dfn $ text "foo"
+-- > dfn $ span $ text "foo"
 --
 -- Result:
 --
--- > <dfn>foo</dfn>
+-- > <dfn><span>foo</span></dfn>
 --
 dfn :: Html -- ^ Inner HTML.
     -> Html -- ^ Resulting HTML.
@@ -500,11 +500,11 @@ dfn =
 --
 -- Example:
 --
--- > div $ text "foo"
+-- > div $ span $ text "foo"
 --
 -- Result:
 --
--- > <div>foo</div>
+-- > <div><span>foo</span></div>
 --
 div :: Html -- ^ Inner HTML.
     -> Html -- ^ Resulting HTML.
@@ -521,11 +521,11 @@ div =
 --
 -- Example:
 --
--- > dl $ text "foo"
+-- > dl $ span $ text "foo"
 --
 -- Result:
 --
--- > <dl>foo</dl>
+-- > <dl><span>foo</span></dl>
 --
 dl :: Html -- ^ Inner HTML.
    -> Html -- ^ Resulting HTML.
@@ -542,11 +542,11 @@ dl =
 --
 -- Example:
 --
--- > dt $ text "foo"
+-- > dt $ span $ text "foo"
 --
 -- Result:
 --
--- > <dt>foo</dt>
+-- > <dt><span>foo</span></dt>
 --
 dt :: Html -- ^ Inner HTML.
    -> Html -- ^ Resulting HTML.
@@ -563,11 +563,11 @@ dt =
 --
 -- Example:
 --
--- > em $ text "foo"
+-- > em $ span $ text "foo"
 --
 -- Result:
 --
--- > <em>foo</em>
+-- > <em><span>foo</span></em>
 --
 em :: Html -- ^ Inner HTML.
    -> Html -- ^ Resulting HTML.
@@ -584,11 +584,11 @@ em =
 --
 -- Example:
 --
--- > fieldset $ text "foo"
+-- > fieldset $ span $ text "foo"
 --
 -- Result:
 --
--- > <fieldset>foo</fieldset>
+-- > <fieldset><span>foo</span></fieldset>
 --
 fieldset :: Html -- ^ Inner HTML.
          -> Html -- ^ Resulting HTML.
@@ -605,11 +605,11 @@ fieldset =
 --
 -- Example:
 --
--- > form $ text "foo"
+-- > form $ span $ text "foo"
 --
 -- Result:
 --
--- > <form>foo</form>
+-- > <form><span>foo</span></form>
 --
 form :: Html -- ^ Inner HTML.
      -> Html -- ^ Resulting HTML.
@@ -626,11 +626,11 @@ form =
 --
 -- Example:
 --
--- > h1 $ text "foo"
+-- > h1 $ span $ text "foo"
 --
 -- Result:
 --
--- > <h1>foo</h1>
+-- > <h1><span>foo</span></h1>
 --
 h1 :: Html -- ^ Inner HTML.
    -> Html -- ^ Resulting HTML.
@@ -647,11 +647,11 @@ h1 =
 --
 -- Example:
 --
--- > h2 $ text "foo"
+-- > h2 $ span $ text "foo"
 --
 -- Result:
 --
--- > <h2>foo</h2>
+-- > <h2><span>foo</span></h2>
 --
 h2 :: Html -- ^ Inner HTML.
    -> Html -- ^ Resulting HTML.
@@ -668,11 +668,11 @@ h2 =
 --
 -- Example:
 --
--- > h3 $ text "foo"
+-- > h3 $ span $ text "foo"
 --
 -- Result:
 --
--- > <h3>foo</h3>
+-- > <h3><span>foo</span></h3>
 --
 h3 :: Html -- ^ Inner HTML.
    -> Html -- ^ Resulting HTML.
@@ -689,11 +689,11 @@ h3 =
 --
 -- Example:
 --
--- > h4 $ text "foo"
+-- > h4 $ span $ text "foo"
 --
 -- Result:
 --
--- > <h4>foo</h4>
+-- > <h4><span>foo</span></h4>
 --
 h4 :: Html -- ^ Inner HTML.
    -> Html -- ^ Resulting HTML.
@@ -710,11 +710,11 @@ h4 =
 --
 -- Example:
 --
--- > h5 $ text "foo"
+-- > h5 $ span $ text "foo"
 --
 -- Result:
 --
--- > <h5>foo</h5>
+-- > <h5><span>foo</span></h5>
 --
 h5 :: Html -- ^ Inner HTML.
    -> Html -- ^ Resulting HTML.
@@ -731,11 +731,11 @@ h5 =
 --
 -- Example:
 --
--- > h6 $ text "foo"
+-- > h6 $ span $ text "foo"
 --
 -- Result:
 --
--- > <h6>foo</h6>
+-- > <h6><span>foo</span></h6>
 --
 h6 :: Html -- ^ Inner HTML.
    -> Html -- ^ Resulting HTML.
@@ -752,11 +752,11 @@ h6 =
 --
 -- Example:
 --
--- > head $ text "foo"
+-- > head $ span $ text "foo"
 --
 -- Result:
 --
--- > <head>foo</head>
+-- > <head><span>foo</span></head>
 --
 head :: Html -- ^ Inner HTML.
      -> Html -- ^ Resulting HTML.
@@ -791,11 +791,11 @@ hr =
 --
 -- Example:
 --
--- > html $ text "foo"
+-- > html $ span $ text "foo"
 --
 -- Result:
 --
--- > <html>foo</html>
+-- > <html><span>foo</span></html>
 --
 html :: Html -- ^ Inner HTML.
      -> Html -- ^ Resulting HTML.
@@ -812,11 +812,11 @@ html =
 --
 -- Example:
 --
--- > i $ text "foo"
+-- > i $ span $ text "foo"
 --
 -- Result:
 --
--- > <i>foo</i>
+-- > <i><span>foo</span></i>
 --
 i :: Html -- ^ Inner HTML.
   -> Html -- ^ Resulting HTML.
@@ -869,11 +869,11 @@ input =
 --
 -- Example:
 --
--- > ins $ text "foo"
+-- > ins $ span $ text "foo"
 --
 -- Result:
 --
--- > <ins>foo</ins>
+-- > <ins><span>foo</span></ins>
 --
 ins :: Html -- ^ Inner HTML.
     -> Html -- ^ Resulting HTML.
@@ -890,11 +890,11 @@ ins =
 --
 -- Example:
 --
--- > kbd $ text "foo"
+-- > kbd $ span $ text "foo"
 --
 -- Result:
 --
--- > <kbd>foo</kbd>
+-- > <kbd><span>foo</span></kbd>
 --
 kbd :: Html -- ^ Inner HTML.
     -> Html -- ^ Resulting HTML.
@@ -911,11 +911,11 @@ kbd =
 --
 -- Example:
 --
--- > label $ text "foo"
+-- > label $ span $ text "foo"
 --
 -- Result:
 --
--- > <label>foo</label>
+-- > <label><span>foo</span></label>
 --
 label :: Html -- ^ Inner HTML.
       -> Html -- ^ Resulting HTML.
@@ -932,11 +932,11 @@ label =
 --
 -- Example:
 --
--- > legend $ text "foo"
+-- > legend $ span $ text "foo"
 --
 -- Result:
 --
--- > <legend>foo</legend>
+-- > <legend><span>foo</span></legend>
 --
 legend :: Html -- ^ Inner HTML.
        -> Html -- ^ Resulting HTML.
@@ -953,11 +953,11 @@ legend =
 --
 -- Example:
 --
--- > li $ text "foo"
+-- > li $ span $ text "foo"
 --
 -- Result:
 --
--- > <li>foo</li>
+-- > <li><span>foo</span></li>
 --
 li :: Html -- ^ Inner HTML.
    -> Html -- ^ Resulting HTML.
@@ -992,11 +992,11 @@ link =
 --
 -- Example:
 --
--- > map $ text "foo"
+-- > map $ span $ text "foo"
 --
 -- Result:
 --
--- > <map>foo</map>
+-- > <map><span>foo</span></map>
 --
 map :: Html -- ^ Inner HTML.
     -> Html -- ^ Resulting HTML.
@@ -1031,11 +1031,11 @@ meta =
 --
 -- Example:
 --
--- > noscript $ text "foo"
+-- > noscript $ span $ text "foo"
 --
 -- Result:
 --
--- > <noscript>foo</noscript>
+-- > <noscript><span>foo</span></noscript>
 --
 noscript :: Html -- ^ Inner HTML.
          -> Html -- ^ Resulting HTML.
@@ -1052,11 +1052,11 @@ noscript =
 --
 -- Example:
 --
--- > object $ text "foo"
+-- > object $ span $ text "foo"
 --
 -- Result:
 --
--- > <object>foo</object>
+-- > <object><span>foo</span></object>
 --
 object :: Html -- ^ Inner HTML.
        -> Html -- ^ Resulting HTML.
@@ -1073,11 +1073,11 @@ object =
 --
 -- Example:
 --
--- > ol $ text "foo"
+-- > ol $ span $ text "foo"
 --
 -- Result:
 --
--- > <ol>foo</ol>
+-- > <ol><span>foo</span></ol>
 --
 ol :: Html -- ^ Inner HTML.
    -> Html -- ^ Resulting HTML.
@@ -1094,11 +1094,11 @@ ol =
 --
 -- Example:
 --
--- > optgroup $ text "foo"
+-- > optgroup $ span $ text "foo"
 --
 -- Result:
 --
--- > <optgroup>foo</optgroup>
+-- > <optgroup><span>foo</span></optgroup>
 --
 optgroup :: Html -- ^ Inner HTML.
          -> Html -- ^ Resulting HTML.
@@ -1115,11 +1115,11 @@ optgroup =
 --
 -- Example:
 --
--- > option $ text "foo"
+-- > option $ span $ text "foo"
 --
 -- Result:
 --
--- > <option>foo</option>
+-- > <option><span>foo</span></option>
 --
 option :: Html -- ^ Inner HTML.
        -> Html -- ^ Resulting HTML.
@@ -1136,11 +1136,11 @@ option =
 --
 -- Example:
 --
--- > p $ text "foo"
+-- > p $ span $ text "foo"
 --
 -- Result:
 --
--- > <p>foo</p>
+-- > <p><span>foo</span></p>
 --
 p :: Html -- ^ Inner HTML.
   -> Html -- ^ Resulting HTML.
@@ -1175,11 +1175,11 @@ param =
 --
 -- Example:
 --
--- > pre $ text "foo"
+-- > pre $ span $ text "foo"
 --
 -- Result:
 --
--- > <pre>foo</pre>
+-- > <pre><span>foo</span></pre>
 --
 pre :: Html -- ^ Inner HTML.
     -> Html -- ^ Resulting HTML.
@@ -1196,11 +1196,11 @@ pre =
 --
 -- Example:
 --
--- > q $ text "foo"
+-- > q $ span $ text "foo"
 --
 -- Result:
 --
--- > <q>foo</q>
+-- > <q><span>foo</span></q>
 --
 q :: Html -- ^ Inner HTML.
   -> Html -- ^ Resulting HTML.
@@ -1217,11 +1217,11 @@ q =
 --
 -- Example:
 --
--- > samp $ text "foo"
+-- > samp $ span $ text "foo"
 --
 -- Result:
 --
--- > <samp>foo</samp>
+-- > <samp><span>foo</span></samp>
 --
 samp :: Html -- ^ Inner HTML.
      -> Html -- ^ Resulting HTML.
@@ -1238,11 +1238,11 @@ samp =
 --
 -- Example:
 --
--- > script $ text "foo"
+-- > script $ span $ text "foo"
 --
 -- Result:
 --
--- > <script>foo</script>
+-- > <script><span>foo</span></script>
 --
 script :: Html -- ^ Inner HTML.
        -> Html -- ^ Resulting HTML.
@@ -1259,11 +1259,11 @@ script =
 --
 -- Example:
 --
--- > select $ text "foo"
+-- > select $ span $ text "foo"
 --
 -- Result:
 --
--- > <select>foo</select>
+-- > <select><span>foo</span></select>
 --
 select :: Html -- ^ Inner HTML.
        -> Html -- ^ Resulting HTML.
@@ -1280,11 +1280,11 @@ select =
 --
 -- Example:
 --
--- > small $ text "foo"
+-- > small $ span $ text "foo"
 --
 -- Result:
 --
--- > <small>foo</small>
+-- > <small><span>foo</span></small>
 --
 small :: Html -- ^ Inner HTML.
       -> Html -- ^ Resulting HTML.
@@ -1301,11 +1301,11 @@ small =
 --
 -- Example:
 --
--- > span $ text "foo"
+-- > span $ span $ text "foo"
 --
 -- Result:
 --
--- > <span>foo</span>
+-- > <span><span>foo</span></span>
 --
 span :: Html -- ^ Inner HTML.
      -> Html -- ^ Resulting HTML.
@@ -1322,11 +1322,11 @@ span =
 --
 -- Example:
 --
--- > strong $ text "foo"
+-- > strong $ span $ text "foo"
 --
 -- Result:
 --
--- > <strong>foo</strong>
+-- > <strong><span>foo</span></strong>
 --
 strong :: Html -- ^ Inner HTML.
        -> Html -- ^ Resulting HTML.
@@ -1343,11 +1343,11 @@ strong =
 --
 -- Example:
 --
--- > style $ text "foo"
+-- > style $ span $ text "foo"
 --
 -- Result:
 --
--- > <style>foo</style>
+-- > <style><span>foo</span></style>
 --
 style :: Html -- ^ Inner HTML.
       -> Html -- ^ Resulting HTML.
@@ -1364,11 +1364,11 @@ style =
 --
 -- Example:
 --
--- > sub $ text "foo"
+-- > sub $ span $ text "foo"
 --
 -- Result:
 --
--- > <sub>foo</sub>
+-- > <sub><span>foo</span></sub>
 --
 sub :: Html -- ^ Inner HTML.
     -> Html -- ^ Resulting HTML.
@@ -1385,11 +1385,11 @@ sub =
 --
 -- Example:
 --
--- > sup $ text "foo"
+-- > sup $ span $ text "foo"
 --
 -- Result:
 --
--- > <sup>foo</sup>
+-- > <sup><span>foo</span></sup>
 --
 sup :: Html -- ^ Inner HTML.
     -> Html -- ^ Resulting HTML.
@@ -1406,11 +1406,11 @@ sup =
 --
 -- Example:
 --
--- > table $ text "foo"
+-- > table $ span $ text "foo"
 --
 -- Result:
 --
--- > <table>foo</table>
+-- > <table><span>foo</span></table>
 --
 table :: Html -- ^ Inner HTML.
       -> Html -- ^ Resulting HTML.
@@ -1427,11 +1427,11 @@ table =
 --
 -- Example:
 --
--- > tbody $ text "foo"
+-- > tbody $ span $ text "foo"
 --
 -- Result:
 --
--- > <tbody>foo</tbody>
+-- > <tbody><span>foo</span></tbody>
 --
 tbody :: Html -- ^ Inner HTML.
       -> Html -- ^ Resulting HTML.
@@ -1448,11 +1448,11 @@ tbody =
 --
 -- Example:
 --
--- > td $ text "foo"
+-- > td $ span $ text "foo"
 --
 -- Result:
 --
--- > <td>foo</td>
+-- > <td><span>foo</span></td>
 --
 td :: Html -- ^ Inner HTML.
    -> Html -- ^ Resulting HTML.
@@ -1469,11 +1469,11 @@ td =
 --
 -- Example:
 --
--- > textarea $ text "foo"
+-- > textarea $ span $ text "foo"
 --
 -- Result:
 --
--- > <textarea>foo</textarea>
+-- > <textarea><span>foo</span></textarea>
 --
 textarea :: Html -- ^ Inner HTML.
          -> Html -- ^ Resulting HTML.
@@ -1490,11 +1490,11 @@ textarea =
 --
 -- Example:
 --
--- > tfoot $ text "foo"
+-- > tfoot $ span $ text "foo"
 --
 -- Result:
 --
--- > <tfoot>foo</tfoot>
+-- > <tfoot><span>foo</span></tfoot>
 --
 tfoot :: Html -- ^ Inner HTML.
       -> Html -- ^ Resulting HTML.
@@ -1511,11 +1511,11 @@ tfoot =
 --
 -- Example:
 --
--- > th $ text "foo"
+-- > th $ span $ text "foo"
 --
 -- Result:
 --
--- > <th>foo</th>
+-- > <th><span>foo</span></th>
 --
 th :: Html -- ^ Inner HTML.
    -> Html -- ^ Resulting HTML.
@@ -1532,11 +1532,11 @@ th =
 --
 -- Example:
 --
--- > thead $ text "foo"
+-- > thead $ span $ text "foo"
 --
 -- Result:
 --
--- > <thead>foo</thead>
+-- > <thead><span>foo</span></thead>
 --
 thead :: Html -- ^ Inner HTML.
       -> Html -- ^ Resulting HTML.
@@ -1553,11 +1553,11 @@ thead =
 --
 -- Example:
 --
--- > title $ text "foo"
+-- > title $ span $ text "foo"
 --
 -- Result:
 --
--- > <title>foo</title>
+-- > <title><span>foo</span></title>
 --
 title :: Html -- ^ Inner HTML.
       -> Html -- ^ Resulting HTML.
@@ -1574,11 +1574,11 @@ title =
 --
 -- Example:
 --
--- > tr $ text "foo"
+-- > tr $ span $ text "foo"
 --
 -- Result:
 --
--- > <tr>foo</tr>
+-- > <tr><span>foo</span></tr>
 --
 tr :: Html -- ^ Inner HTML.
    -> Html -- ^ Resulting HTML.
@@ -1595,11 +1595,11 @@ tr =
 --
 -- Example:
 --
--- > tt $ text "foo"
+-- > tt $ span $ text "foo"
 --
 -- Result:
 --
--- > <tt>foo</tt>
+-- > <tt><span>foo</span></tt>
 --
 tt :: Html -- ^ Inner HTML.
    -> Html -- ^ Resulting HTML.
@@ -1616,11 +1616,11 @@ tt =
 --
 -- Example:
 --
--- > ul $ text "foo"
+-- > ul $ span $ text "foo"
 --
 -- Result:
 --
--- > <ul>foo</ul>
+-- > <ul><span>foo</span></ul>
 --
 ul :: Html -- ^ Inner HTML.
    -> Html -- ^ Resulting HTML.
@@ -1637,11 +1637,11 @@ ul =
 --
 -- Example:
 --
--- > var $ text "foo"
+-- > var $ span $ text "foo"
 --
 -- Result:
 --
--- > <var>foo</var>
+-- > <var><span>foo</span></var>
 --
 var :: Html -- ^ Inner HTML.
     -> Html -- ^ Resulting HTML.

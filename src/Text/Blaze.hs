@@ -14,7 +14,7 @@ module Text.Blaze
       -- * Converting values to HTML.
     , text
     , rawByteString
-    , showHtml
+    , string
 
       -- * Setting attributes
     , (!)
@@ -30,8 +30,9 @@ import Data.ByteString.Char8 (ByteString)
 import qualified Data.ByteString as S
 import qualified Data.ByteString.Lazy as L
 import Data.Text (Text)
+import GHC.Exts (IsString (..))
 
-import Text.Blaze.Internal.Utf8Builder
+import qualified Text.Blaze.Internal.Utf8Builder as B
 
 -- | The core HTML datatype.
 --
@@ -66,35 +67,39 @@ instance Monad HtmlM where
     h1 >>= f = h1 >> f (error "_|_")
     {-# INLINE (>>=) #-}
 
+instance IsString Html where
+    fromString = string
+    {-# INLINE fromString #-}
+
 -- | Create an HTML parent element.
 --
 parent :: S.ByteString -> S.ByteString -> Html -> Html
 parent begin end = \inner -> HtmlM $ \attrs ->
-    fromEscapedByteString begin
+    B.fromEscapedByteString begin
       `mappend` attrs
-      `mappend` fromEscapedAscii7Char '>'
+      `mappend` B.fromEscapedAscii7Char '>'
       `mappend` runHtml inner mempty
-      `mappend` fromEscapedByteString end
+      `mappend` B.fromEscapedByteString end
 {-# INLINE parent #-}
 
 -- | Create an HTML leaf element.
 --
 leaf :: S.ByteString -> Html
 leaf begin = HtmlM $ \attrs ->
-    fromEscapedByteString begin
+    B.fromEscapedByteString begin
       `mappend` attrs
-      `mappend` fromEscapedByteString " />"
+      `mappend` B.fromEscapedByteString " />"
 {-# INLINE leaf #-}
 
 -- | Add an attribute to the current element.
 --
 attribute :: S.ByteString -> Text -> Attribute
 attribute key value = Attribute $ \(HtmlM h) -> HtmlM $ \attrs ->
-    h $ attrs `mappend` (fromEscapedAscii7Char ' '
-              `mappend` (fromEscapedByteString key
-              `mappend` (fromEscapedByteString "=\""
-              `mappend` (fromText value
-              `mappend` (fromEscapedAscii7Char '"')))))
+    h $ attrs `mappend` (B.fromEscapedAscii7Char ' '
+              `mappend` (B.fromEscapedByteString key
+              `mappend` (B.fromEscapedByteString "=\""
+              `mappend` (B.fromText value
+              `mappend` (B.fromEscapedAscii7Char '"')))))
 {-# INLINE attribute #-}
 
 class Attributable h where
@@ -116,7 +121,7 @@ instance Attributable (Html -> Html) where
 --
 text :: Text -- ^ Text to render.
      -> Html -- ^ Resulting HTML fragment.
-text = HtmlM . const . fromText
+text = HtmlM . const . B.fromText
 {-# INLINE text #-}
 
 -- | Render a raw 'S.ByteString'. This function will not do any HTML escaping,
@@ -124,14 +129,14 @@ text = HtmlM . const . fromText
 --
 rawByteString :: S.ByteString -- ^ Raw 'S.ByteString' to render.
               -> Html       -- ^ Resulting HTML fragment.
-rawByteString = HtmlM . const . fromEscapedByteString
+rawByteString = HtmlM . const . B.fromEscapedByteString
 {-# INLINE rawByteString #-}
 
--- | Create a HTML snippet from a 'Show'able type.
+-- | Create a HTML snippet from a 'String'.
 --
-showHtml :: Show a => a -> Html
-showHtml = HtmlM . const . fromString . show
-{-# INLINE showHtml #-}
+string :: String -> Html
+string = HtmlM . const . B.fromString
+{-# INLINE string #-}
 
 -- | /O(n)./ Render the HTML fragment to lazy 'L.ByteString'.
 --

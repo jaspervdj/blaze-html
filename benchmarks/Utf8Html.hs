@@ -19,12 +19,15 @@ import Text.Blaze.Html4.Strict hiding (map)
 import Text.Blaze.Html4.Strict.Attributes hiding (title)
 
 main = defaultMain
-    [ bench "bigTable" $ nf (BL.length . bigTable) bigTableData
-    , bench "basic" $ nf (BL.length . basic) basicData
-    , bench "wideTree" $ nf (BL.length . wideTree) wideTreeData
-    , bench "deepTree" $ nf (BL.length . deepTree) deepTreeData
+    [ benchHtml "bigTable" bigTable bigTableData
+    , benchHtml "basic" basic basicData
+    , benchHtml "wideTree" wideTree wideTreeData
+    , benchHtml "deepTree" deepTree deepTreeData
+    , benchHtml "manyAttributes" manyAttributes manyAttributesData
     ]
   where
+    benchHtml name f x = bench name $ nf (BL.length . f) x
+
     rows :: Int
     rows = 1000
 
@@ -50,6 +53,9 @@ main = defaultMain
         cycle [table, tr, td, p, div]
     {-# NOINLINE deepTreeData #-}
 
+    manyAttributesData :: [Text]
+    manyAttributesData = wideTreeData
+
 bigTable :: [[Int]] -> BL.ByteString
 bigTable t = renderHtml $ table $ mconcat $ map row t
   where
@@ -61,7 +67,7 @@ hello2 = "Hello, me!"
 hello3 = "Hello, world!"
 loop   = "Loop"
 
-static = rawByteString
+static = escapedByteString
 {-# INLINE static #-}
 
 basic :: (Text, Text, [Text]) -- ^ (Title, User, Items)
@@ -86,3 +92,10 @@ wideTree = renderHtml . div . mapM_ (p . text)
 -- | Create a very deep tree with the specified tags.
 deepTree :: [Html -> Html] -> BL.ByteString
 deepTree = renderHtml . ($ text "deep") . foldl1 (.)
+
+-- | Create an element with many attributes.
+manyAttributes :: [Text] -> BL.ByteString
+manyAttributes = renderHtml . foldl setAttribute img
+  where
+    setAttribute html value = html ! id value
+    {-# INLINE setAttribute #-}

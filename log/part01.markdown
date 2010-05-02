@@ -437,3 +437,15 @@ Today, I'm going to have a look at attributes. I wrote a quick benchmark that
 sets 5000 attributes on an `<img />` element. The initial time is 13.04ms. I
 could get it down to 10ms by using a similar approach as used with the leaf and
 parent combinators.
+
+I also tried to change the inlining location. For example, instead of having
+
+    img = leaf "<img"
+
+we probably want
+
+    img = leaf "img"
+
+Because that allows a more elegant interface. By constructing a `ByteString` in
+the leaf function, I seemed to even get a slight speedup. This also got the
+attributes benchmark down to 9ms.

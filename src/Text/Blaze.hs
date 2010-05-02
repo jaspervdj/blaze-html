@@ -33,6 +33,8 @@ import qualified Data.ByteString as S
 import qualified Data.ByteString.Lazy as L
 import Data.Text (Text)
 import GHC.Exts (IsString (..))
+import Debug.Trace (trace)
+import Data.Char (chr)
 
 import qualified Text.Blaze.Internal.Utf8Builder as B
 
@@ -75,31 +77,42 @@ instance IsString Html where
 
 -- | Create an HTML parent element.
 --
-parent :: S.ByteString -> S.ByteString -> Html -> Html
-parent begin end = \inner -> HtmlM $ \attrs ->
+parent :: S.ByteString -> Html -> Html
+parent tag = \inner -> HtmlM $ \attrs ->
     B.fromEscapedByteString begin
       `mappend` attrs
       `mappend` B.fromEscapedAscii7Char '>'
       `mappend` runHtml inner mempty
       `mappend` B.fromEscapedByteString end
+  where
+    begin :: ByteString
+    begin = "<" `mappend` tag
+    end :: ByteString
+    end = "</" `mappend` tag `mappend` ">"
 {-# INLINE parent #-}
 
 -- | Create an HTML leaf element.
 --
 leaf :: S.ByteString -> Html
-leaf begin = HtmlM $ \attrs ->
+leaf tag = HtmlM $ \attrs ->
     B.fromEscapedByteString begin
       `mappend` attrs
       `mappend` B.fromEscapedByteString " />"
+  where
+    begin :: ByteString
+    begin = "<" `mappend` tag
 {-# INLINE leaf #-}
 
 -- | Add an attribute to the current element.
 --
 attribute :: S.ByteString -> Text -> Attribute
 attribute key value = Attribute $ \(HtmlM h) -> HtmlM $ \attrs ->
-    h $ attrs `mappend` B.fromEscapedByteString key
+    h $ attrs `mappend` B.fromEscapedByteString begin
               `mappend` B.fromText value
               `mappend` B.fromEscapedAscii7Char '"'
+  where
+    begin :: ByteString
+    begin = " " `mappend` key `mappend` "=\""
 {-# INLINE attribute #-}
 
 class Attributable h where

@@ -45,7 +45,7 @@ main = defaultMain
 
     wideTreeData :: [Text]
     wideTreeData = take 5000 $
-        cycle ["λf.(λx.fxx)(λx.fxx)", "These & Those", "Foobar"]
+        cycle ["λf.(λx.fxx)(λx.fxx)", "These & Those", "Foobar", "lol"]
     {-# NOINLINE wideTreeData #-}
 
     deepTreeData :: [Html -> Html]
@@ -87,7 +87,7 @@ basic (title', user, items) = renderHtml $ html $ mconcat
 
 -- | A benchmark producing a very wide but very shallow tree.
 wideTree :: [Text] -> BL.ByteString
-wideTree = renderHtml . div . mapM_ (p . text)
+wideTree = renderHtml . div . mapM_ ((p ! id "foo") . text)
 
 -- | Create a very deep tree with the specified tags.
 deepTree :: [Html -> Html] -> BL.ByteString

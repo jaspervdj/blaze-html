@@ -109,13 +109,7 @@ parent tag = unlines
     , "--"
     , function        ++ " :: Html -- ^ Inner HTML."
     , spaces function ++ " -> Html -- ^ Resulting HTML."
-    , function ++ " ="
-    , "    let begin, end :: ByteString"
-    , "        begin = \"<" ++ tag ++ "\""
-    , "        end = \"</" ++ tag ++ ">\""
-    , "        {-# NOINLINE begin #-}"
-    , "        {-# NOINLINE end #-}"
-    , "    in parent begin end"
+    , function ++ " = parent \"" ++ tag ++ "\""
     , "{-# INLINE " ++ function ++ " #-}"
     ]
   where
@@ -137,11 +131,7 @@ leaf tag = unlines
     , "-- > <" ++ tag ++ " />"
     , "--"
     , function        ++ " :: Html -- ^ Resulting HTML."
-    , function ++ " ="
-    , "    let begin :: ByteString"
-    , "        begin = \"<" ++ tag ++ "\""
-    , "        {-# NOINLINE begin #-}"
-    , "    in leaf begin"
+    , function ++ " = leaf \"" ++ tag ++ "\""
     , "{-# INLINE " ++ function ++ " #-}"
     ]
   where
@@ -163,11 +153,7 @@ attribute name = unlines
     , "--"
     , function        ++ " :: Text      -- ^ Attribute value."
     , spaces function ++ " -> Attribute -- ^ Resulting attribute."
-    , function ++ " ="
-    , "    let begin :: ByteString"
-    , "        begin = " ++ "\" " ++ name ++ "=\\\"\""
-    , "        {-# NOINLINE begin #-}"
-    , "    in attribute begin"
+    , function ++ " = attribute \"" ++ name ++ "\""
     , "{-# INLINE " ++ function ++ " #-}"
     ]
   where

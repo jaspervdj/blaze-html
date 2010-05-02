@@ -97,13 +97,7 @@ import Text.Blaze (Html, parent, leaf)
 --
 a :: Html -- ^ Inner HTML.
   -> Html -- ^ Resulting HTML.
-a =
-    let begin, end :: ByteString
-        begin = "<a"
-        end = "</a>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+a = parent "a"
 {-# INLINE a #-}
 
 -- | Combinator for the @\<abbr>@ element.
@@ -118,13 +112,7 @@ a =
 --
 abbr :: Html -- ^ Inner HTML.
      -> Html -- ^ Resulting HTML.
-abbr =
-    let begin, end :: ByteString
-        begin = "<abbr"
-        end = "</abbr>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+abbr = parent "abbr"
 {-# INLINE abbr #-}
 
 -- | Combinator for the @\<acronym>@ element.
@@ -139,13 +127,7 @@ abbr =
 --
 acronym :: Html -- ^ Inner HTML.
         -> Html -- ^ Resulting HTML.
-acronym =
-    let begin, end :: ByteString
-        begin = "<acronym"
-        end = "</acronym>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+acronym = parent "acronym"
 {-# INLINE acronym #-}
 
 -- | Combinator for the @\<address>@ element.
@@ -160,13 +142,7 @@ acronym =
 --
 address :: Html -- ^ Inner HTML.
         -> Html -- ^ Resulting HTML.
-address =
-    let begin, end :: ByteString
-        begin = "<address"
-        end = "</address>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+address = parent "address"
 {-# INLINE address #-}
 
 -- | Combinator for the @\<area />@ element.
@@ -180,11 +156,7 @@ address =
 -- > <area />
 --
 area :: Html -- ^ Resulting HTML.
-area =
-    let begin :: ByteString
-        begin = "<area"
-        {-# NOINLINE begin #-}
-    in leaf begin
+area = leaf "area"
 {-# INLINE area #-}
 
 -- | Combinator for the @\<b>@ element.
@@ -199,13 +171,7 @@ area =
 --
 b :: Html -- ^ Inner HTML.
   -> Html -- ^ Resulting HTML.
-b =
-    let begin, end :: ByteString
-        begin = "<b"
-        end = "</b>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+b = parent "b"
 {-# INLINE b #-}
 
 -- | Combinator for the @\<bdo>@ element.
@@ -220,13 +186,7 @@ b =
 --
 bdo :: Html -- ^ Inner HTML.
     -> Html -- ^ Resulting HTML.
-bdo =
-    let begin, end :: ByteString
-        begin = "<bdo"
-        end = "</bdo>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+bdo = parent "bdo"
 {-# INLINE bdo #-}
 
 -- | Combinator for the @\<big>@ element.
@@ -241,13 +201,7 @@ bdo =
 --
 big :: Html -- ^ Inner HTML.
     -> Html -- ^ Resulting HTML.
-big =
-    let begin, end :: ByteString
-        begin = "<big"
-        end = "</big>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+big = parent "big"
 {-# INLINE big #-}
 
 -- | Combinator for the @\<blockquote>@ element.
@@ -262,13 +216,7 @@ big =
 --
 blockquote :: Html -- ^ Inner HTML.
            -> Html -- ^ Resulting HTML.
-blockquote =
-    let begin, end :: ByteString
-        begin = "<blockquote"
-        end = "</blockquote>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+blockquote = parent "blockquote"
 {-# INLINE blockquote #-}
 
 -- | Combinator for the @\<body>@ element.
@@ -283,13 +231,7 @@ blockquote =
 --
 body :: Html -- ^ Inner HTML.
      -> Html -- ^ Resulting HTML.
-body =
-    let begin, end :: ByteString
-        begin = "<body"
-        end = "</body>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+body = parent "body"
 {-# INLINE body #-}
 
 -- | Combinator for the @\<br />@ element.
@@ -303,11 +245,7 @@ body =
 -- > <br />
 --
 br :: Html -- ^ Resulting HTML.
-br =
-    let begin :: ByteString
-        begin = "<br"
-        {-# NOINLINE begin #-}
-    in leaf begin
+br = leaf "br"
 {-# INLINE br #-}
 
 -- | Combinator for the @\<button>@ element.
@@ -322,13 +260,7 @@ br =
 --
 button :: Html -- ^ Inner HTML.
        -> Html -- ^ Resulting HTML.
-button =
-    let begin, end :: ByteString
-        begin = "<button"
-        end = "</button>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+button = parent "button"
 {-# INLINE button #-}
 
 -- | Combinator for the @\<caption>@ element.
@@ -343,13 +275,7 @@ button =
 --
 caption :: Html -- ^ Inner HTML.
         -> Html -- ^ Resulting HTML.
-caption =
-    let begin, end :: ByteString
-        begin = "<caption"
-        end = "</caption>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+caption = parent "caption"
 {-# INLINE caption #-}
 
 -- | Combinator for the @\<cite>@ element.
@@ -364,13 +290,7 @@ caption =
 --
 cite :: Html -- ^ Inner HTML.
      -> Html -- ^ Resulting HTML.
-cite =
-    let begin, end :: ByteString
-        begin = "<cite"
-        end = "</cite>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+cite = parent "cite"
 {-# INLINE cite #-}
 
 -- | Combinator for the @\<code>@ element.
@@ -385,13 +305,7 @@ cite =
 --
 code :: Html -- ^ Inner HTML.
      -> Html -- ^ Resulting HTML.
-code =
-    let begin, end :: ByteString
-        begin = "<code"
-        end = "</code>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+code = parent "code"
 {-# INLINE code #-}
 
 -- | Combinator for the @\<col />@ element.
@@ -405,11 +319,7 @@ code =
 -- > <col />
 --
 col :: Html -- ^ Resulting HTML.
-col =
-    let begin :: ByteString
-        begin = "<col"
-        {-# NOINLINE begin #-}
-    in leaf begin
+col = leaf "col"
 {-# INLINE col #-}
 
 -- | Combinator for the @\<colgroup>@ element.
@@ -424,13 +334,7 @@ col =
 --
 colgroup :: Html -- ^ Inner HTML.
          -> Html -- ^ Resulting HTML.
-colgroup =
-    let begin, end :: ByteString
-        begin = "<colgroup"
-        end = "</colgroup>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+colgroup = parent "colgroup"
 {-# INLINE colgroup #-}
 
 -- | Combinator for the @\<dd>@ element.
@@ -445,13 +349,7 @@ colgroup =
 --
 dd :: Html -- ^ Inner HTML.
    -> Html -- ^ Resulting HTML.
-dd =
-    let begin, end :: ByteString
-        begin = "<dd"
-        end = "</dd>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+dd = parent "dd"
 {-# INLINE dd #-}
 
 -- | Combinator for the @\<del>@ element.
@@ -466,13 +364,7 @@ dd =
 --
 del :: Html -- ^ Inner HTML.
     -> Html -- ^ Resulting HTML.
-del =
-    let begin, end :: ByteString
-        begin = "<del"
-        end = "</del>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+del = parent "del"
 {-# INLINE del #-}
 
 -- | Combinator for the @\<dfn>@ element.
@@ -487,13 +379,7 @@ del =
 --
 dfn :: Html -- ^ Inner HTML.
     -> Html -- ^ Resulting HTML.
-dfn =
-    let begin, end :: ByteString
-        begin = "<dfn"
-        end = "</dfn>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+dfn = parent "dfn"
 {-# INLINE dfn #-}
 
 -- | Combinator for the @\<div>@ element.
@@ -508,13 +394,7 @@ dfn =
 --
 div :: Html -- ^ Inner HTML.
     -> Html -- ^ Resulting HTML.
-div =
-    let begin, end :: ByteString
-        begin = "<div"
-        end = "</div>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+div = parent "div"
 {-# INLINE div #-}
 
 -- | Combinator for the @\<dl>@ element.
@@ -529,13 +409,7 @@ div =
 --
 dl :: Html -- ^ Inner HTML.
    -> Html -- ^ Resulting HTML.
-dl =
-    let begin, end :: ByteString
-        begin = "<dl"
-        end = "</dl>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+dl = parent "dl"
 {-# INLINE dl #-}
 
 -- | Combinator for the @\<dt>@ element.
@@ -550,13 +424,7 @@ dl =
 --
 dt :: Html -- ^ Inner HTML.
    -> Html -- ^ Resulting HTML.
-dt =
-    let begin, end :: ByteString
-        begin = "<dt"
-        end = "</dt>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+dt = parent "dt"
 {-# INLINE dt #-}
 
 -- | Combinator for the @\<em>@ element.
@@ -571,13 +439,7 @@ dt =
 --
 em :: Html -- ^ Inner HTML.
    -> Html -- ^ Resulting HTML.
-em =
-    let begin, end :: ByteString
-        begin = "<em"
-        end = "</em>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+em = parent "em"
 {-# INLINE em #-}
 
 -- | Combinator for the @\<fieldset>@ element.
@@ -592,13 +454,7 @@ em =
 --
 fieldset :: Html -- ^ Inner HTML.
          -> Html -- ^ Resulting HTML.
-fieldset =
-    let begin, end :: ByteString
-        begin = "<fieldset"
-        end = "</fieldset>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+fieldset = parent "fieldset"
 {-# INLINE fieldset #-}
 
 -- | Combinator for the @\<form>@ element.
@@ -613,13 +469,7 @@ fieldset =
 --
 form :: Html -- ^ Inner HTML.
      -> Html -- ^ Resulting HTML.
-form =
-    let begin, end :: ByteString
-        begin = "<form"
-        end = "</form>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+form = parent "form"
 {-# INLINE form #-}
 
 -- | Combinator for the @\<h1>@ element.
@@ -634,13 +484,7 @@ form =
 --
 h1 :: Html -- ^ Inner HTML.
    -> Html -- ^ Resulting HTML.
-h1 =
-    let begin, end :: ByteString
-        begin = "<h1"
-        end = "</h1>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+h1 = parent "h1"
 {-# INLINE h1 #-}
 
 -- | Combinator for the @\<h2>@ element.
@@ -655,13 +499,7 @@ h1 =
 --
 h2 :: Html -- ^ Inner HTML.
    -> Html -- ^ Resulting HTML.
-h2 =
-    let begin, end :: ByteString
-        begin = "<h2"
-        end = "</h2>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+h2 = parent "h2"
 {-# INLINE h2 #-}
 
 -- | Combinator for the @\<h3>@ element.
@@ -676,13 +514,7 @@ h2 =
 --
 h3 :: Html -- ^ Inner HTML.
    -> Html -- ^ Resulting HTML.
-h3 =
-    let begin, end :: ByteString
-        begin = "<h3"
-        end = "</h3>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+h3 = parent "h3"
 {-# INLINE h3 #-}
 
 -- | Combinator for the @\<h4>@ element.
@@ -697,13 +529,7 @@ h3 =
 --
 h4 :: Html -- ^ Inner HTML.
    -> Html -- ^ Resulting HTML.
-h4 =
-    let begin, end :: ByteString
-        begin = "<h4"
-        end = "</h4>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+h4 = parent "h4"
 {-# INLINE h4 #-}
 
 -- | Combinator for the @\<h5>@ element.
@@ -718,13 +544,7 @@ h4 =
 --
 h5 :: Html -- ^ Inner HTML.
    -> Html -- ^ Resulting HTML.
-h5 =
-    let begin, end :: ByteString
-        begin = "<h5"
-        end = "</h5>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+h5 = parent "h5"
 {-# INLINE h5 #-}
 
 -- | Combinator for the @\<h6>@ element.
@@ -739,13 +559,7 @@ h5 =
 --
 h6 :: Html -- ^ Inner HTML.
    -> Html -- ^ Resulting HTML.
-h6 =
-    let begin, end :: ByteString
-        begin = "<h6"
-        end = "</h6>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+h6 = parent "h6"
 {-# INLINE h6 #-}
 
 -- | Combinator for the @\<head>@ element.
@@ -760,13 +574,7 @@ h6 =
 --
 head :: Html -- ^ Inner HTML.
      -> Html -- ^ Resulting HTML.
-head =
-    let begin, end :: ByteString
-        begin = "<head"
-        end = "</head>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+head = parent "head"
 {-# INLINE head #-}
 
 -- | Combinator for the @\<hr />@ element.
@@ -780,11 +588,7 @@ head =
 -- > <hr />
 --
 hr :: Html -- ^ Resulting HTML.
-hr =
-    let begin :: ByteString
-        begin = "<hr"
-        {-# NOINLINE begin #-}
-    in leaf begin
+hr = leaf "hr"
 {-# INLINE hr #-}
 
 -- | Combinator for the @\<html>@ element.
@@ -799,13 +603,7 @@ hr =
 --
 html :: Html -- ^ Inner HTML.
      -> Html -- ^ Resulting HTML.
-html =
-    let begin, end :: ByteString
-        begin = "<html"
-        end = "</html>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+html = parent "html"
 {-# INLINE html #-}
 
 -- | Combinator for the @\<i>@ element.
@@ -820,13 +618,7 @@ html =
 --
 i :: Html -- ^ Inner HTML.
   -> Html -- ^ Resulting HTML.
-i =
-    let begin, end :: ByteString
-        begin = "<i"
-        end = "</i>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+i = parent "i"
 {-# INLINE i #-}
 
 -- | Combinator for the @\<img />@ element.
@@ -840,11 +632,7 @@ i =
 -- > <img />
 --
 img :: Html -- ^ Resulting HTML.
-img =
-    let begin :: ByteString
-        begin = "<img"
-        {-# NOINLINE begin #-}
-    in leaf begin
+img = leaf "img"
 {-# INLINE img #-}
 
 -- | Combinator for the @\<input />@ element.
@@ -858,11 +646,7 @@ img =
 -- > <input />
 --
 input :: Html -- ^ Resulting HTML.
-input =
-    let begin :: ByteString
-        begin = "<input"
-        {-# NOINLINE begin #-}
-    in leaf begin
+input = leaf "input"
 {-# INLINE input #-}
 
 -- | Combinator for the @\<ins>@ element.
@@ -877,13 +661,7 @@ input =
 --
 ins :: Html -- ^ Inner HTML.
     -> Html -- ^ Resulting HTML.
-ins =
-    let begin, end :: ByteString
-        begin = "<ins"
-        end = "</ins>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+ins = parent "ins"
 {-# INLINE ins #-}
 
 -- | Combinator for the @\<kbd>@ element.
@@ -898,13 +676,7 @@ ins =
 --
 kbd :: Html -- ^ Inner HTML.
     -> Html -- ^ Resulting HTML.
-kbd =
-    let begin, end :: ByteString
-        begin = "<kbd"
-        end = "</kbd>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+kbd = parent "kbd"
 {-# INLINE kbd #-}
 
 -- | Combinator for the @\<label>@ element.
@@ -919,13 +691,7 @@ kbd =
 --
 label :: Html -- ^ Inner HTML.
       -> Html -- ^ Resulting HTML.
-label =
-    let begin, end :: ByteString
-        begin = "<label"
-        end = "</label>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+label = parent "label"
 {-# INLINE label #-}
 
 -- | Combinator for the @\<legend>@ element.
@@ -940,13 +706,7 @@ label =
 --
 legend :: Html -- ^ Inner HTML.
        -> Html -- ^ Resulting HTML.
-legend =
-    let begin, end :: ByteString
-        begin = "<legend"
-        end = "</legend>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+legend = parent "legend"
 {-# INLINE legend #-}
 
 -- | Combinator for the @\<li>@ element.
@@ -961,13 +721,7 @@ legend =
 --
 li :: Html -- ^ Inner HTML.
    -> Html -- ^ Resulting HTML.
-li =
-    let begin, end :: ByteString
-        begin = "<li"
-        end = "</li>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+li = parent "li"
 {-# INLINE li #-}
 
 -- | Combinator for the @\<link />@ element.
@@ -981,11 +735,7 @@ li =
 -- > <link />
 --
 link :: Html -- ^ Resulting HTML.
-link =
-    let begin :: ByteString
-        begin = "<link"
-        {-# NOINLINE begin #-}
-    in leaf begin
+link = leaf "link"
 {-# INLINE link #-}
 
 -- | Combinator for the @\<map>@ element.
@@ -1000,13 +750,7 @@ link =
 --
 map :: Html -- ^ Inner HTML.
     -> Html -- ^ Resulting HTML.
-map =
-    let begin, end :: ByteString
-        begin = "<map"
-        end = "</map>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+map = parent "map"
 {-# INLINE map #-}
 
 -- | Combinator for the @\<meta />@ element.
@@ -1020,11 +764,7 @@ map =
 -- > <meta />
 --
 meta :: Html -- ^ Resulting HTML.
-meta =
-    let begin :: ByteString
-        begin = "<meta"
-        {-# NOINLINE begin #-}
-    in leaf begin
+meta = leaf "meta"
 {-# INLINE meta #-}
 
 -- | Combinator for the @\<noscript>@ element.
@@ -1039,13 +779,7 @@ meta =
 --
 noscript :: Html -- ^ Inner HTML.
          -> Html -- ^ Resulting HTML.
-noscript =
-    let begin, end :: ByteString
-        begin = "<noscript"
-        end = "</noscript>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+noscript = parent "noscript"
 {-# INLINE noscript #-}
 
 -- | Combinator for the @\<object>@ element.
@@ -1060,13 +794,7 @@ noscript =
 --
 object :: Html -- ^ Inner HTML.
        -> Html -- ^ Resulting HTML.
-object =
-    let begin, end :: ByteString
-        begin = "<object"
-        end = "</object>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+object = parent "object"
 {-# INLINE object #-}
 
 -- | Combinator for the @\<ol>@ element.
@@ -1081,13 +809,7 @@ object =
 --
 ol :: Html -- ^ Inner HTML.
    -> Html -- ^ Resulting HTML.
-ol =
-    let begin, end :: ByteString
-        begin = "<ol"
-        end = "</ol>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+ol = parent "ol"
 {-# INLINE ol #-}
 
 -- | Combinator for the @\<optgroup>@ element.
@@ -1102,13 +824,7 @@ ol =
 --
 optgroup :: Html -- ^ Inner HTML.
          -> Html -- ^ Resulting HTML.
-optgroup =
-    let begin, end :: ByteString
-        begin = "<optgroup"
-        end = "</optgroup>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+optgroup = parent "optgroup"
 {-# INLINE optgroup #-}
 
 -- | Combinator for the @\<option>@ element.
@@ -1123,13 +839,7 @@ optgroup =
 --
 option :: Html -- ^ Inner HTML.
        -> Html -- ^ Resulting HTML.
-option =
-    let begin, end :: ByteString
-        begin = "<option"
-        end = "</option>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+option = parent "option"
 {-# INLINE option #-}
 
 -- | Combinator for the @\<p>@ element.
@@ -1144,13 +854,7 @@ option =
 --
 p :: Html -- ^ Inner HTML.
   -> Html -- ^ Resulting HTML.
-p =
-    let begin, end :: ByteString
-        begin = "<p"
-        end = "</p>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+p = parent "p"
 {-# INLINE p #-}
 
 -- | Combinator for the @\<param />@ element.
@@ -1164,11 +868,7 @@ p =
 -- > <param />
 --
 param :: Html -- ^ Resulting HTML.
-param =
-    let begin :: ByteString
-        begin = "<param"
-        {-# NOINLINE begin #-}
-    in leaf begin
+param = leaf "param"
 {-# INLINE param #-}
 
 -- | Combinator for the @\<pre>@ element.
@@ -1183,13 +883,7 @@ param =
 --
 pre :: Html -- ^ Inner HTML.
     -> Html -- ^ Resulting HTML.
-pre =
-    let begin, end :: ByteString
-        begin = "<pre"
-        end = "</pre>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+pre = parent "pre"
 {-# INLINE pre #-}
 
 -- | Combinator for the @\<q>@ element.
@@ -1204,13 +898,7 @@ pre =
 --
 q :: Html -- ^ Inner HTML.
   -> Html -- ^ Resulting HTML.
-q =
-    let begin, end :: ByteString
-        begin = "<q"
-        end = "</q>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+q = parent "q"
 {-# INLINE q #-}
 
 -- | Combinator for the @\<samp>@ element.
@@ -1225,13 +913,7 @@ q =
 --
 samp :: Html -- ^ Inner HTML.
      -> Html -- ^ Resulting HTML.
-samp =
-    let begin, end :: ByteString
-        begin = "<samp"
-        end = "</samp>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+samp = parent "samp"
 {-# INLINE samp #-}
 
 -- | Combinator for the @\<script>@ element.
@@ -1246,13 +928,7 @@ samp =
 --
 script :: Html -- ^ Inner HTML.
        -> Html -- ^ Resulting HTML.
-script =
-    let begin, end :: ByteString
-        begin = "<script"
-        end = "</script>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+script = parent "script"
 {-# INLINE script #-}
 
 -- | Combinator for the @\<select>@ element.
@@ -1267,13 +943,7 @@ script =
 --
 select :: Html -- ^ Inner HTML.
        -> Html -- ^ Resulting HTML.
-select =
-    let begin, end :: ByteString
-        begin = "<select"
-        end = "</select>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+select = parent "select"
 {-# INLINE select #-}
 
 -- | Combinator for the @\<small>@ element.
@@ -1288,13 +958,7 @@ select =
 --
 small :: Html -- ^ Inner HTML.
       -> Html -- ^ Resulting HTML.
-small =
-    let begin, end :: ByteString
-        begin = "<small"
-        end = "</small>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+small = parent "small"
 {-# INLINE small #-}
 
 -- | Combinator for the @\<span>@ element.
@@ -1309,13 +973,7 @@ small =
 --
 span :: Html -- ^ Inner HTML.
      -> Html -- ^ Resulting HTML.
-span =
-    let begin, end :: ByteString
-        begin = "<span"
-        end = "</span>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+span = parent "span"
 {-# INLINE span #-}
 
 -- | Combinator for the @\<strong>@ element.
@@ -1330,13 +988,7 @@ span =
 --
 strong :: Html -- ^ Inner HTML.
        -> Html -- ^ Resulting HTML.
-strong =
-    let begin, end :: ByteString
-        begin = "<strong"
-        end = "</strong>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+strong = parent "strong"
 {-# INLINE strong #-}
 
 -- | Combinator for the @\<style>@ element.
@@ -1351,13 +1003,7 @@ strong =
 --
 style :: Html -- ^ Inner HTML.
       -> Html -- ^ Resulting HTML.
-style =
-    let begin, end :: ByteString
-        begin = "<style"
-        end = "</style>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+style = parent "style"
 {-# INLINE style #-}
 
 -- | Combinator for the @\<sub>@ element.
@@ -1372,13 +1018,7 @@ style =
 --
 sub :: Html -- ^ Inner HTML.
     -> Html -- ^ Resulting HTML.
-sub =
-    let begin, end :: ByteString
-        begin = "<sub"
-        end = "</sub>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+sub = parent "sub"
 {-# INLINE sub #-}
 
 -- | Combinator for the @\<sup>@ element.
@@ -1393,13 +1033,7 @@ sub =
 --
 sup :: Html -- ^ Inner HTML.
     -> Html -- ^ Resulting HTML.
-sup =
-    let begin, end :: ByteString
-        begin = "<sup"
-        end = "</sup>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+sup = parent "sup"
 {-# INLINE sup #-}
 
 -- | Combinator for the @\<table>@ element.
@@ -1414,13 +1048,7 @@ sup =
 --
 table :: Html -- ^ Inner HTML.
       -> Html -- ^ Resulting HTML.
-table =
-    let begin, end :: ByteString
-        begin = "<table"
-        end = "</table>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+table = parent "table"
 {-# INLINE table #-}
 
 -- | Combinator for the @\<tbody>@ element.
@@ -1435,13 +1063,7 @@ table =
 --
 tbody :: Html -- ^ Inner HTML.
       -> Html -- ^ Resulting HTML.
-tbody =
-    let begin, end :: ByteString
-        begin = "<tbody"
-        end = "</tbody>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+tbody = parent "tbody"
 {-# INLINE tbody #-}
 
 -- | Combinator for the @\<td>@ element.
@@ -1456,13 +1078,7 @@ tbody =
 --
 td :: Html -- ^ Inner HTML.
    -> Html -- ^ Resulting HTML.
-td =
-    let begin, end :: ByteString
-        begin = "<td"
-        end = "</td>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+td = parent "td"
 {-# INLINE td #-}
 
 -- | Combinator for the @\<textarea>@ element.
@@ -1477,13 +1093,7 @@ td =
 --
 textarea :: Html -- ^ Inner HTML.
          -> Html -- ^ Resulting HTML.
-textarea =
-    let begin, end :: ByteString
-        begin = "<textarea"
-        end = "</textarea>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+textarea = parent "textarea"
 {-# INLINE textarea #-}
 
 -- | Combinator for the @\<tfoot>@ element.
@@ -1498,13 +1108,7 @@ textarea =
 --
 tfoot :: Html -- ^ Inner HTML.
       -> Html -- ^ Resulting HTML.
-tfoot =
-    let begin, end :: ByteString
-        begin = "<tfoot"
-        end = "</tfoot>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+tfoot = parent "tfoot"
 {-# INLINE tfoot #-}
 
 -- | Combinator for the @\<th>@ element.
@@ -1519,13 +1123,7 @@ tfoot =
 --
 th :: Html -- ^ Inner HTML.
    -> Html -- ^ Resulting HTML.
-th =
-    let begin, end :: ByteString
-        begin = "<th"
-        end = "</th>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+th = parent "th"
 {-# INLINE th #-}
 
 -- | Combinator for the @\<thead>@ element.
@@ -1540,13 +1138,7 @@ th =
 --
 thead :: Html -- ^ Inner HTML.
       -> Html -- ^ Resulting HTML.
-thead =
-    let begin, end :: ByteString
-        begin = "<thead"
-        end = "</thead>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+thead = parent "thead"
 {-# INLINE thead #-}
 
 -- | Combinator for the @\<title>@ element.
@@ -1561,13 +1153,7 @@ thead =
 --
 title :: Html -- ^ Inner HTML.
       -> Html -- ^ Resulting HTML.
-title =
-    let begin, end :: ByteString
-        begin = "<title"
-        end = "</title>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+title = parent "title"
 {-# INLINE title #-}
 
 -- | Combinator for the @\<tr>@ element.
@@ -1582,13 +1168,7 @@ title =
 --
 tr :: Html -- ^ Inner HTML.
    -> Html -- ^ Resulting HTML.
-tr =
-    let begin, end :: ByteString
-        begin = "<tr"
-        end = "</tr>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+tr = parent "tr"
 {-# INLINE tr #-}
 
 -- | Combinator for the @\<tt>@ element.
@@ -1603,13 +1183,7 @@ tr =
 --
 tt :: Html -- ^ Inner HTML.
    -> Html -- ^ Resulting HTML.
-tt =
-    let begin, end :: ByteString
-        begin = "<tt"
-        end = "</tt>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+tt = parent "tt"
 {-# INLINE tt #-}
 
 -- | Combinator for the @\<ul>@ element.
@@ -1624,13 +1198,7 @@ tt =
 --
 ul :: Html -- ^ Inner HTML.
    -> Html -- ^ Resulting HTML.
-ul =
-    let begin, end :: ByteString
-        begin = "<ul"
-        end = "</ul>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+ul = parent "ul"
 {-# INLINE ul #-}
 
 -- | Combinator for the @\<var>@ element.
@@ -1645,11 +1213,5 @@ ul =
 --
 var :: Html -- ^ Inner HTML.
     -> Html -- ^ Resulting HTML.
-var =
-    let begin, end :: ByteString
-        begin = "<var"
-        end = "</var>"
-        {-# NOINLINE begin #-}
-        {-# NOINLINE end #-}
-    in parent begin end
+var = parent "var"
 {-# INLINE var #-}

@@ -429,3 +429,11 @@ attributes). I made sure documentation is generated as well.
 
 The entire HTML 4.01 Strict specification is now available under
 `Text.Blaze.Html4`.
+
+Sunday, May 2nd, morning
+========================
+
+Today, I'm going to have a look at attributes. I wrote a quick benchmark that
+sets 5000 attributes on an `<img />` element. The initial time is 13.04ms. I
+could get it down to 10ms by using a similar approach as used with the leaf and
+parent combinators.

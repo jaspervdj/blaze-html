@@ -104,7 +104,7 @@ a =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE a#-}
+{-# INLINE a #-}
 
 -- | Combinator for the @\<abbr>@ element.
 --
@@ -125,7 +125,7 @@ abbr =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE abbr#-}
+{-# INLINE abbr #-}
 
 -- | Combinator for the @\<acronym>@ element.
 --
@@ -146,7 +146,7 @@ acronym =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE acronym#-}
+{-# INLINE acronym #-}
 
 -- | Combinator for the @\<address>@ element.
 --
@@ -167,7 +167,7 @@ address =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE address#-}
+{-# INLINE address #-}
 
 -- | Combinator for the @\<area />@ element.
 --
@@ -185,7 +185,7 @@ area =
         begin = "<area"
         {-# NOINLINE begin #-}
     in leaf begin
-{-# INLINE area#-}
+{-# INLINE area #-}
 
 -- | Combinator for the @\<b>@ element.
 --
@@ -206,7 +206,7 @@ b =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE b#-}
+{-# INLINE b #-}
 
 -- | Combinator for the @\<bdo>@ element.
 --
@@ -227,7 +227,7 @@ bdo =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE bdo#-}
+{-# INLINE bdo #-}
 
 -- | Combinator for the @\<big>@ element.
 --
@@ -248,7 +248,7 @@ big =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE big#-}
+{-# INLINE big #-}
 
 -- | Combinator for the @\<blockquote>@ element.
 --
@@ -269,7 +269,7 @@ blockquote =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE blockquote#-}
+{-# INLINE blockquote #-}
 
 -- | Combinator for the @\<body>@ element.
 --
@@ -290,7 +290,7 @@ body =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE body#-}
+{-# INLINE body #-}
 
 -- | Combinator for the @\<br />@ element.
 --
@@ -308,7 +308,7 @@ br =
         begin = "<br"
         {-# NOINLINE begin #-}
     in leaf begin
-{-# INLINE br#-}
+{-# INLINE br #-}
 
 -- | Combinator for the @\<button>@ element.
 --
@@ -329,7 +329,7 @@ button =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE button#-}
+{-# INLINE button #-}
 
 -- | Combinator for the @\<caption>@ element.
 --
@@ -350,7 +350,7 @@ caption =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE caption#-}
+{-# INLINE caption #-}
 
 -- | Combinator for the @\<cite>@ element.
 --
@@ -371,7 +371,7 @@ cite =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE cite#-}
+{-# INLINE cite #-}
 
 -- | Combinator for the @\<code>@ element.
 --
@@ -392,7 +392,7 @@ code =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE code#-}
+{-# INLINE code #-}
 
 -- | Combinator for the @\<col />@ element.
 --
@@ -410,7 +410,7 @@ col =
         begin = "<col"
         {-# NOINLINE begin #-}
     in leaf begin
-{-# INLINE col#-}
+{-# INLINE col #-}
 
 -- | Combinator for the @\<colgroup>@ element.
 --
@@ -431,7 +431,7 @@ colgroup =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE colgroup#-}
+{-# INLINE colgroup #-}
 
 -- | Combinator for the @\<dd>@ element.
 --
@@ -452,7 +452,7 @@ dd =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE dd#-}
+{-# INLINE dd #-}
 
 -- | Combinator for the @\<del>@ element.
 --
@@ -473,7 +473,7 @@ del =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE del#-}
+{-# INLINE del #-}
 
 -- | Combinator for the @\<dfn>@ element.
 --
@@ -494,7 +494,7 @@ dfn =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE dfn#-}
+{-# INLINE dfn #-}
 
 -- | Combinator for the @\<div>@ element.
 --
@@ -515,7 +515,7 @@ div =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE div#-}
+{-# INLINE div #-}
 
 -- | Combinator for the @\<dl>@ element.
 --
@@ -536,7 +536,7 @@ dl =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE dl#-}
+{-# INLINE dl #-}
 
 -- | Combinator for the @\<dt>@ element.
 --
@@ -557,7 +557,7 @@ dt =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE dt#-}
+{-# INLINE dt #-}
 
 -- | Combinator for the @\<em>@ element.
 --
@@ -578,7 +578,7 @@ em =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE em#-}
+{-# INLINE em #-}
 
 -- | Combinator for the @\<fieldset>@ element.
 --
@@ -599,7 +599,7 @@ fieldset =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE fieldset#-}
+{-# INLINE fieldset #-}
 
 -- | Combinator for the @\<form>@ element.
 --
@@ -620,7 +620,7 @@ form =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE form#-}
+{-# INLINE form #-}
 
 -- | Combinator for the @\<h1>@ element.
 --
@@ -641,7 +641,7 @@ h1 =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE h1#-}
+{-# INLINE h1 #-}
 
 -- | Combinator for the @\<h2>@ element.
 --
@@ -662,7 +662,7 @@ h2 =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE h2#-}
+{-# INLINE h2 #-}
 
 -- | Combinator for the @\<h3>@ element.
 --
@@ -683,7 +683,7 @@ h3 =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE h3#-}
+{-# INLINE h3 #-}
 
 -- | Combinator for the @\<h4>@ element.
 --
@@ -704,7 +704,7 @@ h4 =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE h4#-}
+{-# INLINE h4 #-}
 
 -- | Combinator for the @\<h5>@ element.
 --
@@ -725,7 +725,7 @@ h5 =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE h5#-}
+{-# INLINE h5 #-}
 
 -- | Combinator for the @\<h6>@ element.
 --
@@ -746,7 +746,7 @@ h6 =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE h6#-}
+{-# INLINE h6 #-}
 
 -- | Combinator for the @\<head>@ element.
 --
@@ -767,7 +767,7 @@ head =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE head#-}
+{-# INLINE head #-}
 
 -- | Combinator for the @\<hr />@ element.
 --
@@ -785,7 +785,7 @@ hr =
         begin = "<hr"
         {-# NOINLINE begin #-}
     in leaf begin
-{-# INLINE hr#-}
+{-# INLINE hr #-}
 
 -- | Combinator for the @\<html>@ element.
 --
@@ -806,7 +806,7 @@ html =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE html#-}
+{-# INLINE html #-}
 
 -- | Combinator for the @\<i>@ element.
 --
@@ -827,7 +827,7 @@ i =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE i#-}
+{-# INLINE i #-}
 
 -- | Combinator for the @\<img />@ element.
 --
@@ -845,7 +845,7 @@ img =
         begin = "<img"
         {-# NOINLINE begin #-}
     in leaf begin
-{-# INLINE img#-}
+{-# INLINE img #-}
 
 -- | Combinator for the @\<input />@ element.
 --
@@ -863,7 +863,7 @@ input =
         begin = "<input"
         {-# NOINLINE begin #-}
     in leaf begin
-{-# INLINE input#-}
+{-# INLINE input #-}
 
 -- | Combinator for the @\<ins>@ element.
 --
@@ -884,7 +884,7 @@ ins =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE ins#-}
+{-# INLINE ins #-}
 
 -- | Combinator for the @\<kbd>@ element.
 --
@@ -905,7 +905,7 @@ kbd =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE kbd#-}
+{-# INLINE kbd #-}
 
 -- | Combinator for the @\<label>@ element.
 --
@@ -926,7 +926,7 @@ label =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE label#-}
+{-# INLINE label #-}
 
 -- | Combinator for the @\<legend>@ element.
 --
@@ -947,7 +947,7 @@ legend =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE legend#-}
+{-# INLINE legend #-}
 
 -- | Combinator for the @\<li>@ element.
 --
@@ -968,7 +968,7 @@ li =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE li#-}
+{-# INLINE li #-}
 
 -- | Combinator for the @\<link />@ element.
 --
@@ -986,7 +986,7 @@ link =
         begin = "<link"
         {-# NOINLINE begin #-}
     in leaf begin
-{-# INLINE link#-}
+{-# INLINE link #-}
 
 -- | Combinator for the @\<map>@ element.
 --
@@ -1007,7 +1007,7 @@ map =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE map#-}
+{-# INLINE map #-}
 
 -- | Combinator for the @\<meta />@ element.
 --
@@ -1025,7 +1025,7 @@ meta =
         begin = "<meta"
         {-# NOINLINE begin #-}
     in leaf begin
-{-# INLINE meta#-}
+{-# INLINE meta #-}
 
 -- | Combinator for the @\<noscript>@ element.
 --
@@ -1046,7 +1046,7 @@ noscript =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE noscript#-}
+{-# INLINE noscript #-}
 
 -- | Combinator for the @\<object>@ element.
 --
@@ -1067,7 +1067,7 @@ object =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE object#-}
+{-# INLINE object #-}
 
 -- | Combinator for the @\<ol>@ element.
 --
@@ -1088,7 +1088,7 @@ ol =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE ol#-}
+{-# INLINE ol #-}
 
 -- | Combinator for the @\<optgroup>@ element.
 --
@@ -1109,7 +1109,7 @@ optgroup =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE optgroup#-}
+{-# INLINE optgroup #-}
 
 -- | Combinator for the @\<option>@ element.
 --
@@ -1130,7 +1130,7 @@ option =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE option#-}
+{-# INLINE option #-}
 
 -- | Combinator for the @\<p>@ element.
 --
@@ -1151,7 +1151,7 @@ p =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE p#-}
+{-# INLINE p #-}
 
 -- | Combinator for the @\<param />@ element.
 --
@@ -1169,7 +1169,7 @@ param =
         begin = "<param"
         {-# NOINLINE begin #-}
     in leaf begin
-{-# INLINE param#-}
+{-# INLINE param #-}
 
 -- | Combinator for the @\<pre>@ element.
 --
@@ -1190,7 +1190,7 @@ pre =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE pre#-}
+{-# INLINE pre #-}
 
 -- | Combinator for the @\<q>@ element.
 --
@@ -1211,7 +1211,7 @@ q =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE q#-}
+{-# INLINE q #-}
 
 -- | Combinator for the @\<samp>@ element.
 --
@@ -1232,7 +1232,7 @@ samp =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE samp#-}
+{-# INLINE samp #-}
 
 -- | Combinator for the @\<script>@ element.
 --
@@ -1253,7 +1253,7 @@ script =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE script#-}
+{-# INLINE script #-}
 
 -- | Combinator for the @\<select>@ element.
 --
@@ -1274,7 +1274,7 @@ select =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE select#-}
+{-# INLINE select #-}
 
 -- | Combinator for the @\<small>@ element.
 --
@@ -1295,7 +1295,7 @@ small =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE small#-}
+{-# INLINE small #-}
 
 -- | Combinator for the @\<span>@ element.
 --
@@ -1316,7 +1316,7 @@ span =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE span#-}
+{-# INLINE span #-}
 
 -- | Combinator for the @\<strong>@ element.
 --
@@ -1337,7 +1337,7 @@ strong =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE strong#-}
+{-# INLINE strong #-}
 
 -- | Combinator for the @\<style>@ element.
 --
@@ -1358,7 +1358,7 @@ style =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE style#-}
+{-# INLINE style #-}
 
 -- | Combinator for the @\<sub>@ element.
 --
@@ -1379,7 +1379,7 @@ sub =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE sub#-}
+{-# INLINE sub #-}
 
 -- | Combinator for the @\<sup>@ element.
 --
@@ -1400,7 +1400,7 @@ sup =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE sup#-}
+{-# INLINE sup #-}
 
 -- | Combinator for the @\<table>@ element.
 --
@@ -1421,7 +1421,7 @@ table =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE table#-}
+{-# INLINE table #-}
 
 -- | Combinator for the @\<tbody>@ element.
 --
@@ -1442,7 +1442,7 @@ tbody =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE tbody#-}
+{-# INLINE tbody #-}
 
 -- | Combinator for the @\<td>@ element.
 --
@@ -1463,7 +1463,7 @@ td =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE td#-}
+{-# INLINE td #-}
 
 -- | Combinator for the @\<textarea>@ element.
 --
@@ -1484,7 +1484,7 @@ textarea =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE textarea#-}
+{-# INLINE textarea #-}
 
 -- | Combinator for the @\<tfoot>@ element.
 --
@@ -1505,7 +1505,7 @@ tfoot =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE tfoot#-}
+{-# INLINE tfoot #-}
 
 -- | Combinator for the @\<th>@ element.
 --
@@ -1526,7 +1526,7 @@ th =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE th#-}
+{-# INLINE th #-}
 
 -- | Combinator for the @\<thead>@ element.
 --
@@ -1547,7 +1547,7 @@ thead =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE thead#-}
+{-# INLINE thead #-}
 
 -- | Combinator for the @\<title>@ element.
 --
@@ -1568,7 +1568,7 @@ title =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE title#-}
+{-# INLINE title #-}
 
 -- | Combinator for the @\<tr>@ element.
 --
@@ -1589,7 +1589,7 @@ tr =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE tr#-}
+{-# INLINE tr #-}
 
 -- | Combinator for the @\<tt>@ element.
 --
@@ -1610,7 +1610,7 @@ tt =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE tt#-}
+{-# INLINE tt #-}
 
 -- | Combinator for the @\<ul>@ element.
 --
@@ -1631,7 +1631,7 @@ ul =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE ul#-}
+{-# INLINE ul #-}
 
 -- | Combinator for the @\<var>@ element.
 --
@@ -1652,4 +1652,4 @@ var =
         {-# NOINLINE begin #-}
         {-# NOINLINE end #-}
     in parent begin end
-{-# INLINE var#-}
+{-# INLINE var #-}

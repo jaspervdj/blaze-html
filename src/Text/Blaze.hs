@@ -97,11 +97,9 @@ leaf begin = HtmlM $ \attrs ->
 --
 attribute :: S.ByteString -> Text -> Attribute
 attribute key value = Attribute $ \(HtmlM h) -> HtmlM $ \attrs ->
-    h $ attrs `mappend` (B.fromEscapedAscii7Char ' '
-              `mappend` (B.fromEscapedByteString key
-              `mappend` (B.fromEscapedByteString "=\""
-              `mappend` (B.fromText value
-              `mappend` (B.fromEscapedAscii7Char '"')))))
+    h $ attrs `mappend` B.fromEscapedByteString key
+              `mappend` B.fromText value
+              `mappend` B.fromEscapedAscii7Char '"'
 {-# INLINE attribute #-}
 
 class Attributable h where

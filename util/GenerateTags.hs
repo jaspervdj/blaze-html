@@ -116,7 +116,7 @@ parent tag = unlines
     , "        {-# NOINLINE begin #-}"
     , "        {-# NOINLINE end #-}"
     , "    in parent begin end"
-    , "{-# INLINE " ++ function ++ "#-}"
+    , "{-# INLINE " ++ function ++ " #-}"
     ]
   where
     function = sanitize tag
@@ -142,7 +142,7 @@ leaf tag = unlines
     , "        begin = \"<" ++ tag ++ "\""
     , "        {-# NOINLINE begin #-}"
     , "    in leaf begin"
-    , "{-# INLINE " ++ function ++ "#-}"
+    , "{-# INLINE " ++ function ++ " #-}"
     ]
   where
     function = sanitize tag
@@ -163,7 +163,12 @@ attribute name = unlines
     , "--"
     , function        ++ " :: Text      -- ^ Attribute value."
     , spaces function ++ " -> Attribute -- ^ Resulting attribute."
-    , function ++ " = attribute \"" ++ name ++ "\""
+    , function ++ " ="
+    , "    let begin :: ByteString"
+    , "        begin = " ++ "\" " ++ name ++ "=\\\"\""
+    , "        {-# NOINLINE begin #-}"
+    , "    in attribute begin"
+    , "{-# INLINE " ++ function ++ " #-}"
     ]
   where
     function = sanitize name

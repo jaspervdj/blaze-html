@@ -110,7 +110,12 @@ import Text.Blaze (Attribute, attribute)
 --
 abbr :: Text      -- ^ Attribute value.
      -> Attribute -- ^ Resulting attribute.
-abbr = attribute "abbr"
+abbr =
+    let begin :: ByteString
+        begin = " abbr=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE abbr #-}
 
 -- | Combinator for the @accept@ attribute.
 --
@@ -124,7 +129,12 @@ abbr = attribute "abbr"
 --
 accept :: Text      -- ^ Attribute value.
        -> Attribute -- ^ Resulting attribute.
-accept = attribute "accept"
+accept =
+    let begin :: ByteString
+        begin = " accept=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE accept #-}
 
 -- | Combinator for the @accesskey@ attribute.
 --
@@ -138,7 +148,12 @@ accept = attribute "accept"
 --
 accesskey :: Text      -- ^ Attribute value.
           -> Attribute -- ^ Resulting attribute.
-accesskey = attribute "accesskey"
+accesskey =
+    let begin :: ByteString
+        begin = " accesskey=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE accesskey #-}
 
 -- | Combinator for the @action@ attribute.
 --
@@ -152,7 +167,12 @@ accesskey = attribute "accesskey"
 --
 action :: Text      -- ^ Attribute value.
        -> Attribute -- ^ Resulting attribute.
-action = attribute "action"
+action =
+    let begin :: ByteString
+        begin = " action=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE action #-}
 
 -- | Combinator for the @align@ attribute.
 --
@@ -166,7 +186,12 @@ action = attribute "action"
 --
 align :: Text      -- ^ Attribute value.
       -> Attribute -- ^ Resulting attribute.
-align = attribute "align"
+align =
+    let begin :: ByteString
+        begin = " align=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE align #-}
 
 -- | Combinator for the @alt@ attribute.
 --
@@ -180,7 +205,12 @@ align = attribute "align"
 --
 alt :: Text      -- ^ Attribute value.
     -> Attribute -- ^ Resulting attribute.
-alt = attribute "alt"
+alt =
+    let begin :: ByteString
+        begin = " alt=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE alt #-}
 
 -- | Combinator for the @archive@ attribute.
 --
@@ -194,7 +224,12 @@ alt = attribute "alt"
 --
 archive :: Text      -- ^ Attribute value.
         -> Attribute -- ^ Resulting attribute.
-archive = attribute "archive"
+archive =
+    let begin :: ByteString
+        begin = " archive=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE archive #-}
 
 -- | Combinator for the @axis@ attribute.
 --
@@ -208,7 +243,12 @@ archive = attribute "archive"
 --
 axis :: Text      -- ^ Attribute value.
      -> Attribute -- ^ Resulting attribute.
-axis = attribute "axis"
+axis =
+    let begin :: ByteString
+        begin = " axis=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE axis #-}
 
 -- | Combinator for the @border@ attribute.
 --
@@ -222,7 +262,12 @@ axis = attribute "axis"
 --
 border :: Text      -- ^ Attribute value.
        -> Attribute -- ^ Resulting attribute.
-border = attribute "border"
+border =
+    let begin :: ByteString
+        begin = " border=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE border #-}
 
 -- | Combinator for the @cellpadding@ attribute.
 --
@@ -236,7 +281,12 @@ border = attribute "border"
 --
 cellpadding :: Text      -- ^ Attribute value.
             -> Attribute -- ^ Resulting attribute.
-cellpadding = attribute "cellpadding"
+cellpadding =
+    let begin :: ByteString
+        begin = " cellpadding=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE cellpadding #-}
 
 -- | Combinator for the @cellspacing@ attribute.
 --
@@ -250,7 +300,12 @@ cellpadding = attribute "cellpadding"
 --
 cellspacing :: Text      -- ^ Attribute value.
             -> Attribute -- ^ Resulting attribute.
-cellspacing = attribute "cellspacing"
+cellspacing =
+    let begin :: ByteString
+        begin = " cellspacing=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE cellspacing #-}
 
 -- | Combinator for the @char@ attribute.
 --
@@ -264,7 +319,12 @@ cellspacing = attribute "cellspacing"
 --
 char :: Text      -- ^ Attribute value.
      -> Attribute -- ^ Resulting attribute.
-char = attribute "char"
+char =
+    let begin :: ByteString
+        begin = " char=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE char #-}
 
 -- | Combinator for the @charoff@ attribute.
 --
@@ -278,7 +338,12 @@ char = attribute "char"
 --
 charoff :: Text      -- ^ Attribute value.
         -> Attribute -- ^ Resulting attribute.
-charoff = attribute "charoff"
+charoff =
+    let begin :: ByteString
+        begin = " charoff=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE charoff #-}
 
 -- | Combinator for the @charset@ attribute.
 --
@@ -292,7 +357,12 @@ charoff = attribute "charoff"
 --
 charset :: Text      -- ^ Attribute value.
         -> Attribute -- ^ Resulting attribute.
-charset = attribute "charset"
+charset =
+    let begin :: ByteString
+        begin = " charset=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE charset #-}
 
 -- | Combinator for the @checked@ attribute.
 --
@@ -306,7 +376,12 @@ charset = attribute "charset"
 --
 checked :: Text      -- ^ Attribute value.
         -> Attribute -- ^ Resulting attribute.
-checked = attribute "checked"
+checked =
+    let begin :: ByteString
+        begin = " checked=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE checked #-}
 
 -- | Combinator for the @cite@ attribute.
 --
@@ -320,7 +395,12 @@ checked = attribute "checked"
 --
 cite :: Text      -- ^ Attribute value.
      -> Attribute -- ^ Resulting attribute.
-cite = attribute "cite"
+cite =
+    let begin :: ByteString
+        begin = " cite=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE cite #-}
 
 -- | Combinator for the @class@ attribute.
 --
@@ -334,7 +414,12 @@ cite = attribute "cite"
 --
 class_ :: Text      -- ^ Attribute value.
        -> Attribute -- ^ Resulting attribute.
-class_ = attribute "class"
+class_ =
+    let begin :: ByteString
+        begin = " class=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE class_ #-}
 
 -- | Combinator for the @classid@ attribute.
 --
@@ -348,7 +433,12 @@ class_ = attribute "class"
 --
 classid :: Text      -- ^ Attribute value.
         -> Attribute -- ^ Resulting attribute.
-classid = attribute "classid"
+classid =
+    let begin :: ByteString
+        begin = " classid=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE classid #-}
 
 -- | Combinator for the @codebase@ attribute.
 --
@@ -362,7 +452,12 @@ classid = attribute "classid"
 --
 codebase :: Text      -- ^ Attribute value.
          -> Attribute -- ^ Resulting attribute.
-codebase = attribute "codebase"
+codebase =
+    let begin :: ByteString
+        begin = " codebase=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE codebase #-}
 
 -- | Combinator for the @codetype@ attribute.
 --
@@ -376,7 +471,12 @@ codebase = attribute "codebase"
 --
 codetype :: Text      -- ^ Attribute value.
          -> Attribute -- ^ Resulting attribute.
-codetype = attribute "codetype"
+codetype =
+    let begin :: ByteString
+        begin = " codetype=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE codetype #-}
 
 -- | Combinator for the @cols@ attribute.
 --
@@ -390,7 +490,12 @@ codetype = attribute "codetype"
 --
 cols :: Text      -- ^ Attribute value.
      -> Attribute -- ^ Resulting attribute.
-cols = attribute "cols"
+cols =
+    let begin :: ByteString
+        begin = " cols=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE cols #-}
 
 -- | Combinator for the @colspan@ attribute.
 --
@@ -404,7 +509,12 @@ cols = attribute "cols"
 --
 colspan :: Text      -- ^ Attribute value.
         -> Attribute -- ^ Resulting attribute.
-colspan = attribute "colspan"
+colspan =
+    let begin :: ByteString
+        begin = " colspan=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE colspan #-}
 
 -- | Combinator for the @content@ attribute.
 --
@@ -418,7 +528,12 @@ colspan = attribute "colspan"
 --
 content :: Text      -- ^ Attribute value.
         -> Attribute -- ^ Resulting attribute.
-content = attribute "content"
+content =
+    let begin :: ByteString
+        begin = " content=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE content #-}
 
 -- | Combinator for the @coords@ attribute.
 --
@@ -432,7 +547,12 @@ content = attribute "content"
 --
 coords :: Text      -- ^ Attribute value.
        -> Attribute -- ^ Resulting attribute.
-coords = attribute "coords"
+coords =
+    let begin :: ByteString
+        begin = " coords=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE coords #-}
 
 -- | Combinator for the @data@ attribute.
 --
@@ -446,7 +566,12 @@ coords = attribute "coords"
 --
 data_ :: Text      -- ^ Attribute value.
       -> Attribute -- ^ Resulting attribute.
-data_ = attribute "data"
+data_ =
+    let begin :: ByteString
+        begin = " data=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE data_ #-}
 
 -- | Combinator for the @datetime@ attribute.
 --
@@ -460,7 +585,12 @@ data_ = attribute "data"
 --
 datetime :: Text      -- ^ Attribute value.
          -> Attribute -- ^ Resulting attribute.
-datetime = attribute "datetime"
+datetime =
+    let begin :: ByteString
+        begin = " datetime=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE datetime #-}
 
 -- | Combinator for the @declare@ attribute.
 --
@@ -474,7 +604,12 @@ datetime = attribute "datetime"
 --
 declare :: Text      -- ^ Attribute value.
         -> Attribute -- ^ Resulting attribute.
-declare = attribute "declare"
+declare =
+    let begin :: ByteString
+        begin = " declare=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE declare #-}
 
 -- | Combinator for the @defer@ attribute.
 --
@@ -488,7 +623,12 @@ declare = attribute "declare"
 --
 defer :: Text      -- ^ Attribute value.
       -> Attribute -- ^ Resulting attribute.
-defer = attribute "defer"
+defer =
+    let begin :: ByteString
+        begin = " defer=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE defer #-}
 
 -- | Combinator for the @dir@ attribute.
 --
@@ -502,7 +642,12 @@ defer = attribute "defer"
 --
 dir :: Text      -- ^ Attribute value.
     -> Attribute -- ^ Resulting attribute.
-dir = attribute "dir"
+dir =
+    let begin :: ByteString
+        begin = " dir=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE dir #-}
 
 -- | Combinator for the @disabled@ attribute.
 --
@@ -516,7 +661,12 @@ dir = attribute "dir"
 --
 disabled :: Text      -- ^ Attribute value.
          -> Attribute -- ^ Resulting attribute.
-disabled = attribute "disabled"
+disabled =
+    let begin :: ByteString
+        begin = " disabled=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE disabled #-}
 
 -- | Combinator for the @for@ attribute.
 --
@@ -530,7 +680,12 @@ disabled = attribute "disabled"
 --
 for :: Text      -- ^ Attribute value.
     -> Attribute -- ^ Resulting attribute.
-for = attribute "for"
+for =
+    let begin :: ByteString
+        begin = " for=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE for #-}
 
 -- | Combinator for the @frame@ attribute.
 --
@@ -544,7 +699,12 @@ for = attribute "for"
 --
 frame :: Text      -- ^ Attribute value.
       -> Attribute -- ^ Resulting attribute.
-frame = attribute "frame"
+frame =
+    let begin :: ByteString
+        begin = " frame=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE frame #-}
 
 -- | Combinator for the @headers@ attribute.
 --
@@ -558,7 +718,12 @@ frame = attribute "frame"
 --
 headers :: Text      -- ^ Attribute value.
         -> Attribute -- ^ Resulting attribute.
-headers = attribute "headers"
+headers =
+    let begin :: ByteString
+        begin = " headers=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE headers #-}
 
 -- | Combinator for the @height@ attribute.
 --
@@ -572,7 +737,12 @@ headers = attribute "headers"
 --
 height :: Text      -- ^ Attribute value.
        -> Attribute -- ^ Resulting attribute.
-height = attribute "height"
+height =
+    let begin :: ByteString
+        begin = " height=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE height #-}
 
 -- | Combinator for the @href@ attribute.
 --
@@ -586,7 +756,12 @@ height = attribute "height"
 --
 href :: Text      -- ^ Attribute value.
      -> Attribute -- ^ Resulting attribute.
-href = attribute "href"
+href =
+    let begin :: ByteString
+        begin = " href=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE href #-}
 
 -- | Combinator for the @hreflang@ attribute.
 --
@@ -600,7 +775,12 @@ href = attribute "href"
 --
 hreflang :: Text      -- ^ Attribute value.
          -> Attribute -- ^ Resulting attribute.
-hreflang = attribute "hreflang"
+hreflang =
+    let begin :: ByteString
+        begin = " hreflang=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE hreflang #-}
 
 -- | Combinator for the @http-equiv@ attribute.
 --
@@ -614,7 +794,12 @@ hreflang = attribute "hreflang"
 --
 http_equiv :: Text      -- ^ Attribute value.
            -> Attribute -- ^ Resulting attribute.
-http_equiv = attribute "http-equiv"
+http_equiv =
+    let begin :: ByteString
+        begin = " http-equiv=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE http_equiv #-}
 
 -- | Combinator for the @id@ attribute.
 --
@@ -628,7 +813,12 @@ http_equiv = attribute "http-equiv"
 --
 id :: Text      -- ^ Attribute value.
    -> Attribute -- ^ Resulting attribute.
-id = attribute "id"
+id =
+    let begin :: ByteString
+        begin = " id=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE id #-}
 
 -- | Combinator for the @label@ attribute.
 --
@@ -642,7 +832,12 @@ id = attribute "id"
 --
 label :: Text      -- ^ Attribute value.
       -> Attribute -- ^ Resulting attribute.
-label = attribute "label"
+label =
+    let begin :: ByteString
+        begin = " label=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE label #-}
 
 -- | Combinator for the @lang@ attribute.
 --
@@ -656,7 +851,12 @@ label = attribute "label"
 --
 lang :: Text      -- ^ Attribute value.
      -> Attribute -- ^ Resulting attribute.
-lang = attribute "lang"
+lang =
+    let begin :: ByteString
+        begin = " lang=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE lang #-}
 
 -- | Combinator for the @maxlength@ attribute.
 --
@@ -670,7 +870,12 @@ lang = attribute "lang"
 --
 maxlength :: Text      -- ^ Attribute value.
           -> Attribute -- ^ Resulting attribute.
-maxlength = attribute "maxlength"
+maxlength =
+    let begin :: ByteString
+        begin = " maxlength=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE maxlength #-}
 
 -- | Combinator for the @media@ attribute.
 --
@@ -684,7 +889,12 @@ maxlength = attribute "maxlength"
 --
 media :: Text      -- ^ Attribute value.
       -> Attribute -- ^ Resulting attribute.
-media = attribute "media"
+media =
+    let begin :: ByteString
+        begin = " media=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE media #-}
 
 -- | Combinator for the @multiple@ attribute.
 --
@@ -698,7 +908,12 @@ media = attribute "media"
 --
 multiple :: Text      -- ^ Attribute value.
          -> Attribute -- ^ Resulting attribute.
-multiple = attribute "multiple"
+multiple =
+    let begin :: ByteString
+        begin = " multiple=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE multiple #-}
 
 -- | Combinator for the @name@ attribute.
 --
@@ -712,7 +927,12 @@ multiple = attribute "multiple"
 --
 name :: Text      -- ^ Attribute value.
      -> Attribute -- ^ Resulting attribute.
-name = attribute "name"
+name =
+    let begin :: ByteString
+        begin = " name=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE name #-}
 
 -- | Combinator for the @nohref@ attribute.
 --
@@ -726,7 +946,12 @@ name = attribute "name"
 --
 nohref :: Text      -- ^ Attribute value.
        -> Attribute -- ^ Resulting attribute.
-nohref = attribute "nohref"
+nohref =
+    let begin :: ByteString
+        begin = " nohref=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE nohref #-}
 
 -- | Combinator for the @onabort@ attribute.
 --
@@ -740,7 +965,12 @@ nohref = attribute "nohref"
 --
 onabort :: Text      -- ^ Attribute value.
         -> Attribute -- ^ Resulting attribute.
-onabort = attribute "onabort"
+onabort =
+    let begin :: ByteString
+        begin = " onabort=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE onabort #-}
 
 -- | Combinator for the @onblur@ attribute.
 --
@@ -754,7 +984,12 @@ onabort = attribute "onabort"
 --
 onblur :: Text      -- ^ Attribute value.
        -> Attribute -- ^ Resulting attribute.
-onblur = attribute "onblur"
+onblur =
+    let begin :: ByteString
+        begin = " onblur=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE onblur #-}
 
 -- | Combinator for the @onchange@ attribute.
 --
@@ -768,7 +1003,12 @@ onblur = attribute "onblur"
 --
 onchange :: Text      -- ^ Attribute value.
          -> Attribute -- ^ Resulting attribute.
-onchange = attribute "onchange"
+onchange =
+    let begin :: ByteString
+        begin = " onchange=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE onchange #-}
 
 -- | Combinator for the @onclick@ attribute.
 --
@@ -782,7 +1022,12 @@ onchange = attribute "onchange"
 --
 onclick :: Text      -- ^ Attribute value.
         -> Attribute -- ^ Resulting attribute.
-onclick = attribute "onclick"
+onclick =
+    let begin :: ByteString
+        begin = " onclick=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE onclick #-}
 
 -- | Combinator for the @ondblclick@ attribute.
 --
@@ -796,7 +1041,12 @@ onclick = attribute "onclick"
 --
 ondblclick :: Text      -- ^ Attribute value.
            -> Attribute -- ^ Resulting attribute.
-ondblclick = attribute "ondblclick"
+ondblclick =
+    let begin :: ByteString
+        begin = " ondblclick=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE ondblclick #-}
 
 -- | Combinator for the @onfocus@ attribute.
 --
@@ -810,7 +1060,12 @@ ondblclick = attribute "ondblclick"
 --
 onfocus :: Text      -- ^ Attribute value.
         -> Attribute -- ^ Resulting attribute.
-onfocus = attribute "onfocus"
+onfocus =
+    let begin :: ByteString
+        begin = " onfocus=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE onfocus #-}
 
 -- | Combinator for the @onkeydown@ attribute.
 --
@@ -824,7 +1079,12 @@ onfocus = attribute "onfocus"
 --
 onkeydown :: Text      -- ^ Attribute value.
           -> Attribute -- ^ Resulting attribute.
-onkeydown = attribute "onkeydown"
+onkeydown =
+    let begin :: ByteString
+        begin = " onkeydown=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE onkeydown #-}
 
 -- | Combinator for the @onkeypress@ attribute.
 --
@@ -838,7 +1098,12 @@ onkeydown = attribute "onkeydown"
 --
 onkeypress :: Text      -- ^ Attribute value.
            -> Attribute -- ^ Resulting attribute.
-onkeypress = attribute "onkeypress"
+onkeypress =
+    let begin :: ByteString
+        begin = " onkeypress=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE onkeypress #-}
 
 -- | Combinator for the @onkeyup@ attribute.
 --
@@ -852,7 +1117,12 @@ onkeypress = attribute "onkeypress"
 --
 onkeyup :: Text      -- ^ Attribute value.
         -> Attribute -- ^ Resulting attribute.
-onkeyup = attribute "onkeyup"
+onkeyup =
+    let begin :: ByteString
+        begin = " onkeyup=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE onkeyup #-}
 
 -- | Combinator for the @onload@ attribute.
 --
@@ -866,7 +1136,12 @@ onkeyup = attribute "onkeyup"
 --
 onload :: Text      -- ^ Attribute value.
        -> Attribute -- ^ Resulting attribute.
-onload = attribute "onload"
+onload =
+    let begin :: ByteString
+        begin = " onload=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE onload #-}
 
 -- | Combinator for the @onmousedown@ attribute.
 --
@@ -880,7 +1155,12 @@ onload = attribute "onload"
 --
 onmousedown :: Text      -- ^ Attribute value.
             -> Attribute -- ^ Resulting attribute.
-onmousedown = attribute "onmousedown"
+onmousedown =
+    let begin :: ByteString
+        begin = " onmousedown=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE onmousedown #-}
 
 -- | Combinator for the @onmousemove@ attribute.
 --
@@ -894,7 +1174,12 @@ onmousedown = attribute "onmousedown"
 --
 onmousemove :: Text      -- ^ Attribute value.
             -> Attribute -- ^ Resulting attribute.
-onmousemove = attribute "onmousemove"
+onmousemove =
+    let begin :: ByteString
+        begin = " onmousemove=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE onmousemove #-}
 
 -- | Combinator for the @onmouseout@ attribute.
 --
@@ -908,7 +1193,12 @@ onmousemove = attribute "onmousemove"
 --
 onmouseout :: Text      -- ^ Attribute value.
            -> Attribute -- ^ Resulting attribute.
-onmouseout = attribute "onmouseout"
+onmouseout =
+    let begin :: ByteString
+        begin = " onmouseout=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE onmouseout #-}
 
 -- | Combinator for the @onmouseover@ attribute.
 --
@@ -922,7 +1212,12 @@ onmouseout = attribute "onmouseout"
 --
 onmouseover :: Text      -- ^ Attribute value.
             -> Attribute -- ^ Resulting attribute.
-onmouseover = attribute "onmouseover"
+onmouseover =
+    let begin :: ByteString
+        begin = " onmouseover=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE onmouseover #-}
 
 -- | Combinator for the @onmouseup@ attribute.
 --
@@ -936,7 +1231,12 @@ onmouseover = attribute "onmouseover"
 --
 onmouseup :: Text      -- ^ Attribute value.
           -> Attribute -- ^ Resulting attribute.
-onmouseup = attribute "onmouseup"
+onmouseup =
+    let begin :: ByteString
+        begin = " onmouseup=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE onmouseup #-}
 
 -- | Combinator for the @onreset@ attribute.
 --
@@ -950,7 +1250,12 @@ onmouseup = attribute "onmouseup"
 --
 onreset :: Text      -- ^ Attribute value.
         -> Attribute -- ^ Resulting attribute.
-onreset = attribute "onreset"
+onreset =
+    let begin :: ByteString
+        begin = " onreset=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE onreset #-}
 
 -- | Combinator for the @onselect@ attribute.
 --
@@ -964,7 +1269,12 @@ onreset = attribute "onreset"
 --
 onselect :: Text      -- ^ Attribute value.
          -> Attribute -- ^ Resulting attribute.
-onselect = attribute "onselect"
+onselect =
+    let begin :: ByteString
+        begin = " onselect=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE onselect #-}
 
 -- | Combinator for the @onsubmit@ attribute.
 --
@@ -978,7 +1288,12 @@ onselect = attribute "onselect"
 --
 onsubmit :: Text      -- ^ Attribute value.
          -> Attribute -- ^ Resulting attribute.
-onsubmit = attribute "onsubmit"
+onsubmit =
+    let begin :: ByteString
+        begin = " onsubmit=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE onsubmit #-}
 
 -- | Combinator for the @onunload@ attribute.
 --
@@ -992,7 +1307,12 @@ onsubmit = attribute "onsubmit"
 --
 onunload :: Text      -- ^ Attribute value.
          -> Attribute -- ^ Resulting attribute.
-onunload = attribute "onunload"
+onunload =
+    let begin :: ByteString
+        begin = " onunload=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE onunload #-}
 
 -- | Combinator for the @profile@ attribute.
 --
@@ -1006,7 +1326,12 @@ onunload = attribute "onunload"
 --
 profile :: Text      -- ^ Attribute value.
         -> Attribute -- ^ Resulting attribute.
-profile = attribute "profile"
+profile =
+    let begin :: ByteString
+        begin = " profile=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE profile #-}
 
 -- | Combinator for the @readonly@ attribute.
 --
@@ -1020,7 +1345,12 @@ profile = attribute "profile"
 --
 readonly :: Text      -- ^ Attribute value.
          -> Attribute -- ^ Resulting attribute.
-readonly = attribute "readonly"
+readonly =
+    let begin :: ByteString
+        begin = " readonly=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE readonly #-}
 
 -- | Combinator for the @rel@ attribute.
 --
@@ -1034,7 +1364,12 @@ readonly = attribute "readonly"
 --
 rel :: Text      -- ^ Attribute value.
     -> Attribute -- ^ Resulting attribute.
-rel = attribute "rel"
+rel =
+    let begin :: ByteString
+        begin = " rel=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE rel #-}
 
 -- | Combinator for the @rev@ attribute.
 --
@@ -1048,7 +1383,12 @@ rel = attribute "rel"
 --
 rev :: Text      -- ^ Attribute value.
     -> Attribute -- ^ Resulting attribute.
-rev = attribute "rev"
+rev =
+    let begin :: ByteString
+        begin = " rev=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE rev #-}
 
 -- | Combinator for the @rows@ attribute.
 --
@@ -1062,7 +1402,12 @@ rev = attribute "rev"
 --
 rows :: Text      -- ^ Attribute value.
      -> Attribute -- ^ Resulting attribute.
-rows = attribute "rows"
+rows =
+    let begin :: ByteString
+        begin = " rows=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE rows #-}
 
 -- | Combinator for the @rowspan@ attribute.
 --
@@ -1076,7 +1421,12 @@ rows = attribute "rows"
 --
 rowspan :: Text      -- ^ Attribute value.
         -> Attribute -- ^ Resulting attribute.
-rowspan = attribute "rowspan"
+rowspan =
+    let begin :: ByteString
+        begin = " rowspan=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE rowspan #-}
 
 -- | Combinator for the @rules@ attribute.
 --
@@ -1090,7 +1440,12 @@ rowspan = attribute "rowspan"
 --
 rules :: Text      -- ^ Attribute value.
       -> Attribute -- ^ Resulting attribute.
-rules = attribute "rules"
+rules =
+    let begin :: ByteString
+        begin = " rules=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE rules #-}
 
 -- | Combinator for the @scheme@ attribute.
 --
@@ -1104,7 +1459,12 @@ rules = attribute "rules"
 --
 scheme :: Text      -- ^ Attribute value.
        -> Attribute -- ^ Resulting attribute.
-scheme = attribute "scheme"
+scheme =
+    let begin :: ByteString
+        begin = " scheme=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE scheme #-}
 
 -- | Combinator for the @scope@ attribute.
 --
@@ -1118,7 +1478,12 @@ scheme = attribute "scheme"
 --
 scope :: Text      -- ^ Attribute value.
       -> Attribute -- ^ Resulting attribute.
-scope = attribute "scope"
+scope =
+    let begin :: ByteString
+        begin = " scope=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE scope #-}
 
 -- | Combinator for the @selected@ attribute.
 --
@@ -1132,7 +1497,12 @@ scope = attribute "scope"
 --
 selected :: Text      -- ^ Attribute value.
          -> Attribute -- ^ Resulting attribute.
-selected = attribute "selected"
+selected =
+    let begin :: ByteString
+        begin = " selected=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE selected #-}
 
 -- | Combinator for the @shape@ attribute.
 --
@@ -1146,7 +1516,12 @@ selected = attribute "selected"
 --
 shape :: Text      -- ^ Attribute value.
       -> Attribute -- ^ Resulting attribute.
-shape = attribute "shape"
+shape =
+    let begin :: ByteString
+        begin = " shape=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE shape #-}
 
 -- | Combinator for the @size@ attribute.
 --
@@ -1160,7 +1535,12 @@ shape = attribute "shape"
 --
 size :: Text      -- ^ Attribute value.
      -> Attribute -- ^ Resulting attribute.
-size = attribute "size"
+size =
+    let begin :: ByteString
+        begin = " size=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE size #-}
 
 -- | Combinator for the @span@ attribute.
 --
@@ -1174,7 +1554,12 @@ size = attribute "size"
 --
 span :: Text      -- ^ Attribute value.
      -> Attribute -- ^ Resulting attribute.
-span = attribute "span"
+span =
+    let begin :: ByteString
+        begin = " span=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE span #-}
 
 -- | Combinator for the @src@ attribute.
 --
@@ -1188,7 +1573,12 @@ span = attribute "span"
 --
 src :: Text      -- ^ Attribute value.
     -> Attribute -- ^ Resulting attribute.
-src = attribute "src"
+src =
+    let begin :: ByteString
+        begin = " src=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE src #-}
 
 -- | Combinator for the @standby@ attribute.
 --
@@ -1202,7 +1592,12 @@ src = attribute "src"
 --
 standby :: Text      -- ^ Attribute value.
         -> Attribute -- ^ Resulting attribute.
-standby = attribute "standby"
+standby =
+    let begin :: ByteString
+        begin = " standby=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE standby #-}
 
 -- | Combinator for the @style@ attribute.
 --
@@ -1216,7 +1611,12 @@ standby = attribute "standby"
 --
 style :: Text      -- ^ Attribute value.
       -> Attribute -- ^ Resulting attribute.
-style = attribute "style"
+style =
+    let begin :: ByteString
+        begin = " style=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE style #-}
 
 -- | Combinator for the @summary@ attribute.
 --
@@ -1230,7 +1630,12 @@ style = attribute "style"
 --
 summary :: Text      -- ^ Attribute value.
         -> Attribute -- ^ Resulting attribute.
-summary = attribute "summary"
+summary =
+    let begin :: ByteString
+        begin = " summary=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE summary #-}
 
 -- | Combinator for the @tabindex@ attribute.
 --
@@ -1244,7 +1649,12 @@ summary = attribute "summary"
 --
 tabindex :: Text      -- ^ Attribute value.
          -> Attribute -- ^ Resulting attribute.
-tabindex = attribute "tabindex"
+tabindex =
+    let begin :: ByteString
+        begin = " tabindex=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE tabindex #-}
 
 -- | Combinator for the @title@ attribute.
 --
@@ -1258,7 +1668,12 @@ tabindex = attribute "tabindex"
 --
 title :: Text      -- ^ Attribute value.
       -> Attribute -- ^ Resulting attribute.
-title = attribute "title"
+title =
+    let begin :: ByteString
+        begin = " title=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE title #-}
 
 -- | Combinator for the @type@ attribute.
 --
@@ -1272,7 +1687,12 @@ title = attribute "title"
 --
 type_ :: Text      -- ^ Attribute value.
       -> Attribute -- ^ Resulting attribute.
-type_ = attribute "type"
+type_ =
+    let begin :: ByteString
+        begin = " type=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE type_ #-}
 
 -- | Combinator for the @usemap@ attribute.
 --
@@ -1286,7 +1706,12 @@ type_ = attribute "type"
 --
 usemap :: Text      -- ^ Attribute value.
        -> Attribute -- ^ Resulting attribute.
-usemap = attribute "usemap"
+usemap =
+    let begin :: ByteString
+        begin = " usemap=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE usemap #-}
 
 -- | Combinator for the @valign@ attribute.
 --
@@ -1300,7 +1725,12 @@ usemap = attribute "usemap"
 --
 valign :: Text      -- ^ Attribute value.
        -> Attribute -- ^ Resulting attribute.
-valign = attribute "valign"
+valign =
+    let begin :: ByteString
+        begin = " valign=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE valign #-}
 
 -- | Combinator for the @value@ attribute.
 --
@@ -1314,7 +1744,12 @@ valign = attribute "valign"
 --
 value :: Text      -- ^ Attribute value.
       -> Attribute -- ^ Resulting attribute.
-value = attribute "value"
+value =
+    let begin :: ByteString
+        begin = " value=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE value #-}
 
 -- | Combinator for the @valuetype@ attribute.
 --
@@ -1328,7 +1763,12 @@ value = attribute "value"
 --
 valuetype :: Text      -- ^ Attribute value.
           -> Attribute -- ^ Resulting attribute.
-valuetype = attribute "valuetype"
+valuetype =
+    let begin :: ByteString
+        begin = " valuetype=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE valuetype #-}
 
 -- | Combinator for the @width@ attribute.
 --
@@ -1342,4 +1782,9 @@ valuetype = attribute "valuetype"
 --
 width :: Text      -- ^ Attribute value.
       -> Attribute -- ^ Resulting attribute.
-width = attribute "width"
+width =
+    let begin :: ByteString
+        begin = " width=\""
+        {-# NOINLINE begin #-}
+    in attribute begin
+{-# INLINE width #-}

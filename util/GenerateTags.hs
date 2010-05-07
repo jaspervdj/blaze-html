@@ -180,14 +180,15 @@ html4Strict = HtmlVariant
         , "codetype", "cols", "colspan", "content", "coords", "data", "datetime"
         , "declare", "defer", "dir", "disabled", "for", "frame", "headers"
         , "height", "href", "hreflang", "http-equiv", "id", "label", "lang"
-        , "maxlength", "media", "multiple", "name", "nohref", "onabort"
-        , "onblur", "onchange", "onclick", "ondblclick", "onfocus", "onkeydown"
-        , "onkeypress", "onkeyup", "onload", "onmousedown", "onmousemove"
-        , "onmouseout", "onmouseover", "onmouseup", "onreset", "onselect"
-        , "onsubmit", "onunload", "profile", "readonly", "rel", "rev", "rows"
-        , "rowspan", "rules", "scheme", "scope", "selected", "shape", "size"
-        , "span", "src", "standby", "style", "summary", "tabindex", "title"
-        , "type", "usemap", "valign", "value", "valuetype", "width"
+        , "maxlength", "media", "method", "multiple", "name", "nohref"
+        , "onabort", "onblur", "onchange", "onclick", "ondblclick", "onfocus"
+        , "onkeydown", "onkeypress", "onkeyup", "onload", "onmousedown"
+        , "onmousemove", "onmouseout", "onmouseover", "onmouseup", "onreset"
+        , "onselect", "onsubmit", "onunload", "profile", "readonly", "rel"
+        , "rev", "rows", "rowspan", "rules", "scheme", "scope", "selected"
+        , "shape", "size", "span", "src", "standby", "style", "summary"
+        , "tabindex", "title", "type", "usemap", "valign", "value", "valuetype"
+        , "width"
         ]
     }
 

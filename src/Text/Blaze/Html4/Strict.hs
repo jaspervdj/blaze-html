@@ -80,8 +80,6 @@ module Text.Blaze.Html4.Strict
 
 import Prelude ()
 
-import Data.Text (Text)
-
 import Text.Blaze (Html, parent, leaf)
 
 -- | Combinator for the @\<a>@ element.

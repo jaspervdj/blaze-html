@@ -732,14 +732,14 @@ media = attribute "media"
 --
 -- Example:
 --
--- > form ! method "/foo"
+-- > img ! method "bar"
 --
 -- Result:
 --
--- > <form method="bar" />
+-- > <img method="bar" />
 --
 method :: Text      -- ^ Attribute value.
-      -> Attribute -- ^ Resulting attribute.
+       -> Attribute -- ^ Resulting attribute.
 method = attribute "method"
 {-# INLINE method #-}
 

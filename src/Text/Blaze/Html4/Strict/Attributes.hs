@@ -42,6 +42,7 @@ module Text.Blaze.Html4.Strict.Attributes
     , lang
     , maxlength
     , media
+    , method
     , multiple
     , name
     , nohref
@@ -727,6 +728,21 @@ media :: Text      -- ^ Attribute value.
       -> Attribute -- ^ Resulting attribute.
 media = attribute "media"
 {-# INLINE media #-}
+
+-- | Combinator for the @method@ attribute.
+--
+-- Example:
+--
+-- > form ! method "/foo"
+--
+-- Result:
+--
+-- > <form method="bar" />
+--
+method :: Text      -- ^ Attribute value.
+      -> Attribute -- ^ Resulting attribute.
+method = attribute "method"
+{-# INLINE method #-}
 
 -- | Combinator for the @multiple@ attribute.
 --

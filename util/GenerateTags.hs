@@ -36,9 +36,6 @@ writeHtmlVariant htmlVariant = do
         , exportList moduleName (map fst sortedTags)
         , "import Prelude ()"
         , ""
-        , "import Data.Text (Text)"
-        , "import Data.ByteString.Char8 (ByteString)"
-        , ""
         , "import Text.Blaze (Html, parent, leaf)"
         , ""
         , unlines appliedTags
@@ -53,7 +50,6 @@ writeHtmlVariant htmlVariant = do
         , "import Prelude ()"
         , ""
         , "import Data.Text (Text)"
-        , "import Data.ByteString.Char8 (ByteString)"
         , ""
         , "import Text.Blaze (Attribute, attribute)"
         , ""
@@ -195,5 +191,6 @@ html4Strict = HtmlVariant
         ]
     }
 
+main :: IO ()
 main = do
     writeHtmlVariant html4Strict

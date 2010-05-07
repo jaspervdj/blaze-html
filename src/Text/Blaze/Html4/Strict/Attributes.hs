@@ -95,7 +95,6 @@ module Text.Blaze.Html4.Strict.Attributes
 import Prelude ()
 
 import Data.Text (Text)
-import Data.ByteString.Char8 (ByteString)
 
 import Text.Blaze (Attribute, attribute)
 

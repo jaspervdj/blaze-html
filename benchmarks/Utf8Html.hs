@@ -13,7 +13,6 @@ import GHC.Exts (IsString, fromString)
 import qualified Data.ByteString.Lazy as BL
 import qualified Data.Text as T
 
-import Text.Blaze.Internal.Utf8Builder
 import Text.Blaze
 import Text.Blaze.Html4.Strict hiding (map)
 import Text.Blaze.Html4.Strict.Attributes hiding (title)
@@ -61,29 +60,18 @@ bigTable t = renderHtml $ table $ mconcat $ map row t
   where
     row r = tr $ mconcat $ map (td . string . show) r
 
-hello1, hello2, hello3, loop :: ByteString
-hello1 = "Hello, "
-hello2 = "Hello, me!"
-hello3 = "Hello, world!"
-loop   = "Loop"
-
-static = escapedByteString
-{-# INLINE static #-}
-
 basic :: (Text, Text, [Text]) -- ^ (Title, User, Items)
       -> BL.ByteString
-basic (title', user, items) = renderHtml $ html $ mconcat
-    [ head $ title $ text title'
-    , body $ mconcat
-        [ div ! id "header" $ (h1 $ text title')
-        , p $ static hello1 `mappend` text user `mappend` text "!"
-        , p $ static hello2
-        , p $ static hello3
-        , h2 $ static loop
-        , mconcat $ map (li . text) items
-        , div ! id "footer" $ mempty
-        ]
-    ]
+basic (title', user, items) = renderHtml $ html $ do
+    head $ title $ text title'
+    body $ do
+        div ! id "header" $ (h1 $ text title')
+        p $ "Hello, " `mappend` text user `mappend` text "!"
+        p $ "Hello, me!"
+        p $ "Hello, world!"
+        h2 $ "loop"
+        mconcat $ map (li . text) items
+        div ! id "footer" $ mempty
 
 -- | A benchmark producing a very wide but very shallow tree.
 wideTree :: [Text] -> BL.ByteString

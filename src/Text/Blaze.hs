@@ -33,8 +33,6 @@ import qualified Data.ByteString as S
 import qualified Data.ByteString.Lazy as L
 import Data.Text (Text)
 import GHC.Exts (IsString (..))
-import Debug.Trace (trace)
-import Data.Char (chr)
 
 import qualified Text.Blaze.Internal.Utf8Builder as B
 
@@ -63,7 +61,7 @@ instance Monoid (HtmlM a) where
     {-# INLINE mconcat #-}
 
 instance Monad HtmlM where
-    return a = mempty
+    return _ = mempty
     {-# INLINE return #-}
     (HtmlM h1) >> (HtmlM h2) = HtmlM $
         \attrs -> h1 attrs `mappend` h2 attrs

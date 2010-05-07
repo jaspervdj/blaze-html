@@ -81,7 +81,6 @@ module Text.Blaze.Html4.Strict
 import Prelude ()
 
 import Data.Text (Text)
-import Data.ByteString.Char8 (ByteString)
 
 import Text.Blaze (Html, parent, leaf)
 

@@ -31,10 +31,95 @@ Different versions of HTML are available. To sum up a few:
 My first question is: what versions and variants should the library *at least*
 support? Which HTML version would you preferably use?
 
+Encoding
+--------
+
 We will support input from both `String` and `Data.Text` datatypes. These two
 datatypes support all Unicode codepoints, so the output format should support
 all Unicode codepoints, too. If the output format does not support all Unicode
-codepoints, an extra escaping phase needs to happen. The second question is:
-is this needed? Do we need support for "lossy" encodings, e.g. Latin-1? All
+codepoints, an extra escaping phase needs to happen. And so the second question
+is: is this needed? Do we need support for "lossy" encodings, e.g. Latin-1? All
 desktop browsers, and most mobile browsers support superior encodings like
 UTF-8.
+
+Also, I would like to pose some questions about the output format. There seem
+to be two major options:
+
+- Output to an encoded lazy ByteString. The advantage of this scenario is that
+  the result can be sent over the network directly and efficiently.
+- Output to a Text value. The advantage here is that we have a nicer separation
+  of concerns (encoding would be separated from HTML generation).
+
+The first option is faster. Should I sacrifice some speed to have the second
+option as a possibility?
+
+Syntax
+------
+
+BlazeHtml is going to use do-notation syntax by declaring a monad instance. An
+example:
+
+    page = html $ do
+        head $ do
+            title "Introduction page."
+            link ! rel "stylesheet" ! type "text/css" ! href "screen.css"
+        body $ do
+            div ! id "header" $ "Syntax"
+            p "This is an example of BlazeHtml syntax."
+
+Because HTML is also a monoid, the above fragment would be equivalent to:
+
+    page = html $ mconcat
+        [ head $ mconcat
+            [ title "Introduction page."
+            , link ! rel "stylesheet" ! type "text/css" ! href "screen.css"
+            ]
+        , body $ mconcat
+            [ div ! id "header" $ "Syntax"
+            , p "This is an example of BlazeHtml syntax."
+            ]
+        ]
+
+The syntax choice is then up to the end user. However, again a few questions
+to the community:
+
+Do you think `!` is a good operator for setting attributes? I made an initial
+choice for `!` because the old HTML package uses this. However, this operator
+looks more like array indexing. It is not too late to change this, suggestions
+are very welcome.
+
+How should multiple attributes be handled? In the above example, we used the `!`
+again for the next attribute:
+
+    link ! rel "stylesheet" ! type "text/css" ! href "screen.css"
+
+Another option would be to define a variant that takes a list of attributes:
+
+    link !> [rel "stylesheet", type "text/css", href "screen.css"]
+
+Or, we could use a typeclass to give the `!` different uses, and thus have:
+
+    link ! [rel "stylesheet", type "text/css", href "screen.css"]
+
+The last option will, however, introduce a more complicated type for attributes,
+and a little more overhead.
+
+Modules
+-------
+
+How should modules be placed/named?
+
+Pretty output
+-------------
+
+Should we include a pretty printer?
+
+Naming conventions
+------------------
+
+Explain the naming conventions for the combinators and ask feedback.
+
+Packaging
+---------
+
+How should the package be called? What is a good license to release it under?

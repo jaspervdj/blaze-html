@@ -449,3 +449,12 @@ we probably want
 Because that allows a more elegant interface. By constructing a `ByteString` in
 the leaf function, I seemed to even get a slight speedup. This also got the
 attributes benchmark down to 9ms.
+
+Saturday, May 8th, evening
+==========================
+
+So, it's been a busy week because of a college project. I met (well, virtually
+met) with Simon and Johan wednesday and we discussed a more detailed planning.
+
+I started writing an RFC to send out to the haskell community, so I can get
+feedback before the library design is too fixed.

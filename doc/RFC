@@ -1,0 +1,40 @@
+BlazeHtml RFC
+=============
+
+Introduction
+------------
+
+I was accepted as a student to Google Summer of Code for haskell.org. My task
+is now to create a high-performance HTML generation library. We have chosen to
+create a combinator library with a light-weight syntax called BlazeHtml.
+
+In the past few weeks, I have been exploring the performance and design of
+different drafts of this library. Now, the time has come to ask some questions
+to the Haskell community -- and more specifically, the end users of the library,
+and current users of other HTML generation libraries.
+
+This document is mostly geared towards API design, and I would like to hear some
+feedback on it: how do you want the API to look like?
+
+HTML
+----
+
+Different versions of HTML are available. To sum up a few:
+
+- XHTML
+- HTML 4 Strict
+- HTML 4 Transitional
+- HTML 4 Frameset
+- HTML 5
+- ...
+
+My first question is: what versions and variants should the library *at least*
+support? Which HTML version would you preferably use?
+
+We will support input from both `String` and `Data.Text` datatypes. These two
+datatypes support all Unicode codepoints, so the output format should support
+all Unicode codepoints, too. If the output format does not support all Unicode
+codepoints, an extra escaping phase needs to happen. The second question is:
+is this needed? Do we need support for "lossy" encodings, e.g. Latin-1? All
+desktop browsers, and most mobile browsers support superior encodings like
+UTF-8.

@@ -128,7 +128,8 @@ instance Attributable (Html -> Html) where
     {-# INLINE (!) #-}
     {-# SPECIALIZE (!) :: (Html -> Html) -> Attribute -> (Html -> Html) #-}
 
--- | Render escaped text.
+-- | Render escaped text. This is the preferred way of converting string
+-- datatypes to HTML.
 --
 text :: Text -- ^ Text to render.
      -> Html -- ^ Resulting HTML fragment.

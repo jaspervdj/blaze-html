@@ -62,21 +62,27 @@ example:
     page = html $ do
         head $ do
             title "Introduction page."
-            link ! rel "stylesheet" ! type "text/css" ! href "screen.css"
+            link ! rel "stylesheet" ! type_ "text/css" ! href "screen.css"
         body $ do
             div ! id "header" $ "Syntax"
             p "This is an example of BlazeHtml syntax."
+            ul $ forM_ [1, 2, 3] (li . string . show)
+
+Take note: we use a monadic notation only for the do-syntax. The `>>=` operator
+is defined but has no practical use -- we can use convenient functions like
+`forM_`, though.
 
 Because HTML is also a monoid, the above fragment would be equivalent to:
 
     page = html $ mconcat
         [ head $ mconcat
             [ title "Introduction page."
-            , link ! rel "stylesheet" ! type "text/css" ! href "screen.css"
+            , link ! rel "stylesheet" ! type_ "text/css" ! href "screen.css"
             ]
         , body $ mconcat
             [ div ! id "header" $ "Syntax"
             , p "This is an example of BlazeHtml syntax."
+            , mconcat $ map (li . string . show) [1, 2, 3]
             ]
         ]
 

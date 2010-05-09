@@ -113,7 +113,20 @@ and a little more overhead.
 Modules
 -------
 
-How should modules be placed/named?
+Then, modules. How do you think modules should be called? We think that it
+would make sense to have a separate module for attributes, because of the name
+clashes (many elements names also appear as attributes). One option would be
+to put the modules under:
+
+    Text.Blaze.Html4.Strict
+    Text.Blaze.Html4.Strict.Attributes
+
+If we can drop "Blaze", we would get shorter names:
+
+    Text.Html4.Strict
+    Text.Html4.Strict.Attributes
+
+What do you think about this? Should project names be in module names?
 
 Pretty output
 -------------

@@ -8,13 +8,13 @@ I was accepted as a student to Google Summer of Code for haskell.org. My task
 is now to create a high-performance HTML generation library. We have chosen to
 create a combinator library with a light-weight syntax called BlazeHtml.
 
-In the past few weeks, I have been exploring the performance and design of
+In the past few weeks, we have been exploring the performance and design of
 different drafts of this library. Now, the time has come to ask some questions
 to the Haskell community -- and more specifically, the end users of the library,
 and current users of other HTML generation libraries.
 
-This document is mostly geared towards API design, and I would like to hear some
-feedback on it: how do you want the API to look like?
+This document is mostly geared towards API design, and we would like to hear
+some feedback on it: how do you want the API to look like?
 
 HTML
 ----
@@ -42,7 +42,7 @@ is: is this needed? Do we need support for "lossy" encodings, e.g. Latin-1? All
 desktop browsers, and most mobile browsers support superior encodings like
 UTF-8.
 
-Also, I would like to pose some questions about the output format. There seem
+Also, we would like to pose some questions about the output format. There seem
 to be two major options:
 
 - Output to an encoded lazy ByteString. The advantage of this scenario is that
@@ -50,7 +50,7 @@ to be two major options:
 - Output to a Text value. The advantage here is that we have a nicer separation
   of concerns (encoding would be separated from HTML generation).
 
-The first option is faster. Should I sacrifice some speed to have the second
+The first option is faster. Should we sacrifice some speed to have the second
 option as a possibility?
 
 Syntax
@@ -89,7 +89,7 @@ Because HTML is also a monoid, the above fragment would be equivalent to:
 The syntax choice is then up to the end user. However, again a few questions
 to the community:
 
-Do you think `!` is a good operator for setting attributes? I made an initial
+Do you think `!` is a good operator for setting attributes? We made an initial
 choice for `!` because the old HTML package uses this. However, this operator
 looks more like array indexing. It is not too late to change this, suggestions
 are very welcome.
@@ -131,7 +131,16 @@ What do you think about this? Should project names be in module names?
 Pretty output
 -------------
 
-Should we include a pretty printer?
+To inspect the output for debugging purposes, most templating systems offer
+some sort of "pretty printing". This here means producing properly indented
+HTML.
+
+However, we have some doubts about this.
+
+- Not indenting HTML will spare bytes.
+- There are better tools to inspect the produced HTML. For example, most
+  browsers offer some form of "DOM inspection", and code editors often have
+  a "reindent" feature.
 
 Naming conventions
 ------------------

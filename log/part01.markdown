@@ -458,3 +458,21 @@ met) with Simon and Johan wednesday and we discussed a more detailed planning.
 
 I started writing an RFC to send out to the haskell community, so I can get
 feedback before the library design is too fixed.
+
+Tuesday, May 11th, evening
+==========================
+
+Lately, I've been doing some more writing on the RFC. Also, I am playing around
+with a typeclass idea again. It seems that I can get an implementation as fast
+as the one we currently have using a typeclass like:
+
+    class Monoid h => Html h where
+        parent            :: S.ByteString -> h -> h
+        leaf              :: S.ByteString -> h
+        attribute         :: S.ByteString -> Text -> Attribute h
+        string            :: String -> h
+        text              :: Text -> h
+        escapedByteString :: S.ByteString -> h
+
+More methods need to be added though, but if this means we can be as fast using
+a typeclass, this seems more attractive since it offers a lot of flexibility.

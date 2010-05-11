@@ -113,9 +113,7 @@ and a little more overhead.
 Modules
 -------
 
-Then, modules. How do you think modules should be called? We think that it
-would make sense to have a separate module for attributes, because of the name
-clashes (many elements names also appear as attributes). One option would be
+Then, modules. How do you think modules should be called? One option would be
 to put the modules under:
 
     Text.Blaze.Html4.Strict
@@ -145,7 +143,32 @@ However, we have some doubts about this.
 Naming conventions
 ------------------
 
-Explain the naming conventions for the combinators and ask feedback.
+A bit on naming conventions. When we consider the set of HTML attributes and
+the set of HTML tag names, there is an intersection which includes, for example
+"style".
+
+This would require us to have two variations on the "style" combinator -- one
+producing an attribute, and one producing an element. What we could do here is,
+for example, append an apostroph to the attribute combinators.
+
+However, we propose a different solution. After some discussions, it seemed
+best to have two modules for a HTML set, for example
+
+    Text.Blaze.Html4.Strict
+    Text.Blaze.Html4.Strict.Attributes
+
+What do you think of this?
+
+Secondly, a number of elements/attributes cannot have a Haskell function with
+the same name. Two examples are "http-equiv" (Haskell doesn't like the '-'
+character) or "class" (which is a Haskell keyword). Therefore, we propose the
+following:
+
+1. Replace '-' with '_'.
+2. Append '_' to Haskell keywords.
+
+With these rules, we can make combinators for the HTML specification. Any
+feedback on these rules?
 
 Packaging
 ---------

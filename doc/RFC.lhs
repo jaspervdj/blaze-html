@@ -200,10 +200,12 @@ With these rules, we can make combinators for the complete HTML specification.
 Rendering & encoding
 --------------------
 
-As said before, We will support input from both `String` and `Data.Text`
+As said before, we will support input from both `String` and `Data.Text`
 datatypes. These two datatypes support all Unicode codepoints, so the output
 format should support all Unicode codepoints, too. If the output format does
-not support all Unicode codepoints, an extra escaping phase needs to happen.
+not support all Unicode codepoints, an extra escaping phase needs to happen. We
+think that more than 90% of the end users just need UTF-8 encoded HTML output,
+but we could, of course, be wrong.
 
 *QX*: Do we need support for "lossy" encodings, e.g. Latin-1? All desktop
 browsers, and most mobile browsers support superior encodings like UTF-8.
@@ -220,6 +222,27 @@ to be two major options:
 The first option is definitely faster.
 
 *QX*: Should we sacrifice some speed to have the second option as a possibility?
+
+Currently, the type for HTML snippets in Haskell is simple `Html`. If we would
+make `Html` a typeclass or use a tree fold, it would be possible to render the
+same `Html` value to different encodings.
+
+*QX*: Should we sacrifice some speed in order to be able to render a certain
+snippet in different encodings?
+
+The browser needs to know the encoding of the document it receives. There are
+two important options for a server to tell the encoding to the browser:
+
+- Use the `Content-Type` HTTP header.
+- Use a `<meta http-equiv="..." content="..." />` tag.
+
+Typically, the first option is preferred -- and this option would happen outside
+of BlazeHtml. If we want to support the second option in BlazeHtml, specifying a
+document in an encoding-independent method becomes harder (but not impossible,
+we wrote a prototype implementation that supports this as well).
+
+*QX*: Should we support the second option or should we trust the end user to be
+savvy enough to insert the correct encoding tag?
 
 > main = do
 >     putStrLn $ renderHtml page1

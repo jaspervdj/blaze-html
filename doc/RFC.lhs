@@ -13,8 +13,24 @@ different drafts of this library. Now, the time has come to ask some questions
 to the Haskell community -- and more specifically, the end users of the library,
 and current users of other HTML generation libraries.
 
+About this file
+---------------
+
 This document is a literate Haskell file in which we explain our current ideas
-and, if possible, request feedback.
+and, if possible, request feedback. If you want to run this file or experiment
+with the code, you need to check out the code from github:
+
+    git clone git://github.com/jaspervdj/BlazeHtml.git
+
+Enter the directory. You can then run the benchmarks like this:
+
+    cd BlazeHtml
+    make bench-html
+
+The folder also contains a `.ghci` file which will set the correct include
+directories for ghci. To load this document, use:
+
+    ghci doc/RFC.lhs
 
 Input strings
 -------------

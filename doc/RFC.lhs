@@ -40,7 +40,7 @@ BlazeHtml is mostly written to support `Data.Text` values as "input": it takes
 
 We also support `String` as input types, but we tend to this discourage this.
 
-*QX*: What do you think of these input types?
+*Q1*: What do you think of these input types?
 
 We would like to avoid using `pack` everywhere in our code, so we use the
 `OverloadedStrings` language extension:
@@ -59,7 +59,7 @@ The BlazeHtml main module would be `Text.Blaze`. In this module, we define
 general functions one needs when using BlazeHtml, for example, the operator to
 set attributes.
 
-*QX*: Do you think `Text.Blaze` is a proper name for the main module? Or should
+*Q2*: Do you think `Text.Blaze` is a proper name for the main module? Or should
 we drop `Blaze` and use `Text.Html` instead?
 
 > import Text.Blaze
@@ -73,7 +73,7 @@ Different versions of HTML are available. To sum up a few:
 - HTML 5
 - ...
 
-*QX*: My first question is: what versions and variants should the library *at
+*Q3*: My first question is: what versions and variants should the library *at
 least* support? Which HTML version would you preferably use?
 
 We decide on a standard to use -- let's take HTML 4 Strict, because it is the
@@ -84,12 +84,12 @@ is an intersection which includes, for example "style".
 
 This would require us to have two variations on the "style" combinator -- one
 producing an attribute, and one producing an element. What we could do here is,
-for example, append an apostroph to the attribute combinators.
+for example, append an apostrophe to the attribute combinators.
 
 However, we propose a different solution. After some discussions, it seemed
 best to have two modules for a HTML set.
 
-*QX*: What do you think of this approach?
+*Q4*: What do you think of this approach?
 
 > import Text.Blaze.Html4.Strict hiding (map)
 > import Text.Blaze.Html4.Strict.Attributes hiding (title)
@@ -157,14 +157,14 @@ The syntax choice is then up to the end user. We tend to prefer the first
 notation, we think it is easier to the eyes because there is almost no operator
 noise.
 
-*QX*: How do you think about this syntax, generally?
+*Q5*: How do you think about this syntax, generally?
 
-*QX*: Do you think `!` is a good operator for setting attributes? We made an
+*Q6*: Do you think `!` is a good operator for setting attributes? We made an
 initial choice for `!` because the old HTML package uses this. However, this 
 operator looks more like array indexing. It is not too late to change this, 
 suggestions are very welcome.
 
-*QX*: How should multiple attributes be handled? In the above example, we used 
+*Q7*: How should multiple attributes be handled? In the above example, we used 
 the `!` again for the next attribute:
 
     link ! rel "stylesheet" ! type "text/css" ! href "screen.css"
@@ -195,7 +195,7 @@ ruleset:
 
 With these rules, we can make combinators for the complete HTML specification.
 
-*QX*: Do you agree on these rules?
+*Q8*: Do you agree on these rules?
 
 Rendering & encoding
 --------------------
@@ -207,7 +207,7 @@ not support all Unicode codepoints, an extra escaping phase needs to happen. We
 think that more than 90% of the end users just need UTF-8 encoded HTML output,
 but we could, of course, be wrong.
 
-*QX*: Do we need support for "lossy" encodings, e.g. Latin-1? All desktop
+*Q9*: Do we need support for "lossy" encodings, e.g. Latin-1? All desktop
 browsers, and most mobile browsers support superior encodings like UTF-8.
 
 Also, we would like to pose some questions about the output format. There seem
@@ -221,13 +221,13 @@ to be two major options:
 
 The first option is definitely faster.
 
-*QX*: Should we sacrifice some speed to have the second option as a possibility?
+*Q10*: Should we sacrifice some speed to have the second option as a possibility?
 
 Currently, the type for HTML snippets in Haskell is simple `Html`. If we would
 make `Html` a typeclass or use a tree fold, it would be possible to render the
 same `Html` value to different encodings.
 
-*QX*: Should we sacrifice some speed in order to be able to render a certain
+*Q11*: Should we sacrifice some speed in order to be able to render a certain
 snippet in different encodings?
 
 The browser needs to know the encoding of the document it receives. There are
@@ -241,7 +241,7 @@ of BlazeHtml. If we want to support the second option in BlazeHtml, specifying a
 document in an encoding-independent method becomes harder (but not impossible,
 we wrote a prototype implementation that supports this as well).
 
-*QX*: Should we support the second option or should we trust the end user to be
+*Q12*: Should we support the second option or should we trust the end user to be
 savvy enough to insert the correct encoding tag?
 
 > main = do

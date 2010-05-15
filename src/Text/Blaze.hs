@@ -10,6 +10,7 @@ module Text.Blaze
     , parent
     , leaf
     , attribute
+    , open
 
       -- * Converting values to HTML.
     , text
@@ -100,6 +101,19 @@ leaf tag = HtmlM $ \attrs ->
     begin :: ByteString
     begin = "<" `mappend` tag
 {-# INLINE leaf #-}
+
+-- | Produce an open tag. This can be used for open tags in HTML 4.01, like
+-- for example @<br>@.
+--
+open :: S.ByteString -> Html
+open tag = HtmlM $ \attrs ->
+    B.fromEscapedByteString begin
+      `mappend` attrs
+      `mappend` B.fromEscapedByteString ">"
+  where
+    begin :: ByteString
+    begin = "<" `mappend` tag
+{-# INLINE open #-}
 
 -- | Add an attribute to the current element.
 --

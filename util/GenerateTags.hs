@@ -16,6 +16,7 @@ data HtmlVariant = HtmlVariant
     { version    :: [String]
     , parents    :: [String]
     , leafs      :: [String]
+    , opens      :: [String]
     , attributes :: [String]
     } deriving (Show)
 
@@ -26,7 +27,8 @@ writeHtmlVariant htmlVariant = do
     -- Make a directory.
     createDirectoryIfMissing True $ basePath
 
-    let tags = zip parents' (repeat parent) ++ zip leafs' (repeat leaf)
+    let tags = zip parents' (repeat parent) ++ zip leafs' (repeat leaf) ++
+               zip opens' (repeat open)
         sortedTags = sortBy (comparing fst) tags
         appliedTags = map (\(x, f) -> f x) sortedTags
 
@@ -36,7 +38,7 @@ writeHtmlVariant htmlVariant = do
         , exportList moduleName (map fst sortedTags)
         , "import Prelude ()"
         , ""
-        , "import Text.Blaze (Html, parent, leaf)"
+        , "import Text.Blaze (Html, parent, leaf, open)"
         , ""
         , unlines appliedTags
         ]
@@ -62,6 +64,7 @@ writeHtmlVariant htmlVariant = do
     attributes' = attributes htmlVariant
     parents'    = parents htmlVariant
     leafs'      = leafs htmlVariant
+    opens'      = opens htmlVariant
     version'    = version htmlVariant
     removeTrailingNewlines = reverse . drop 2 . reverse
 
@@ -111,7 +114,6 @@ parent tag = unlines
   where
     function = sanitize tag
 
-
 -- | Generate a function for an HTML tag that must be a leaf.
 --
 leaf :: String -> String
@@ -128,6 +130,27 @@ leaf tag = unlines
     , "--"
     , function        ++ " :: Html -- ^ Resulting HTML."
     , function ++ " = leaf \"" ++ tag ++ "\""
+    , "{-# INLINE " ++ function ++ " #-}"
+    ]
+  where
+    function = sanitize tag
+
+-- | Generate a function for an HTML tag that must be open.
+--
+open :: String -> String
+open tag = unlines
+    [ "-- | Combinator for the @\\<" ++ tag ++ ">@ element."
+    , "--"
+    , "-- Example:"
+    , "--"
+    , "-- > " ++ function
+    , "--"
+    , "-- Result:"
+    , "--"
+    , "-- > <" ++ tag ++ ">"
+    , "--"
+    , function        ++ " :: Html -- ^ Resulting HTML."
+    , function ++ " = open \"" ++ tag ++ "\""
     , "{-# INLINE " ++ function ++ " #-}"
     ]
   where
@@ -170,8 +193,9 @@ html4Strict = HtmlVariant
         , "span", "strong", "style", "sub", "sup", "table", "tbody", "td"
         , "textarea", "tfoot", "th", "thead", "title", "tr", "tt", "ul", "var"
         ]
-    , leafs = 
-        [ "img", "input", "area", "br", "col", "hr", "link", "meta", "param"
+    , leafs = []
+    , opens = 
+        [ "area", "br", "col", "hr", "link", "img", "input",  "meta", "param"
         ]
     , attributes = 
         [ "abbr", "accept", "accesskey", "action", "align", "alt", "archive"

@@ -476,3 +476,15 @@ as the one we currently have using a typeclass like:
 
 More methods need to be added though, but if this means we can be as fast using
 a typeclass, this seems more attractive since it offers a lot of flexibility.
+
+Saturday, May 15th, afternoon
+=============================
+
+After reading some more in the HTML 4.01 spec, I saw that it is recommended for
+HTML 4.01 "leaf" elements (such as `img` and `br`) **not** to have a closing
+tag. This means that for HTML 4.01, BlazeHtml should produce `<img>` instead of
+`<img />`.
+
+In order to realise this, I added another primitive. We now have `parent`,
+`leaf` and `open` as low-level combinators. HTML variants can specify "open"
+elements in addition to leafs and parents.

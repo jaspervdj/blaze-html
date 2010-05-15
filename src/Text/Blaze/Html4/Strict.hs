@@ -80,7 +80,7 @@ module Text.Blaze.Html4.Strict
 
 import Prelude ()
 
-import Text.Blaze (Html, parent, leaf)
+import Text.Blaze (Html, parent, leaf, open)
 
 -- | Combinator for the @\<a>@ element.
 --
@@ -142,7 +142,7 @@ address :: Html -- ^ Inner HTML.
 address = parent "address"
 {-# INLINE address #-}
 
--- | Combinator for the @\<area />@ element.
+-- | Combinator for the @\<area>@ element.
 --
 -- Example:
 --
@@ -150,10 +150,10 @@ address = parent "address"
 --
 -- Result:
 --
--- > <area />
+-- > <area>
 --
 area :: Html -- ^ Resulting HTML.
-area = leaf "area"
+area = open "area"
 {-# INLINE area #-}
 
 -- | Combinator for the @\<b>@ element.
@@ -231,7 +231,7 @@ body :: Html -- ^ Inner HTML.
 body = parent "body"
 {-# INLINE body #-}
 
--- | Combinator for the @\<br />@ element.
+-- | Combinator for the @\<br>@ element.
 --
 -- Example:
 --
@@ -239,10 +239,10 @@ body = parent "body"
 --
 -- Result:
 --
--- > <br />
+-- > <br>
 --
 br :: Html -- ^ Resulting HTML.
-br = leaf "br"
+br = open "br"
 {-# INLINE br #-}
 
 -- | Combinator for the @\<button>@ element.
@@ -305,7 +305,7 @@ code :: Html -- ^ Inner HTML.
 code = parent "code"
 {-# INLINE code #-}
 
--- | Combinator for the @\<col />@ element.
+-- | Combinator for the @\<col>@ element.
 --
 -- Example:
 --
@@ -313,10 +313,10 @@ code = parent "code"
 --
 -- Result:
 --
--- > <col />
+-- > <col>
 --
 col :: Html -- ^ Resulting HTML.
-col = leaf "col"
+col = open "col"
 {-# INLINE col #-}
 
 -- | Combinator for the @\<colgroup>@ element.
@@ -574,7 +574,7 @@ head :: Html -- ^ Inner HTML.
 head = parent "head"
 {-# INLINE head #-}
 
--- | Combinator for the @\<hr />@ element.
+-- | Combinator for the @\<hr>@ element.
 --
 -- Example:
 --
@@ -582,10 +582,10 @@ head = parent "head"
 --
 -- Result:
 --
--- > <hr />
+-- > <hr>
 --
 hr :: Html -- ^ Resulting HTML.
-hr = leaf "hr"
+hr = open "hr"
 {-# INLINE hr #-}
 
 -- | Combinator for the @\<html>@ element.
@@ -618,7 +618,7 @@ i :: Html -- ^ Inner HTML.
 i = parent "i"
 {-# INLINE i #-}
 
--- | Combinator for the @\<img />@ element.
+-- | Combinator for the @\<img>@ element.
 --
 -- Example:
 --
@@ -626,13 +626,13 @@ i = parent "i"
 --
 -- Result:
 --
--- > <img />
+-- > <img>
 --
 img :: Html -- ^ Resulting HTML.
-img = leaf "img"
+img = open "img"
 {-# INLINE img #-}
 
--- | Combinator for the @\<input />@ element.
+-- | Combinator for the @\<input>@ element.
 --
 -- Example:
 --
@@ -640,10 +640,10 @@ img = leaf "img"
 --
 -- Result:
 --
--- > <input />
+-- > <input>
 --
 input :: Html -- ^ Resulting HTML.
-input = leaf "input"
+input = open "input"
 {-# INLINE input #-}
 
 -- | Combinator for the @\<ins>@ element.
@@ -721,7 +721,7 @@ li :: Html -- ^ Inner HTML.
 li = parent "li"
 {-# INLINE li #-}
 
--- | Combinator for the @\<link />@ element.
+-- | Combinator for the @\<link>@ element.
 --
 -- Example:
 --
@@ -729,10 +729,10 @@ li = parent "li"
 --
 -- Result:
 --
--- > <link />
+-- > <link>
 --
 link :: Html -- ^ Resulting HTML.
-link = leaf "link"
+link = open "link"
 {-# INLINE link #-}
 
 -- | Combinator for the @\<map>@ element.
@@ -750,7 +750,7 @@ map :: Html -- ^ Inner HTML.
 map = parent "map"
 {-# INLINE map #-}
 
--- | Combinator for the @\<meta />@ element.
+-- | Combinator for the @\<meta>@ element.
 --
 -- Example:
 --
@@ -758,10 +758,10 @@ map = parent "map"
 --
 -- Result:
 --
--- > <meta />
+-- > <meta>
 --
 meta :: Html -- ^ Resulting HTML.
-meta = leaf "meta"
+meta = open "meta"
 {-# INLINE meta #-}
 
 -- | Combinator for the @\<noscript>@ element.
@@ -854,7 +854,7 @@ p :: Html -- ^ Inner HTML.
 p = parent "p"
 {-# INLINE p #-}
 
--- | Combinator for the @\<param />@ element.
+-- | Combinator for the @\<param>@ element.
 --
 -- Example:
 --
@@ -862,10 +862,10 @@ p = parent "p"
 --
 -- Result:
 --
--- > <param />
+-- > <param>
 --
 param :: Html -- ^ Resulting HTML.
-param = leaf "param"
+param = open "param"
 {-# INLINE param #-}
 
 -- | Combinator for the @\<pre>@ element.

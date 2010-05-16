@@ -107,6 +107,7 @@ makeDocType lines' = unlines
     , "-- > docType"
     , "--"
     , "-- Result:"
+    , "--"
     , unlines (map ("-- > " ++) lines') ++ "--"
     , "docType :: Html  -- ^ The document type HTML."
     , "docType = escapedText " ++ (show $ unlines lines')

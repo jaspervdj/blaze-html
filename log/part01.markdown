@@ -488,3 +488,16 @@ tag. This means that for HTML 4.01, BlazeHtml should produce `<img>` instead of
 In order to realise this, I added another primitive. We now have `parent`,
 `leaf` and `open` as low-level combinators. HTML variants can specify "open"
 elements in addition to leafs and parents.
+
+Sunday, May 16th, evening
+=========================
+
+This evening, I added document type definitions to BlazeHtml. The idea
+is pretty simple: in a Html4.Strict document, you would just write:
+
+    docType
+
+Which would be rendered as:
+
+    <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+            "http://www.w3.org/TR/html4/strict.dtd">

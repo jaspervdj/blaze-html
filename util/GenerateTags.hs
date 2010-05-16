@@ -14,6 +14,7 @@ import System.FilePath ((</>), (<.>))
 --
 data HtmlVariant = HtmlVariant
     { version    :: [String]
+    , docType    :: [String]
     , parents    :: [String]
     , leafs      :: [String]
     , opens      :: [String]
@@ -27,19 +28,21 @@ writeHtmlVariant htmlVariant = do
     -- Make a directory.
     createDirectoryIfMissing True $ basePath
 
-    let tags = zip parents' (repeat parent) ++ zip leafs' (repeat leaf) ++
-               zip opens' (repeat open)
+    let tags =  zip parents' (repeat makeParent)
+             ++ zip leafs' (repeat makeLeaf)
+             ++ zip opens' (repeat makeOpen)
         sortedTags = sortBy (comparing fst) tags
         appliedTags = map (\(x, f) -> f x) sortedTags
 
     -- Write the main module.
     writeFile (basePath <.> "hs") $ removeTrailingNewlines $ unlines
         [ "{-# LANGUAGE OverloadedStrings #-}"
-        , exportList moduleName (map fst sortedTags)
+        , exportList moduleName $ "docType" : (map fst sortedTags)
         , "import Prelude ()"
         , ""
-        , "import Text.Blaze (Html, parent, leaf, open)"
+        , "import Text.Blaze (Html, parent, leaf, open, escapedText)"
         , ""
+        , makeDocType $ docType htmlVariant
         , unlines appliedTags
         ]
 
@@ -92,10 +95,28 @@ exportList name (f:functions) = unlines $
     map (("    , " ++) . sanitize) functions ++
     [ "    ) where"]
 
+-- | Generate a function for a doctype.
+--
+makeDocType :: [String] -> String
+makeDocType lines' = unlines
+    [ "-- | Combinator for the document type. This should be placed at the top"
+    , "-- of every HTML page."
+    , "--"
+    , "-- Example:"
+    , "--"
+    , "-- > docType"
+    , "--"
+    , "-- Result:"
+    , unlines (map ("-- > " ++) lines') ++ "--"
+    , "docType :: Html  -- ^ The document type HTML."
+    , "docType = escapedText " ++ (show $ unlines lines')
+    , "{-# INLINE docType #-}"
+    ]
+
 -- | Generate a function for an HTML tag that can be a parent.
 --
-parent :: String -> String
-parent tag = unlines
+makeParent :: String -> String
+makeParent tag = unlines
     [ "-- | Combinator for the @\\<" ++ tag ++ ">@ element."
     , "--"
     , "-- Example:"
@@ -106,8 +127,8 @@ parent tag = unlines
     , "--"
     , "-- > <" ++ tag ++ "><span>foo</span></" ++ tag ++ ">"
     , "--"
-    , function        ++ " :: Html -- ^ Inner HTML."
-    , spaces function ++ " -> Html -- ^ Resulting HTML."
+    , function        ++ " :: Html  -- ^ Inner HTML."
+    , spaces function ++ " -> Html  -- ^ Resulting HTML."
     , function ++ " = parent \"" ++ tag ++ "\""
     , "{-# INLINE " ++ function ++ " #-}"
     ]
@@ -116,8 +137,8 @@ parent tag = unlines
 
 -- | Generate a function for an HTML tag that must be a leaf.
 --
-leaf :: String -> String
-leaf tag = unlines
+makeLeaf :: String -> String
+makeLeaf tag = unlines
     [ "-- | Combinator for the @\\<" ++ tag ++ " />@ element."
     , "--"
     , "-- Example:"
@@ -128,7 +149,7 @@ leaf tag = unlines
     , "--"
     , "-- > <" ++ tag ++ " />"
     , "--"
-    , function        ++ " :: Html -- ^ Resulting HTML."
+    , function        ++ " :: Html  -- ^ Resulting HTML."
     , function ++ " = leaf \"" ++ tag ++ "\""
     , "{-# INLINE " ++ function ++ " #-}"
     ]
@@ -137,8 +158,8 @@ leaf tag = unlines
 
 -- | Generate a function for an HTML tag that must be open.
 --
-open :: String -> String
-open tag = unlines
+makeOpen :: String -> String
+makeOpen tag = unlines
     [ "-- | Combinator for the @\\<" ++ tag ++ ">@ element."
     , "--"
     , "-- Example:"
@@ -149,7 +170,7 @@ open tag = unlines
     , "--"
     , "-- > <" ++ tag ++ ">"
     , "--"
-    , function        ++ " :: Html -- ^ Resulting HTML."
+    , function        ++ " :: Html  -- ^ Resulting HTML."
     , function ++ " = open \"" ++ tag ++ "\""
     , "{-# INLINE " ++ function ++ " #-}"
     ]
@@ -170,8 +191,8 @@ attribute name = unlines
     , "--"
     , "-- > <img " ++ name ++ "=\"bar\" />"
     , "--"
-    , function        ++ " :: Text      -- ^ Attribute value."
-    , spaces function ++ " -> Attribute -- ^ Resulting attribute."
+    , function        ++ " :: Text       -- ^ Attribute value."
+    , spaces function ++ " -> Attribute  -- ^ Resulting attribute."
     , function ++ " = attribute \"" ++ name ++ "\""
     , "{-# INLINE " ++ function ++ " #-}"
     ]
@@ -183,6 +204,10 @@ attribute name = unlines
 html4Strict :: HtmlVariant
 html4Strict = HtmlVariant
     { version = ["Html4", "Strict"]
+    , docType =
+        [ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\""
+        , "    \"http://www.w3.org/TR/html4/strict.dtd\">"
+        ]
     , parents = 
         [ "a", "abbr", "acronym", "address", "b", "bdo", "big", "blockquote"
         , "body" , "button", "caption", "cite", "code", "colgroup", "dd", "del"

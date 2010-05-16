@@ -14,10 +14,9 @@ module Text.Blaze
 
       -- * Converting values to HTML.
     , text
+    , escapedText
     , string
-
-      -- * Inserting pre-rendered pieces of HTML.
-    , escapedByteString
+    , escapedString
 
       -- * Setting attributes
     , (!)
@@ -145,10 +144,17 @@ instance Attributable (Html -> Html) where
 -- | Render escaped text. This is the preferred way of converting string
 -- datatypes to HTML.
 --
-text :: Text -- ^ Text to render.
-     -> Html -- ^ Resulting HTML fragment.
+text :: Text  -- ^ Text to render.
+     -> Html  -- ^ Resulting HTML fragment.
 text = HtmlM . const . B.fromText
 {-# INLINE text #-}
+
+-- | Render text without escaping.
+--
+escapedText :: Text  -- ^ Text to insert.
+            -> Html  -- Resulting HTML fragment.
+escapedText = HtmlM . const . B.fromEscapedText
+{-# INLINE escapedText #-}
 
 -- | Create a HTML snippet from a 'String'.
 --
@@ -156,13 +162,11 @@ string :: String -> Html
 string = HtmlM . const . B.fromString
 {-# INLINE string #-}
 
--- | Render a raw 'S.ByteString'. This function will not do any HTML escaping,
--- so be careful with it.
+-- | Create a HTML snippet from a 'String' without escaping
 --
-escapedByteString :: S.ByteString -- ^ Raw 'S.ByteString' to render.
-                  -> Html         -- ^ Resulting HTML fragment.
-escapedByteString = HtmlM . const . B.fromEscapedByteString
-{-# INLINE escapedByteString #-}
+escapedString :: String -> Html
+escapedString = HtmlM . const . B.fromEscapedString
+{-# INLINE escapedString #-}
 
 -- | /O(n)./ Render the HTML fragment to lazy 'L.ByteString'.
 --

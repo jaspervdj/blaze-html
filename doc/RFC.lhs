@@ -248,4 +248,14 @@ savvy enough to insert the correct encoding tag?
 >     putStrLn $ renderHtml page1
 >     putStrLn $ renderHtml page2
 
+Epilogue
+--------
+
+Most modern web applications embrace the MVC design pattern. In this pattern,
+BlazeHtml could be considered the "View". Two other components are needed --
+the "Model" (data retrieval & persistence) and the "Controller" (the server).
+
+*Q13*: What other libraries would you use BlazeHtml with? We could provide
+integration where needed.
+
 [1]: http://hackage.haskell.org/package/network-bytestring

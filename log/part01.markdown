@@ -501,3 +501,34 @@ Which would be rendered as:
 
     <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
             "http://www.w3.org/TR/html4/strict.dtd">
+
+Wednesday, May 19th, afternoon
+==============================
+
+I made what is an important commit today (or at least, I think it's an
+important commit). Remember the "big ugly but fast" function I used to get the
+speed? I was able to split this function into two parts -- one doing UTF-8
+logic, the other doing Builder logic. I think this is very good, because several
+people were afraid that we would duplicate too much code that was already in the
+Haskell libraries somewhere.
+
+The key (to not getting any slowdown) is the type of the `encodeCharUtf8`
+function. The function(s) already in the Haskell libraries usually have a type
+signature like:
+
+    encodeCharUtf8 :: Char -> [Word8]
+
+This is no good for us, since the intermediate lists are too much of a
+bottleneck. Therefore, we use a more abstract function:
+
+    encodeCharUtf8 :: (Word8 -> a)
+                   -> (Word8 -> Word8 -> a)
+                   -> (Word8 -> Word8 -> Word8 -> a)
+                   -> (Word8 -> Word8 -> Word8 -> Word8 -> a)
+                   -> Char
+                   -> a
+
+You explicitly specify to this function what needs to happen for the different
+lengths of an encoded Unicode character (1, 2, 3 or 4 bytes). Because we can
+do some inlining, this approach is equally efficient (the benchmarks didn't
+change).

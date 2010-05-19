@@ -121,37 +121,55 @@ writeUnicodeChar (l, f) c = writeEscapedUnicodeChar (l, f) c
 
 -- | Write a Unicode character, encoding it as UTF-8.
 --
-writeEscapedUnicodeChar :: (Int, Ptr Word8 -> IO ()) -- ^ Current state.
-                        -> Char                      -- ^ Character to write.
-                        -> (Int, Ptr Word8 -> IO ()) -- ^ Resulting state.
-writeEscapedUnicodeChar (l, f) c = l `seq` case ord c of
-    x | x <= 0xFF -> (l + 1, \ptr -> f ptr >> poke (ptr `plusPtr` l)
-                                                   (fromIntegral x :: Word8))
+writeEscapedUnicodeChar :: (Int, Ptr Word8 -> IO ())  -- ^ Current state.
+                        -> Char                       -- ^ Character to write.
+                        -> (Int, Ptr Word8 -> IO ())  -- ^ Resulting state.
+writeEscapedUnicodeChar (l, f) c = l `seq` encodeCharUtf8 f1 f2 f3 f4 c
+  where
+    f1 x = (l + 1, \ptr -> f ptr >> poke (ptr `plusPtr` l) x)
+
+    f2 x1 x2 = (l + 2, \ptr -> let pos = ptr `plusPtr` l
+                               in f ptr >> poke pos x1
+                                        >> poke (pos `plusPtr` 1) x2)
+
+    f3 x1 x2 x3 = (l + 3, \ptr -> let pos = ptr `plusPtr` l
+                                  in f ptr >> poke pos x1
+                                           >> poke (pos `plusPtr` 1) x2
+                                           >> poke (pos `plusPtr` 2) x3)
+
+    f4 x1 x2 x3 x4 = (l + 4, \ptr -> let pos = ptr `plusPtr` l
+                                     in f ptr >> poke pos x1
+                                              >> poke (pos `plusPtr` 1) x2
+                                              >> poke (pos `plusPtr` 2) x3
+                                              >> poke (pos `plusPtr` 3) x4)
+{-# INLINE writeEscapedUnicodeChar #-}
+
+-- | Encode a Unicode character to another datatype, using UTF-8. This function
+-- acts as an abstract way of encoding characters, as it is unaware of what
+-- needs to happen with the resulting bytes: you have to specify functions to
+-- deal with those.
+--
+encodeCharUtf8 :: (Word8 -> a)                             -- ^ 1-byte UTF-8.
+               -> (Word8 -> Word8 -> a)                    -- ^ 2-byte UTF-8.
+               -> (Word8 -> Word8 -> Word8 -> a)           -- ^ 3-byte UTF-8.
+               -> (Word8 -> Word8 -> Word8 -> Word8 -> a)  -- ^ 4-byte UTF-8.
+               -> Char                                     -- ^ Input 'Char'.
+               -> a                                        -- ^ Result.
+encodeCharUtf8 f1 f2 f3 f4 c = case ord c of
+    x | x <= 0xFF -> f1 $ fromIntegral x
       | x <= 0x07FF ->
            let x1 = fromIntegral $ (x `shiftR` 6) + 0xC0
                x2 = fromIntegral $ (x .&. 0x3F)   + 0x80
-           in (l + 2, \ptr ->
-               let pos = ptr `plusPtr` l
-               in f ptr >> poke pos (x1 :: Word8)
-                        >> poke (pos `plusPtr` 1) (x2 :: Word8))
+           in f2 x1 x2
       | x <= 0xFFFF ->
            let x1 = fromIntegral $ (x `shiftR` 12) + 0xE0
                x2 = fromIntegral $ ((x `shiftR` 6) .&. 0x3F) + 0x80
                x3 = fromIntegral $ (x .&. 0x3F) + 0x80
-           in (l + 3, \ptr ->
-               let pos = ptr `plusPtr` l
-               in f ptr >> poke pos (x1 :: Word8)
-                        >> poke (pos `plusPtr` 1) (x2 :: Word8)
-                        >> poke (pos `plusPtr` 2) (x3 :: Word8))
+           in f3 x1 x2 x3
       | otherwise ->
            let x1 = fromIntegral $ (x `shiftR` 18) + 0xF0
                x2 = fromIntegral $ ((x `shiftR` 12) .&. 0x3F) + 0x80
                x3 = fromIntegral $ ((x `shiftR` 6) .&. 0x3F) + 0x80
                x4 = fromIntegral $ (x .&. 0x3F) + 0x80
-           in (l + 4, \ptr ->
-               let pos = ptr `plusPtr` l
-               in f ptr >> poke pos (x1 :: Word8)
-                        >> poke (pos `plusPtr` 1) (x2 :: Word8)
-                        >> poke (pos `plusPtr` 2) (x3 :: Word8)
-                        >> poke (pos `plusPtr` 3) (x4 :: Word8))
-{-# INLINE writeEscapedUnicodeChar #-}
+           in f4 x1 x2 x3 x4
+{-# INLINE encodeCharUtf8 #-}

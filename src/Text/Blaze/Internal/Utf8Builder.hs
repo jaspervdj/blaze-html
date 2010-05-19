@@ -1,21 +1,47 @@
 -- | A module for efficiently constructing a 'Builder'. This module offers more
 -- functions than the standard ones, and more HTML-specific functions.
 --
+--
+--  SM: General remark: Try to split it into Utf8 specific parts and a
+--  HtmlBuilder using it. Essentially, a UTF-8 builder is a Text builder that
+--  uses UTF-8 for its internal representation. The Text builder from Tom
+--  Harper would then be called Utf16Builder. They should offer exactly the
+--  same interface (except perhaps for the extraction functions.)
+--
 module Text.Blaze.Internal.Utf8Builder 
     ( 
       -- * Creating Builders from Text.
       fromText
     , fromEscapedText
+--SM: It seems strange to me that a Utf8 builder cares about escaping. This
+--should be part of a HtmlBuilder if at all.
+--
+--The invariant added by a Utf8Builder is that it is a UTF-8 encoded sequence
+--of Unicode characters.
 
       -- * Creating Builders from ByteStrings.
     , fromEscapedByteString
+--SM: same comment as above
 
       -- * Creating Builders from characters.
     , fromEscapedAscii7Char
+--SM: I'm not sure if this is needed. There are few places where the caller can
+--    guarantee that his char is really Ascii7. I would incorporate these places
+--    like showing ints or the like into the API of an Utf8Builder if it is really
+--    needed for speed.
+--
+--    Or otherwise I would offer the interface of fromUnsafeBytestring and
+--    fromUnsafeByte.
 
       -- * Creating Builders from Strings.
     , fromString
     , fromEscapedString
+
+--SM: Here, I would expect that I get two functions
+--
+-- toText           :: Utf8Builder -> Text
+-- toLazyByteString :: Utf8Builder -> LB.ByteString
+
     ) where
 
 import Foreign
@@ -35,6 +61,13 @@ fromText :: Text -> Builder
 fromText text =
     let (l, f) = T.foldl writeUnicodeChar writeNothing text
     in fromUnsafeWrite l f
+--
+--SM: The above construction is going to kill you (in terms of memory and
+--latency) if the text is too long.  Could you ensure that the text is written
+--chunkwise? Perhaps, by first breaking the Builder abstraction again and
+--inlining the check for enough free memory into the loop. The basic check
+--should be equally expensive as summing up the length.
+--
 
 -- | /O(n)./ Convert a 'Text' value to a 'Builder'. This function will not do
 -- any HTML escaping.
@@ -44,11 +77,16 @@ fromEscapedText text =
     let (l, f) = T.foldl writeEscapedUnicodeChar writeNothing text
     in fromUnsafeWrite l f
 
+
+
 -- | /O(n)./ A Builder taking a 'S.ByteString`, copying it. This is a well
 -- suited function for strings consisting only of Ascii7 characters. This
 -- function should perform better when dealing with small strings than the
 -- fromByteString function from Builder.
 --
+--
+--SM: This function should rather be called 'unsafeFromByteString' mentioning
+--that the bytestring must be a valid UTF-8 encoding of a Unicode sequence.
 fromEscapedByteString :: S.ByteString -> Builder
 fromEscapedByteString byteString = fromUnsafeWrite l f
   where
@@ -87,6 +125,9 @@ writeNothing = (0, const $ return ())
 {-# INLINE writeNothing #-}
 
 -- | Write an unicode character to a 'Builder', doing HTML escaping.
+--
+-- SM: I guess the escaping could be almost as efficient when using a copying
+-- fromByteString that is inlined appropriately.
 --
 writeUnicodeChar :: (Int, Ptr Word8 -> IO ()) -- ^ Current write state.
                  -> Char                      -- ^ Character to write.

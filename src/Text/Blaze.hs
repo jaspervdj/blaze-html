@@ -35,6 +35,10 @@ import Data.Text (Text)
 import GHC.Exts (IsString (..))
 
 import qualified Text.Blaze.Internal.Utf8Builder as B
+--SM: I didn't notice in the Utf8Builder file, but I do know here. I would
+--strongly suggest to use a newtype to differentiate between Utf8Builder and a
+--standard Builder. A Utf8 builder has different invarians and supports
+--operations not supportable by a builder (e.g. toText).
 
 -- | The core HTML datatype.
 --
@@ -163,6 +167,11 @@ string = HtmlM . const . B.fromString
 {-# INLINE string #-}
 
 -- | Create a HTML snippet from a 'String' without escaping
+--
+-- SM: Somehow I'm not sure if 'escaped' is the right word here. I read it now
+-- quite a few times in the source files. From the word itself I cannot tell,
+-- if it means that escaping is being done or not. Why not switch to
+-- 'preescaped' ?
 --
 escapedString :: String -> Html
 escapedString = HtmlM . const . B.fromEscapedString

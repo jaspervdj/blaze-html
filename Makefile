@@ -5,4 +5,4 @@ bench-html:
 
 bench-builder:
 	ghc --make -O2 -fforce-recomp -isrc -ilib/binary-0.5.0.2/src benchmarks/Utf8Builder.hs
-	./benchmarks/Utf8Builder
+	./benchmarks/Utf8Builder --resamples 10000

@@ -45,6 +45,10 @@ import qualified Text.Blaze.Internal.Utf8Builder as B
 newtype HtmlM a = HtmlM
     { -- | Function to extract the 'Builder'.
       --
+      -- SM: I would expect this function to be:
+      --
+      --  Utf8Builder -> Utf8Builder
+      --
       runHtml :: Builder -> Builder
     }
 
@@ -57,6 +61,12 @@ newtype Attribute = Attribute (Html -> Html)
 instance Monoid (HtmlM a) where
     mempty = HtmlM $ \_ -> mempty
     {-# INLINE mempty #-}
+    --SM: Note for the benchmarks: We should test which multi-`mappend`
+    --versions are faster: right or left-associative ones. Then we can register
+    --a rewrite rule taking care of that. I actually guess that this may be one
+    --of the reasons accounting for the speed differences between monadic
+    --syntax and monoid syntax: the rewrite rules for monadic syntax bring the
+    --`>>=` into the better form which results in a better form for `mappend`.
     (HtmlM h1) `mappend` (HtmlM h2) = HtmlM $
         \attrs -> h1 attrs `mappend` h2 attrs
     {-# INLINE mappend #-}
@@ -76,6 +86,7 @@ instance Monad HtmlM where
 instance IsString Html where
     fromString = string
     {-# INLINE fromString #-}
+
 
 -- | Create an HTML parent element.
 --
@@ -119,6 +130,15 @@ open tag = HtmlM $ \attrs ->
 {-# INLINE open #-}
 
 -- | Add an attribute to the current element.
+--
+-- SM: Why are attribute values fixed to 'Text'. Couldn't it be that the
+-- attribute comes from an 'Int' and we want to use 'show' to build it. Couldn't
+-- it also be that the attribute needs to be composed also?
+--
+-- I would suggest using a newtype 'AttributeValue' that encapsulates a
+-- Utf8Builder. Then we can provide the correct escaping (doublequoted attributes
+-- need less escaping than html content) and combinators for building attribute
+-- values; i.e. an IsString instance, overload 'string', 'text' and 'fromShow'.
 --
 attribute :: S.ByteString -> Text -> Attribute
 attribute key value = Attribute $ \(HtmlM h) -> HtmlM $ \attrs ->
@@ -165,6 +185,8 @@ escapedText = HtmlM . const . B.fromEscapedText
 string :: String -> Html
 string = HtmlM . const . B.fromString
 {-# INLINE string #-}
+
+-- Why not provide a 'fromShow :: Show a => a -> Html' method?
 
 -- | Create a HTML snippet from a 'String' without escaping
 --

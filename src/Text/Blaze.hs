@@ -92,11 +92,11 @@ instance IsString Html where
 --
 parent :: S.ByteString -> Html -> Html
 parent tag = \inner -> HtmlM $ \attrs ->
-    B.fromPreEscapedByteString begin
+    B.unsafeFromByteString begin
       `mappend` attrs
       `mappend` B.fromPreEscapedAscii7Char '>'
       `mappend` runHtml inner mempty
-      `mappend` B.fromPreEscapedByteString end
+      `mappend` B.unsafeFromByteString end
   where
     begin :: ByteString
     begin = "<" `mappend` tag
@@ -108,9 +108,9 @@ parent tag = \inner -> HtmlM $ \attrs ->
 --
 leaf :: S.ByteString -> Html
 leaf tag = HtmlM $ \attrs ->
-    B.fromPreEscapedByteString begin
+    B.unsafeFromByteString begin
       `mappend` attrs
-      `mappend` B.fromPreEscapedByteString " />"
+      `mappend` B.unsafeFromByteString " />"
   where
     begin :: ByteString
     begin = "<" `mappend` tag
@@ -121,9 +121,9 @@ leaf tag = HtmlM $ \attrs ->
 --
 open :: S.ByteString -> Html
 open tag = HtmlM $ \attrs ->
-    B.fromPreEscapedByteString begin
+    B.unsafeFromByteString begin
       `mappend` attrs
-      `mappend` B.fromPreEscapedByteString ">"
+      `mappend` B.unsafeFromByteString ">"
   where
     begin :: ByteString
     begin = "<" `mappend` tag
@@ -142,7 +142,7 @@ open tag = HtmlM $ \attrs ->
 --
 attribute :: S.ByteString -> Text -> Attribute
 attribute key value = Attribute $ \(HtmlM h) -> HtmlM $ \attrs ->
-    h $ attrs `mappend` B.fromPreEscapedByteString begin
+    h $ attrs `mappend` B.unsafeFromByteString begin
               `mappend` B.fromText value
               `mappend` B.fromPreEscapedAscii7Char '"'
   where

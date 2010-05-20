@@ -20,8 +20,7 @@ module Text.Blaze.Internal.Utf8Builder
 --of Unicode characters.
 
       -- * Creating Builders from ByteStrings.
-    , fromPreEscapedByteString
---SM: same comment as above
+    , unsafeFromByteString
 
       -- * Creating Builders from characters.
     , fromPreEscapedAscii7Char
@@ -76,16 +75,13 @@ fromPreEscapedText text =
     let (l, f) = T.foldl writePreEscapedUnicodeChar writeNothing text
     in fromUnsafeWrite l f
 
--- | /O(n)./ A Builder taking a 'S.ByteString`, copying it. This is a well
--- suited function for strings consisting only of Ascii7 characters. This
--- function should perform better when dealing with small strings than the
--- fromByteString function from Builder.
+-- | /O(n)./ A Builder taking a 'S.ByteString`, copying it. This function is
+-- considered unsafe, as a `S.ByteString` can contain invalid UTF-8 bytes, so
+-- you chould use it with caution. This function should perform better when
+-- dealing with small strings than the fromByteString function from Builder.
 --
---
---SM: This function should rather be called 'unsafeFromByteString' mentioning
---that the bytestring must be a valid UTF-8 encoding of a Unicode sequence.
-fromPreEscapedByteString :: S.ByteString -> Builder
-fromPreEscapedByteString byteString = fromUnsafeWrite l f
+unsafeFromByteString :: S.ByteString -> Builder
+unsafeFromByteString byteString = fromUnsafeWrite l f
   where
     (fptr, o, l) = S.toForeignPtr byteString
     f dst = do copyBytes dst (unsafeForeignPtrToPtr fptr `plusPtr` o) l

@@ -1,3 +1,4 @@
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 -- | A module for efficiently constructing a 'Builder'. This module offers more
 -- functions than the standard ones, and more HTML-specific functions.
 --
@@ -10,8 +11,11 @@
 --
 module Text.Blaze.Internal.Utf8Builder 
     ( 
+      -- * The Utf8Builder type.
+      Utf8Builder
+
       -- * Creating Builders from Text.
-      fromText
+    , fromText
     , fromPreEscapedText
 --SM: It seems strange to me that a Utf8 builder cares about escaping. This
 --should be part of a HtmlBuilder if at all.
@@ -36,6 +40,8 @@ module Text.Blaze.Internal.Utf8Builder
     , fromString
     , fromPreEscapedString
 
+      -- * Extracting the value from the builder.
+    , toLazyByteString
 --SM: Here, I would expect that I get two functions
 --
 -- toText           :: Utf8Builder -> Text
@@ -44,21 +50,28 @@ module Text.Blaze.Internal.Utf8Builder
 
 import Foreign
 import Data.Char (ord)
+import Data.Monoid (Monoid)
 import Prelude hiding (quot)
 
-import Data.Binary.Builder (Builder, fromUnsafeWrite, singleton)
+import Data.Binary.Builder (Builder)
+import qualified Data.Binary.Builder as B
 import qualified Data.ByteString as S
 import qualified Data.ByteString.Internal as S
+import qualified Data.ByteString.Lazy as L
 import Data.Text (Text)
 import qualified Data.Text as T
 
--- | /O(n)./ Convert a 'Text' value to a 'Builder'. This function does proper
--- HTML escaping.
+-- | A newtype definition for the UTF-8 builder monoid.
+newtype Utf8Builder = Utf8Builder Builder
+    deriving (Monoid)
+
+-- | /O(n)./ Convert a 'Text' value to a 'Utf8Builder'. This function does
+-- proper HTML escaping.
 --
-fromText :: Text -> Builder
+fromText :: Text -> Utf8Builder
 fromText text =
     let (l, f) = T.foldl writeUnicodeChar writeNothing text
-    in fromUnsafeWrite l f
+    in Utf8Builder $ B.fromUnsafeWrite l f
 --
 --SM: The above construction is going to kill you (in terms of memory and
 --latency) if the text is too long.  Could you ensure that the text is written
@@ -67,49 +80,54 @@ fromText text =
 --should be equally expensive as summing up the length.
 --
 
--- | /O(n)./ Convert a 'Text' value to a 'Builder'. This function will not do
--- any HTML escaping.
+-- | /O(n)./ Convert a 'Text' value to a 'Utf8Builder'. This function will not
+-- do any HTML escaping.
 --
-fromPreEscapedText :: Text -> Builder
+fromPreEscapedText :: Text -> Utf8Builder
 fromPreEscapedText text =
     let (l, f) = T.foldl writePreEscapedUnicodeChar writeNothing text
-    in fromUnsafeWrite l f
+    in Utf8Builder $ B.fromUnsafeWrite l f
 
 -- | /O(n)./ A Builder taking a 'S.ByteString`, copying it. This function is
 -- considered unsafe, as a `S.ByteString` can contain invalid UTF-8 bytes, so
 -- you chould use it with caution. This function should perform better when
 -- dealing with small strings than the fromByteString function from Builder.
 --
-unsafeFromByteString :: S.ByteString -> Builder
-unsafeFromByteString byteString = fromUnsafeWrite l f
+unsafeFromByteString :: S.ByteString -> Utf8Builder
+unsafeFromByteString byteString = Utf8Builder $ B.fromUnsafeWrite l f
   where
     (fptr, o, l) = S.toForeignPtr byteString
     f dst = do copyBytes dst (unsafeForeignPtrToPtr fptr `plusPtr` o) l
                touchForeignPtr fptr
     {-# INLINE f #-}
 
--- | /O(1)./ Convert a Haskell character to a 'Builder', truncating it to a
+-- | /O(1)./ Convert a Haskell character to a 'Utf8Builder', truncating it to a
 -- byte, and not doing any escaping.
 --
-fromPreEscapedAscii7Char :: Char -> Builder
-fromPreEscapedAscii7Char = singleton . fromIntegral . ord
+fromPreEscapedAscii7Char :: Char -> Utf8Builder
+fromPreEscapedAscii7Char = Utf8Builder . B.singleton . fromIntegral . ord
 {-# INLINE fromPreEscapedAscii7Char #-}
 
--- | /O(n)./ Convert a Haskell 'String' to a 'Builder'. This function does
+-- | /O(n)./ Convert a Haskell 'String' to a 'Utf8Builder'. This function does
 -- proper escaping for HTML entities.
 --
-fromString :: String -> Builder
+fromString :: String -> Utf8Builder
 fromString s =
     let (l, f) = foldl writeUnicodeChar writeNothing s
-    in fromUnsafeWrite l f
+    in Utf8Builder $ B.fromUnsafeWrite l f
 
 -- | /O(n)./ Convert a Haskell 'String' to a builder. Unlike 'fromHtmlString',
 -- this function will not do any escaping.
 --
-fromPreEscapedString :: String -> Builder
+fromPreEscapedString :: String -> Utf8Builder
 fromPreEscapedString s =
     let (l, f) = foldl writePreEscapedUnicodeChar writeNothing s
-    in fromUnsafeWrite l f
+    in Utf8Builder $ B.fromUnsafeWrite l f
+
+-- | /O(n)./ Convert the builder to a 'L.ByteString'.
+--
+toLazyByteString :: Utf8Builder -> L.ByteString
+toLazyByteString (Utf8Builder builder) = B.toLazyByteString builder
 
 -- | Function to create an empty write. This is used as initial value for folds.
 --

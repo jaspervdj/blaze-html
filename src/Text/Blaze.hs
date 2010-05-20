@@ -27,29 +27,20 @@ module Text.Blaze
 
 import Data.Monoid (Monoid, mappend, mempty, mconcat)
 
-import Data.Binary.Builder (Builder, toLazyByteString)
 import Data.ByteString.Char8 (ByteString)
 import qualified Data.ByteString as S
 import qualified Data.ByteString.Lazy as L
 import Data.Text (Text)
 import GHC.Exts (IsString (..))
 
+import Text.Blaze.Internal.Utf8Builder (Utf8Builder)
 import qualified Text.Blaze.Internal.Utf8Builder as B
---SM: I didn't notice in the Utf8Builder file, but I do know here. I would
---strongly suggest to use a newtype to differentiate between Utf8Builder and a
---standard Builder. A Utf8 builder has different invarians and supports
---operations not supportable by a builder (e.g. toText).
 
 -- | The core HTML datatype.
 --
 newtype HtmlM a = HtmlM
     { -- | Function to extract the 'Builder'.
-      --
-      -- SM: I would expect this function to be:
-      --
-      --  Utf8Builder -> Utf8Builder
-      --
-      runHtml :: Builder -> Builder
+      runHtml :: Utf8Builder -> Utf8Builder
     }
 
 -- | Simplification of the 'HtmlM' type.
@@ -197,4 +188,4 @@ preEscapedString = HtmlM . const . B.fromPreEscapedString
 -- | /O(n)./ Render the HTML fragment to lazy 'L.ByteString'.
 --
 renderHtml :: Html -> L.ByteString
-renderHtml = toLazyByteString . flip runHtml mempty
+renderHtml = B.toLazyByteString . flip runHtml mempty

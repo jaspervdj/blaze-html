@@ -12,7 +12,7 @@ module Text.Blaze.Internal.Utf8Builder
     ( 
       -- * Creating Builders from Text.
       fromText
-    , fromEscapedText
+    , fromPreEscapedText
 --SM: It seems strange to me that a Utf8 builder cares about escaping. This
 --should be part of a HtmlBuilder if at all.
 --
@@ -20,11 +20,11 @@ module Text.Blaze.Internal.Utf8Builder
 --of Unicode characters.
 
       -- * Creating Builders from ByteStrings.
-    , fromEscapedByteString
+    , fromPreEscapedByteString
 --SM: same comment as above
 
       -- * Creating Builders from characters.
-    , fromEscapedAscii7Char
+    , fromPreEscapedAscii7Char
 --SM: I'm not sure if this is needed. There are few places where the caller can
 --    guarantee that his char is really Ascii7. I would incorporate these places
 --    like showing ints or the like into the API of an Utf8Builder if it is really
@@ -35,13 +35,12 @@ module Text.Blaze.Internal.Utf8Builder
 
       -- * Creating Builders from Strings.
     , fromString
-    , fromEscapedString
+    , fromPreEscapedString
 
 --SM: Here, I would expect that I get two functions
 --
 -- toText           :: Utf8Builder -> Text
 -- toLazyByteString :: Utf8Builder -> LB.ByteString
-
     ) where
 
 import Foreign
@@ -72,12 +71,10 @@ fromText text =
 -- | /O(n)./ Convert a 'Text' value to a 'Builder'. This function will not do
 -- any HTML escaping.
 --
-fromEscapedText :: Text -> Builder
-fromEscapedText text =
-    let (l, f) = T.foldl writeEscapedUnicodeChar writeNothing text
+fromPreEscapedText :: Text -> Builder
+fromPreEscapedText text =
+    let (l, f) = T.foldl writePreEscapedUnicodeChar writeNothing text
     in fromUnsafeWrite l f
-
-
 
 -- | /O(n)./ A Builder taking a 'S.ByteString`, copying it. This is a well
 -- suited function for strings consisting only of Ascii7 characters. This
@@ -87,8 +84,8 @@ fromEscapedText text =
 --
 --SM: This function should rather be called 'unsafeFromByteString' mentioning
 --that the bytestring must be a valid UTF-8 encoding of a Unicode sequence.
-fromEscapedByteString :: S.ByteString -> Builder
-fromEscapedByteString byteString = fromUnsafeWrite l f
+fromPreEscapedByteString :: S.ByteString -> Builder
+fromPreEscapedByteString byteString = fromUnsafeWrite l f
   where
     (fptr, o, l) = S.toForeignPtr byteString
     f dst = do copyBytes dst (unsafeForeignPtrToPtr fptr `plusPtr` o) l
@@ -98,9 +95,9 @@ fromEscapedByteString byteString = fromUnsafeWrite l f
 -- | /O(1)./ Convert a Haskell character to a 'Builder', truncating it to a
 -- byte, and not doing any escaping.
 --
-fromEscapedAscii7Char :: Char -> Builder
-fromEscapedAscii7Char = singleton . fromIntegral . ord
-{-# INLINE fromEscapedAscii7Char #-}
+fromPreEscapedAscii7Char :: Char -> Builder
+fromPreEscapedAscii7Char = singleton . fromIntegral . ord
+{-# INLINE fromPreEscapedAscii7Char #-}
 
 -- | /O(n)./ Convert a Haskell 'String' to a 'Builder'. This function does
 -- proper escaping for HTML entities.
@@ -113,9 +110,9 @@ fromString s =
 -- | /O(n)./ Convert a Haskell 'String' to a builder. Unlike 'fromHtmlString',
 -- this function will not do any escaping.
 --
-fromEscapedString :: String -> Builder
-fromEscapedString s =
-    let (l, f) = foldl writeEscapedUnicodeChar writeNothing s
+fromPreEscapedString :: String -> Builder
+fromPreEscapedString s =
+    let (l, f) = foldl writePreEscapedUnicodeChar writeNothing s
     in fromUnsafeWrite l f
 
 -- | Function to create an empty write. This is used as initial value for folds.
@@ -157,15 +154,15 @@ writeUnicodeChar (l, f) '\'' =
   where
     apos :: [Word8]
     apos = map (fromIntegral . ord) "&apos;"
-writeUnicodeChar (l, f) c = writeEscapedUnicodeChar (l, f) c
+writeUnicodeChar (l, f) c = writePreEscapedUnicodeChar (l, f) c
 {-# INLINE writeUnicodeChar #-}
 
 -- | Write a Unicode character, encoding it as UTF-8.
 --
-writeEscapedUnicodeChar :: (Int, Ptr Word8 -> IO ())  -- ^ Current state.
+writePreEscapedUnicodeChar :: (Int, Ptr Word8 -> IO ())  -- ^ Current state.
                         -> Char                       -- ^ Character to write.
                         -> (Int, Ptr Word8 -> IO ())  -- ^ Resulting state.
-writeEscapedUnicodeChar (l, f) c = l `seq` encodeCharUtf8 f1 f2 f3 f4 c
+writePreEscapedUnicodeChar (l, f) c = l `seq` encodeCharUtf8 f1 f2 f3 f4 c
   where
     f1 x = (l + 1, \ptr -> f ptr >> poke (ptr `plusPtr` l) x)
 
@@ -183,7 +180,7 @@ writeEscapedUnicodeChar (l, f) c = l `seq` encodeCharUtf8 f1 f2 f3 f4 c
                                               >> poke (pos `plusPtr` 1) x2
                                               >> poke (pos `plusPtr` 2) x3
                                               >> poke (pos `plusPtr` 3) x4)
-{-# INLINE writeEscapedUnicodeChar #-}
+{-# INLINE writePreEscapedUnicodeChar #-}
 
 -- | Encode a Unicode character to another datatype, using UTF-8. This function
 -- acts as an abstract way of encoding characters, as it is unaware of what

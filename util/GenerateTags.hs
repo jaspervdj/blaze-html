@@ -40,7 +40,7 @@ writeHtmlVariant htmlVariant = do
         , exportList moduleName $ "docType" : (map fst sortedTags)
         , "import Prelude ()"
         , ""
-        , "import Text.Blaze (Html, parent, leaf, open, escapedText)"
+        , "import Text.Blaze (Html, parent, leaf, open, preEscapedText)"
         , ""
         , makeDocType $ docType htmlVariant
         , unlines appliedTags
@@ -110,7 +110,7 @@ makeDocType lines' = unlines
     , "--"
     , unlines (map ("-- > " ++) lines') ++ "--"
     , "docType :: Html  -- ^ The document type HTML."
-    , "docType = escapedText " ++ (show $ unlines lines')
+    , "docType = preEscapedText " ++ (show $ unlines lines')
     , "{-# INLINE docType #-}"
     ]
 

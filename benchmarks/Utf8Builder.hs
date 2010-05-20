@@ -57,7 +57,7 @@ benchByteStrings = BL.length . toLazyByteString
 
 benchByteStrings' :: [S.ByteString] -> Int64
 benchByteStrings' = BL.length . toLazyByteString
-                  . mconcat . map fromEscapedByteString
+                  . mconcat . map fromPreEscapedByteString
 
 benchText :: [Text] -> Int64
 benchText = BL.length . toLazyByteString . mconcat

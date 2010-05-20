@@ -14,9 +14,9 @@ module Text.Blaze
 
       -- * Converting values to HTML.
     , text
-    , escapedText
+    , preEscapedText
     , string
-    , escapedString
+    , preEscapedString
 
       -- * Setting attributes
     , (!)
@@ -92,11 +92,11 @@ instance IsString Html where
 --
 parent :: S.ByteString -> Html -> Html
 parent tag = \inner -> HtmlM $ \attrs ->
-    B.fromEscapedByteString begin
+    B.fromPreEscapedByteString begin
       `mappend` attrs
-      `mappend` B.fromEscapedAscii7Char '>'
+      `mappend` B.fromPreEscapedAscii7Char '>'
       `mappend` runHtml inner mempty
-      `mappend` B.fromEscapedByteString end
+      `mappend` B.fromPreEscapedByteString end
   where
     begin :: ByteString
     begin = "<" `mappend` tag
@@ -108,9 +108,9 @@ parent tag = \inner -> HtmlM $ \attrs ->
 --
 leaf :: S.ByteString -> Html
 leaf tag = HtmlM $ \attrs ->
-    B.fromEscapedByteString begin
+    B.fromPreEscapedByteString begin
       `mappend` attrs
-      `mappend` B.fromEscapedByteString " />"
+      `mappend` B.fromPreEscapedByteString " />"
   where
     begin :: ByteString
     begin = "<" `mappend` tag
@@ -121,9 +121,9 @@ leaf tag = HtmlM $ \attrs ->
 --
 open :: S.ByteString -> Html
 open tag = HtmlM $ \attrs ->
-    B.fromEscapedByteString begin
+    B.fromPreEscapedByteString begin
       `mappend` attrs
-      `mappend` B.fromEscapedByteString ">"
+      `mappend` B.fromPreEscapedByteString ">"
   where
     begin :: ByteString
     begin = "<" `mappend` tag
@@ -142,9 +142,9 @@ open tag = HtmlM $ \attrs ->
 --
 attribute :: S.ByteString -> Text -> Attribute
 attribute key value = Attribute $ \(HtmlM h) -> HtmlM $ \attrs ->
-    h $ attrs `mappend` B.fromEscapedByteString begin
+    h $ attrs `mappend` B.fromPreEscapedByteString begin
               `mappend` B.fromText value
-              `mappend` B.fromEscapedAscii7Char '"'
+              `mappend` B.fromPreEscapedAscii7Char '"'
   where
     begin :: ByteString
     begin = " " `mappend` key `mappend` "=\""
@@ -165,7 +165,7 @@ instance Attributable (Html -> Html) where
     {-# INLINE (!) #-}
     {-# SPECIALIZE (!) :: (Html -> Html) -> Attribute -> (Html -> Html) #-}
 
--- | Render escaped text. This is the preferred way of converting string
+-- | Render preEscaped text. This is the preferred way of converting string
 -- datatypes to HTML.
 --
 text :: Text  -- ^ Text to render.
@@ -175,10 +175,10 @@ text = HtmlM . const . B.fromText
 
 -- | Render text without escaping.
 --
-escapedText :: Text  -- ^ Text to insert.
-            -> Html  -- Resulting HTML fragment.
-escapedText = HtmlM . const . B.fromEscapedText
-{-# INLINE escapedText #-}
+preEscapedText :: Text  -- ^ Text to insert.
+               -> Html  -- Resulting HTML fragment.
+preEscapedText = HtmlM . const . B.fromPreEscapedText
+{-# INLINE preEscapedText #-}
 
 -- | Create a HTML snippet from a 'String'.
 --
@@ -190,14 +190,9 @@ string = HtmlM . const . B.fromString
 
 -- | Create a HTML snippet from a 'String' without escaping
 --
--- SM: Somehow I'm not sure if 'escaped' is the right word here. I read it now
--- quite a few times in the source files. From the word itself I cannot tell,
--- if it means that escaping is being done or not. Why not switch to
--- 'preescaped' ?
---
-escapedString :: String -> Html
-escapedString = HtmlM . const . B.fromEscapedString
-{-# INLINE escapedString #-}
+preEscapedString :: String -> Html
+preEscapedString = HtmlM . const . B.fromPreEscapedString
+{-# INLINE preEscapedString #-}
 
 -- | /O(n)./ Render the HTML fragment to lazy 'L.ByteString'.
 --

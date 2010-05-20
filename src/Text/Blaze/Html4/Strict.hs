@@ -81,7 +81,7 @@ module Text.Blaze.Html4.Strict
 
 import Prelude ()
 
-import Text.Blaze (Html, parent, leaf, open, escapedText)
+import Text.Blaze (Html, parent, leaf, open, preEscapedText)
 
 -- | Combinator for the document type. This should be placed at the top
 -- of every HTML page.
@@ -96,7 +96,7 @@ import Text.Blaze (Html, parent, leaf, open, escapedText)
 -- >     "http://www.w3.org/TR/html4/strict.dtd">
 --
 docType :: Html  -- ^ The document type HTML.
-docType = escapedText "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\"\n    \"http://www.w3.org/TR/html4/strict.dtd\">\n"
+docType = preEscapedText "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\"\n    \"http://www.w3.org/TR/html4/strict.dtd\">\n"
 {-# INLINE docType #-}
 
 -- | Combinator for the @\<a>@ element.

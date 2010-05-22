@@ -227,22 +227,18 @@ more complicated type errors, and some performance overhead in some cases.
 
 Rendering & encoding
 --------------------
-[[SM: Insert a paragraph explaining the terminology.
 
-Rendering means mapping the nested tree of Html elements annotated with
-attributes and content to its representation as a sequence of Unicode
-characters according to a specific rendering format.
+We make a distinction in terminology between rendering and encoding here. The
+process of mapping the tree of HTML elements annotated with attributes and
+content to its representation as a sequence of Unicode chreacters according
+to a specific rendering format.
 
 Encoding means mapping a sequence of Unicode characters to its representation
 as sequence of bytes according to a specific encoding format.
 
-Outputting a Html document denotes the combined mapping of rendering and
-encoding according to a specific output format.
-]]
-
 As said before, we will support input from both `String` and `Data.Text`
-datatypes. These two datatypes support all Unicode codepoints, so the output
-format should support all Unicode codepoints, too. If the output format does
+datatypes. These two datatypes support all Unicode codepoints, so the encoding
+format should support all Unicode codepoints, too. If the encoding format does
 not support all Unicode codepoints, then rendering and encoding cannot be
 separated nicely because unencodable characters must already be escaped 
 accordingly during rendering. 
@@ -250,13 +246,8 @@ accordingly during rendering.
 We think that more than 90% of the end users just need UTF-8 encoded HTML
 output, but we could, of course, be wrong.
 
-[[SM: Why don't you address the reader directly? 
-
-  Do you need support for "lossy" encodings, e.g. Latin-1? If yes, could you
-  describe your use case more precisely?
-]]
-
-*Q9*: Do we need support for "lossy" encodings, e.g. Latin-1? 
+*Q9*: Do you need support for "lossy" encodings, e.g. Latin-1? If yes, could you
+describe your use case more precisely?
 
 Note that all desktop browsers, and most mobile browsers support superior
 encodings like UTF-8.
@@ -267,15 +258,9 @@ to be two major options:
 - Output to an encoded lazy ByteString representing an UTF-8 encoded sequence
   of Unicode characters. The advantage of this scenario is that the result can
   be sent over the network directly and efficiently, for example
-  with the network-bytestring[1] library.
-
-  [[SM: I see the primary advantage that in the end (according to our assumptions)
-        a user will need the UTF-8 encoded sequence of Unicode characters.
-
-        The central question is, if this assumption is justified. We can easily
-        support output to Text values by decoding the lazy ByteString.
-  ]]
-        
+  with the network-bytestring[1] library. We think (according to our
+  assumptions) that in the end, a user will need the UTF-8 encoded sequence of
+  Unicode characters.
 
 - Output to a Text value. The advantage here is that we have a nicer separation
   of concerns (encoding would be separated from HTML generation).
@@ -285,18 +270,11 @@ The first option is definitely faster.
 *Q10*: Should we sacrifice some speed to have the second option as a possibility?
 
 Currently, the type for HTML snippets in Haskell is simple `Html`. If we would
-make `Html` a typeclass or use a tree fold, it would be possible to render the
-same `Html` value to different encodings.
+make `Html` a typeclass or use a user-defined fold over the tree, it would be
+possible to render the same `Html` value to different encodings.
 
-[[SM: What is a tree fold?]]
-
-*Q11*: Should we sacrifice some speed in order to be able to render a certain
-snippet in different encodings?
-
-[[SM: To me this is somehow the wrong question: Its not about sacrificing speed
-or not. Its about the question if there are valid use cases that require this
-flexibility.
-]]
+*Q11*: Do you need to be able to render a certain snippet in different
+encodings?
 
 The browser needs to know the encoding of the document it receives. There are
 two important options for a server to tell the encoding to the browser:

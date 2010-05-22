@@ -5,6 +5,7 @@ module Text.Blaze
       -- * Important types.
       Html
     , Attribute
+    , AttributeValue
 
       -- * Creating custom tags and attributes.
     , parent
@@ -17,6 +18,12 @@ module Text.Blaze
     , preEscapedText
     , string
     , preEscapedString
+
+      -- * Converting values to attribute values.
+    , textValue
+    , preEscapedTextValue
+    , stringValue
+    , preEscapedStringValue
 
       -- * Setting attributes
     , (!)
@@ -47,7 +54,13 @@ newtype HtmlM a = HtmlM
 --
 type Html = HtmlM ()
 
+-- | Type for an attribute.
+--
 newtype Attribute = Attribute (Html -> Html)
+
+-- | The type for an attribute value.
+--
+newtype AttributeValue = AttributeValue { attributeValue :: Utf8Builder }
 
 instance Monoid (HtmlM a) where
     mempty = HtmlM $ \_ -> mempty
@@ -78,6 +91,9 @@ instance IsString Html where
     fromString = string
     {-# INLINE fromString #-}
 
+instance IsString AttributeValue where
+    fromString = stringValue
+    {-# INLINE fromString #-}
 
 -- | Create an HTML parent element.
 --
@@ -120,21 +136,10 @@ open tag = HtmlM $ \attrs ->
     begin = "<" `mappend` tag
 {-# INLINE open #-}
 
--- | Add an attribute to the current element.
---
--- SM: Why are attribute values fixed to 'Text'. Couldn't it be that the
--- attribute comes from an 'Int' and we want to use 'show' to build it. Couldn't
--- it also be that the attribute needs to be composed also?
---
--- I would suggest using a newtype 'AttributeValue' that encapsulates a
--- Utf8Builder. Then we can provide the correct escaping (doublequoted attributes
--- need less escaping than html content) and combinators for building attribute
--- values; i.e. an IsString instance, overload 'string', 'text' and 'fromShow'.
---
-attribute :: S.ByteString -> Text -> Attribute
+attribute :: S.ByteString -> AttributeValue -> Attribute
 attribute key value = Attribute $ \(HtmlM h) -> HtmlM $ \attrs ->
     h $ attrs `mappend` B.unsafeFromByteString begin
-              `mappend` B.fromText value
+              `mappend` attributeValue value
               `mappend` B.fromPreEscapedAscii7Char '"'
   where
     begin :: ByteString
@@ -156,7 +161,7 @@ instance Attributable (Html -> Html) where
     {-# INLINE (!) #-}
     {-# SPECIALIZE (!) :: (Html -> Html) -> Attribute -> (Html -> Html) #-}
 
--- | Render preEscaped text. This is the preferred way of converting string
+-- | Render text. This is the preferred way of converting string
 -- datatypes to HTML.
 --
 text :: Text  -- ^ Text to render.
@@ -184,6 +189,32 @@ string = HtmlM . const . B.fromString
 preEscapedString :: String -> Html
 preEscapedString = HtmlM . const . B.fromPreEscapedString
 {-# INLINE preEscapedString #-}
+
+-- | Render an attrbitute value from 'Text'.
+--
+textValue :: Text            -- ^ The actual value.
+          -> AttributeValue  -- ^ Resulting attribute value.
+textValue = AttributeValue . B.fromText
+{-# INLINE textValue #-}
+
+-- | Render an attribute value from 'Text' without escaping.
+--
+preEscapedTextValue :: Text            -- ^ Text to insert.
+                    -> AttributeValue  -- Resulting HTML fragment.
+preEscapedTextValue = AttributeValue . B.fromPreEscapedText
+{-# INLINE preEscapedTextValue #-}
+
+-- | Create an attribute value from a 'String'.
+--
+stringValue :: String -> AttributeValue
+stringValue = AttributeValue . B.fromString
+{-# INLINE stringValue #-}
+
+-- | Create an attribute value from a 'String' without escaping.
+--
+preEscapedStringValue :: String -> AttributeValue
+preEscapedStringValue = AttributeValue . B.fromPreEscapedString
+{-# INLINE preEscapedStringValue #-}
 
 -- | /O(n)./ Render the HTML fragment to lazy 'L.ByteString'.
 --

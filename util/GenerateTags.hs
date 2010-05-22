@@ -56,9 +56,9 @@ writeHtmlVariant htmlVariant = do
         , ""
         , "import Data.Text (Text)"
         , ""
-        , "import Text.Blaze (Attribute, attribute)"
+        , "import Text.Blaze (Attribute, AttributeValue, attribute)"
         , ""
-        , unlines (map attribute sortedAttributes)
+        , unlines (map makeAttribute sortedAttributes)
         ]
   where
     basePath = "src" </> "Text" </> "Blaze" </> foldl1 (</>) version'
@@ -180,8 +180,8 @@ makeOpen tag = unlines
 
 -- | Generate a function for an HTML attribute.
 --
-attribute :: String -> String
-attribute name = unlines
+makeAttribute :: String -> String
+makeAttribute name = unlines
     [ "-- | Combinator for the @" ++ name ++ "@ attribute."
     , "--"
     , "-- Example:"
@@ -192,8 +192,8 @@ attribute name = unlines
     , "--"
     , "-- > <img " ++ name ++ "=\"bar\" />"
     , "--"
-    , function        ++ " :: Text       -- ^ Attribute value."
-    , spaces function ++ " -> Attribute  -- ^ Resulting attribute."
+    , function        ++ " :: AttributeValue  -- ^ Attribute value."
+    , spaces function ++ " -> Attribute       -- ^ Resulting attribute."
     , function ++ " = attribute \"" ++ name ++ "\""
     , "{-# INLINE " ++ function ++ " #-}"
     ]

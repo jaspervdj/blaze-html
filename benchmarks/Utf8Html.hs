@@ -85,5 +85,5 @@ deepTree = renderHtml . ($ text "deep") . foldl1 (.)
 manyAttributes :: [Text] -> BL.ByteString
 manyAttributes = renderHtml . foldl setAttribute img
   where
-    setAttribute html value = html ! id value
+    setAttribute html value = html ! id (textValue value)
     {-# INLINE setAttribute #-}

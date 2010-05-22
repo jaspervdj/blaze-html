@@ -276,23 +276,23 @@ possible to render the same `Html` value to different encodings.
 *Q11*: Do you need to be able to render a certain snippet in different
 encodings?
 
-The browser needs to know the encoding of the document it receives. There are
-two important options for a server to tell the encoding to the browser:
+When the web server sends out an HTML document, the browser will need to know
+the encoding of this document, so it can be interpreted correctly. The most
+common way to do this is to send `Content-Type` in the HTTP header.
 
-- Use the `Content-Type` HTTP header.
-- Use a `<meta http-equiv="..." content="..." />` tag.
+Based on our assumptions, we think that BlazeHtml will be used with a Haskell
+web server or framework, such as HappStack, Hyena, Yesod or Snap. These web
+servers can send the encoding correctly.
 
-Typically, the first option is preferred -- and this option would happen outside
-of BlazeHtml. If we want to support the second option in BlazeHtml, specifying a
-document in an encoding-independent method becomes harder (but not impossible,
-we wrote a prototype implementation that supports this as well).
+However, when the user has no control over the web server, the encoding might
+be sent incorrectly. In such a case, we need to use a
+`<meta http-equiv="..." content="..." />` tag.  If we want to support the second
+option in BlazeHtml, specifying a document in an encoding-independent method
+becomes harder (but not impossible, we wrote a prototype implementation that
+supports this as well).
 
-*Q12*: Should we support the second option or should we trust the end user to be
-savvy enough to insert the correct encoding tag?
-
-[[SM: Could you rewrite the above section to focus more on use cases. You can of
-course ask the reader how much speed he would like to sacrifice.
-]]
+*Q12*: Do you have a use case in which the server cannot send the encoding
+correctly?
 
 > main = do
 >     putStrLn $ renderHtml page1

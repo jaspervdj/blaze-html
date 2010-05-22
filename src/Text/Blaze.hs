@@ -220,3 +220,4 @@ preEscapedStringValue = AttributeValue . B.fromPreEscapedString
 --
 renderHtml :: Html -> L.ByteString
 renderHtml = B.toLazyByteString . flip runHtml mempty
+{-# INLINE renderHtml #-}

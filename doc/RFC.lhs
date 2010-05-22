@@ -57,41 +57,27 @@ Input strings
 
 BlazeHtml is mostly written to support `Data.Text` values as "input": it takes
 `Data.Text` values as parameters for attributes, as content for text elements...
+We also support `String` as input types everywhere.
 
-We also support `String` as input types, but we tend to this discourage this.
+*Q1*: Do you known other input types that you need to support natively; i.e.
+without converting them to Data.Text or String first?
 
-[[SM: Why should we discourage String per se? Shouldn't we just support both
-types natively and let the user choose? Essentially, we want to ensure that no
-unnecessary conversions are required for outputting to Html.
-]]
-
-*Q1*: What do you think of these input types?
-
-[[SM: What answers do you hope to get here? Why no pose the question as:
-
-  Do you known other input types that you need to support natively; i.e.
-  without converting them to Data.Text or String first?
-
-]]
-
-[[SM: At this point "avoiding `pack`" is much more difficult to understand than "we want to
-use static strings of both type Text as well as String"; i.e. try to require as
-few as possible prerequisite knowledge and guide your reader through the text.
-]]
-
-We would like to avoid using `pack` everywhere in our code, so we use the
-`OverloadedStrings` language extension:
+We want to use static strings in our program of both type `Data.Text` as well as
+`String`. For this purpose, we require the `OverloadedStrings` language
+extension:
 
 > {-# LANGUAGE OverloadedStrings #-}
 
 Modules
 -------
 
-I am going to import Prelude hiding some functions, to avoid clashes.
+I am going to import Prelude hiding some functions, to avoid clashes: `head`,
+`id` and `div` are all HTML elements. Since we do not use the corresponding
+Prelude functions in our program, we will just hide them instead of qualifying
+them.
 
-[[SM: Tell the reader why your are doing that. It also takes only one sentence,
-but gives him much more information than words mirroring the code one-to-one.
-]]
+We also use the `putStrLn` from `Data.ByteString.Lazy` instead of the one from
+the Prelude.
 
 > import Prelude hiding (head, id, div, putStrLn)
 > import Data.ByteString.Lazy (putStrLn)
@@ -120,34 +106,24 @@ Different versions of HTML are available. To sum up a few:
 - HTML 5
 - ...
 
-*Q3*: My first question is: what versions and variants should the library *at
-least* support? Which HTML version would you preferably use?
+*Q3*: What versions and variants should the library *at least* support? Which
+HTML version would you preferably use?
 
-[[SM: "first" vs. Q3 ??? ;-) ]]
-
-We decide on a standard to use -- let's take HTML 4 Strict, because it is the
-only standard currently supported in the BlazeHtml prototype.
-
-[[SM: What is the context of this decision? It may sound to the reader, as if
-BlazeHtml would only support HTML 4 Strict.
-]]
-
-When we consider the set of HTML attributes and the set of HTML tag names, there
-is an intersection which includes, for example "style".
-
-[[SM: Describe the problem. Then the possible solutions (if needed). Then our
-reason for chosing our specific solution. Here, I would expect something like:
+We decide on a standard to use -- let's take HTML 4 Strict, for example.
 
 Our goal is that a description of a Html document using BlazeHtml looks as
-similar as possible to real HTML. Hence, we want to provide for every HTML
-element and attribute a combinator with exactly the same name. However, this is
-not possible due to two reasons: (1) There are HTML element and attribute names
-that conflict with Haskell keywords. (2) There are HTML elements having the
-same name as HTML attributes.
+similar as possible to real HTML -- and, if possible, easier to the eyes. Hence,
+we want to provide for every HTML element and attribute a combinator with
+exactly the same name. However, this is not possible due to two reasons: (1)
+There are HTML element and attribute names that conflict with Haskell keywords,
+or Haskell naming conventions. (2) There are HTML elements having the same name
+as HTML attributes.
 
 To solve the first problem, we adopt the convention that the combinator for a
 HTML element (or an attribute) that conflicts with a Haskell keyword (like class) 
-is suffixed with and underscore (i.e class_ instead of class).
+is suffixed with and underscore (i.e class_ instead of class). Attributes like
+`http-equiv` (Haskell doesn't like the '-' character) will be written as
+`http_equiv`.
 
 To solve the second problem, we split the combinators for elements and
 attributes into separate modules. This way the library user can decide on how
@@ -155,18 +131,7 @@ to handle the conflicting names using hiding and/or qualified imports; e.g.  we
 could qualify the attributes such that the 'title' combinator becomes
 'A.title'.
 
-Describing the problem precisely will also yield a better return in terms of 
-good and constructive anserws.
-]]
-
-This would require us to have two variations on the "style" combinator -- one
-producing an attribute, and one producing an element. What we could do here is,
-for example, append an apostrophe to the attribute combinators.
-
-However, we propose a different solution. After some discussions, it seemed
-best to have two modules for a HTML set.
-
-*Q4*: What do you think of this approach?
+*Q4*: What do you think of this approach on modules/combinator names?
 
 > import Text.Blaze.Html4.Strict hiding (map)
 > import Text.Blaze.Html4.Strict.Attributes hiding (title)
@@ -200,15 +165,8 @@ produce:
         </body>
     </html>
 
-[[SM: I would formulate it as follows.
-
 In BlazeHtml, we abuse do-notation to get a very light syntax. Essentially, we abuse 
 monadic sequencing to represent concatenation of Html documents.
-
-]]
-
-BlazeHtml is going to use do-notation syntax by declaring a monad instance. This
-is the above example written in BlazeHtml with do-notation:
 
 > page1 = html $ do
 >     head $ do
@@ -219,8 +177,6 @@ is the above example written in BlazeHtml with do-notation:
 >         p "This is an example of BlazeHtml syntax."
 >         ul $ forM_ [1, 2, 3] (li . string . show)
 
-[[SM: Reformulate?
-
 This abuse has its cost, as we don't support passing values inside the monad.
 Hence, `return x >>= f != f x`. We tried supporting passing values, but it
 cost too much performance. 
@@ -228,13 +184,6 @@ cost too much performance.
 The correct way out would be to drop this instance and have the user use the
 functions working on Monoids directly. As in the following example describing
 the same page.
-]]
-
-Take note: we use a monadic notation only for the do-syntax. The `>>=` operator
-is defined but has no practical use -- we can use convenient functions like
-`forM_`, though.
-
-Because HTML is also a monoid, the above fragment would be equivalent to:
 
 > page2 = html $ mconcat
 >     [ head $ mconcat
@@ -275,24 +224,6 @@ Or, we could use a typeclass to give the `!` different uses, and thus have:
 The last option will, however, introduce a more complicated type for attributes,
 more complicated type errors, and some performance overhead in some cases.
 
-Naming conventions
-------------------
-
-[[SM: Merge with high-level syntax intro; i.e. together with module splitting ]]
-
-As we said before, our goal is to have the same name as the HTML tag for the
-corresponding combinator. However, this is not always possible. A number of
-elements/attributes cannot have a Haskell function with the same name. Two 
-examples are "http-equiv" (Haskell doesn't like the '-' character) or "class" 
-(which is a Haskell keyword). Therefore, we propose the following simple
-ruleset:
-
-1. Replace '-' with '_'.
-2. Append '_' to Haskell keywords.
-
-With these rules, we can make combinators for the complete HTML specification.
-
-*Q8*: Do you agree on these rules?
 
 Rendering & encoding
 --------------------

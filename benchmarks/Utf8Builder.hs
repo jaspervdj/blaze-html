@@ -17,6 +17,7 @@ import qualified Text.Blaze.Internal.Utf8Builder as UB
 
 main = defaultMain 
     [ bench "[String] -> Builder" $ whnf benchStrings strings
+    , bench "[String] -> Builder'" $ whnf benchStrings' strings
     , bench "[ByteString] -> Builder" $ whnf benchByteStrings byteStrings
     , bench "[ByteString] -> Builder'" $ whnf benchByteStrings' byteStrings
     , bench "[Text] -> Builder" $ whnf benchText texts
@@ -32,24 +33,16 @@ main = defaultMain
     {-# NOINLINE byteStrings #-}
 
     texts :: [Text]
-    texts = replicate 30 $
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec \
-        \nunc purus, bibendum quis dapibus in, fermentum id ipsum. Morbi \
-        \scelerisque accumsan sem, nec tempus tortor dictum eu. Etiam id \
-        \elit quam, ac suscipit libero. Aenean eget interdum ligula. Donec \
-        \id lorem eget sem iaculis rutrum vel ut libero. Quisque iaculis, \
-        \sem quis rhoncus commodo, ante erat placerat dui, non accumsan \
-        \nunc odio at est. In ac leo felis.  Quisque et arcu nec ligula \
-        \dignissim scelerisque. Aliquam tincidunt lacus quis augue iaculis \
-        \sed tincidunt nunc porttitor. Donec id nunc orci. Nunc quam erat, \
-        \euismod id vestibulum vel, porttitor auctor erat. Vestibulum sed \
-        \placerat augue. Morbi suscipit eleifend mauris ac gravida. Vivamus \
-        \non vehicula augue. Pellentesque nec aliquet enim."
+    texts = replicate 100 "<img>"
     {-# NOINLINE texts #-}
 
 benchStrings :: [String] -> Int64
 benchStrings = BL.length . B.toLazyByteString . mconcat
              . concatMap (map $ B.singleton . fromIntegral . ord)
+
+benchStrings' :: [String] -> Int64
+benchStrings' = BL.length . UB.toLazyByteString
+              . mconcat . map UB.fromString
 
 benchByteStrings :: [S.ByteString] -> Int64
 benchByteStrings = BL.length . B.toLazyByteString

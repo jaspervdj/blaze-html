@@ -22,6 +22,7 @@ main = defaultMain
     , bench "[ByteString] -> Builder'" $ whnf benchByteStrings' byteStrings
     , bench "[Text] -> Builder" $ whnf benchText texts
     , bench "[Text] -> Builder'" $ whnf benchText' texts
+    , bench "cached [Text] -> Builder'" $ whnf benchCached cachedTexts
     ]
   where
     strings :: [String]
@@ -35,6 +36,10 @@ main = defaultMain
     texts :: [Text]
     texts = replicate 100 "<img>"
     {-# NOINLINE texts #-}
+
+    cachedTexts :: [UB.Utf8Builder]
+    cachedTexts = replicate 100 (UB.cached $ UB.fromText "<img>")
+    {-# NOINLINE cachedTexts #-}
 
 benchStrings :: [String] -> Int64
 benchStrings = BL.length . B.toLazyByteString . mconcat
@@ -59,3 +64,6 @@ benchText = BL.length . B.toLazyByteString . mconcat
 benchText' :: [Text] -> Int64
 benchText' = BL.length . UB.toLazyByteString . mconcat
            . map UB.fromText
+
+benchCached :: [UB.Utf8Builder] -> Int64
+benchCached = BL.length . UB.toLazyByteString . mconcat

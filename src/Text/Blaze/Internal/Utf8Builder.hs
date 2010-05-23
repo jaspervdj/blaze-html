@@ -40,6 +40,8 @@ module Text.Blaze.Internal.Utf8Builder
     , fromString
     , fromPreEscapedString
 
+    , cached
+
       -- * Extracting the value from the builder.
     , toLazyByteString
 --SM: Here, I would expect that I get two functions
@@ -50,7 +52,7 @@ module Text.Blaze.Internal.Utf8Builder
 
 import Foreign
 import Data.Char (ord)
-import Data.Monoid (Monoid)
+import Data.Monoid (Monoid, mconcat)
 import Prelude hiding (quot)
 
 import Data.Binary.Builder (Builder)
@@ -123,6 +125,9 @@ fromPreEscapedString :: String -> Utf8Builder
 fromPreEscapedString s =
     let (l, f) = foldl writePreEscapedUnicodeChar writeNothing s
     in Utf8Builder $ B.fromUnsafeWrite l f
+
+cached :: Utf8Builder -> Utf8Builder
+cached = mconcat . map unsafeFromByteString . L.toChunks . toLazyByteString
 
 -- | /O(n)./ Convert the builder to a 'L.ByteString'.
 --

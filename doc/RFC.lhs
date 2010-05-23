@@ -1,24 +1,6 @@
 BlazeHtml RFC
 =============
 
-[[SM: Hi Jasper,
-
- In general the RFC is coming along nicely. At some points the problem definition is
- still missing. Moreover, I have the feeling that it would be good to reconsider for
- each question what answers we will get and if they help us decide the open design
- decisions.
-
- I'm looking forward to reading the next version. Please feel free to ask all the
- questions you have via mail. Me being busy is no excuse for not answering mail :-)
-
- best regards,
- Simon
-
- PS: I just checked the benchmarks. It seems that the bigTable benchmark got a bit
- faster again. Yay! :-)
-
-]]
-
 Introduction
 ------------
 
@@ -302,22 +284,19 @@ correctly?
 Speed
 -----
 
-[[SM: I moved this down here. It is an important part, but speed should be dealt
-with after we have found a design that suits most use cases (and can still be
-implemented efficiently ;-)). I know its difficult to find the right path... 
-I hope my advice is not too contradictory in some places.
+There is a preliminary suite of benchmarks available. We focused on the
+"BigTable" mostly, this is a very simple microbenchmark, implemented in many
+different templating engines. It times the rendering of a big <table>. This
+table has 1000 rows and 10 columns, and every row has the simple content 1, 2,
+3, ... 10.
 
-Here, the point should be to show to the reader that we have a nice advantage over
-existing libraries. Why don't we include the standard spitfire perf.test script
-and link it from the Makefile.
-
-]]
-
-There is a preliminary suite of benchmarks
-
-You can run the benchmarks like this:
+You can run our benchmarks like this:
 
     make bench-html
+
+Our prototype library is much faster than other templating engines such as
+Spitfire, ClearSilver, ERB and Erubis. More information can be found in this
+blogpost[2].
 
 
 Epilogue
@@ -328,12 +307,8 @@ BlazeHtml could be considered the "View". Two other components are needed --
 the "Model" (data retrieval & persistence) and the "Controller" (the server).
 
 *Q13*: What other libraries would you use BlazeHtml with? We could provide
-integration where needed.
-
-[[SM: Do we really want to provide integration from our side? I would assume that
-we want to make integration of BlazeHtml as simple as possible. So why don't we
-ask, what points the reader sees as problematic when he thinks about using
-BlazeHtml as the Html outputting library in his favourite web framework?
-]]
+integration where needed, or at least try to make integration as simple as
+possible.
 
 [1]: http://hackage.haskell.org/package/network-bytestring
+[2]: http://jaspervdj.be/posts/2010-04-28-blazehtml-initial-results.html

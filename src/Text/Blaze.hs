@@ -1,4 +1,4 @@
-{-# LANGUAGE FlexibleInstances, TypeSynonymInstances, OverloadedStrings #-}
+{-# LANGUAGE FlexibleInstances, OverloadedStrings #-}
 -- | Core exposed functions.
 module Text.Blaze
     ( 
@@ -87,7 +87,7 @@ instance Monad HtmlM where
     h1 >>= f = h1 >> f (error "_|_")
     {-# INLINE (>>=) #-}
 
-instance IsString Html where
+instance IsString (HtmlM ()) where
     fromString = string
     {-# INLINE fromString #-}
 
@@ -151,12 +151,12 @@ class Attributable h where
     --
     (!) :: h -> Attribute -> h
 
-instance Attributable Html where
+instance Attributable (HtmlM ()) where
     h ! (Attribute a) = a h
     {-# INLINE (!) #-}
     {-# SPECIALIZE (!) :: Html -> Attribute -> Html #-}
 
-instance Attributable (Html -> Html) where
+instance Attributable (HtmlM () -> HtmlM ()) where
     f ! (Attribute a) = \h -> a (f h)
     {-# INLINE (!) #-}
     {-# SPECIALIZE (!) :: (Html -> Html) -> Attribute -> (Html -> Html) #-}

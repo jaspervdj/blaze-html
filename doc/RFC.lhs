@@ -37,9 +37,14 @@ correct include directories for ghci.
 Input strings
 -------------
 
-BlazeHtml is mostly written to support `Data.Text` values as "input": it takes
-`Data.Text` values as parameters for attributes, as content for text elements...
-We also support `String` as input types everywhere.
+With "input", we mean the string values the end user annotes the HTML with --
+for example: HTML content and HTML attribute values.
+
+BlazeHtml supports both input from `Data.Text` and `String`.
+
+We are very likely to choose *not* to support input from `ByteString`s, or at
+least discourage this. The reason behind this is that if a function receives a
+`ByteString`, there is no way to correctly infer the encoding in all cases.
 
 *Q1*: Do you known other input types that you need to support natively; i.e.
 without converting them to Data.Text or String first?
@@ -56,7 +61,7 @@ Modules
 I am going to import Prelude hiding some functions, to avoid clashes: `head`,
 `id` and `div` are all HTML elements. Since we do not use the corresponding
 Prelude functions in our program, we will just hide them instead of qualifying
-them.
+either the Prelude or our modules.
 
 We also use the `putStrLn` from `Data.ByteString.Lazy` instead of the one from
 the Prelude.
@@ -112,6 +117,11 @@ attributes into separate modules. This way the library user can decide on how
 to handle the conflicting names using hiding and/or qualified imports; e.g.  we
 could qualify the attributes such that the 'title' combinator becomes
 'A.title'.
+
+A lot of functions clash with the prelude as well (e.g. `head`, `map`). We do
+not think this will be a big problem, since a web developer probably wants to
+split their busines logic from the presentation layer, and thus putting the
+BlazeHtml templates in separate modules, where very little logic is required.
 
 *Q4*: What do you think of this approach on modules/combinator names?
 
@@ -199,7 +209,7 @@ Another option would be to define a variant that takes a list of attributes:
 
     link !> [rel "stylesheet", type "text/css", href "screen.css"]
 
-Or, we could use a typeclass to give the `!` different uses, and thus have:
+Or, we could use a type class to give the `!` different uses, and thus have:
 
     link ! [rel "stylesheet", type "text/css", href "screen.css"]
 
@@ -252,7 +262,7 @@ The first option is definitely faster.
 *Q10*: Should we sacrifice some speed to have the second option as a possibility?
 
 Currently, the type for HTML snippets in Haskell is simple `Html`. If we would
-make `Html` a typeclass or use a user-defined fold over the tree, it would be
+make `Html` a type class or use a user-defined fold over the tree, it would be
 possible to render the same `Html` value to different encodings.
 
 *Q11*: Do you need to be able to render a certain snippet in different

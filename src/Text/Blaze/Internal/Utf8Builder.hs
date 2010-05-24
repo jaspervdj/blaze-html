@@ -55,6 +55,7 @@ import Data.Char (ord)
 import Data.Monoid (Monoid, mconcat)
 import Prelude hiding (quot)
 
+import Debug.Trace (trace)
 import Data.Binary.Builder (Builder)
 import qualified Data.Binary.Builder as B
 import qualified Data.ByteString as S
@@ -127,7 +128,8 @@ fromPreEscapedString s =
     in Utf8Builder $ B.fromUnsafeWrite l f
 
 cached :: Utf8Builder -> Utf8Builder
-cached = mconcat . map unsafeFromByteString . L.toChunks . toLazyByteString
+cached = unsafeFromByteString . mconcat . L.toChunks . toLazyByteString
+{-# INLINE cached #-}
 
 -- | /O(n)./ Convert the builder to a 'L.ByteString'.
 --

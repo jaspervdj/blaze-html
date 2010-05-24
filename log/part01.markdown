@@ -532,3 +532,37 @@ You explicitly specify to this function what needs to happen for the different
 lengths of an encoded Unicode character (1, 2, 3 or 4 bytes). Because we can
 do some inlining, this approach is equally efficient (the benchmarks didn't
 change).
+
+Monday, May 24th, morning
+=========================
+
+Lately, I have been playing with an idea from Simon: a cached builder monoid.
+I've been investigating this for a very specific purpose -- tags. Currently, the
+`parent` function, for example, has the type signature:
+
+    parent :: S.ByteString -> Html -> Html
+
+We use a strict `ByteString` for the tag name. Advantages:
+
+- Very fast.
+- Very, very fast.
+
+Disadvantages:
+
+- It is not encoding independent. We rely on the fact the the lowest 128
+  characters are the same for every encoding; and this is not the case. We could
+  get away with this for now because we only support UTF-8, but this might a
+  serious disadvantage for flexibility reasons in the future.
+
+I thus implemented a `cached` function
+
+    cached :: Utf8Builder -> Utf8Builder
+
+that brings the data in a "more suited" format. Note that this `cached` function
+only works well for very small builders. In the future, I will have two options:
+
+- Extends this function so it works for all builders.
+- Rename it to `prepareSmallBuilder` or something similar.
+
+Internally, the `cached` function simply works by doing all encoding and
+escaping, so the single copy can happen with a fast call to `copyBytes`.

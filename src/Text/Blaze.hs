@@ -97,18 +97,18 @@ instance IsString AttributeValue where
 
 -- | Create an HTML parent element.
 --
-parent :: S.ByteString -> Html -> Html
+parent :: Text -> Html -> Html
 parent tag = \inner -> HtmlM $ \attrs ->
-    B.unsafeFromByteString begin
+    begin
       `mappend` attrs
       `mappend` B.fromPreEscapedAscii7Char '>'
       `mappend` runHtml inner mempty
-      `mappend` B.unsafeFromByteString end
+      `mappend` end
   where
-    begin :: ByteString
-    begin = "<" `mappend` tag
-    end :: ByteString
-    end = "</" `mappend` tag `mappend` ">"
+    begin :: Utf8Builder
+    begin = B.cached $ B.fromPreEscapedText $ "<" `mappend` tag
+    end :: Utf8Builder
+    end = B.cached $ B.fromPreEscapedText $ "</" `mappend` tag `mappend` ">"
 {-# INLINE parent #-}
 
 -- | Create an HTML leaf element.

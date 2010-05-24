@@ -97,7 +97,9 @@ instance IsString AttributeValue where
 
 -- | Create an HTML parent element.
 --
-parent :: Text -> Html -> Html
+parent :: Text  -- ^ HTML element tag.
+       -> Html  -- ^ Inner HTML, to place in this element.
+       -> Html  -- ^ Resulting HTML.
 parent tag = \inner -> HtmlM $ \attrs ->
     begin
       `mappend` attrs
@@ -113,37 +115,43 @@ parent tag = \inner -> HtmlM $ \attrs ->
 
 -- | Create an HTML leaf element.
 --
-leaf :: S.ByteString -> Html
+leaf :: Text  -- ^ HTML element tag.
+     -> Html  -- ^ Resulting HTML.
 leaf tag = HtmlM $ \attrs ->
-    B.unsafeFromByteString begin
+    begin
       `mappend` attrs
       `mappend` B.unsafeFromByteString " />"
   where
-    begin :: ByteString
-    begin = "<" `mappend` tag
+    begin :: Utf8Builder
+    begin = B.cached $ B.fromPreEscapedText $ "<" `mappend` tag
 {-# INLINE leaf #-}
 
 -- | Produce an open tag. This can be used for open tags in HTML 4.01, like
 -- for example @<br>@.
 --
-open :: S.ByteString -> Html
+open :: Text  -- ^ Tag for the open HTML element.
+     -> Html  -- ^ Resulting HTML.
 open tag = HtmlM $ \attrs ->
-    B.unsafeFromByteString begin
+    begin
       `mappend` attrs
       `mappend` B.unsafeFromByteString ">"
   where
-    begin :: ByteString
-    begin = "<" `mappend` tag
+    begin :: Utf8Builder
+    begin = B.cached $ B.fromPreEscapedText $ "<" `mappend` tag
 {-# INLINE open #-}
 
-attribute :: S.ByteString -> AttributeValue -> Attribute
+-- | Create an HTML attribute.
+--
+attribute :: Text            -- ^ Key for the HTML attribute.
+          -> AttributeValue  -- ^ Value for the HTML attribute.
+          -> Attribute       -- ^ Resulting HTML attribute.
 attribute key value = Attribute $ \(HtmlM h) -> HtmlM $ \attrs ->
-    h $ attrs `mappend` B.unsafeFromByteString begin
+    h $ attrs `mappend` begin
               `mappend` attributeValue value
               `mappend` B.fromPreEscapedAscii7Char '"'
   where
-    begin :: ByteString
-    begin = " " `mappend` key `mappend` "=\""
+    begin :: Utf8Builder
+    begin = B.cached $ B.fromPreEscapedText $ " " `mappend` key `mappend` "=\""
 {-# INLINE attribute #-}
 
 class Attributable h where

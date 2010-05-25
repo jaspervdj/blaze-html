@@ -1,7 +1,7 @@
 {-# LANGUAGE FlexibleInstances, OverloadedStrings #-}
 -- | Core exposed functions.
 module Text.Blaze
-    ( 
+    (
       -- * Important types.
       Html
     , Attribute
@@ -71,11 +71,11 @@ instance Monoid (HtmlM a) where
     --of the reasons accounting for the speed differences between monadic
     --syntax and monoid syntax: the rewrite rules for monadic syntax bring the
     --`>>=` into the better form which results in a better form for `mappend`.
-    (HtmlM h1) `mappend` (HtmlM h2) = HtmlM $
-        \attrs -> h1 attrs `mappend` h2 attrs
+    (HtmlM h1) `mappend` (HtmlM h2) = HtmlM $ \attrs ->
+        h1 attrs `mappend` h2 attrs
     {-# INLINE mappend #-}
     mconcat hs = HtmlM $ \attrs ->
-        foldr (\h k -> runHtml h attrs `mappend` k) mempty hs
+        foldr mappend mempty $ map (flip runHtml attrs) hs
     {-# INLINE mconcat #-}
 
 instance Monad HtmlM where

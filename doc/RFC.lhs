@@ -69,20 +69,12 @@ the Prelude.
 > import Prelude hiding (head, id, div, putStrLn)
 > import Data.ByteString.Lazy (putStrLn)
 
-The BlazeHtml main module would be `Text.Blaze`. In this module, we define
-general functions one needs when using BlazeHtml, for example, the operator to
-set attributes.
+All our modules would share the `Text.Blaze` prefix.
 
-[[SM: Why don't we give the user everything he needs when he imports 
-      Text.Html4 and Text.Html4.Attributes ?
-
-      The fewer things I have to import the better.
-]]
-
-*Q2*: Do you think `Text.Blaze` is a proper name for the main module? Or should
-we drop `Blaze` and use `Text.Html` instead?
-
-> import Text.Blaze
+*Q2*: Do you think `Text.Blaze.X` is a proper name for a module? Or should we
+drop `Blaze` and use `Text.Html` instead? An advantage would be that the user
+can directly see what the module is for, a disadvantage would be that the
+likelihood of module clashes on Hackages increases.
 
 Different versions of HTML are available. To sum up a few:
 
@@ -238,7 +230,7 @@ accordingly during rendering.
 We think that more than 90% of the end users just need UTF-8 encoded HTML
 output, but we could, of course, be wrong.
 
-*Q9*: Do you need support for "lossy" encodings, e.g. Latin-1? If yes, could you
+*Q8*: Do you need support for "lossy" encodings, e.g. Latin-1? If yes, could you
 describe your use case more precisely?
 
 Note that all desktop browsers, and most mobile browsers support superior
@@ -259,13 +251,13 @@ to be two major options:
 
 The first option is definitely faster.
 
-*Q10*: Should we sacrifice some speed to have the second option as a possibility?
+*Q9*: Should we sacrifice some speed to have the second option as a possibility?
 
 Currently, the type for HTML snippets in Haskell is simple `Html`. If we would
 make `Html` a type class or use a user-defined fold over the tree, it would be
 possible to render the same `Html` value to different encodings.
 
-*Q11*: Do you need to be able to render a certain snippet in different
+*Q10*: Do you need to be able to render a certain snippet in different
 encodings?
 
 When the web server sends out an HTML document, the browser will need to know
@@ -283,7 +275,7 @@ option in BlazeHtml, specifying a document in an encoding-independent method
 becomes harder (but not impossible, we wrote a prototype implementation that
 supports this as well).
 
-*Q12*: Do you have a use case in which the server cannot send the encoding
+*Q11*: Do you have a use case in which the server cannot send the encoding
 correctly?
 
 > main = do
@@ -316,7 +308,7 @@ Most modern web applications embrace the MVC design pattern. In this pattern,
 BlazeHtml could be considered the "View". Two other components are needed --
 the "Model" (data retrieval & persistence) and the "Controller" (the server).
 
-*Q13*: What other libraries would you use BlazeHtml with? We could provide
+*Q12*: What other libraries would you use BlazeHtml with? We could provide
 integration where needed, or at least try to make integration as simple as
 possible.
 

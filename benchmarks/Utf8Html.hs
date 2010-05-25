@@ -13,7 +13,6 @@ import GHC.Exts (IsString, fromString)
 import qualified Data.ByteString.Lazy as BL
 import qualified Data.Text as T
 
-import Text.Blaze
 import Text.Blaze.Html4.Strict hiding (map)
 import Text.Blaze.Html4.Strict.Attributes hiding (title)
 

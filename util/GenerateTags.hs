@@ -37,10 +37,11 @@ writeHtmlVariant htmlVariant = do
     -- Write the main module.
     writeFile (basePath <.> "hs") $ removeTrailingNewlines $ unlines
         [ "{-# LANGUAGE OverloadedStrings #-}"
-        , exportList moduleName $ "docType" : (map fst sortedTags)
+        , exportList moduleName $
+            "module Text.Blaze" : "docType" : (map fst sortedTags)
         , "import Prelude ()"
         , ""
-        , "import Text.Blaze (Html, parent, leaf, open, preEscapedText)"
+        , "import Text.Blaze"
         , ""
         , makeDocType $ docType htmlVariant
         , unlines appliedTags

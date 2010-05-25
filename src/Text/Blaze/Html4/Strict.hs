@@ -1,6 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Text.Blaze.Html4.Strict
-    ( docType
+    ( module Text.Blaze
+    , docType
     , a
     , abbr
     , acronym
@@ -81,7 +82,7 @@ module Text.Blaze.Html4.Strict
 
 import Prelude ()
 
-import Text.Blaze (Html, parent, leaf, open, preEscapedText)
+import Text.Blaze
 
 -- | Combinator for the document type. This should be placed at the top
 -- of every HTML page.

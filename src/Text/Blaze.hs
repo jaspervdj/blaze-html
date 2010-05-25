@@ -108,9 +108,10 @@ parent tag = \inner -> HtmlM $ \attrs ->
       `mappend` end
   where
     begin :: Utf8Builder
-    begin = B.cached $ B.fromPreEscapedText $ "<" `mappend` tag
+    begin = B.optimizePiece $ B.fromPreEscapedText $ "<" `mappend` tag
     end :: Utf8Builder
-    end = B.cached $ B.fromPreEscapedText $ "</" `mappend` tag `mappend` ">"
+    end = B.optimizePiece $ B.fromPreEscapedText $ "</" `mappend` tag
+                                                        `mappend` ">"
 {-# INLINE parent #-}
 
 -- | Create an HTML leaf element.
@@ -123,7 +124,7 @@ leaf tag = HtmlM $ \attrs ->
       `mappend` B.unsafeFromByteString " />"
   where
     begin :: Utf8Builder
-    begin = B.cached $ B.fromPreEscapedText $ "<" `mappend` tag
+    begin = B.optimizePiece $ B.fromPreEscapedText $ "<" `mappend` tag
 {-# INLINE leaf #-}
 
 -- | Produce an open tag. This can be used for open tags in HTML 4.01, like
@@ -137,7 +138,7 @@ open tag = HtmlM $ \attrs ->
       `mappend` B.unsafeFromByteString ">"
   where
     begin :: Utf8Builder
-    begin = B.cached $ B.fromPreEscapedText $ "<" `mappend` tag
+    begin = B.optimizePiece $ B.fromPreEscapedText $ "<" `mappend` tag
 {-# INLINE open #-}
 
 -- | Create an HTML attribute.
@@ -151,7 +152,8 @@ attribute key value = Attribute $ \(HtmlM h) -> HtmlM $ \attrs ->
               `mappend` B.fromPreEscapedAscii7Char '"'
   where
     begin :: Utf8Builder
-    begin = B.cached $ B.fromPreEscapedText $ " " `mappend` key `mappend` "=\""
+    begin = B.optimizePiece $ B.fromPreEscapedText $ " " `mappend` key
+                                                         `mappend` "=\""
 {-# INLINE attribute #-}
 
 class Attributable h where

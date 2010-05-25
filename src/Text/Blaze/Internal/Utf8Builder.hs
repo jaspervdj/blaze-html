@@ -40,14 +40,12 @@ module Text.Blaze.Internal.Utf8Builder
     , fromString
     , fromPreEscapedString
 
-    , cached
+      -- * Transformations on the builder.
+    , optimizePiece
 
       -- * Extracting the value from the builder.
     , toLazyByteString
---SM: Here, I would expect that I get two functions
---
--- toText           :: Utf8Builder -> Text
--- toLazyByteString :: Utf8Builder -> LB.ByteString
+    , toText
     ) where
 
 import Foreign
@@ -63,6 +61,7 @@ import qualified Data.ByteString.Internal as S
 import qualified Data.ByteString.Lazy as L
 import Data.Text (Text)
 import qualified Data.Text as T
+import qualified Data.Text.Encoding as T
 
 -- | A newtype definition for the UTF-8 builder monoid.
 newtype Utf8Builder = Utf8Builder Builder
@@ -127,14 +126,24 @@ fromPreEscapedString s =
     let (l, f) = foldl writePreEscapedUnicodeChar writeNothing s
     in Utf8Builder $ B.fromUnsafeWrite l f
 
-cached :: Utf8Builder -> Utf8Builder
-cached = unsafeFromByteString . mconcat . L.toChunks . toLazyByteString
-{-# INLINE cached #-}
+-- | /O(n)./ Optimize a small builder. This function has an initial speed
+-- penalty, but will speed up later calls of the optimized builder piece. This
+-- speedup will only work well for small builders (less than 1k characters).
+--
+optimizePiece :: Utf8Builder -> Utf8Builder
+optimizePiece = unsafeFromByteString . mconcat . L.toChunks . toLazyByteString
+{-# INLINE optimizePiece #-}
 
 -- | /O(n)./ Convert the builder to a 'L.ByteString'.
 --
 toLazyByteString :: Utf8Builder -> L.ByteString
 toLazyByteString (Utf8Builder builder) = B.toLazyByteString builder
+
+-- | /O(n)./ Convert the builder to a 'Text' value. Please note that this
+-- function is a lot slower than the 'toLazyByteString' function.
+--
+toText :: Utf8Builder -> Text
+toText = T.concat . map T.decodeUtf8 . L.toChunks . toLazyByteString
 
 -- | Function to create an empty write. This is used as initial value for folds.
 --

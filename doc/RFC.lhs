@@ -1,6 +1,7 @@
 BlazeHtml RFC
 =============
 
+
 Introduction
 ------------
 
@@ -12,6 +13,7 @@ In the past few weeks, we have been exploring the performance and design of
 different drafts of this library. Now, the time has come to ask some questions
 to the Haskell community -- more specifically the future users of BlazeHtml as
 well as current users of other HTML generation libraries.
+
 
 About this file
 ---------------
@@ -34,6 +36,7 @@ and load this document using
 Note that we placed a `.ghci` file in the `BlazeHtml` directory. It sets the
 correct include directories for ghci.
 
+
 Input strings
 -------------
 
@@ -54,6 +57,7 @@ We want to use static strings in our program of both type `Data.Text` as well as
 extension:
 
 > {-# LANGUAGE OverloadedStrings #-}
+
 
 Modules
 -------
@@ -124,6 +128,7 @@ Two more imports to satisfy the compiler:
 
 > import Data.Monoid (mconcat)
 > import Control.Monad (forM_)
+
 
 Syntax
 ------
@@ -311,6 +316,7 @@ the "Model" (data retrieval & persistence) and the "Controller" (the server).
 *Q12*: What other libraries would you use BlazeHtml with? We could provide
 integration where needed, or at least try to make integration as simple as
 possible.
+
 
 [1]: http://hackage.haskell.org/package/network-bytestring
 [2]: http://jaspervdj.be/posts/2010-04-28-blazehtml-initial-results.html

@@ -95,9 +95,9 @@ There are different HTML standards. For example,
 - HTML 4 Frameset
 - HTML 5
 
-*Q3*: What HTML standards should the library *at least* support? 
+*Q2*: What HTML standards should the library *at least* support? 
 
-*Q4*: Which HTML version would you preferably use?
+*Q3*: Which HTML version would you preferably use?
 
 Currently, we decided to use the HTML 4 Strict standard, as it seems to be 
 the most used one.
@@ -141,7 +141,7 @@ Currently, we decided that all our modules will share the `Text.Blaze` prefix.
 > import Text.Blaze.Html4.Strict hiding (map)
 > import Text.Blaze.Html4.Strict.Attributes hiding (title)
 
-*Q2*: Do you think `Text.Blaze.X` is a proper name for a module? Or should we
+*Q6*: Do you think `Text.Blaze.X` is a proper name for a module? Or should we
 drop `Blaze` and use `Text.Html` instead? 
 
 An advantage of using the `Text.Html` prefix is that the user can directly see
@@ -225,15 +225,15 @@ The main function just outputs the two pages:
 >     LB.putStrLn $ renderHtml page1
 >     LB.putStrLn $ renderHtml page2
 
-*Q5*: How do you think about this syntax, generally?
+*Q7*: How do you think about this syntax, generally?
 
-*Q6*: Do you think `!` is a good operator for setting attributes? 
+*Q8*: Do you think `!` is a good operator for setting attributes? 
 
 We made an initial choice for `!` because the old HTML package uses this.
 However, this operator looks more like array indexing. It is not too late to
 change this, suggestions are very welcome.
 
-*Q7*: How should multiple attributes be handled? 
+*Q9*: How should multiple attributes be handled? 
 
 In the above example, we used  the `!` again for the next attribute:
 
@@ -265,14 +265,14 @@ We think that more than 95% of the end users won't need support for lossy
 encodings. Hence, we choose not to support them. Note that all desktop browsers,
 and most mobile browsers support superior encodings.
 
-*Q8*: Do you need support for "lossy" encodings, e.g. Latin-1? If yes, could you
+*Q10*: Do you need support for "lossy" encodings, e.g. Latin-1? If yes, could you
 describe your use case more precisely?
 
 Fixing the encoding statically greatly helps for achieving the best possible
 performance. Hence, we fix the encoding of rendered HTML documents to UTF-8
 because this is the most used encoding for HTML documents [1].
 
-*Q9*: What other encodings do you need support for?
+*Q11*: What other encodings do you need support for?
 
 Note that for a non-performance-critical code path you can always decode and
 re-encode the rendered and UTF-8 encoded HTML document.
@@ -311,7 +311,7 @@ templating engines such as Spitfire, ClearSilver, ERB and Erubis. More
 information can be found in this
 blogpost [3].
 
-*Q10*: Do you know of other libraries or benchmarks that we should compare to?
+*Q12*: Do you know of other libraries or benchmarks that we should compare to?
 
 
 Epilogue
@@ -321,9 +321,9 @@ Most modern web applications embrace the MVC design pattern. In this pattern,
 BlazeHtml is part of the "View". Two other components are needed -- the "Model"
 (data retrieval & persistence) and the "Controller" (the server).
 
-*Q12*: What other libraries would you use BlazeHtml with? 
+*Q13*: What other libraries would you use BlazeHtml with? 
 
-*Q13*: Do you see any problems with respect to integrating BlazeHtml in 
+*Q14*: Do you see any problems with respect to integrating BlazeHtml in 
 your favourite web-framework/server?
 
 

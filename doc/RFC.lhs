@@ -305,11 +305,10 @@ In the `BlazeHtml` directory that you created in the beginning of this RFC.
 
 Note that these benchmarks also contain the "BigTable" benchmark that is
 implemented in many different templating engines. It measures the rendering time
-of a big <table> that has 1000 rows and 10 columns, and every row has the simple
-content 1, 2, 3, ... 10. Our prototype library is much faster than other
+of a big `<table>` that has 1000 rows and 10 columns, and every row has the
+simple content 1, 2, 3, ... 10. Our prototype library is much faster than other
 templating engines such as Spitfire, ClearSilver, ERB and Erubis. More
-information can be found in this
-blogpost [3].
+information can be found in this blogpost [3].
 
 *Q12*: Do you know of other libraries or benchmarks that we should compare to?
 

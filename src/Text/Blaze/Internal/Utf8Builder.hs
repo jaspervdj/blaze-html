@@ -1,6 +1,6 @@
-{-# LANGUAGE GeneralizedNewtypeDeriving, OverloadedStrings #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 -- | A module for efficiently constructing a 'Builder'. This module offers more
--- functions than the standard ones, and more HTML-specific functions.
+-- functions than the standard ones, optimized for HTML generation.
 --
 --
 --  SM: General remark: Try to split it into Utf8 specific parts and a
@@ -14,17 +14,10 @@ module Text.Blaze.Internal.Utf8Builder
       -- * The Utf8Builder type.
       Utf8Builder
 
-      -- * Creating Builders from characters.
+      -- * Creating Builders from various text representations.
     , fromChar
-    , fromPreEscapedChar
-
-      -- * Creating Builders from Text.
     , fromText
-    , fromPreEscapedText
-
-      -- * Creating Builders from Strings.
     , fromString
-    , fromPreEscapedString
 
       -- * Creating Builders from ByteStrings.
     , unsafeFromByteString
@@ -66,51 +59,25 @@ import qualified Data.Text.Encoding as T
 newtype Utf8Builder = Utf8Builder Builder
     deriving (Monoid)
 
--- | /O(1)./ Convert a Haskell character to a 'Utf8Builder'.
+-- | /O(1)./ Convert a Haskell character to a 'Utf8Builder', without doing any
+-- escaping.
 --
 fromChar :: Char -> Utf8Builder
 fromChar = fromUnsafeWrite . writeChar
 
--- | /O(1)./ Convert a Haskell character to a 'Utf8Builder', without doing any
--- escaping.
---
-fromPreEscapedChar :: Char -> Utf8Builder
-fromPreEscapedChar = fromUnsafeWrite . writePreEscapedChar
-
--- | /O(n)./ Convert a 'Text' value to a 'Utf8Builder'. This function does
--- proper HTML escaping.
+-- | /O(n)./ Convert a 'Text' value to a 'Utf8Builder'. This function will not
+-- do any HTML escaping.
 --
 fromText :: Text -> Utf8Builder
 fromText text = fromUnsafeWrite $
     T.foldl (\w c -> w `mappend` writeChar c) mempty text
---
---SM: The above construction is going to kill you (in terms of memory and
---latency) if the text is too long.  Could you ensure that the text is written
---chunkwise? Perhaps, by first breaking the Builder abstraction again and
---inlining the check for enough free memory into the loop. The basic check
---should be equally expensive as summing up the length.
---
-
--- | /O(n)./ Convert a 'Text' value to a 'Utf8Builder'. This function will not
--- do any HTML escaping.
---
-fromPreEscapedText :: Text -> Utf8Builder
-fromPreEscapedText text = fromUnsafeWrite $
-    T.foldl (\w c -> w `mappend` writePreEscapedChar c) mempty text
-
--- | /O(n)./ Convert a Haskell 'String' to a 'Utf8Builder'. This function does
--- proper escaping for HTML entities.
---
-fromString :: String -> Utf8Builder
-fromString string = fromUnsafeWrite $
-    foldl (\w c -> w `mappend` writeChar c) mempty string
 
 -- | /O(n)./ Convert a Haskell 'String' to a builder. Unlike 'fromHtmlString',
 -- this function will not do any escaping.
 --
-fromPreEscapedString :: String -> Utf8Builder
-fromPreEscapedString string = fromUnsafeWrite $
-    foldl (\w c -> w `mappend` writePreEscapedChar c) mempty string
+fromString :: String -> Utf8Builder
+fromString string = fromUnsafeWrite $
+    foldl (\w c -> w `mappend` writeChar c) mempty string
 
 -- | /O(n)./ A Builder taking a 'S.ByteString`, copying it. This function is
 -- considered unsafe, as a `S.ByteString` can contain invalid UTF-8 bytes, so
@@ -179,26 +146,11 @@ writeByteString byteString = Write l f
     {-# INLINE f #-}
 {-# INLINE writeByteString #-}
 
--- | Write an unicode character to a 'Builder', doing HTML escaping.
---
--- SM: I guess the escaping could be almost as efficient when using a copying
--- fromByteString that is inlined appropriately.
+-- | Write a Unicode character, encoding it as UTF-8.
 --
 writeChar :: Char   -- ^ Character to write.
           -> Write  -- ^ Resulting write.
-writeChar '<' = optimizeWriteBuilder $ fromPreEscapedText "&lt;"
-writeChar '>' = optimizeWriteBuilder $ fromPreEscapedText "&gt;"
-writeChar '&' = optimizeWriteBuilder $ fromPreEscapedText "&amp;"
-writeChar '"' = optimizeWriteBuilder $ fromPreEscapedText "&quot;"
-writeChar '\'' = optimizeWriteBuilder $ fromPreEscapedText "&apos;"
-writeChar c = writePreEscapedChar c
-{-# INLINE writeChar #-}
-
--- | Write a Unicode character, encoding it as UTF-8.
---
-writePreEscapedChar :: Char   -- ^ Character to write.
-                    -> Write  -- ^ Resulting write.
-writePreEscapedChar = encodeCharUtf8 f1 f2 f3 f4
+writeChar = encodeCharUtf8 f1 f2 f3 f4
   where
     f1 x = Write 1 $ \ptr -> poke ptr x
 
@@ -213,7 +165,7 @@ writePreEscapedChar = encodeCharUtf8 f1 f2 f3 f4
                                           poke (ptr `plusPtr` 1) x2
                                           poke (ptr `plusPtr` 2) x3
                                           poke (ptr `plusPtr` 3) x4
-{-# INLINE writePreEscapedChar #-}
+{-# INLINE writeChar #-}
 
 -- | Encode a Unicode character to another datatype, using UTF-8. This function
 -- acts as an abstract way of encoding characters, as it is unaware of what

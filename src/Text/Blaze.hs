@@ -42,6 +42,7 @@ import GHC.Exts (IsString (..))
 
 import Text.Blaze.Internal.Utf8Builder (Utf8Builder)
 import qualified Text.Blaze.Internal.Utf8Builder as B
+import qualified Text.Blaze.Internal.Utf8BuilderHtml as B
 
 -- | The core HTML datatype.
 --
@@ -103,15 +104,15 @@ parent :: Text  -- ^ HTML element tag.
 parent tag = \inner -> HtmlM $ \attrs ->
     begin
       `mappend` attrs
-      `mappend` B.fromPreEscapedChar '>'
+      `mappend` B.fromChar '>'
       `mappend` runHtml inner mempty
       `mappend` end
   where
     begin :: Utf8Builder
-    begin = B.optimizePiece $ B.fromPreEscapedText $ "<" `mappend` tag
+    begin = B.optimizePiece $ B.fromText $ "<" `mappend` tag
     end :: Utf8Builder
-    end = B.optimizePiece $ B.fromPreEscapedText $ "</" `mappend` tag
-                                                        `mappend` ">"
+    end = B.optimizePiece $ B.fromText $ "</" `mappend` tag
+                                              `mappend` ">"
 {-# INLINE parent #-}
 
 -- | Create an HTML leaf element.
@@ -121,10 +122,12 @@ leaf :: Text  -- ^ HTML element tag.
 leaf tag = HtmlM $ \attrs ->
     begin
       `mappend` attrs
-      `mappend` B.unsafeFromByteString " />"
+      `mappend` end
   where
     begin :: Utf8Builder
-    begin = B.optimizePiece $ B.fromPreEscapedText $ "<" `mappend` tag
+    begin = B.optimizePiece $ B.fromText $ "<" `mappend` tag
+    end :: Utf8Builder
+    end = B.optimizePiece $ B.fromText $ " />"
 {-# INLINE leaf #-}
 
 -- | Produce an open tag. This can be used for open tags in HTML 4.01, like
@@ -135,10 +138,10 @@ open :: Text  -- ^ Tag for the open HTML element.
 open tag = HtmlM $ \attrs ->
     begin
       `mappend` attrs
-      `mappend` B.unsafeFromByteString ">"
+      `mappend` B.fromChar '>'
   where
     begin :: Utf8Builder
-    begin = B.optimizePiece $ B.fromPreEscapedText $ "<" `mappend` tag
+    begin = B.optimizePiece $ B.fromText $ "<" `mappend` tag
 {-# INLINE open #-}
 
 -- | Create an HTML attribute.
@@ -149,11 +152,11 @@ attribute :: Text            -- ^ Key for the HTML attribute.
 attribute key value = Attribute $ \(HtmlM h) -> HtmlM $ \attrs ->
     h $ attrs `mappend` begin
               `mappend` attributeValue value
-              `mappend` B.fromPreEscapedChar '"'
+              `mappend` B.fromChar '"'
   where
     begin :: Utf8Builder
-    begin = B.optimizePiece $ B.fromPreEscapedText $ " " `mappend` key
-                                                         `mappend` "=\""
+    begin = B.optimizePiece $ B.fromText $ " " `mappend` key
+                                               `mappend` "=\""
 {-# INLINE attribute #-}
 
 class Attributable h where
@@ -176,20 +179,20 @@ instance Attributable (HtmlM () -> HtmlM ()) where
 --
 text :: Text  -- ^ Text to render.
      -> Html  -- ^ Resulting HTML fragment.
-text = HtmlM . const . B.fromText
+text = HtmlM . const . B.escapeHtmlFromText
 {-# INLINE text #-}
 
 -- | Render text without escaping.
 --
 preEscapedText :: Text  -- ^ Text to insert.
                -> Html  -- Resulting HTML fragment.
-preEscapedText = HtmlM . const . B.fromPreEscapedText
+preEscapedText = HtmlM . const . B.fromText
 {-# INLINE preEscapedText #-}
 
 -- | Create a HTML snippet from a 'String'.
 --
 string :: String -> Html
-string = HtmlM . const . B.fromString
+string = HtmlM . const . B.escapeHtmlFromString
 {-# INLINE string #-}
 
 -- Why not provide a 'fromShow :: Show a => a -> Html' method?
@@ -197,33 +200,33 @@ string = HtmlM . const . B.fromString
 -- | Create a HTML snippet from a 'String' without escaping
 --
 preEscapedString :: String -> Html
-preEscapedString = HtmlM . const . B.fromPreEscapedString
+preEscapedString = HtmlM . const . B.fromString
 {-# INLINE preEscapedString #-}
 
 -- | Render an attrbitute value from 'Text'.
 --
 textValue :: Text            -- ^ The actual value.
           -> AttributeValue  -- ^ Resulting attribute value.
-textValue = AttributeValue . B.fromText
+textValue = AttributeValue . B.escapeHtmlFromText
 {-# INLINE textValue #-}
 
 -- | Render an attribute value from 'Text' without escaping.
 --
 preEscapedTextValue :: Text            -- ^ Text to insert.
                     -> AttributeValue  -- Resulting HTML fragment.
-preEscapedTextValue = AttributeValue . B.fromPreEscapedText
+preEscapedTextValue = AttributeValue . B.fromText
 {-# INLINE preEscapedTextValue #-}
 
 -- | Create an attribute value from a 'String'.
 --
 stringValue :: String -> AttributeValue
-stringValue = AttributeValue . B.fromString
+stringValue = AttributeValue . B.escapeHtmlFromString
 {-# INLINE stringValue #-}
 
 -- | Create an attribute value from a 'String' without escaping.
 --
 preEscapedStringValue :: String -> AttributeValue
-preEscapedStringValue = AttributeValue . B.fromPreEscapedString
+preEscapedStringValue = AttributeValue . B.fromString
 {-# INLINE preEscapedStringValue #-}
 
 -- | /O(n)./ Render the HTML fragment to lazy 'L.ByteString'.

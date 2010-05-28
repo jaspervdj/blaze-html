@@ -40,8 +40,7 @@ main = defaultMain
     {-# NOINLINE texts #-}
 
     cachedStrings :: [UB.Utf8Builder]
-    cachedStrings =
-        replicate 100 (UB.optimizePiece $ UB.fromPreEscapedString "<img>")
+    cachedStrings = replicate 100 (UB.optimizePiece $ UB.fromString "<img>")
     {-# NOINLINE cachedStrings #-}
 
     cachedByteStrings :: [UB.Utf8Builder]
@@ -50,7 +49,7 @@ main = defaultMain
     {-# NOINLINE cachedByteStrings #-}
 
     cachedTexts :: [UB.Utf8Builder]
-    cachedTexts = replicate 100 (UB.optimizePiece $ UB.fromPreEscapedText "<img>")
+    cachedTexts = replicate 100 (UB.optimizePiece $ UB.fromText "<img>")
     {-# NOINLINE cachedTexts #-}
 
 benchStrings :: [String] -> Int64
@@ -59,7 +58,7 @@ benchStrings = BL.length . B.toLazyByteString . mconcat
 
 benchStrings' :: [String] -> Int64
 benchStrings' = BL.length . UB.toLazyByteString
-              . mconcat . map UB.fromPreEscapedString
+              . mconcat . map UB.fromString
 
 benchByteStrings :: [S.ByteString] -> Int64
 benchByteStrings = BL.length . B.toLazyByteString
@@ -75,7 +74,7 @@ benchText = BL.length . B.toLazyByteString . mconcat
 
 benchText' :: [Text] -> Int64
 benchText' = BL.length . UB.toLazyByteString . mconcat
-           . map UB.fromPreEscapedText
+           . map UB.fromText
 
 benchCached :: [UB.Utf8Builder] -> Int64
 benchCached = BL.length . UB.toLazyByteString . mconcat

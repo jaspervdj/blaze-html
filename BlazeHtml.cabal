@@ -55,8 +55,7 @@ Library
                      lib/binary-0.5.0.2/src
 
   -- Modules exported by the library.
-  Exposed-modules:   Text.Blaze.Internal.Utf8Builder
-                     Text.Blaze
+  Exposed-modules:   Text.Blaze
                      Text.Blaze.Html4.Strict
                      Text.Blaze.Html4.Strict.Attributes
   
@@ -67,6 +66,8 @@ Library
   
   -- Modules not exported by this package.
   Other-modules:     Data.Binary.Builder
+                     Text.Blaze.Internal.Utf8Builder
+                     Text.Blaze.Internal.Utf8BuilderHtml
   
   -- Extra tools (e.g. alex, hsc2hs, ...) needed to build the source.
   -- Build-tools:         

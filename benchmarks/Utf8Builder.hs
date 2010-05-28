@@ -41,16 +41,16 @@ main = defaultMain
 
     cachedStrings :: [UB.Utf8Builder]
     cachedStrings =
-        replicate 100 (UB.cached $ UB.fromPreEscapedString "<img>")
+        replicate 100 (UB.optimizePiece $ UB.fromPreEscapedString "<img>")
     {-# NOINLINE cachedStrings #-}
 
     cachedByteStrings :: [UB.Utf8Builder]
     cachedByteStrings =
-        replicate 100 (UB.cached $ UB.unsafeFromByteString "<img>")
+        replicate 100 (UB.optimizePiece $ UB.unsafeFromByteString "<img>")
     {-# NOINLINE cachedByteStrings #-}
 
     cachedTexts :: [UB.Utf8Builder]
-    cachedTexts = replicate 100 (UB.cached $ UB.fromPreEscapedText "<img>")
+    cachedTexts = replicate 100 (UB.optimizePiece $ UB.fromPreEscapedText "<img>")
     {-# NOINLINE cachedTexts #-}
 
 benchStrings :: [String] -> Int64

@@ -566,3 +566,27 @@ only works well for very small builders. In the future, I will have two options:
 
 Internally, the `cached` function simply works by doing all encoding and
 escaping, so the single copy can happen with a fast call to `copyBytes`.
+
+Friday, May 28th, morning
+=========================
+
+A quick update. A renamed the `cached` function to `optimizePiece` for now, I
+might change the name back again if I make the implementation more general.
+Wednesday, Simon and I finished the RFC, and it was published yesterday. We're
+getting lots of feedback, but I want to wait a little more to react on it.
+
+What I'd like to do next is take our current `Utf8Builder` and split it into
+two parts: an `Utf8Builder`, and an `Utf8HtmlBuilder`, where the former is
+unaware of any HTML-specific issues.
+
+The first thing to do is write a regression test, so I can see if performance
+increases or decreases if I split it up. That's why I'm going to write a
+`lotsOfEscaping` benchmark, which tests the HTML-specific performance of the
+builder.
+
+(Hacking...)
+
+I abstracted away our builder a bit, and the result is that the escaping is
+now optimized. The benchmark I wrote for escaping dropped from initially 1.61ms
+to 1.12ms. Yay. There's also been a slight speedup in the other benchmarks as
+well, because some optimizations were quite general.

@@ -1,4 +1,4 @@
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving, OverloadedStrings #-}
 -- | A module for efficiently constructing a 'Builder'. This module offers more
 -- functions than the standard ones, and more HTML-specific functions.
 --
@@ -50,7 +50,7 @@ module Text.Blaze.Internal.Utf8Builder
 
 import Foreign
 import Data.Char (ord)
-import Data.Monoid (Monoid, mconcat)
+import Data.Monoid (Monoid (..))
 import Prelude hiding (quot)
 
 import Debug.Trace (trace)
@@ -71,9 +71,8 @@ newtype Utf8Builder = Utf8Builder Builder
 -- proper HTML escaping.
 --
 fromText :: Text -> Utf8Builder
-fromText text =
-    let (l, f) = T.foldl writeUnicodeChar writeNothing text
-    in Utf8Builder $ B.fromUnsafeWrite l f
+fromText text = fromUnsafeWrite $
+    T.foldl (\w c -> w `mappend` writeUnicodeChar c) mempty text
 --
 --SM: The above construction is going to kill you (in terms of memory and
 --latency) if the text is too long.  Could you ensure that the text is written
@@ -86,9 +85,8 @@ fromText text =
 -- do any HTML escaping.
 --
 fromPreEscapedText :: Text -> Utf8Builder
-fromPreEscapedText text =
-    let (l, f) = T.foldl writePreEscapedUnicodeChar writeNothing text
-    in Utf8Builder $ B.fromUnsafeWrite l f
+fromPreEscapedText text = fromUnsafeWrite $
+    T.foldl (\w c -> w `mappend` writePreEscapedUnicodeChar c) mempty text
 
 -- | /O(n)./ A Builder taking a 'S.ByteString`, copying it. This function is
 -- considered unsafe, as a `S.ByteString` can contain invalid UTF-8 bytes, so
@@ -96,12 +94,7 @@ fromPreEscapedText text =
 -- dealing with small strings than the fromByteString function from Builder.
 --
 unsafeFromByteString :: S.ByteString -> Utf8Builder
-unsafeFromByteString byteString = Utf8Builder $ B.fromUnsafeWrite l f
-  where
-    (fptr, o, l) = S.toForeignPtr byteString
-    f dst = do copyBytes dst (unsafeForeignPtrToPtr fptr `plusPtr` o) l
-               touchForeignPtr fptr
-    {-# INLINE f #-}
+unsafeFromByteString = fromUnsafeWrite . writeByteString
 
 -- | /O(1)./ Convert a Haskell character to a 'Utf8Builder', truncating it to a
 -- byte, and not doing any escaping.
@@ -114,24 +107,22 @@ fromPreEscapedAscii7Char = Utf8Builder . B.singleton . fromIntegral . ord
 -- proper escaping for HTML entities.
 --
 fromString :: String -> Utf8Builder
-fromString s =
-    let (l, f) = foldl writeUnicodeChar writeNothing s
-    in Utf8Builder $ B.fromUnsafeWrite l f
+fromString string = fromUnsafeWrite $
+    foldl (\w c -> w `mappend` writeUnicodeChar c) mempty string
 
 -- | /O(n)./ Convert a Haskell 'String' to a builder. Unlike 'fromHtmlString',
 -- this function will not do any escaping.
 --
 fromPreEscapedString :: String -> Utf8Builder
-fromPreEscapedString s =
-    let (l, f) = foldl writePreEscapedUnicodeChar writeNothing s
-    in Utf8Builder $ B.fromUnsafeWrite l f
+fromPreEscapedString string = fromUnsafeWrite $
+    foldl (\w c -> w `mappend` writePreEscapedUnicodeChar c) mempty string
 
 -- | /O(n)./ Optimize a small builder. This function has an initial speed
 -- penalty, but will speed up later calls of the optimized builder piece. This
 -- speedup will only work well for small builders (less than 1k characters).
 --
 optimizePiece :: Utf8Builder -> Utf8Builder
-optimizePiece = unsafeFromByteString . mconcat . L.toChunks . toLazyByteString
+optimizePiece = fromUnsafeWrite . optimizeWriteBuilder
 {-# INLINE optimizePiece #-}
 
 -- | /O(n)./ Convert the builder to a 'L.ByteString'.
@@ -145,71 +136,80 @@ toLazyByteString (Utf8Builder builder) = B.toLazyByteString builder
 toText :: Utf8Builder -> Text
 toText = T.concat . map T.decodeUtf8 . L.toChunks . toLazyByteString
 
--- | Function to create an empty write. This is used as initial value for folds.
+-- | Abstract representation of a write action to the internal buffer.
 --
-writeNothing :: (Int, Ptr Word8 -> IO ())
-writeNothing = (0, const $ return ())
-{-# INLINE writeNothing #-}
+data Write = Write
+    {-# UNPACK #-} !Int   -- ^ Number of bytes to be written.
+    (Ptr Word8 -> IO ())  -- ^ Actual write function.
+
+-- | Create a builder from a write.
+--
+fromUnsafeWrite :: Write        -- ^ Write to execute.
+                -> Utf8Builder  -- ^ Resulting builder.
+fromUnsafeWrite (Write l f) = Utf8Builder $ B.fromUnsafeWrite l f 
+{-# INLINE fromUnsafeWrite #-}
+
+-- | Optimize a small builder to a write operation.
+--
+optimizeWriteBuilder :: Utf8Builder  -- ^ Small builder to optimize.
+                     -> Write        -- ^ Resulting write.
+optimizeWriteBuilder = writeByteString . mconcat . L.toChunks . toLazyByteString
+{-# INLINE optimizeWriteBuilder #-}
+
+-- Create a monoid interface for the write actions.
+instance Monoid Write where
+    mempty = Write 0 (const $ return ())
+    {-# INLINE mempty #-}
+    mappend (Write l1 f1) (Write l2 f2) =
+        Write (l1 + l2) (\ptr -> f1 ptr >> f2 (ptr `plusPtr` l1))
+    {-# INLINE mappend #-}
+
+-- | Write a 'S.ByteString' to the builder.
+--
+writeByteString :: S.ByteString  -- ^ ByteString to write.
+                -> Write         -- ^ Resulting write.
+writeByteString byteString = Write l f
+  where
+    (fptr, o, l) = S.toForeignPtr byteString
+    f dst = do copyBytes dst (unsafeForeignPtrToPtr fptr `plusPtr` o) l
+               touchForeignPtr fptr
+    {-# INLINE f #-}
+{-# INLINE writeByteString #-}
 
 -- | Write an unicode character to a 'Builder', doing HTML escaping.
 --
 -- SM: I guess the escaping could be almost as efficient when using a copying
 -- fromByteString that is inlined appropriately.
 --
-writeUnicodeChar :: (Int, Ptr Word8 -> IO ()) -- ^ Current write state.
-                 -> Char                      -- ^ Character to write.
-                 -> (Int, Ptr Word8 -> IO ()) -- ^ Resulting state.
-writeUnicodeChar (l, f) '<' =
-    (l + 4, \ptr -> f ptr >> pokeArray (ptr `plusPtr` l) lt)
-  where
-    lt :: [Word8]
-    lt = map (fromIntegral . ord) "&lt;"
-writeUnicodeChar (l, f) '>' =
-    (l + 4, \ptr -> f ptr >> pokeArray (ptr `plusPtr` l) gt)
-  where
-    gt :: [Word8]
-    gt = map (fromIntegral . ord) "&gt;"
-writeUnicodeChar (l, f) '&' =
-    (l + 5, \ptr -> f ptr >> pokeArray (ptr `plusPtr` l) amp)
-  where
-    amp :: [Word8]
-    amp = map (fromIntegral . ord) "&amp;"
-writeUnicodeChar (l, f) '"' =
-    (l + 6, \ptr -> f ptr >> pokeArray (ptr `plusPtr` l) quot)
-  where
-    quot :: [Word8]
-    quot = map (fromIntegral . ord) "&quot;"
-writeUnicodeChar (l, f) '\'' =
-    (l + 6, \ptr -> f ptr >> pokeArray (ptr `plusPtr` l) apos)
-  where
-    apos :: [Word8]
-    apos = map (fromIntegral . ord) "&apos;"
-writeUnicodeChar (l, f) c = writePreEscapedUnicodeChar (l, f) c
+writeUnicodeChar :: Char   -- ^ Character to write.
+                 -> Write  -- ^ Resulting write.
+writeUnicodeChar '<' = optimizeWriteBuilder $ fromPreEscapedText "&lt;"
+writeUnicodeChar '>' = optimizeWriteBuilder $ fromPreEscapedText "&gt;"
+writeUnicodeChar '&' = optimizeWriteBuilder $ fromPreEscapedText "&amp;"
+writeUnicodeChar '"' = optimizeWriteBuilder $ fromPreEscapedText "&quot;"
+writeUnicodeChar '\'' = optimizeWriteBuilder $ fromPreEscapedText "&apos;"
+writeUnicodeChar c = writePreEscapedUnicodeChar c
 {-# INLINE writeUnicodeChar #-}
 
 -- | Write a Unicode character, encoding it as UTF-8.
 --
-writePreEscapedUnicodeChar :: (Int, Ptr Word8 -> IO ())  -- ^ Current state.
-                        -> Char                       -- ^ Character to write.
-                        -> (Int, Ptr Word8 -> IO ())  -- ^ Resulting state.
-writePreEscapedUnicodeChar (l, f) c = l `seq` encodeCharUtf8 f1 f2 f3 f4 c
+writePreEscapedUnicodeChar :: Char   -- ^ Character to write.
+                           -> Write  -- ^ Resulting write.
+writePreEscapedUnicodeChar = encodeCharUtf8 f1 f2 f3 f4
   where
-    f1 x = (l + 1, \ptr -> f ptr >> poke (ptr `plusPtr` l) x)
+    f1 x = Write 1 $ \ptr -> poke ptr x
 
-    f2 x1 x2 = (l + 2, \ptr -> let pos = ptr `plusPtr` l
-                               in f ptr >> poke pos x1
-                                        >> poke (pos `plusPtr` 1) x2)
+    f2 x1 x2 = Write 2 $ \ptr -> do poke ptr x1
+                                    poke (ptr `plusPtr` 1) x2
 
-    f3 x1 x2 x3 = (l + 3, \ptr -> let pos = ptr `plusPtr` l
-                                  in f ptr >> poke pos x1
-                                           >> poke (pos `plusPtr` 1) x2
-                                           >> poke (pos `plusPtr` 2) x3)
+    f3 x1 x2 x3 = Write 3 $ \ptr -> do poke ptr x1
+                                       poke (ptr `plusPtr` 1) x2
+                                       poke (ptr `plusPtr` 2) x3
 
-    f4 x1 x2 x3 x4 = (l + 4, \ptr -> let pos = ptr `plusPtr` l
-                                     in f ptr >> poke pos x1
-                                              >> poke (pos `plusPtr` 1) x2
-                                              >> poke (pos `plusPtr` 2) x3
-                                              >> poke (pos `plusPtr` 3) x4)
+    f4 x1 x2 x3 x4 = Write 4 $ \ptr -> do poke ptr x1
+                                          poke (ptr `plusPtr` 1) x2
+                                          poke (ptr `plusPtr` 2) x3
+                                          poke (ptr `plusPtr` 3) x4
 {-# INLINE writePreEscapedUnicodeChar #-}
 
 -- | Encode a Unicode character to another datatype, using UTF-8. This function

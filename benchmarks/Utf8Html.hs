@@ -20,6 +20,7 @@ main = defaultMain
     [ benchHtml "bigTable" bigTable bigTableData
     , benchHtml "basic" basic basicData
     , benchHtml "wideTree" wideTree wideTreeData
+    , benchHtml "wideTreeEscaping" wideTree wideTreeEscapingData
     , benchHtml "deepTree" deepTree deepTreeData
     , benchHtml "manyAttributes" manyAttributes manyAttributesData
     ]
@@ -45,6 +46,11 @@ main = defaultMain
     wideTreeData = take 5000 $
         cycle ["λf.(λx.fxx)(λx.fxx)", "These & Those", "Foobar", "lol"]
     {-# NOINLINE wideTreeData #-}
+    
+    wideTreeEscapingData :: [Text]
+    wideTreeEscapingData = take 1000 $
+        cycle ["<><>", "\"lol\"", "<&>", "'>>'"]
+    {-# NOINLINE wideTreeEscapingData #-}
 
     deepTreeData :: [Html -> Html]
     deepTreeData = take 1000 $
@@ -54,13 +60,18 @@ main = defaultMain
     manyAttributesData :: [Text]
     manyAttributesData = wideTreeData
 
-bigTable :: [[Int]] -> BL.ByteString
+-- | Render the argument matrix as an HTML table.
+--
+bigTable :: [[Int]]        -- ^ Matrix.
+         -> BL.ByteString  -- ^ Result.
 bigTable t = renderHtml $ table $ mconcat $ map row t
   where
     row r = tr $ mconcat $ map (td . string . show) r
 
-basic :: (Text, Text, [Text]) -- ^ (Title, User, Items)
-      -> BL.ByteString
+-- | Render a simple HTML page with some data.
+--
+basic :: (Text, Text, [Text])  -- ^ (Title, User, Items)
+      -> BL.ByteString         -- ^ Result.
 basic (title', user, items) = renderHtml $ html $ do
     head $ title $ text title'
     body $ do
@@ -73,15 +84,21 @@ basic (title', user, items) = renderHtml $ html $ do
         div ! id "footer" $ mempty
 
 -- | A benchmark producing a very wide but very shallow tree.
-wideTree :: [Text] -> BL.ByteString
+--
+wideTree :: [Text]         -- ^ Text to create a tree from.
+         -> BL.ByteString  -- ^ Result.
 wideTree = renderHtml . div . mapM_ ((p ! id "foo") . text)
 
 -- | Create a very deep tree with the specified tags.
-deepTree :: [Html -> Html] -> BL.ByteString
+--
+deepTree :: [Html -> Html]  -- ^ List of parent elements to nest.
+         -> BL.ByteString   -- ^ Result.
 deepTree = renderHtml . ($ text "deep") . foldl1 (.)
 
 -- | Create an element with many attributes.
-manyAttributes :: [Text] -> BL.ByteString
+--
+manyAttributes :: [Text]         -- ^ List of attribute values.
+               -> BL.ByteString  -- ^ Result.
 manyAttributes = renderHtml . foldl setAttribute img
   where
     setAttribute html value = html ! id (textValue value)

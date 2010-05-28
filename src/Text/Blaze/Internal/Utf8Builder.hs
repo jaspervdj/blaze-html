@@ -14,31 +14,20 @@ module Text.Blaze.Internal.Utf8Builder
       -- * The Utf8Builder type.
       Utf8Builder
 
+      -- * Creating Builders from characters.
+    , fromChar
+    , fromPreEscapedChar
+
       -- * Creating Builders from Text.
     , fromText
     , fromPreEscapedText
---SM: It seems strange to me that a Utf8 builder cares about escaping. This
---should be part of a HtmlBuilder if at all.
---
---The invariant added by a Utf8Builder is that it is a UTF-8 encoded sequence
---of Unicode characters.
-
-      -- * Creating Builders from ByteStrings.
-    , unsafeFromByteString
-
-      -- * Creating Builders from characters.
-    , fromPreEscapedAscii7Char
---SM: I'm not sure if this is needed. There are few places where the caller can
---    guarantee that his char is really Ascii7. I would incorporate these places
---    like showing ints or the like into the API of an Utf8Builder if it is really
---    needed for speed.
---
---    Or otherwise I would offer the interface of fromUnsafeBytestring and
---    fromUnsafeByte.
 
       -- * Creating Builders from Strings.
     , fromString
     , fromPreEscapedString
+
+      -- * Creating Builders from ByteStrings.
+    , unsafeFromByteString
 
       -- * Transformations on the builder.
     , optimizePiece
@@ -46,6 +35,16 @@ module Text.Blaze.Internal.Utf8Builder
       -- * Extracting the value from the builder.
     , toLazyByteString
     , toText
+
+      -- * Internal functions to extend the builder.
+      -- ** The write type.
+    , Write
+    , fromUnsafeWrite
+    , optimizeWriteBuilder
+
+      -- ** Functions to create a write.
+    , writeChar
+    , writeByteString
     ) where
 
 import Foreign
@@ -67,12 +66,23 @@ import qualified Data.Text.Encoding as T
 newtype Utf8Builder = Utf8Builder Builder
     deriving (Monoid)
 
+-- | /O(1)./ Convert a Haskell character to a 'Utf8Builder'.
+--
+fromChar :: Char -> Utf8Builder
+fromChar = fromUnsafeWrite . writeChar
+
+-- | /O(1)./ Convert a Haskell character to a 'Utf8Builder', without doing any
+-- escaping.
+--
+fromPreEscapedChar :: Char -> Utf8Builder
+fromPreEscapedChar = fromUnsafeWrite . writePreEscapedChar
+
 -- | /O(n)./ Convert a 'Text' value to a 'Utf8Builder'. This function does
 -- proper HTML escaping.
 --
 fromText :: Text -> Utf8Builder
 fromText text = fromUnsafeWrite $
-    T.foldl (\w c -> w `mappend` writeUnicodeChar c) mempty text
+    T.foldl (\w c -> w `mappend` writeChar c) mempty text
 --
 --SM: The above construction is going to kill you (in terms of memory and
 --latency) if the text is too long.  Could you ensure that the text is written
@@ -86,7 +96,21 @@ fromText text = fromUnsafeWrite $
 --
 fromPreEscapedText :: Text -> Utf8Builder
 fromPreEscapedText text = fromUnsafeWrite $
-    T.foldl (\w c -> w `mappend` writePreEscapedUnicodeChar c) mempty text
+    T.foldl (\w c -> w `mappend` writePreEscapedChar c) mempty text
+
+-- | /O(n)./ Convert a Haskell 'String' to a 'Utf8Builder'. This function does
+-- proper escaping for HTML entities.
+--
+fromString :: String -> Utf8Builder
+fromString string = fromUnsafeWrite $
+    foldl (\w c -> w `mappend` writeChar c) mempty string
+
+-- | /O(n)./ Convert a Haskell 'String' to a builder. Unlike 'fromHtmlString',
+-- this function will not do any escaping.
+--
+fromPreEscapedString :: String -> Utf8Builder
+fromPreEscapedString string = fromUnsafeWrite $
+    foldl (\w c -> w `mappend` writePreEscapedChar c) mempty string
 
 -- | /O(n)./ A Builder taking a 'S.ByteString`, copying it. This function is
 -- considered unsafe, as a `S.ByteString` can contain invalid UTF-8 bytes, so
@@ -95,27 +119,6 @@ fromPreEscapedText text = fromUnsafeWrite $
 --
 unsafeFromByteString :: S.ByteString -> Utf8Builder
 unsafeFromByteString = fromUnsafeWrite . writeByteString
-
--- | /O(1)./ Convert a Haskell character to a 'Utf8Builder', truncating it to a
--- byte, and not doing any escaping.
---
-fromPreEscapedAscii7Char :: Char -> Utf8Builder
-fromPreEscapedAscii7Char = Utf8Builder . B.singleton . fromIntegral . ord
-{-# INLINE fromPreEscapedAscii7Char #-}
-
--- | /O(n)./ Convert a Haskell 'String' to a 'Utf8Builder'. This function does
--- proper escaping for HTML entities.
---
-fromString :: String -> Utf8Builder
-fromString string = fromUnsafeWrite $
-    foldl (\w c -> w `mappend` writeUnicodeChar c) mempty string
-
--- | /O(n)./ Convert a Haskell 'String' to a builder. Unlike 'fromHtmlString',
--- this function will not do any escaping.
---
-fromPreEscapedString :: String -> Utf8Builder
-fromPreEscapedString string = fromUnsafeWrite $
-    foldl (\w c -> w `mappend` writePreEscapedUnicodeChar c) mempty string
 
 -- | /O(n)./ Optimize a small builder. This function has an initial speed
 -- penalty, but will speed up later calls of the optimized builder piece. This
@@ -142,6 +145,14 @@ data Write = Write
     {-# UNPACK #-} !Int   -- ^ Number of bytes to be written.
     (Ptr Word8 -> IO ())  -- ^ Actual write function.
 
+-- Create a monoid interface for the write actions.
+instance Monoid Write where
+    mempty = Write 0 (const $ return ())
+    {-# INLINE mempty #-}
+    mappend (Write l1 f1) (Write l2 f2) =
+        Write (l1 + l2) (\ptr -> f1 ptr >> f2 (ptr `plusPtr` l1))
+    {-# INLINE mappend #-}
+
 -- | Create a builder from a write.
 --
 fromUnsafeWrite :: Write        -- ^ Write to execute.
@@ -155,14 +166,6 @@ optimizeWriteBuilder :: Utf8Builder  -- ^ Small builder to optimize.
                      -> Write        -- ^ Resulting write.
 optimizeWriteBuilder = writeByteString . mconcat . L.toChunks . toLazyByteString
 {-# INLINE optimizeWriteBuilder #-}
-
--- Create a monoid interface for the write actions.
-instance Monoid Write where
-    mempty = Write 0 (const $ return ())
-    {-# INLINE mempty #-}
-    mappend (Write l1 f1) (Write l2 f2) =
-        Write (l1 + l2) (\ptr -> f1 ptr >> f2 (ptr `plusPtr` l1))
-    {-# INLINE mappend #-}
 
 -- | Write a 'S.ByteString' to the builder.
 --
@@ -181,21 +184,21 @@ writeByteString byteString = Write l f
 -- SM: I guess the escaping could be almost as efficient when using a copying
 -- fromByteString that is inlined appropriately.
 --
-writeUnicodeChar :: Char   -- ^ Character to write.
-                 -> Write  -- ^ Resulting write.
-writeUnicodeChar '<' = optimizeWriteBuilder $ fromPreEscapedText "&lt;"
-writeUnicodeChar '>' = optimizeWriteBuilder $ fromPreEscapedText "&gt;"
-writeUnicodeChar '&' = optimizeWriteBuilder $ fromPreEscapedText "&amp;"
-writeUnicodeChar '"' = optimizeWriteBuilder $ fromPreEscapedText "&quot;"
-writeUnicodeChar '\'' = optimizeWriteBuilder $ fromPreEscapedText "&apos;"
-writeUnicodeChar c = writePreEscapedUnicodeChar c
-{-# INLINE writeUnicodeChar #-}
+writeChar :: Char   -- ^ Character to write.
+          -> Write  -- ^ Resulting write.
+writeChar '<' = optimizeWriteBuilder $ fromPreEscapedText "&lt;"
+writeChar '>' = optimizeWriteBuilder $ fromPreEscapedText "&gt;"
+writeChar '&' = optimizeWriteBuilder $ fromPreEscapedText "&amp;"
+writeChar '"' = optimizeWriteBuilder $ fromPreEscapedText "&quot;"
+writeChar '\'' = optimizeWriteBuilder $ fromPreEscapedText "&apos;"
+writeChar c = writePreEscapedChar c
+{-# INLINE writeChar #-}
 
 -- | Write a Unicode character, encoding it as UTF-8.
 --
-writePreEscapedUnicodeChar :: Char   -- ^ Character to write.
-                           -> Write  -- ^ Resulting write.
-writePreEscapedUnicodeChar = encodeCharUtf8 f1 f2 f3 f4
+writePreEscapedChar :: Char   -- ^ Character to write.
+                    -> Write  -- ^ Resulting write.
+writePreEscapedChar = encodeCharUtf8 f1 f2 f3 f4
   where
     f1 x = Write 1 $ \ptr -> poke ptr x
 
@@ -210,7 +213,7 @@ writePreEscapedUnicodeChar = encodeCharUtf8 f1 f2 f3 f4
                                           poke (ptr `plusPtr` 1) x2
                                           poke (ptr `plusPtr` 2) x3
                                           poke (ptr `plusPtr` 3) x4
-{-# INLINE writePreEscapedUnicodeChar #-}
+{-# INLINE writePreEscapedChar #-}
 
 -- | Encode a Unicode character to another datatype, using UTF-8. This function
 -- acts as an abstract way of encoding characters, as it is unaware of what

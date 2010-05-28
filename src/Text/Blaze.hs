@@ -103,7 +103,7 @@ parent :: Text  -- ^ HTML element tag.
 parent tag = \inner -> HtmlM $ \attrs ->
     begin
       `mappend` attrs
-      `mappend` B.fromPreEscapedAscii7Char '>'
+      `mappend` B.fromPreEscapedChar '>'
       `mappend` runHtml inner mempty
       `mappend` end
   where
@@ -149,7 +149,7 @@ attribute :: Text            -- ^ Key for the HTML attribute.
 attribute key value = Attribute $ \(HtmlM h) -> HtmlM $ \attrs ->
     h $ attrs `mappend` begin
               `mappend` attributeValue value
-              `mappend` B.fromPreEscapedAscii7Char '"'
+              `mappend` B.fromPreEscapedChar '"'
   where
     begin :: Utf8Builder
     begin = B.optimizePiece $ B.fromPreEscapedText $ " " `mappend` key

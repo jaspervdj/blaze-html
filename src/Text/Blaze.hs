@@ -1,10 +1,11 @@
-{-# LANGUAGE OverloadedStrings, GeneralizedNewtypeDeriving, RankNTypes,
+{-# LANGUAGE OverloadedStrings, GeneralizedNewtypeDeriving, Rank2Types,
              FlexibleInstances #-}
 -- | Core exposed functions.
 module Text.Blaze
     (
       -- * Important types.
       Html
+    , Tag
     , Attribute
     , AttributeValue
 
@@ -19,6 +20,10 @@ module Text.Blaze
     , preEscapedText
     , string
     , preEscapedString
+
+      -- * Converting values to tags.
+    , textTag
+    , stringTag
 
       -- * Converting values to attribute values.
     , textValue
@@ -49,8 +54,13 @@ import qualified Text.Blaze.Internal.Utf8BuilderHtml as B
 --
 newtype Html a = Html
     { -- | Function to extract the 'Builder'.
-      runHtml :: Utf8Builder -> Utf8Builder
+      unHtml :: Utf8Builder -> Utf8Builder
     }
+
+-- | Type for an HTML tag.
+--
+newtype Tag = Tag { unTag :: Utf8Builder }
+    deriving (Monoid)
 
 -- | Type for an attribute.
 --
@@ -74,7 +84,7 @@ instance Monoid (Html a) where
         h1 attrs `mappend` h2 attrs
     {-# INLINE mappend #-}
     mconcat hs = Html $ \attrs ->
-        foldr mappend mempty $ map (flip runHtml attrs) hs
+        foldr mappend mempty $ map (flip unHtml attrs) hs
     {-# INLINE mconcat #-}
 
 instance Monad Html where
@@ -90,32 +100,36 @@ instance IsString (Html a) where
     fromString = string
     {-# INLINE fromString #-}
 
+instance IsString Tag where
+    fromString = stringTag
+    {-# INLINE fromString #-}
+
 instance IsString AttributeValue where
     fromString = stringValue
     {-# INLINE fromString #-}
 
 -- | Create an HTML parent element.
 --
-parent :: Text    -- ^ HTML element tag.
+parent :: Tag     -- ^ HTML element tag.
        -> Html a  -- ^ Inner HTML, to place in this element.
        -> Html a  -- ^ Resulting HTML.
 parent tag = \inner -> Html $ \attrs ->
     begin
       `mappend` attrs
       `mappend` B.fromChar '>'
-      `mappend` runHtml inner mempty
+      `mappend` unHtml inner mempty
       `mappend` end
   where
     begin :: Utf8Builder
-    begin = B.optimizePiece $ B.fromText $ "<" `mappend` tag
+    begin = B.optimizePiece $ B.fromChar '<' `mappend` unTag tag
     end :: Utf8Builder
-    end = B.optimizePiece $ B.fromText $ "</" `mappend` tag
-                                              `mappend` ">"
+    end = B.optimizePiece $ B.fromText "</" `mappend` unTag tag
+                                            `mappend` B.fromChar '>'
 {-# INLINE parent #-}
 
 -- | Create an HTML leaf element.
 --
-leaf :: Text    -- ^ HTML element tag.
+leaf :: Tag    -- ^ HTML element tag.
      -> Html a  -- ^ Resulting HTML.
 leaf tag = Html $ \attrs ->
     begin
@@ -123,7 +137,7 @@ leaf tag = Html $ \attrs ->
       `mappend` end
   where
     begin :: Utf8Builder
-    begin = B.optimizePiece $ B.fromText $ "<" `mappend` tag
+    begin = B.optimizePiece $ B.fromChar '<' `mappend` unTag tag
     end :: Utf8Builder
     end = B.optimizePiece $ B.fromText $ " />"
 {-# INLINE leaf #-}
@@ -131,7 +145,7 @@ leaf tag = Html $ \attrs ->
 -- | Produce an open tag. This can be used for open tags in HTML 4.01, like
 -- for example @<br>@.
 --
-open :: Text    -- ^ Tag for the open HTML element.
+open :: Tag     -- ^ Tag for the open HTML element.
      -> Html a  -- ^ Resulting HTML.
 open tag = Html $ \attrs ->
     begin
@@ -139,12 +153,12 @@ open tag = Html $ \attrs ->
       `mappend` B.fromChar '>'
   where
     begin :: Utf8Builder
-    begin = B.optimizePiece $ B.fromText $ "<" `mappend` tag
+    begin = B.optimizePiece $ B.fromChar '<' `mappend` unTag tag
 {-# INLINE open #-}
 
 -- | Create an HTML attribute.
 --
-attribute :: Text            -- ^ Key for the HTML attribute.
+attribute :: Tag             -- ^ Key for the HTML attribute.
           -> AttributeValue  -- ^ Value for the HTML attribute.
           -> Attribute       -- ^ Resulting HTML attribute.
 attribute key value = Attribute $ \(Html h) -> Html $ \attrs ->
@@ -153,8 +167,8 @@ attribute key value = Attribute $ \(Html h) -> Html $ \attrs ->
               `mappend` B.fromChar '"'
   where
     begin :: Utf8Builder
-    begin = B.optimizePiece $ B.fromText $ " " `mappend` key
-                                               `mappend` "=\""
+    begin = B.optimizePiece $ B.fromChar ' ' `mappend` unTag key
+                                             `mappend` B.fromText "=\""
 {-# INLINE attribute #-}
 
 class Attributable h where
@@ -217,6 +231,14 @@ preEscapedString :: String -> Html a
 preEscapedString = Html . const . B.fromString
 {-# INLINE preEscapedString #-}
 
+textTag :: Text -> Tag
+textTag = Tag . B.fromText
+{-# INLINE textTag #-}
+
+stringTag :: String -> Tag
+stringTag = Tag . B.fromString
+{-# INLINE stringTag #-}
+
 -- | Render an attrbitute value from 'Text'.
 --
 textValue :: Text            -- ^ The actual value.
@@ -246,5 +268,5 @@ preEscapedStringValue = AttributeValue . B.fromString
 -- | /O(n)./ Render the HTML fragment to lazy 'L.ByteString'.
 --
 renderHtml :: Html a -> L.ByteString
-renderHtml = B.toLazyByteString . flip runHtml mempty
+renderHtml = B.toLazyByteString . flip unHtml mempty
 {-# INLINE renderHtml #-}

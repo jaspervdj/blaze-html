@@ -194,7 +194,7 @@ makeAttribute name = unlines
     , "-- > <div " ++ name ++ "=\"bar\">Hello.</div>"
     , "--"
     , function        ++ " :: AttributeValue  -- ^ Attribute value."
-    , spaces function ++ " -> Attribute a     -- ^ Resulting attribute."
+    , spaces function ++ " -> Attribute       -- ^ Resulting attribute."
     , function ++ " = attribute \"" ++ name ++ "\""
     , "{-# INLINE " ++ function ++ " #-}"
     ]

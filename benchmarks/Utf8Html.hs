@@ -75,19 +75,19 @@ basic :: (Text, Text, [Text])  -- ^ (Title, User, Items)
 basic (title', user, items) = renderHtml $ html $ do
     head $ title $ text title'
     body $ do
-        div <! id "header" $ (h1 $ text title')
+        div ! id "header" $ (h1 $ text title')
         p $ "Hello, " `mappend` text user `mappend` text "!"
         p $ "Hello, me!"
         p $ "Hello, world!"
         h2 $ "loop"
         mconcat $ map (li . text) items
-        div <! id "footer" $ mempty
+        div ! id "footer" $ mempty
 
 -- | A benchmark producing a very wide but very shallow tree.
 --
 wideTree :: [Text]         -- ^ Text to create a tree from.
          -> BL.ByteString  -- ^ Result.
-wideTree = renderHtml . div . mapM_ ((p <! id "foo") . text)
+wideTree = renderHtml . div . mapM_ ((p ! id "foo") . text)
 
 -- | Create a very deep tree with the specified tags.
 --

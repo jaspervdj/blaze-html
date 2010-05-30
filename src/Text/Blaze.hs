@@ -1,4 +1,5 @@
-{-# LANGUAGE FlexibleInstances, OverloadedStrings #-}
+{-# LANGUAGE OverloadedStrings, GeneralizedNewtypeDeriving, RankNTypes,
+             FlexibleInstances #-}
 -- | Core exposed functions.
 module Text.Blaze
     (
@@ -27,7 +28,6 @@ module Text.Blaze
 
       -- * Setting attributes
     , (!)
-    , (<!)
 
       -- * Rendering HTML.
     , renderHtml
@@ -54,11 +54,12 @@ newtype Html a = Html
 
 -- | Type for an attribute.
 --
-newtype Attribute a = Attribute (Html a -> Html a)
+newtype Attribute = Attribute (forall a. Html a -> Html a)
 
 -- | The type for an attribute value.
 --
 newtype AttributeValue = AttributeValue { attributeValue :: Utf8Builder }
+    deriving (Monoid)
 
 instance Monoid (Html a) where
     mempty = Html $ \_ -> mempty
@@ -145,7 +146,7 @@ open tag = Html $ \attrs ->
 --
 attribute :: Text            -- ^ Key for the HTML attribute.
           -> AttributeValue  -- ^ Value for the HTML attribute.
-          -> Attribute a     -- ^ Resulting HTML attribute.
+          -> Attribute       -- ^ Resulting HTML attribute.
 attribute key value = Attribute $ \(Html h) -> Html $ \attrs ->
     h $ attrs `mappend` begin
               `mappend` attributeValue value
@@ -156,36 +157,36 @@ attribute key value = Attribute $ \(Html h) -> Html $ \attrs ->
                                                `mappend` "=\""
 {-# INLINE attribute #-}
 
--- | Apply an attribute to a leaf element.
---
--- Example:
---
--- > img ! src "foo.png"
---
--- Result:
---
--- > <img src="foo.png" />
---
-(!) :: Html a -> Attribute a -> Html a
-h ! (Attribute f) = f h
-{-# INLINE (!) #-}
+class Attributable h where
+    -- | Apply an attribute to an element.
+    --
+    -- Example:
+    --
+    -- > img ! src "foo.png"
+    --
+    -- Result:
+    --
+    -- > <img src="foo.png" />
+    --
+    -- This can be used on nested elements as well.
+    --
+    -- Example:
+    --
+    -- > p ! style "float: right" $ "Hello!"
+    --
+    -- Result:
+    --
+    -- > <p style="float: right">Hello!</p>
+    --
+    (!) :: h -> Attribute -> h
 
+instance Attributable (Html a) where
+    h ! (Attribute f) = f h
+    {-# INLINE (!) #-}
 
--- | Apply an attribute to a parent element.
---
--- Example:
---
--- > p ! style "float: right" $ "Hello!"
---
--- Result:
---
--- > <p style="float: right">Hello!</p>
---
-(<!) :: (Html a -> Html a)
-     -> Attribute a
-     -> (Html a -> Html a)
-f <! (Attribute g) = \h -> g (f h)
-{-# INLINE (<!) #-}
+instance Attributable (Html a -> Html a) where
+    h ! (Attribute f) = f . h
+    {-# INLINE (!) #-}
 
 -- | Render text. This is the preferred way of converting string
 -- datatypes to HTML.

@@ -109,7 +109,7 @@ import Text.Blaze (Attribute, AttributeValue, attribute)
 -- > <div abbr="bar">Hello.</div>
 --
 abbr :: AttributeValue  -- ^ Attribute value.
-     -> Attribute a     -- ^ Resulting attribute.
+     -> Attribute       -- ^ Resulting attribute.
 abbr = attribute "abbr"
 {-# INLINE abbr #-}
 
@@ -124,7 +124,7 @@ abbr = attribute "abbr"
 -- > <div accept="bar">Hello.</div>
 --
 accept :: AttributeValue  -- ^ Attribute value.
-       -> Attribute a     -- ^ Resulting attribute.
+       -> Attribute       -- ^ Resulting attribute.
 accept = attribute "accept"
 {-# INLINE accept #-}
 
@@ -139,7 +139,7 @@ accept = attribute "accept"
 -- > <div accesskey="bar">Hello.</div>
 --
 accesskey :: AttributeValue  -- ^ Attribute value.
-          -> Attribute a     -- ^ Resulting attribute.
+          -> Attribute       -- ^ Resulting attribute.
 accesskey = attribute "accesskey"
 {-# INLINE accesskey #-}
 
@@ -154,7 +154,7 @@ accesskey = attribute "accesskey"
 -- > <div action="bar">Hello.</div>
 --
 action :: AttributeValue  -- ^ Attribute value.
-       -> Attribute a     -- ^ Resulting attribute.
+       -> Attribute       -- ^ Resulting attribute.
 action = attribute "action"
 {-# INLINE action #-}
 
@@ -169,7 +169,7 @@ action = attribute "action"
 -- > <div align="bar">Hello.</div>
 --
 align :: AttributeValue  -- ^ Attribute value.
-      -> Attribute a     -- ^ Resulting attribute.
+      -> Attribute       -- ^ Resulting attribute.
 align = attribute "align"
 {-# INLINE align #-}
 
@@ -184,7 +184,7 @@ align = attribute "align"
 -- > <div alt="bar">Hello.</div>
 --
 alt :: AttributeValue  -- ^ Attribute value.
-    -> Attribute a     -- ^ Resulting attribute.
+    -> Attribute       -- ^ Resulting attribute.
 alt = attribute "alt"
 {-# INLINE alt #-}
 
@@ -199,7 +199,7 @@ alt = attribute "alt"
 -- > <div archive="bar">Hello.</div>
 --
 archive :: AttributeValue  -- ^ Attribute value.
-        -> Attribute a     -- ^ Resulting attribute.
+        -> Attribute       -- ^ Resulting attribute.
 archive = attribute "archive"
 {-# INLINE archive #-}
 
@@ -214,7 +214,7 @@ archive = attribute "archive"
 -- > <div axis="bar">Hello.</div>
 --
 axis :: AttributeValue  -- ^ Attribute value.
-     -> Attribute a     -- ^ Resulting attribute.
+     -> Attribute       -- ^ Resulting attribute.
 axis = attribute "axis"
 {-# INLINE axis #-}
 
@@ -229,7 +229,7 @@ axis = attribute "axis"
 -- > <div border="bar">Hello.</div>
 --
 border :: AttributeValue  -- ^ Attribute value.
-       -> Attribute a     -- ^ Resulting attribute.
+       -> Attribute       -- ^ Resulting attribute.
 border = attribute "border"
 {-# INLINE border #-}
 
@@ -244,7 +244,7 @@ border = attribute "border"
 -- > <div cellpadding="bar">Hello.</div>
 --
 cellpadding :: AttributeValue  -- ^ Attribute value.
-            -> Attribute a     -- ^ Resulting attribute.
+            -> Attribute       -- ^ Resulting attribute.
 cellpadding = attribute "cellpadding"
 {-# INLINE cellpadding #-}
 
@@ -259,7 +259,7 @@ cellpadding = attribute "cellpadding"
 -- > <div cellspacing="bar">Hello.</div>
 --
 cellspacing :: AttributeValue  -- ^ Attribute value.
-            -> Attribute a     -- ^ Resulting attribute.
+            -> Attribute       -- ^ Resulting attribute.
 cellspacing = attribute "cellspacing"
 {-# INLINE cellspacing #-}
 
@@ -274,7 +274,7 @@ cellspacing = attribute "cellspacing"
 -- > <div char="bar">Hello.</div>
 --
 char :: AttributeValue  -- ^ Attribute value.
-     -> Attribute a     -- ^ Resulting attribute.
+     -> Attribute       -- ^ Resulting attribute.
 char = attribute "char"
 {-# INLINE char #-}
 
@@ -289,7 +289,7 @@ char = attribute "char"
 -- > <div charoff="bar">Hello.</div>
 --
 charoff :: AttributeValue  -- ^ Attribute value.
-        -> Attribute a     -- ^ Resulting attribute.
+        -> Attribute       -- ^ Resulting attribute.
 charoff = attribute "charoff"
 {-# INLINE charoff #-}
 
@@ -304,7 +304,7 @@ charoff = attribute "charoff"
 -- > <div charset="bar">Hello.</div>
 --
 charset :: AttributeValue  -- ^ Attribute value.
-        -> Attribute a     -- ^ Resulting attribute.
+        -> Attribute       -- ^ Resulting attribute.
 charset = attribute "charset"
 {-# INLINE charset #-}
 
@@ -319,7 +319,7 @@ charset = attribute "charset"
 -- > <div checked="bar">Hello.</div>
 --
 checked :: AttributeValue  -- ^ Attribute value.
-        -> Attribute a     -- ^ Resulting attribute.
+        -> Attribute       -- ^ Resulting attribute.
 checked = attribute "checked"
 {-# INLINE checked #-}
 
@@ -334,7 +334,7 @@ checked = attribute "checked"
 -- > <div cite="bar">Hello.</div>
 --
 cite :: AttributeValue  -- ^ Attribute value.
-     -> Attribute a     -- ^ Resulting attribute.
+     -> Attribute       -- ^ Resulting attribute.
 cite = attribute "cite"
 {-# INLINE cite #-}
 
@@ -349,7 +349,7 @@ cite = attribute "cite"
 -- > <div class="bar">Hello.</div>
 --
 class_ :: AttributeValue  -- ^ Attribute value.
-       -> Attribute a     -- ^ Resulting attribute.
+       -> Attribute       -- ^ Resulting attribute.
 class_ = attribute "class"
 {-# INLINE class_ #-}
 
@@ -364,7 +364,7 @@ class_ = attribute "class"
 -- > <div classid="bar">Hello.</div>
 --
 classid :: AttributeValue  -- ^ Attribute value.
-        -> Attribute a     -- ^ Resulting attribute.
+        -> Attribute       -- ^ Resulting attribute.
 classid = attribute "classid"
 {-# INLINE classid #-}
 
@@ -379,7 +379,7 @@ classid = attribute "classid"
 -- > <div codebase="bar">Hello.</div>
 --
 codebase :: AttributeValue  -- ^ Attribute value.
-         -> Attribute a     -- ^ Resulting attribute.
+         -> Attribute       -- ^ Resulting attribute.
 codebase = attribute "codebase"
 {-# INLINE codebase #-}
 
@@ -394,7 +394,7 @@ codebase = attribute "codebase"
 -- > <div codetype="bar">Hello.</div>
 --
 codetype :: AttributeValue  -- ^ Attribute value.
-         -> Attribute a     -- ^ Resulting attribute.
+         -> Attribute       -- ^ Resulting attribute.
 codetype = attribute "codetype"
 {-# INLINE codetype #-}
 
@@ -409,7 +409,7 @@ codetype = attribute "codetype"
 -- > <div cols="bar">Hello.</div>
 --
 cols :: AttributeValue  -- ^ Attribute value.
-     -> Attribute a     -- ^ Resulting attribute.
+     -> Attribute       -- ^ Resulting attribute.
 cols = attribute "cols"
 {-# INLINE cols #-}
 
@@ -424,7 +424,7 @@ cols = attribute "cols"
 -- > <div colspan="bar">Hello.</div>
 --
 colspan :: AttributeValue  -- ^ Attribute value.
-        -> Attribute a     -- ^ Resulting attribute.
+        -> Attribute       -- ^ Resulting attribute.
 colspan = attribute "colspan"
 {-# INLINE colspan #-}
 
@@ -439,7 +439,7 @@ colspan = attribute "colspan"
 -- > <div content="bar">Hello.</div>
 --
 content :: AttributeValue  -- ^ Attribute value.
-        -> Attribute a     -- ^ Resulting attribute.
+        -> Attribute       -- ^ Resulting attribute.
 content = attribute "content"
 {-# INLINE content #-}
 
@@ -454,7 +454,7 @@ content = attribute "content"
 -- > <div coords="bar">Hello.</div>
 --
 coords :: AttributeValue  -- ^ Attribute value.
-       -> Attribute a     -- ^ Resulting attribute.
+       -> Attribute       -- ^ Resulting attribute.
 coords = attribute "coords"
 {-# INLINE coords #-}
 
@@ -469,7 +469,7 @@ coords = attribute "coords"
 -- > <div data="bar">Hello.</div>
 --
 data_ :: AttributeValue  -- ^ Attribute value.
-      -> Attribute a     -- ^ Resulting attribute.
+      -> Attribute       -- ^ Resulting attribute.
 data_ = attribute "data"
 {-# INLINE data_ #-}
 
@@ -484,7 +484,7 @@ data_ = attribute "data"
 -- > <div datetime="bar">Hello.</div>
 --
 datetime :: AttributeValue  -- ^ Attribute value.
-         -> Attribute a     -- ^ Resulting attribute.
+         -> Attribute       -- ^ Resulting attribute.
 datetime = attribute "datetime"
 {-# INLINE datetime #-}
 
@@ -499,7 +499,7 @@ datetime = attribute "datetime"
 -- > <div declare="bar">Hello.</div>
 --
 declare :: AttributeValue  -- ^ Attribute value.
-        -> Attribute a     -- ^ Resulting attribute.
+        -> Attribute       -- ^ Resulting attribute.
 declare = attribute "declare"
 {-# INLINE declare #-}
 
@@ -514,7 +514,7 @@ declare = attribute "declare"
 -- > <div defer="bar">Hello.</div>
 --
 defer :: AttributeValue  -- ^ Attribute value.
-      -> Attribute a     -- ^ Resulting attribute.
+      -> Attribute       -- ^ Resulting attribute.
 defer = attribute "defer"
 {-# INLINE defer #-}
 
@@ -529,7 +529,7 @@ defer = attribute "defer"
 -- > <div dir="bar">Hello.</div>
 --
 dir :: AttributeValue  -- ^ Attribute value.
-    -> Attribute a     -- ^ Resulting attribute.
+    -> Attribute       -- ^ Resulting attribute.
 dir = attribute "dir"
 {-# INLINE dir #-}
 
@@ -544,7 +544,7 @@ dir = attribute "dir"
 -- > <div disabled="bar">Hello.</div>
 --
 disabled :: AttributeValue  -- ^ Attribute value.
-         -> Attribute a     -- ^ Resulting attribute.
+         -> Attribute       -- ^ Resulting attribute.
 disabled = attribute "disabled"
 {-# INLINE disabled #-}
 
@@ -559,7 +559,7 @@ disabled = attribute "disabled"
 -- > <div for="bar">Hello.</div>
 --
 for :: AttributeValue  -- ^ Attribute value.
-    -> Attribute a     -- ^ Resulting attribute.
+    -> Attribute       -- ^ Resulting attribute.
 for = attribute "for"
 {-# INLINE for #-}
 
@@ -574,7 +574,7 @@ for = attribute "for"
 -- > <div frame="bar">Hello.</div>
 --
 frame :: AttributeValue  -- ^ Attribute value.
-      -> Attribute a     -- ^ Resulting attribute.
+      -> Attribute       -- ^ Resulting attribute.
 frame = attribute "frame"
 {-# INLINE frame #-}
 
@@ -589,7 +589,7 @@ frame = attribute "frame"
 -- > <div headers="bar">Hello.</div>
 --
 headers :: AttributeValue  -- ^ Attribute value.
-        -> Attribute a     -- ^ Resulting attribute.
+        -> Attribute       -- ^ Resulting attribute.
 headers = attribute "headers"
 {-# INLINE headers #-}
 
@@ -604,7 +604,7 @@ headers = attribute "headers"
 -- > <div height="bar">Hello.</div>
 --
 height :: AttributeValue  -- ^ Attribute value.
-       -> Attribute a     -- ^ Resulting attribute.
+       -> Attribute       -- ^ Resulting attribute.
 height = attribute "height"
 {-# INLINE height #-}
 
@@ -619,7 +619,7 @@ height = attribute "height"
 -- > <div href="bar">Hello.</div>
 --
 href :: AttributeValue  -- ^ Attribute value.
-     -> Attribute a     -- ^ Resulting attribute.
+     -> Attribute       -- ^ Resulting attribute.
 href = attribute "href"
 {-# INLINE href #-}
 
@@ -634,7 +634,7 @@ href = attribute "href"
 -- > <div hreflang="bar">Hello.</div>
 --
 hreflang :: AttributeValue  -- ^ Attribute value.
-         -> Attribute a     -- ^ Resulting attribute.
+         -> Attribute       -- ^ Resulting attribute.
 hreflang = attribute "hreflang"
 {-# INLINE hreflang #-}
 
@@ -649,7 +649,7 @@ hreflang = attribute "hreflang"
 -- > <div http-equiv="bar">Hello.</div>
 --
 http_equiv :: AttributeValue  -- ^ Attribute value.
-           -> Attribute a     -- ^ Resulting attribute.
+           -> Attribute       -- ^ Resulting attribute.
 http_equiv = attribute "http-equiv"
 {-# INLINE http_equiv #-}
 
@@ -664,7 +664,7 @@ http_equiv = attribute "http-equiv"
 -- > <div id="bar">Hello.</div>
 --
 id :: AttributeValue  -- ^ Attribute value.
-   -> Attribute a     -- ^ Resulting attribute.
+   -> Attribute       -- ^ Resulting attribute.
 id = attribute "id"
 {-# INLINE id #-}
 
@@ -679,7 +679,7 @@ id = attribute "id"
 -- > <div label="bar">Hello.</div>
 --
 label :: AttributeValue  -- ^ Attribute value.
-      -> Attribute a     -- ^ Resulting attribute.
+      -> Attribute       -- ^ Resulting attribute.
 label = attribute "label"
 {-# INLINE label #-}
 
@@ -694,7 +694,7 @@ label = attribute "label"
 -- > <div lang="bar">Hello.</div>
 --
 lang :: AttributeValue  -- ^ Attribute value.
-     -> Attribute a     -- ^ Resulting attribute.
+     -> Attribute       -- ^ Resulting attribute.
 lang = attribute "lang"
 {-# INLINE lang #-}
 
@@ -709,7 +709,7 @@ lang = attribute "lang"
 -- > <div maxlength="bar">Hello.</div>
 --
 maxlength :: AttributeValue  -- ^ Attribute value.
-          -> Attribute a     -- ^ Resulting attribute.
+          -> Attribute       -- ^ Resulting attribute.
 maxlength = attribute "maxlength"
 {-# INLINE maxlength #-}
 
@@ -724,7 +724,7 @@ maxlength = attribute "maxlength"
 -- > <div media="bar">Hello.</div>
 --
 media :: AttributeValue  -- ^ Attribute value.
-      -> Attribute a     -- ^ Resulting attribute.
+      -> Attribute       -- ^ Resulting attribute.
 media = attribute "media"
 {-# INLINE media #-}
 
@@ -739,7 +739,7 @@ media = attribute "media"
 -- > <div method="bar">Hello.</div>
 --
 method :: AttributeValue  -- ^ Attribute value.
-       -> Attribute a     -- ^ Resulting attribute.
+       -> Attribute       -- ^ Resulting attribute.
 method = attribute "method"
 {-# INLINE method #-}
 
@@ -754,7 +754,7 @@ method = attribute "method"
 -- > <div multiple="bar">Hello.</div>
 --
 multiple :: AttributeValue  -- ^ Attribute value.
-         -> Attribute a     -- ^ Resulting attribute.
+         -> Attribute       -- ^ Resulting attribute.
 multiple = attribute "multiple"
 {-# INLINE multiple #-}
 
@@ -769,7 +769,7 @@ multiple = attribute "multiple"
 -- > <div name="bar">Hello.</div>
 --
 name :: AttributeValue  -- ^ Attribute value.
-     -> Attribute a     -- ^ Resulting attribute.
+     -> Attribute       -- ^ Resulting attribute.
 name = attribute "name"
 {-# INLINE name #-}
 
@@ -784,7 +784,7 @@ name = attribute "name"
 -- > <div nohref="bar">Hello.</div>
 --
 nohref :: AttributeValue  -- ^ Attribute value.
-       -> Attribute a     -- ^ Resulting attribute.
+       -> Attribute       -- ^ Resulting attribute.
 nohref = attribute "nohref"
 {-# INLINE nohref #-}
 
@@ -799,7 +799,7 @@ nohref = attribute "nohref"
 -- > <div onabort="bar">Hello.</div>
 --
 onabort :: AttributeValue  -- ^ Attribute value.
-        -> Attribute a     -- ^ Resulting attribute.
+        -> Attribute       -- ^ Resulting attribute.
 onabort = attribute "onabort"
 {-# INLINE onabort #-}
 
@@ -814,7 +814,7 @@ onabort = attribute "onabort"
 -- > <div onblur="bar">Hello.</div>
 --
 onblur :: AttributeValue  -- ^ Attribute value.
-       -> Attribute a     -- ^ Resulting attribute.
+       -> Attribute       -- ^ Resulting attribute.
 onblur = attribute "onblur"
 {-# INLINE onblur #-}
 
@@ -829,7 +829,7 @@ onblur = attribute "onblur"
 -- > <div onchange="bar">Hello.</div>
 --
 onchange :: AttributeValue  -- ^ Attribute value.
-         -> Attribute a     -- ^ Resulting attribute.
+         -> Attribute       -- ^ Resulting attribute.
 onchange = attribute "onchange"
 {-# INLINE onchange #-}
 
@@ -844,7 +844,7 @@ onchange = attribute "onchange"
 -- > <div onclick="bar">Hello.</div>
 --
 onclick :: AttributeValue  -- ^ Attribute value.
-        -> Attribute a     -- ^ Resulting attribute.
+        -> Attribute       -- ^ Resulting attribute.
 onclick = attribute "onclick"
 {-# INLINE onclick #-}
 
@@ -859,7 +859,7 @@ onclick = attribute "onclick"
 -- > <div ondblclick="bar">Hello.</div>
 --
 ondblclick :: AttributeValue  -- ^ Attribute value.
-           -> Attribute a     -- ^ Resulting attribute.
+           -> Attribute       -- ^ Resulting attribute.
 ondblclick = attribute "ondblclick"
 {-# INLINE ondblclick #-}
 
@@ -874,7 +874,7 @@ ondblclick = attribute "ondblclick"
 -- > <div onfocus="bar">Hello.</div>
 --
 onfocus :: AttributeValue  -- ^ Attribute value.
-        -> Attribute a     -- ^ Resulting attribute.
+        -> Attribute       -- ^ Resulting attribute.
 onfocus = attribute "onfocus"
 {-# INLINE onfocus #-}
 
@@ -889,7 +889,7 @@ onfocus = attribute "onfocus"
 -- > <div onkeydown="bar">Hello.</div>
 --
 onkeydown :: AttributeValue  -- ^ Attribute value.
-          -> Attribute a     -- ^ Resulting attribute.
+          -> Attribute       -- ^ Resulting attribute.
 onkeydown = attribute "onkeydown"
 {-# INLINE onkeydown #-}
 
@@ -904,7 +904,7 @@ onkeydown = attribute "onkeydown"
 -- > <div onkeypress="bar">Hello.</div>
 --
 onkeypress :: AttributeValue  -- ^ Attribute value.
-           -> Attribute a     -- ^ Resulting attribute.
+           -> Attribute       -- ^ Resulting attribute.
 onkeypress = attribute "onkeypress"
 {-# INLINE onkeypress #-}
 
@@ -919,7 +919,7 @@ onkeypress = attribute "onkeypress"
 -- > <div onkeyup="bar">Hello.</div>
 --
 onkeyup :: AttributeValue  -- ^ Attribute value.
-        -> Attribute a     -- ^ Resulting attribute.
+        -> Attribute       -- ^ Resulting attribute.
 onkeyup = attribute "onkeyup"
 {-# INLINE onkeyup #-}
 
@@ -934,7 +934,7 @@ onkeyup = attribute "onkeyup"
 -- > <div onload="bar">Hello.</div>
 --
 onload :: AttributeValue  -- ^ Attribute value.
-       -> Attribute a     -- ^ Resulting attribute.
+       -> Attribute       -- ^ Resulting attribute.
 onload = attribute "onload"
 {-# INLINE onload #-}
 
@@ -949,7 +949,7 @@ onload = attribute "onload"
 -- > <div onmousedown="bar">Hello.</div>
 --
 onmousedown :: AttributeValue  -- ^ Attribute value.
-            -> Attribute a     -- ^ Resulting attribute.
+            -> Attribute       -- ^ Resulting attribute.
 onmousedown = attribute "onmousedown"
 {-# INLINE onmousedown #-}
 
@@ -964,7 +964,7 @@ onmousedown = attribute "onmousedown"
 -- > <div onmousemove="bar">Hello.</div>
 --
 onmousemove :: AttributeValue  -- ^ Attribute value.
-            -> Attribute a     -- ^ Resulting attribute.
+            -> Attribute       -- ^ Resulting attribute.
 onmousemove = attribute "onmousemove"
 {-# INLINE onmousemove #-}
 
@@ -979,7 +979,7 @@ onmousemove = attribute "onmousemove"
 -- > <div onmouseout="bar">Hello.</div>
 --
 onmouseout :: AttributeValue  -- ^ Attribute value.
-           -> Attribute a     -- ^ Resulting attribute.
+           -> Attribute       -- ^ Resulting attribute.
 onmouseout = attribute "onmouseout"
 {-# INLINE onmouseout #-}
 
@@ -994,7 +994,7 @@ onmouseout = attribute "onmouseout"
 -- > <div onmouseover="bar">Hello.</div>
 --
 onmouseover :: AttributeValue  -- ^ Attribute value.
-            -> Attribute a     -- ^ Resulting attribute.
+            -> Attribute       -- ^ Resulting attribute.
 onmouseover = attribute "onmouseover"
 {-# INLINE onmouseover #-}
 
@@ -1009,7 +1009,7 @@ onmouseover = attribute "onmouseover"
 -- > <div onmouseup="bar">Hello.</div>
 --
 onmouseup :: AttributeValue  -- ^ Attribute value.
-          -> Attribute a     -- ^ Resulting attribute.
+          -> Attribute       -- ^ Resulting attribute.
 onmouseup = attribute "onmouseup"
 {-# INLINE onmouseup #-}
 
@@ -1024,7 +1024,7 @@ onmouseup = attribute "onmouseup"
 -- > <div onreset="bar">Hello.</div>
 --
 onreset :: AttributeValue  -- ^ Attribute value.
-        -> Attribute a     -- ^ Resulting attribute.
+        -> Attribute       -- ^ Resulting attribute.
 onreset = attribute "onreset"
 {-# INLINE onreset #-}
 
@@ -1039,7 +1039,7 @@ onreset = attribute "onreset"
 -- > <div onselect="bar">Hello.</div>
 --
 onselect :: AttributeValue  -- ^ Attribute value.
-         -> Attribute a     -- ^ Resulting attribute.
+         -> Attribute       -- ^ Resulting attribute.
 onselect = attribute "onselect"
 {-# INLINE onselect #-}
 
@@ -1054,7 +1054,7 @@ onselect = attribute "onselect"
 -- > <div onsubmit="bar">Hello.</div>
 --
 onsubmit :: AttributeValue  -- ^ Attribute value.
-         -> Attribute a     -- ^ Resulting attribute.
+         -> Attribute       -- ^ Resulting attribute.
 onsubmit = attribute "onsubmit"
 {-# INLINE onsubmit #-}
 
@@ -1069,7 +1069,7 @@ onsubmit = attribute "onsubmit"
 -- > <div onunload="bar">Hello.</div>
 --
 onunload :: AttributeValue  -- ^ Attribute value.
-         -> Attribute a     -- ^ Resulting attribute.
+         -> Attribute       -- ^ Resulting attribute.
 onunload = attribute "onunload"
 {-# INLINE onunload #-}
 
@@ -1084,7 +1084,7 @@ onunload = attribute "onunload"
 -- > <div profile="bar">Hello.</div>
 --
 profile :: AttributeValue  -- ^ Attribute value.
-        -> Attribute a     -- ^ Resulting attribute.
+        -> Attribute       -- ^ Resulting attribute.
 profile = attribute "profile"
 {-# INLINE profile #-}
 
@@ -1099,7 +1099,7 @@ profile = attribute "profile"
 -- > <div readonly="bar">Hello.</div>
 --
 readonly :: AttributeValue  -- ^ Attribute value.
-         -> Attribute a     -- ^ Resulting attribute.
+         -> Attribute       -- ^ Resulting attribute.
 readonly = attribute "readonly"
 {-# INLINE readonly #-}
 
@@ -1114,7 +1114,7 @@ readonly = attribute "readonly"
 -- > <div rel="bar">Hello.</div>
 --
 rel :: AttributeValue  -- ^ Attribute value.
-    -> Attribute a     -- ^ Resulting attribute.
+    -> Attribute       -- ^ Resulting attribute.
 rel = attribute "rel"
 {-# INLINE rel #-}
 
@@ -1129,7 +1129,7 @@ rel = attribute "rel"
 -- > <div rev="bar">Hello.</div>
 --
 rev :: AttributeValue  -- ^ Attribute value.
-    -> Attribute a     -- ^ Resulting attribute.
+    -> Attribute       -- ^ Resulting attribute.
 rev = attribute "rev"
 {-# INLINE rev #-}
 
@@ -1144,7 +1144,7 @@ rev = attribute "rev"
 -- > <div rows="bar">Hello.</div>
 --
 rows :: AttributeValue  -- ^ Attribute value.
-     -> Attribute a     -- ^ Resulting attribute.
+     -> Attribute       -- ^ Resulting attribute.
 rows = attribute "rows"
 {-# INLINE rows #-}
 
@@ -1159,7 +1159,7 @@ rows = attribute "rows"
 -- > <div rowspan="bar">Hello.</div>
 --
 rowspan :: AttributeValue  -- ^ Attribute value.
-        -> Attribute a     -- ^ Resulting attribute.
+        -> Attribute       -- ^ Resulting attribute.
 rowspan = attribute "rowspan"
 {-# INLINE rowspan #-}
 
@@ -1174,7 +1174,7 @@ rowspan = attribute "rowspan"
 -- > <div rules="bar">Hello.</div>
 --
 rules :: AttributeValue  -- ^ Attribute value.
-      -> Attribute a     -- ^ Resulting attribute.
+      -> Attribute       -- ^ Resulting attribute.
 rules = attribute "rules"
 {-# INLINE rules #-}
 
@@ -1189,7 +1189,7 @@ rules = attribute "rules"
 -- > <div scheme="bar">Hello.</div>
 --
 scheme :: AttributeValue  -- ^ Attribute value.
-       -> Attribute a     -- ^ Resulting attribute.
+       -> Attribute       -- ^ Resulting attribute.
 scheme = attribute "scheme"
 {-# INLINE scheme #-}
 
@@ -1204,7 +1204,7 @@ scheme = attribute "scheme"
 -- > <div scope="bar">Hello.</div>
 --
 scope :: AttributeValue  -- ^ Attribute value.
-      -> Attribute a     -- ^ Resulting attribute.
+      -> Attribute       -- ^ Resulting attribute.
 scope = attribute "scope"
 {-# INLINE scope #-}
 
@@ -1219,7 +1219,7 @@ scope = attribute "scope"
 -- > <div selected="bar">Hello.</div>
 --
 selected :: AttributeValue  -- ^ Attribute value.
-         -> Attribute a     -- ^ Resulting attribute.
+         -> Attribute       -- ^ Resulting attribute.
 selected = attribute "selected"
 {-# INLINE selected #-}
 
@@ -1234,7 +1234,7 @@ selected = attribute "selected"
 -- > <div shape="bar">Hello.</div>
 --
 shape :: AttributeValue  -- ^ Attribute value.
-      -> Attribute a     -- ^ Resulting attribute.
+      -> Attribute       -- ^ Resulting attribute.
 shape = attribute "shape"
 {-# INLINE shape #-}
 
@@ -1249,7 +1249,7 @@ shape = attribute "shape"
 -- > <div size="bar">Hello.</div>
 --
 size :: AttributeValue  -- ^ Attribute value.
-     -> Attribute a     -- ^ Resulting attribute.
+     -> Attribute       -- ^ Resulting attribute.
 size = attribute "size"
 {-# INLINE size #-}
 
@@ -1264,7 +1264,7 @@ size = attribute "size"
 -- > <div span="bar">Hello.</div>
 --
 span :: AttributeValue  -- ^ Attribute value.
-     -> Attribute a     -- ^ Resulting attribute.
+     -> Attribute       -- ^ Resulting attribute.
 span = attribute "span"
 {-# INLINE span #-}
 
@@ -1279,7 +1279,7 @@ span = attribute "span"
 -- > <div src="bar">Hello.</div>
 --
 src :: AttributeValue  -- ^ Attribute value.
-    -> Attribute a     -- ^ Resulting attribute.
+    -> Attribute       -- ^ Resulting attribute.
 src = attribute "src"
 {-# INLINE src #-}
 
@@ -1294,7 +1294,7 @@ src = attribute "src"
 -- > <div standby="bar">Hello.</div>
 --
 standby :: AttributeValue  -- ^ Attribute value.
-        -> Attribute a     -- ^ Resulting attribute.
+        -> Attribute       -- ^ Resulting attribute.
 standby = attribute "standby"
 {-# INLINE standby #-}
 
@@ -1309,7 +1309,7 @@ standby = attribute "standby"
 -- > <div style="bar">Hello.</div>
 --
 style :: AttributeValue  -- ^ Attribute value.
-      -> Attribute a     -- ^ Resulting attribute.
+      -> Attribute       -- ^ Resulting attribute.
 style = attribute "style"
 {-# INLINE style #-}
 
@@ -1324,7 +1324,7 @@ style = attribute "style"
 -- > <div summary="bar">Hello.</div>
 --
 summary :: AttributeValue  -- ^ Attribute value.
-        -> Attribute a     -- ^ Resulting attribute.
+        -> Attribute       -- ^ Resulting attribute.
 summary = attribute "summary"
 {-# INLINE summary #-}
 
@@ -1339,7 +1339,7 @@ summary = attribute "summary"
 -- > <div tabindex="bar">Hello.</div>
 --
 tabindex :: AttributeValue  -- ^ Attribute value.
-         -> Attribute a     -- ^ Resulting attribute.
+         -> Attribute       -- ^ Resulting attribute.
 tabindex = attribute "tabindex"
 {-# INLINE tabindex #-}
 
@@ -1354,7 +1354,7 @@ tabindex = attribute "tabindex"
 -- > <div title="bar">Hello.</div>
 --
 title :: AttributeValue  -- ^ Attribute value.
-      -> Attribute a     -- ^ Resulting attribute.
+      -> Attribute       -- ^ Resulting attribute.
 title = attribute "title"
 {-# INLINE title #-}
 
@@ -1369,7 +1369,7 @@ title = attribute "title"
 -- > <div type="bar">Hello.</div>
 --
 type_ :: AttributeValue  -- ^ Attribute value.
-      -> Attribute a     -- ^ Resulting attribute.
+      -> Attribute       -- ^ Resulting attribute.
 type_ = attribute "type"
 {-# INLINE type_ #-}
 
@@ -1384,7 +1384,7 @@ type_ = attribute "type"
 -- > <div usemap="bar">Hello.</div>
 --
 usemap :: AttributeValue  -- ^ Attribute value.
-       -> Attribute a     -- ^ Resulting attribute.
+       -> Attribute       -- ^ Resulting attribute.
 usemap = attribute "usemap"
 {-# INLINE usemap #-}
 
@@ -1399,7 +1399,7 @@ usemap = attribute "usemap"
 -- > <div valign="bar">Hello.</div>
 --
 valign :: AttributeValue  -- ^ Attribute value.
-       -> Attribute a     -- ^ Resulting attribute.
+       -> Attribute       -- ^ Resulting attribute.
 valign = attribute "valign"
 {-# INLINE valign #-}
 
@@ -1414,7 +1414,7 @@ valign = attribute "valign"
 -- > <div value="bar">Hello.</div>
 --
 value :: AttributeValue  -- ^ Attribute value.
-      -> Attribute a     -- ^ Resulting attribute.
+      -> Attribute       -- ^ Resulting attribute.
 value = attribute "value"
 {-# INLINE value #-}
 
@@ -1429,7 +1429,7 @@ value = attribute "value"
 -- > <div valuetype="bar">Hello.</div>
 --
 valuetype :: AttributeValue  -- ^ Attribute value.
-          -> Attribute a     -- ^ Resulting attribute.
+          -> Attribute       -- ^ Resulting attribute.
 valuetype = attribute "valuetype"
 {-# INLINE valuetype #-}
 
@@ -1444,6 +1444,6 @@ valuetype = attribute "valuetype"
 -- > <div width="bar">Hello.</div>
 --
 width :: AttributeValue  -- ^ Attribute value.
-      -> Attribute a     -- ^ Resulting attribute.
+      -> Attribute       -- ^ Resulting attribute.
 width = attribute "width"
 {-# INLINE width #-}

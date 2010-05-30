@@ -156,10 +156,31 @@ attribute key value = Attribute $ \(Html h) -> Html $ \attrs ->
                                                `mappend` "=\""
 {-# INLINE attribute #-}
 
+-- | Apply an attribute to a leaf element.
+--
+-- Example:
+--
+-- > img ! src "foo.png"
+--
+-- Result:
+--
+-- > <img src="foo.png" />
+--
 (!) :: Html a -> Attribute a -> Html a
 h ! (Attribute f) = f h
 {-# INLINE (!) #-}
 
+
+-- | Apply an attribute to a parent element.
+--
+-- Example:
+--
+-- > p ! style "float: right" $ "Hello!"
+--
+-- Result:
+--
+-- > <p style="float: right">Hello!</p>
+--
 (<!) :: (Html a -> Html a)
      -> Attribute a
      -> (Html a -> Html a)

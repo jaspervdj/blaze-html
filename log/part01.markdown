@@ -594,7 +594,7 @@ well, because some optimizations were quite general.
 Sunday, May 30th, morning
 =========================
 
-Correction and type safety are very important for Haskell programmers. Until
+Correctness and type safety are very important for Haskell programmers. Until
 now, we used `Html` for our main HTML type, where
 
     type Html = HtmlM ()

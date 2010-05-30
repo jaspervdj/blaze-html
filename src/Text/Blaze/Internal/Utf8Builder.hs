@@ -109,8 +109,8 @@ toText = T.concat . map T.decodeUtf8 . L.toChunks . toLazyByteString
 -- | Abstract representation of a write action to the internal buffer.
 --
 data Write = Write
-    {-# UNPACK #-} !Int   -- ^ Number of bytes to be written.
-    (Ptr Word8 -> IO ())  -- ^ Actual write function.
+    {-# UNPACK #-} !Int
+    (Ptr Word8 -> IO ())
 
 -- Create a monoid interface for the write actions.
 instance Monoid Write where

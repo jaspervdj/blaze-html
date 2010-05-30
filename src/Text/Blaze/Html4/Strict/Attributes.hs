@@ -102,11 +102,11 @@ import Text.Blaze (Attribute, AttributeValue, attribute)
 --
 -- Example:
 --
--- > img ! abbr "bar"
+-- > div <! abbr "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img abbr="bar" />
+-- > <div abbr="bar">Hello.</div>
 --
 abbr :: AttributeValue  -- ^ Attribute value.
      -> Attribute a     -- ^ Resulting attribute.
@@ -117,11 +117,11 @@ abbr = attribute "abbr"
 --
 -- Example:
 --
--- > img ! accept "bar"
+-- > div <! accept "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img accept="bar" />
+-- > <div accept="bar">Hello.</div>
 --
 accept :: AttributeValue  -- ^ Attribute value.
        -> Attribute a     -- ^ Resulting attribute.
@@ -132,11 +132,11 @@ accept = attribute "accept"
 --
 -- Example:
 --
--- > img ! accesskey "bar"
+-- > div <! accesskey "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img accesskey="bar" />
+-- > <div accesskey="bar">Hello.</div>
 --
 accesskey :: AttributeValue  -- ^ Attribute value.
           -> Attribute a     -- ^ Resulting attribute.
@@ -147,11 +147,11 @@ accesskey = attribute "accesskey"
 --
 -- Example:
 --
--- > img ! action "bar"
+-- > div <! action "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img action="bar" />
+-- > <div action="bar">Hello.</div>
 --
 action :: AttributeValue  -- ^ Attribute value.
        -> Attribute a     -- ^ Resulting attribute.
@@ -162,11 +162,11 @@ action = attribute "action"
 --
 -- Example:
 --
--- > img ! align "bar"
+-- > div <! align "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img align="bar" />
+-- > <div align="bar">Hello.</div>
 --
 align :: AttributeValue  -- ^ Attribute value.
       -> Attribute a     -- ^ Resulting attribute.
@@ -177,11 +177,11 @@ align = attribute "align"
 --
 -- Example:
 --
--- > img ! alt "bar"
+-- > div <! alt "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img alt="bar" />
+-- > <div alt="bar">Hello.</div>
 --
 alt :: AttributeValue  -- ^ Attribute value.
     -> Attribute a     -- ^ Resulting attribute.
@@ -192,11 +192,11 @@ alt = attribute "alt"
 --
 -- Example:
 --
--- > img ! archive "bar"
+-- > div <! archive "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img archive="bar" />
+-- > <div archive="bar">Hello.</div>
 --
 archive :: AttributeValue  -- ^ Attribute value.
         -> Attribute a     -- ^ Resulting attribute.
@@ -207,11 +207,11 @@ archive = attribute "archive"
 --
 -- Example:
 --
--- > img ! axis "bar"
+-- > div <! axis "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img axis="bar" />
+-- > <div axis="bar">Hello.</div>
 --
 axis :: AttributeValue  -- ^ Attribute value.
      -> Attribute a     -- ^ Resulting attribute.
@@ -222,11 +222,11 @@ axis = attribute "axis"
 --
 -- Example:
 --
--- > img ! border "bar"
+-- > div <! border "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img border="bar" />
+-- > <div border="bar">Hello.</div>
 --
 border :: AttributeValue  -- ^ Attribute value.
        -> Attribute a     -- ^ Resulting attribute.
@@ -237,11 +237,11 @@ border = attribute "border"
 --
 -- Example:
 --
--- > img ! cellpadding "bar"
+-- > div <! cellpadding "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img cellpadding="bar" />
+-- > <div cellpadding="bar">Hello.</div>
 --
 cellpadding :: AttributeValue  -- ^ Attribute value.
             -> Attribute a     -- ^ Resulting attribute.
@@ -252,11 +252,11 @@ cellpadding = attribute "cellpadding"
 --
 -- Example:
 --
--- > img ! cellspacing "bar"
+-- > div <! cellspacing "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img cellspacing="bar" />
+-- > <div cellspacing="bar">Hello.</div>
 --
 cellspacing :: AttributeValue  -- ^ Attribute value.
             -> Attribute a     -- ^ Resulting attribute.
@@ -267,11 +267,11 @@ cellspacing = attribute "cellspacing"
 --
 -- Example:
 --
--- > img ! char "bar"
+-- > div <! char "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img char="bar" />
+-- > <div char="bar">Hello.</div>
 --
 char :: AttributeValue  -- ^ Attribute value.
      -> Attribute a     -- ^ Resulting attribute.
@@ -282,11 +282,11 @@ char = attribute "char"
 --
 -- Example:
 --
--- > img ! charoff "bar"
+-- > div <! charoff "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img charoff="bar" />
+-- > <div charoff="bar">Hello.</div>
 --
 charoff :: AttributeValue  -- ^ Attribute value.
         -> Attribute a     -- ^ Resulting attribute.
@@ -297,11 +297,11 @@ charoff = attribute "charoff"
 --
 -- Example:
 --
--- > img ! charset "bar"
+-- > div <! charset "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img charset="bar" />
+-- > <div charset="bar">Hello.</div>
 --
 charset :: AttributeValue  -- ^ Attribute value.
         -> Attribute a     -- ^ Resulting attribute.
@@ -312,11 +312,11 @@ charset = attribute "charset"
 --
 -- Example:
 --
--- > img ! checked "bar"
+-- > div <! checked "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img checked="bar" />
+-- > <div checked="bar">Hello.</div>
 --
 checked :: AttributeValue  -- ^ Attribute value.
         -> Attribute a     -- ^ Resulting attribute.
@@ -327,11 +327,11 @@ checked = attribute "checked"
 --
 -- Example:
 --
--- > img ! cite "bar"
+-- > div <! cite "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img cite="bar" />
+-- > <div cite="bar">Hello.</div>
 --
 cite :: AttributeValue  -- ^ Attribute value.
      -> Attribute a     -- ^ Resulting attribute.
@@ -342,11 +342,11 @@ cite = attribute "cite"
 --
 -- Example:
 --
--- > img ! class_ "bar"
+-- > div <! class_ "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img class="bar" />
+-- > <div class="bar">Hello.</div>
 --
 class_ :: AttributeValue  -- ^ Attribute value.
        -> Attribute a     -- ^ Resulting attribute.
@@ -357,11 +357,11 @@ class_ = attribute "class"
 --
 -- Example:
 --
--- > img ! classid "bar"
+-- > div <! classid "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img classid="bar" />
+-- > <div classid="bar">Hello.</div>
 --
 classid :: AttributeValue  -- ^ Attribute value.
         -> Attribute a     -- ^ Resulting attribute.
@@ -372,11 +372,11 @@ classid = attribute "classid"
 --
 -- Example:
 --
--- > img ! codebase "bar"
+-- > div <! codebase "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img codebase="bar" />
+-- > <div codebase="bar">Hello.</div>
 --
 codebase :: AttributeValue  -- ^ Attribute value.
          -> Attribute a     -- ^ Resulting attribute.
@@ -387,11 +387,11 @@ codebase = attribute "codebase"
 --
 -- Example:
 --
--- > img ! codetype "bar"
+-- > div <! codetype "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img codetype="bar" />
+-- > <div codetype="bar">Hello.</div>
 --
 codetype :: AttributeValue  -- ^ Attribute value.
          -> Attribute a     -- ^ Resulting attribute.
@@ -402,11 +402,11 @@ codetype = attribute "codetype"
 --
 -- Example:
 --
--- > img ! cols "bar"
+-- > div <! cols "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img cols="bar" />
+-- > <div cols="bar">Hello.</div>
 --
 cols :: AttributeValue  -- ^ Attribute value.
      -> Attribute a     -- ^ Resulting attribute.
@@ -417,11 +417,11 @@ cols = attribute "cols"
 --
 -- Example:
 --
--- > img ! colspan "bar"
+-- > div <! colspan "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img colspan="bar" />
+-- > <div colspan="bar">Hello.</div>
 --
 colspan :: AttributeValue  -- ^ Attribute value.
         -> Attribute a     -- ^ Resulting attribute.
@@ -432,11 +432,11 @@ colspan = attribute "colspan"
 --
 -- Example:
 --
--- > img ! content "bar"
+-- > div <! content "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img content="bar" />
+-- > <div content="bar">Hello.</div>
 --
 content :: AttributeValue  -- ^ Attribute value.
         -> Attribute a     -- ^ Resulting attribute.
@@ -447,11 +447,11 @@ content = attribute "content"
 --
 -- Example:
 --
--- > img ! coords "bar"
+-- > div <! coords "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img coords="bar" />
+-- > <div coords="bar">Hello.</div>
 --
 coords :: AttributeValue  -- ^ Attribute value.
        -> Attribute a     -- ^ Resulting attribute.
@@ -462,11 +462,11 @@ coords = attribute "coords"
 --
 -- Example:
 --
--- > img ! data_ "bar"
+-- > div <! data_ "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img data="bar" />
+-- > <div data="bar">Hello.</div>
 --
 data_ :: AttributeValue  -- ^ Attribute value.
       -> Attribute a     -- ^ Resulting attribute.
@@ -477,11 +477,11 @@ data_ = attribute "data"
 --
 -- Example:
 --
--- > img ! datetime "bar"
+-- > div <! datetime "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img datetime="bar" />
+-- > <div datetime="bar">Hello.</div>
 --
 datetime :: AttributeValue  -- ^ Attribute value.
          -> Attribute a     -- ^ Resulting attribute.
@@ -492,11 +492,11 @@ datetime = attribute "datetime"
 --
 -- Example:
 --
--- > img ! declare "bar"
+-- > div <! declare "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img declare="bar" />
+-- > <div declare="bar">Hello.</div>
 --
 declare :: AttributeValue  -- ^ Attribute value.
         -> Attribute a     -- ^ Resulting attribute.
@@ -507,11 +507,11 @@ declare = attribute "declare"
 --
 -- Example:
 --
--- > img ! defer "bar"
+-- > div <! defer "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img defer="bar" />
+-- > <div defer="bar">Hello.</div>
 --
 defer :: AttributeValue  -- ^ Attribute value.
       -> Attribute a     -- ^ Resulting attribute.
@@ -522,11 +522,11 @@ defer = attribute "defer"
 --
 -- Example:
 --
--- > img ! dir "bar"
+-- > div <! dir "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img dir="bar" />
+-- > <div dir="bar">Hello.</div>
 --
 dir :: AttributeValue  -- ^ Attribute value.
     -> Attribute a     -- ^ Resulting attribute.
@@ -537,11 +537,11 @@ dir = attribute "dir"
 --
 -- Example:
 --
--- > img ! disabled "bar"
+-- > div <! disabled "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img disabled="bar" />
+-- > <div disabled="bar">Hello.</div>
 --
 disabled :: AttributeValue  -- ^ Attribute value.
          -> Attribute a     -- ^ Resulting attribute.
@@ -552,11 +552,11 @@ disabled = attribute "disabled"
 --
 -- Example:
 --
--- > img ! for "bar"
+-- > div <! for "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img for="bar" />
+-- > <div for="bar">Hello.</div>
 --
 for :: AttributeValue  -- ^ Attribute value.
     -> Attribute a     -- ^ Resulting attribute.
@@ -567,11 +567,11 @@ for = attribute "for"
 --
 -- Example:
 --
--- > img ! frame "bar"
+-- > div <! frame "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img frame="bar" />
+-- > <div frame="bar">Hello.</div>
 --
 frame :: AttributeValue  -- ^ Attribute value.
       -> Attribute a     -- ^ Resulting attribute.
@@ -582,11 +582,11 @@ frame = attribute "frame"
 --
 -- Example:
 --
--- > img ! headers "bar"
+-- > div <! headers "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img headers="bar" />
+-- > <div headers="bar">Hello.</div>
 --
 headers :: AttributeValue  -- ^ Attribute value.
         -> Attribute a     -- ^ Resulting attribute.
@@ -597,11 +597,11 @@ headers = attribute "headers"
 --
 -- Example:
 --
--- > img ! height "bar"
+-- > div <! height "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img height="bar" />
+-- > <div height="bar">Hello.</div>
 --
 height :: AttributeValue  -- ^ Attribute value.
        -> Attribute a     -- ^ Resulting attribute.
@@ -612,11 +612,11 @@ height = attribute "height"
 --
 -- Example:
 --
--- > img ! href "bar"
+-- > div <! href "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img href="bar" />
+-- > <div href="bar">Hello.</div>
 --
 href :: AttributeValue  -- ^ Attribute value.
      -> Attribute a     -- ^ Resulting attribute.
@@ -627,11 +627,11 @@ href = attribute "href"
 --
 -- Example:
 --
--- > img ! hreflang "bar"
+-- > div <! hreflang "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img hreflang="bar" />
+-- > <div hreflang="bar">Hello.</div>
 --
 hreflang :: AttributeValue  -- ^ Attribute value.
          -> Attribute a     -- ^ Resulting attribute.
@@ -642,11 +642,11 @@ hreflang = attribute "hreflang"
 --
 -- Example:
 --
--- > img ! http_equiv "bar"
+-- > div <! http_equiv "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img http-equiv="bar" />
+-- > <div http-equiv="bar">Hello.</div>
 --
 http_equiv :: AttributeValue  -- ^ Attribute value.
            -> Attribute a     -- ^ Resulting attribute.
@@ -657,11 +657,11 @@ http_equiv = attribute "http-equiv"
 --
 -- Example:
 --
--- > img ! id "bar"
+-- > div <! id "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img id="bar" />
+-- > <div id="bar">Hello.</div>
 --
 id :: AttributeValue  -- ^ Attribute value.
    -> Attribute a     -- ^ Resulting attribute.
@@ -672,11 +672,11 @@ id = attribute "id"
 --
 -- Example:
 --
--- > img ! label "bar"
+-- > div <! label "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img label="bar" />
+-- > <div label="bar">Hello.</div>
 --
 label :: AttributeValue  -- ^ Attribute value.
       -> Attribute a     -- ^ Resulting attribute.
@@ -687,11 +687,11 @@ label = attribute "label"
 --
 -- Example:
 --
--- > img ! lang "bar"
+-- > div <! lang "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img lang="bar" />
+-- > <div lang="bar">Hello.</div>
 --
 lang :: AttributeValue  -- ^ Attribute value.
      -> Attribute a     -- ^ Resulting attribute.
@@ -702,11 +702,11 @@ lang = attribute "lang"
 --
 -- Example:
 --
--- > img ! maxlength "bar"
+-- > div <! maxlength "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img maxlength="bar" />
+-- > <div maxlength="bar">Hello.</div>
 --
 maxlength :: AttributeValue  -- ^ Attribute value.
           -> Attribute a     -- ^ Resulting attribute.
@@ -717,11 +717,11 @@ maxlength = attribute "maxlength"
 --
 -- Example:
 --
--- > img ! media "bar"
+-- > div <! media "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img media="bar" />
+-- > <div media="bar">Hello.</div>
 --
 media :: AttributeValue  -- ^ Attribute value.
       -> Attribute a     -- ^ Resulting attribute.
@@ -732,11 +732,11 @@ media = attribute "media"
 --
 -- Example:
 --
--- > img ! method "bar"
+-- > div <! method "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img method="bar" />
+-- > <div method="bar">Hello.</div>
 --
 method :: AttributeValue  -- ^ Attribute value.
        -> Attribute a     -- ^ Resulting attribute.
@@ -747,11 +747,11 @@ method = attribute "method"
 --
 -- Example:
 --
--- > img ! multiple "bar"
+-- > div <! multiple "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img multiple="bar" />
+-- > <div multiple="bar">Hello.</div>
 --
 multiple :: AttributeValue  -- ^ Attribute value.
          -> Attribute a     -- ^ Resulting attribute.
@@ -762,11 +762,11 @@ multiple = attribute "multiple"
 --
 -- Example:
 --
--- > img ! name "bar"
+-- > div <! name "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img name="bar" />
+-- > <div name="bar">Hello.</div>
 --
 name :: AttributeValue  -- ^ Attribute value.
      -> Attribute a     -- ^ Resulting attribute.
@@ -777,11 +777,11 @@ name = attribute "name"
 --
 -- Example:
 --
--- > img ! nohref "bar"
+-- > div <! nohref "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img nohref="bar" />
+-- > <div nohref="bar">Hello.</div>
 --
 nohref :: AttributeValue  -- ^ Attribute value.
        -> Attribute a     -- ^ Resulting attribute.
@@ -792,11 +792,11 @@ nohref = attribute "nohref"
 --
 -- Example:
 --
--- > img ! onabort "bar"
+-- > div <! onabort "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img onabort="bar" />
+-- > <div onabort="bar">Hello.</div>
 --
 onabort :: AttributeValue  -- ^ Attribute value.
         -> Attribute a     -- ^ Resulting attribute.
@@ -807,11 +807,11 @@ onabort = attribute "onabort"
 --
 -- Example:
 --
--- > img ! onblur "bar"
+-- > div <! onblur "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img onblur="bar" />
+-- > <div onblur="bar">Hello.</div>
 --
 onblur :: AttributeValue  -- ^ Attribute value.
        -> Attribute a     -- ^ Resulting attribute.
@@ -822,11 +822,11 @@ onblur = attribute "onblur"
 --
 -- Example:
 --
--- > img ! onchange "bar"
+-- > div <! onchange "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img onchange="bar" />
+-- > <div onchange="bar">Hello.</div>
 --
 onchange :: AttributeValue  -- ^ Attribute value.
          -> Attribute a     -- ^ Resulting attribute.
@@ -837,11 +837,11 @@ onchange = attribute "onchange"
 --
 -- Example:
 --
--- > img ! onclick "bar"
+-- > div <! onclick "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img onclick="bar" />
+-- > <div onclick="bar">Hello.</div>
 --
 onclick :: AttributeValue  -- ^ Attribute value.
         -> Attribute a     -- ^ Resulting attribute.
@@ -852,11 +852,11 @@ onclick = attribute "onclick"
 --
 -- Example:
 --
--- > img ! ondblclick "bar"
+-- > div <! ondblclick "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img ondblclick="bar" />
+-- > <div ondblclick="bar">Hello.</div>
 --
 ondblclick :: AttributeValue  -- ^ Attribute value.
            -> Attribute a     -- ^ Resulting attribute.
@@ -867,11 +867,11 @@ ondblclick = attribute "ondblclick"
 --
 -- Example:
 --
--- > img ! onfocus "bar"
+-- > div <! onfocus "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img onfocus="bar" />
+-- > <div onfocus="bar">Hello.</div>
 --
 onfocus :: AttributeValue  -- ^ Attribute value.
         -> Attribute a     -- ^ Resulting attribute.
@@ -882,11 +882,11 @@ onfocus = attribute "onfocus"
 --
 -- Example:
 --
--- > img ! onkeydown "bar"
+-- > div <! onkeydown "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img onkeydown="bar" />
+-- > <div onkeydown="bar">Hello.</div>
 --
 onkeydown :: AttributeValue  -- ^ Attribute value.
           -> Attribute a     -- ^ Resulting attribute.
@@ -897,11 +897,11 @@ onkeydown = attribute "onkeydown"
 --
 -- Example:
 --
--- > img ! onkeypress "bar"
+-- > div <! onkeypress "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img onkeypress="bar" />
+-- > <div onkeypress="bar">Hello.</div>
 --
 onkeypress :: AttributeValue  -- ^ Attribute value.
            -> Attribute a     -- ^ Resulting attribute.
@@ -912,11 +912,11 @@ onkeypress = attribute "onkeypress"
 --
 -- Example:
 --
--- > img ! onkeyup "bar"
+-- > div <! onkeyup "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img onkeyup="bar" />
+-- > <div onkeyup="bar">Hello.</div>
 --
 onkeyup :: AttributeValue  -- ^ Attribute value.
         -> Attribute a     -- ^ Resulting attribute.
@@ -927,11 +927,11 @@ onkeyup = attribute "onkeyup"
 --
 -- Example:
 --
--- > img ! onload "bar"
+-- > div <! onload "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img onload="bar" />
+-- > <div onload="bar">Hello.</div>
 --
 onload :: AttributeValue  -- ^ Attribute value.
        -> Attribute a     -- ^ Resulting attribute.
@@ -942,11 +942,11 @@ onload = attribute "onload"
 --
 -- Example:
 --
--- > img ! onmousedown "bar"
+-- > div <! onmousedown "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img onmousedown="bar" />
+-- > <div onmousedown="bar">Hello.</div>
 --
 onmousedown :: AttributeValue  -- ^ Attribute value.
             -> Attribute a     -- ^ Resulting attribute.
@@ -957,11 +957,11 @@ onmousedown = attribute "onmousedown"
 --
 -- Example:
 --
--- > img ! onmousemove "bar"
+-- > div <! onmousemove "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img onmousemove="bar" />
+-- > <div onmousemove="bar">Hello.</div>
 --
 onmousemove :: AttributeValue  -- ^ Attribute value.
             -> Attribute a     -- ^ Resulting attribute.
@@ -972,11 +972,11 @@ onmousemove = attribute "onmousemove"
 --
 -- Example:
 --
--- > img ! onmouseout "bar"
+-- > div <! onmouseout "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img onmouseout="bar" />
+-- > <div onmouseout="bar">Hello.</div>
 --
 onmouseout :: AttributeValue  -- ^ Attribute value.
            -> Attribute a     -- ^ Resulting attribute.
@@ -987,11 +987,11 @@ onmouseout = attribute "onmouseout"
 --
 -- Example:
 --
--- > img ! onmouseover "bar"
+-- > div <! onmouseover "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img onmouseover="bar" />
+-- > <div onmouseover="bar">Hello.</div>
 --
 onmouseover :: AttributeValue  -- ^ Attribute value.
             -> Attribute a     -- ^ Resulting attribute.
@@ -1002,11 +1002,11 @@ onmouseover = attribute "onmouseover"
 --
 -- Example:
 --
--- > img ! onmouseup "bar"
+-- > div <! onmouseup "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img onmouseup="bar" />
+-- > <div onmouseup="bar">Hello.</div>
 --
 onmouseup :: AttributeValue  -- ^ Attribute value.
           -> Attribute a     -- ^ Resulting attribute.
@@ -1017,11 +1017,11 @@ onmouseup = attribute "onmouseup"
 --
 -- Example:
 --
--- > img ! onreset "bar"
+-- > div <! onreset "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img onreset="bar" />
+-- > <div onreset="bar">Hello.</div>
 --
 onreset :: AttributeValue  -- ^ Attribute value.
         -> Attribute a     -- ^ Resulting attribute.
@@ -1032,11 +1032,11 @@ onreset = attribute "onreset"
 --
 -- Example:
 --
--- > img ! onselect "bar"
+-- > div <! onselect "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img onselect="bar" />
+-- > <div onselect="bar">Hello.</div>
 --
 onselect :: AttributeValue  -- ^ Attribute value.
          -> Attribute a     -- ^ Resulting attribute.
@@ -1047,11 +1047,11 @@ onselect = attribute "onselect"
 --
 -- Example:
 --
--- > img ! onsubmit "bar"
+-- > div <! onsubmit "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img onsubmit="bar" />
+-- > <div onsubmit="bar">Hello.</div>
 --
 onsubmit :: AttributeValue  -- ^ Attribute value.
          -> Attribute a     -- ^ Resulting attribute.
@@ -1062,11 +1062,11 @@ onsubmit = attribute "onsubmit"
 --
 -- Example:
 --
--- > img ! onunload "bar"
+-- > div <! onunload "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img onunload="bar" />
+-- > <div onunload="bar">Hello.</div>
 --
 onunload :: AttributeValue  -- ^ Attribute value.
          -> Attribute a     -- ^ Resulting attribute.
@@ -1077,11 +1077,11 @@ onunload = attribute "onunload"
 --
 -- Example:
 --
--- > img ! profile "bar"
+-- > div <! profile "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img profile="bar" />
+-- > <div profile="bar">Hello.</div>
 --
 profile :: AttributeValue  -- ^ Attribute value.
         -> Attribute a     -- ^ Resulting attribute.
@@ -1092,11 +1092,11 @@ profile = attribute "profile"
 --
 -- Example:
 --
--- > img ! readonly "bar"
+-- > div <! readonly "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img readonly="bar" />
+-- > <div readonly="bar">Hello.</div>
 --
 readonly :: AttributeValue  -- ^ Attribute value.
          -> Attribute a     -- ^ Resulting attribute.
@@ -1107,11 +1107,11 @@ readonly = attribute "readonly"
 --
 -- Example:
 --
--- > img ! rel "bar"
+-- > div <! rel "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img rel="bar" />
+-- > <div rel="bar">Hello.</div>
 --
 rel :: AttributeValue  -- ^ Attribute value.
     -> Attribute a     -- ^ Resulting attribute.
@@ -1122,11 +1122,11 @@ rel = attribute "rel"
 --
 -- Example:
 --
--- > img ! rev "bar"
+-- > div <! rev "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img rev="bar" />
+-- > <div rev="bar">Hello.</div>
 --
 rev :: AttributeValue  -- ^ Attribute value.
     -> Attribute a     -- ^ Resulting attribute.
@@ -1137,11 +1137,11 @@ rev = attribute "rev"
 --
 -- Example:
 --
--- > img ! rows "bar"
+-- > div <! rows "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img rows="bar" />
+-- > <div rows="bar">Hello.</div>
 --
 rows :: AttributeValue  -- ^ Attribute value.
      -> Attribute a     -- ^ Resulting attribute.
@@ -1152,11 +1152,11 @@ rows = attribute "rows"
 --
 -- Example:
 --
--- > img ! rowspan "bar"
+-- > div <! rowspan "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img rowspan="bar" />
+-- > <div rowspan="bar">Hello.</div>
 --
 rowspan :: AttributeValue  -- ^ Attribute value.
         -> Attribute a     -- ^ Resulting attribute.
@@ -1167,11 +1167,11 @@ rowspan = attribute "rowspan"
 --
 -- Example:
 --
--- > img ! rules "bar"
+-- > div <! rules "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img rules="bar" />
+-- > <div rules="bar">Hello.</div>
 --
 rules :: AttributeValue  -- ^ Attribute value.
       -> Attribute a     -- ^ Resulting attribute.
@@ -1182,11 +1182,11 @@ rules = attribute "rules"
 --
 -- Example:
 --
--- > img ! scheme "bar"
+-- > div <! scheme "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img scheme="bar" />
+-- > <div scheme="bar">Hello.</div>
 --
 scheme :: AttributeValue  -- ^ Attribute value.
        -> Attribute a     -- ^ Resulting attribute.
@@ -1197,11 +1197,11 @@ scheme = attribute "scheme"
 --
 -- Example:
 --
--- > img ! scope "bar"
+-- > div <! scope "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img scope="bar" />
+-- > <div scope="bar">Hello.</div>
 --
 scope :: AttributeValue  -- ^ Attribute value.
       -> Attribute a     -- ^ Resulting attribute.
@@ -1212,11 +1212,11 @@ scope = attribute "scope"
 --
 -- Example:
 --
--- > img ! selected "bar"
+-- > div <! selected "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img selected="bar" />
+-- > <div selected="bar">Hello.</div>
 --
 selected :: AttributeValue  -- ^ Attribute value.
          -> Attribute a     -- ^ Resulting attribute.
@@ -1227,11 +1227,11 @@ selected = attribute "selected"
 --
 -- Example:
 --
--- > img ! shape "bar"
+-- > div <! shape "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img shape="bar" />
+-- > <div shape="bar">Hello.</div>
 --
 shape :: AttributeValue  -- ^ Attribute value.
       -> Attribute a     -- ^ Resulting attribute.
@@ -1242,11 +1242,11 @@ shape = attribute "shape"
 --
 -- Example:
 --
--- > img ! size "bar"
+-- > div <! size "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img size="bar" />
+-- > <div size="bar">Hello.</div>
 --
 size :: AttributeValue  -- ^ Attribute value.
      -> Attribute a     -- ^ Resulting attribute.
@@ -1257,11 +1257,11 @@ size = attribute "size"
 --
 -- Example:
 --
--- > img ! span "bar"
+-- > div <! span "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img span="bar" />
+-- > <div span="bar">Hello.</div>
 --
 span :: AttributeValue  -- ^ Attribute value.
      -> Attribute a     -- ^ Resulting attribute.
@@ -1272,11 +1272,11 @@ span = attribute "span"
 --
 -- Example:
 --
--- > img ! src "bar"
+-- > div <! src "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img src="bar" />
+-- > <div src="bar">Hello.</div>
 --
 src :: AttributeValue  -- ^ Attribute value.
     -> Attribute a     -- ^ Resulting attribute.
@@ -1287,11 +1287,11 @@ src = attribute "src"
 --
 -- Example:
 --
--- > img ! standby "bar"
+-- > div <! standby "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img standby="bar" />
+-- > <div standby="bar">Hello.</div>
 --
 standby :: AttributeValue  -- ^ Attribute value.
         -> Attribute a     -- ^ Resulting attribute.
@@ -1302,11 +1302,11 @@ standby = attribute "standby"
 --
 -- Example:
 --
--- > img ! style "bar"
+-- > div <! style "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img style="bar" />
+-- > <div style="bar">Hello.</div>
 --
 style :: AttributeValue  -- ^ Attribute value.
       -> Attribute a     -- ^ Resulting attribute.
@@ -1317,11 +1317,11 @@ style = attribute "style"
 --
 -- Example:
 --
--- > img ! summary "bar"
+-- > div <! summary "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img summary="bar" />
+-- > <div summary="bar">Hello.</div>
 --
 summary :: AttributeValue  -- ^ Attribute value.
         -> Attribute a     -- ^ Resulting attribute.
@@ -1332,11 +1332,11 @@ summary = attribute "summary"
 --
 -- Example:
 --
--- > img ! tabindex "bar"
+-- > div <! tabindex "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img tabindex="bar" />
+-- > <div tabindex="bar">Hello.</div>
 --
 tabindex :: AttributeValue  -- ^ Attribute value.
          -> Attribute a     -- ^ Resulting attribute.
@@ -1347,11 +1347,11 @@ tabindex = attribute "tabindex"
 --
 -- Example:
 --
--- > img ! title "bar"
+-- > div <! title "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img title="bar" />
+-- > <div title="bar">Hello.</div>
 --
 title :: AttributeValue  -- ^ Attribute value.
       -> Attribute a     -- ^ Resulting attribute.
@@ -1362,11 +1362,11 @@ title = attribute "title"
 --
 -- Example:
 --
--- > img ! type_ "bar"
+-- > div <! type_ "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img type="bar" />
+-- > <div type="bar">Hello.</div>
 --
 type_ :: AttributeValue  -- ^ Attribute value.
       -> Attribute a     -- ^ Resulting attribute.
@@ -1377,11 +1377,11 @@ type_ = attribute "type"
 --
 -- Example:
 --
--- > img ! usemap "bar"
+-- > div <! usemap "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img usemap="bar" />
+-- > <div usemap="bar">Hello.</div>
 --
 usemap :: AttributeValue  -- ^ Attribute value.
        -> Attribute a     -- ^ Resulting attribute.
@@ -1392,11 +1392,11 @@ usemap = attribute "usemap"
 --
 -- Example:
 --
--- > img ! valign "bar"
+-- > div <! valign "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img valign="bar" />
+-- > <div valign="bar">Hello.</div>
 --
 valign :: AttributeValue  -- ^ Attribute value.
        -> Attribute a     -- ^ Resulting attribute.
@@ -1407,11 +1407,11 @@ valign = attribute "valign"
 --
 -- Example:
 --
--- > img ! value "bar"
+-- > div <! value "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img value="bar" />
+-- > <div value="bar">Hello.</div>
 --
 value :: AttributeValue  -- ^ Attribute value.
       -> Attribute a     -- ^ Resulting attribute.
@@ -1422,11 +1422,11 @@ value = attribute "value"
 --
 -- Example:
 --
--- > img ! valuetype "bar"
+-- > div <! valuetype "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img valuetype="bar" />
+-- > <div valuetype="bar">Hello.</div>
 --
 valuetype :: AttributeValue  -- ^ Attribute value.
           -> Attribute a     -- ^ Resulting attribute.
@@ -1437,11 +1437,11 @@ valuetype = attribute "valuetype"
 --
 -- Example:
 --
--- > img ! width "bar"
+-- > div <! width "bar" $ "Hello."
 --
 -- Result:
 --
--- > <img width="bar" />
+-- > <div width="bar">Hello.</div>
 --
 width :: AttributeValue  -- ^ Attribute value.
       -> Attribute a     -- ^ Resulting attribute.

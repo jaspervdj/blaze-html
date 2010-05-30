@@ -52,7 +52,7 @@ main = defaultMain
         cycle ["<><>", "\"lol\"", "<&>", "'>>'"]
     {-# NOINLINE wideTreeEscapingData #-}
 
-    deepTreeData :: [Html -> Html]
+    deepTreeData :: [Html a -> Html a]
     deepTreeData = take 1000 $
         cycle [table, tr, td, p, div]
     {-# NOINLINE deepTreeData #-}
@@ -75,23 +75,23 @@ basic :: (Text, Text, [Text])  -- ^ (Title, User, Items)
 basic (title', user, items) = renderHtml $ html $ do
     head $ title $ text title'
     body $ do
-        div ! id "header" $ (h1 $ text title')
+        div <! id "header" $ (h1 $ text title')
         p $ "Hello, " `mappend` text user `mappend` text "!"
         p $ "Hello, me!"
         p $ "Hello, world!"
         h2 $ "loop"
         mconcat $ map (li . text) items
-        div ! id "footer" $ mempty
+        div <! id "footer" $ mempty
 
 -- | A benchmark producing a very wide but very shallow tree.
 --
 wideTree :: [Text]         -- ^ Text to create a tree from.
          -> BL.ByteString  -- ^ Result.
-wideTree = renderHtml . div . mapM_ ((p ! id "foo") . text)
+wideTree = renderHtml . div . mapM_ ((p <! id "foo") . text)
 
 -- | Create a very deep tree with the specified tags.
 --
-deepTree :: [Html -> Html]  -- ^ List of parent elements to nest.
+deepTree :: [Html a -> Html a]  -- ^ List of parent elements to nest.
          -> BL.ByteString   -- ^ Result.
 deepTree = renderHtml . ($ text "deep") . foldl1 (.)
 

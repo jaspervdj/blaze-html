@@ -109,7 +109,7 @@ import Text.Blaze (Attribute, AttributeValue, attribute)
 -- > <img abbr="bar" />
 --
 abbr :: AttributeValue  -- ^ Attribute value.
-     -> Attribute       -- ^ Resulting attribute.
+     -> Attribute a     -- ^ Resulting attribute.
 abbr = attribute "abbr"
 {-# INLINE abbr #-}
 
@@ -124,7 +124,7 @@ abbr = attribute "abbr"
 -- > <img accept="bar" />
 --
 accept :: AttributeValue  -- ^ Attribute value.
-       -> Attribute       -- ^ Resulting attribute.
+       -> Attribute a     -- ^ Resulting attribute.
 accept = attribute "accept"
 {-# INLINE accept #-}
 
@@ -139,7 +139,7 @@ accept = attribute "accept"
 -- > <img accesskey="bar" />
 --
 accesskey :: AttributeValue  -- ^ Attribute value.
-          -> Attribute       -- ^ Resulting attribute.
+          -> Attribute a     -- ^ Resulting attribute.
 accesskey = attribute "accesskey"
 {-# INLINE accesskey #-}
 
@@ -154,7 +154,7 @@ accesskey = attribute "accesskey"
 -- > <img action="bar" />
 --
 action :: AttributeValue  -- ^ Attribute value.
-       -> Attribute       -- ^ Resulting attribute.
+       -> Attribute a     -- ^ Resulting attribute.
 action = attribute "action"
 {-# INLINE action #-}
 
@@ -169,7 +169,7 @@ action = attribute "action"
 -- > <img align="bar" />
 --
 align :: AttributeValue  -- ^ Attribute value.
-      -> Attribute       -- ^ Resulting attribute.
+      -> Attribute a     -- ^ Resulting attribute.
 align = attribute "align"
 {-# INLINE align #-}
 
@@ -184,7 +184,7 @@ align = attribute "align"
 -- > <img alt="bar" />
 --
 alt :: AttributeValue  -- ^ Attribute value.
-    -> Attribute       -- ^ Resulting attribute.
+    -> Attribute a     -- ^ Resulting attribute.
 alt = attribute "alt"
 {-# INLINE alt #-}
 
@@ -199,7 +199,7 @@ alt = attribute "alt"
 -- > <img archive="bar" />
 --
 archive :: AttributeValue  -- ^ Attribute value.
-        -> Attribute       -- ^ Resulting attribute.
+        -> Attribute a     -- ^ Resulting attribute.
 archive = attribute "archive"
 {-# INLINE archive #-}
 
@@ -214,7 +214,7 @@ archive = attribute "archive"
 -- > <img axis="bar" />
 --
 axis :: AttributeValue  -- ^ Attribute value.
-     -> Attribute       -- ^ Resulting attribute.
+     -> Attribute a     -- ^ Resulting attribute.
 axis = attribute "axis"
 {-# INLINE axis #-}
 
@@ -229,7 +229,7 @@ axis = attribute "axis"
 -- > <img border="bar" />
 --
 border :: AttributeValue  -- ^ Attribute value.
-       -> Attribute       -- ^ Resulting attribute.
+       -> Attribute a     -- ^ Resulting attribute.
 border = attribute "border"
 {-# INLINE border #-}
 
@@ -244,7 +244,7 @@ border = attribute "border"
 -- > <img cellpadding="bar" />
 --
 cellpadding :: AttributeValue  -- ^ Attribute value.
-            -> Attribute       -- ^ Resulting attribute.
+            -> Attribute a     -- ^ Resulting attribute.
 cellpadding = attribute "cellpadding"
 {-# INLINE cellpadding #-}
 
@@ -259,7 +259,7 @@ cellpadding = attribute "cellpadding"
 -- > <img cellspacing="bar" />
 --
 cellspacing :: AttributeValue  -- ^ Attribute value.
-            -> Attribute       -- ^ Resulting attribute.
+            -> Attribute a     -- ^ Resulting attribute.
 cellspacing = attribute "cellspacing"
 {-# INLINE cellspacing #-}
 
@@ -274,7 +274,7 @@ cellspacing = attribute "cellspacing"
 -- > <img char="bar" />
 --
 char :: AttributeValue  -- ^ Attribute value.
-     -> Attribute       -- ^ Resulting attribute.
+     -> Attribute a     -- ^ Resulting attribute.
 char = attribute "char"
 {-# INLINE char #-}
 
@@ -289,7 +289,7 @@ char = attribute "char"
 -- > <img charoff="bar" />
 --
 charoff :: AttributeValue  -- ^ Attribute value.
-        -> Attribute       -- ^ Resulting attribute.
+        -> Attribute a     -- ^ Resulting attribute.
 charoff = attribute "charoff"
 {-# INLINE charoff #-}
 
@@ -304,7 +304,7 @@ charoff = attribute "charoff"
 -- > <img charset="bar" />
 --
 charset :: AttributeValue  -- ^ Attribute value.
-        -> Attribute       -- ^ Resulting attribute.
+        -> Attribute a     -- ^ Resulting attribute.
 charset = attribute "charset"
 {-# INLINE charset #-}
 
@@ -319,7 +319,7 @@ charset = attribute "charset"
 -- > <img checked="bar" />
 --
 checked :: AttributeValue  -- ^ Attribute value.
-        -> Attribute       -- ^ Resulting attribute.
+        -> Attribute a     -- ^ Resulting attribute.
 checked = attribute "checked"
 {-# INLINE checked #-}
 
@@ -334,7 +334,7 @@ checked = attribute "checked"
 -- > <img cite="bar" />
 --
 cite :: AttributeValue  -- ^ Attribute value.
-     -> Attribute       -- ^ Resulting attribute.
+     -> Attribute a     -- ^ Resulting attribute.
 cite = attribute "cite"
 {-# INLINE cite #-}
 
@@ -349,7 +349,7 @@ cite = attribute "cite"
 -- > <img class="bar" />
 --
 class_ :: AttributeValue  -- ^ Attribute value.
-       -> Attribute       -- ^ Resulting attribute.
+       -> Attribute a     -- ^ Resulting attribute.
 class_ = attribute "class"
 {-# INLINE class_ #-}
 
@@ -364,7 +364,7 @@ class_ = attribute "class"
 -- > <img classid="bar" />
 --
 classid :: AttributeValue  -- ^ Attribute value.
-        -> Attribute       -- ^ Resulting attribute.
+        -> Attribute a     -- ^ Resulting attribute.
 classid = attribute "classid"
 {-# INLINE classid #-}
 
@@ -379,7 +379,7 @@ classid = attribute "classid"
 -- > <img codebase="bar" />
 --
 codebase :: AttributeValue  -- ^ Attribute value.
-         -> Attribute       -- ^ Resulting attribute.
+         -> Attribute a     -- ^ Resulting attribute.
 codebase = attribute "codebase"
 {-# INLINE codebase #-}
 
@@ -394,7 +394,7 @@ codebase = attribute "codebase"
 -- > <img codetype="bar" />
 --
 codetype :: AttributeValue  -- ^ Attribute value.
-         -> Attribute       -- ^ Resulting attribute.
+         -> Attribute a     -- ^ Resulting attribute.
 codetype = attribute "codetype"
 {-# INLINE codetype #-}
 
@@ -409,7 +409,7 @@ codetype = attribute "codetype"
 -- > <img cols="bar" />
 --
 cols :: AttributeValue  -- ^ Attribute value.
-     -> Attribute       -- ^ Resulting attribute.
+     -> Attribute a     -- ^ Resulting attribute.
 cols = attribute "cols"
 {-# INLINE cols #-}
 
@@ -424,7 +424,7 @@ cols = attribute "cols"
 -- > <img colspan="bar" />
 --
 colspan :: AttributeValue  -- ^ Attribute value.
-        -> Attribute       -- ^ Resulting attribute.
+        -> Attribute a     -- ^ Resulting attribute.
 colspan = attribute "colspan"
 {-# INLINE colspan #-}
 
@@ -439,7 +439,7 @@ colspan = attribute "colspan"
 -- > <img content="bar" />
 --
 content :: AttributeValue  -- ^ Attribute value.
-        -> Attribute       -- ^ Resulting attribute.
+        -> Attribute a     -- ^ Resulting attribute.
 content = attribute "content"
 {-# INLINE content #-}
 
@@ -454,7 +454,7 @@ content = attribute "content"
 -- > <img coords="bar" />
 --
 coords :: AttributeValue  -- ^ Attribute value.
-       -> Attribute       -- ^ Resulting attribute.
+       -> Attribute a     -- ^ Resulting attribute.
 coords = attribute "coords"
 {-# INLINE coords #-}
 
@@ -469,7 +469,7 @@ coords = attribute "coords"
 -- > <img data="bar" />
 --
 data_ :: AttributeValue  -- ^ Attribute value.
-      -> Attribute       -- ^ Resulting attribute.
+      -> Attribute a     -- ^ Resulting attribute.
 data_ = attribute "data"
 {-# INLINE data_ #-}
 
@@ -484,7 +484,7 @@ data_ = attribute "data"
 -- > <img datetime="bar" />
 --
 datetime :: AttributeValue  -- ^ Attribute value.
-         -> Attribute       -- ^ Resulting attribute.
+         -> Attribute a     -- ^ Resulting attribute.
 datetime = attribute "datetime"
 {-# INLINE datetime #-}
 
@@ -499,7 +499,7 @@ datetime = attribute "datetime"
 -- > <img declare="bar" />
 --
 declare :: AttributeValue  -- ^ Attribute value.
-        -> Attribute       -- ^ Resulting attribute.
+        -> Attribute a     -- ^ Resulting attribute.
 declare = attribute "declare"
 {-# INLINE declare #-}
 
@@ -514,7 +514,7 @@ declare = attribute "declare"
 -- > <img defer="bar" />
 --
 defer :: AttributeValue  -- ^ Attribute value.
-      -> Attribute       -- ^ Resulting attribute.
+      -> Attribute a     -- ^ Resulting attribute.
 defer = attribute "defer"
 {-# INLINE defer #-}
 
@@ -529,7 +529,7 @@ defer = attribute "defer"
 -- > <img dir="bar" />
 --
 dir :: AttributeValue  -- ^ Attribute value.
-    -> Attribute       -- ^ Resulting attribute.
+    -> Attribute a     -- ^ Resulting attribute.
 dir = attribute "dir"
 {-# INLINE dir #-}
 
@@ -544,7 +544,7 @@ dir = attribute "dir"
 -- > <img disabled="bar" />
 --
 disabled :: AttributeValue  -- ^ Attribute value.
-         -> Attribute       -- ^ Resulting attribute.
+         -> Attribute a     -- ^ Resulting attribute.
 disabled = attribute "disabled"
 {-# INLINE disabled #-}
 
@@ -559,7 +559,7 @@ disabled = attribute "disabled"
 -- > <img for="bar" />
 --
 for :: AttributeValue  -- ^ Attribute value.
-    -> Attribute       -- ^ Resulting attribute.
+    -> Attribute a     -- ^ Resulting attribute.
 for = attribute "for"
 {-# INLINE for #-}
 
@@ -574,7 +574,7 @@ for = attribute "for"
 -- > <img frame="bar" />
 --
 frame :: AttributeValue  -- ^ Attribute value.
-      -> Attribute       -- ^ Resulting attribute.
+      -> Attribute a     -- ^ Resulting attribute.
 frame = attribute "frame"
 {-# INLINE frame #-}
 
@@ -589,7 +589,7 @@ frame = attribute "frame"
 -- > <img headers="bar" />
 --
 headers :: AttributeValue  -- ^ Attribute value.
-        -> Attribute       -- ^ Resulting attribute.
+        -> Attribute a     -- ^ Resulting attribute.
 headers = attribute "headers"
 {-# INLINE headers #-}
 
@@ -604,7 +604,7 @@ headers = attribute "headers"
 -- > <img height="bar" />
 --
 height :: AttributeValue  -- ^ Attribute value.
-       -> Attribute       -- ^ Resulting attribute.
+       -> Attribute a     -- ^ Resulting attribute.
 height = attribute "height"
 {-# INLINE height #-}
 
@@ -619,7 +619,7 @@ height = attribute "height"
 -- > <img href="bar" />
 --
 href :: AttributeValue  -- ^ Attribute value.
-     -> Attribute       -- ^ Resulting attribute.
+     -> Attribute a     -- ^ Resulting attribute.
 href = attribute "href"
 {-# INLINE href #-}
 
@@ -634,7 +634,7 @@ href = attribute "href"
 -- > <img hreflang="bar" />
 --
 hreflang :: AttributeValue  -- ^ Attribute value.
-         -> Attribute       -- ^ Resulting attribute.
+         -> Attribute a     -- ^ Resulting attribute.
 hreflang = attribute "hreflang"
 {-# INLINE hreflang #-}
 
@@ -649,7 +649,7 @@ hreflang = attribute "hreflang"
 -- > <img http-equiv="bar" />
 --
 http_equiv :: AttributeValue  -- ^ Attribute value.
-           -> Attribute       -- ^ Resulting attribute.
+           -> Attribute a     -- ^ Resulting attribute.
 http_equiv = attribute "http-equiv"
 {-# INLINE http_equiv #-}
 
@@ -664,7 +664,7 @@ http_equiv = attribute "http-equiv"
 -- > <img id="bar" />
 --
 id :: AttributeValue  -- ^ Attribute value.
-   -> Attribute       -- ^ Resulting attribute.
+   -> Attribute a     -- ^ Resulting attribute.
 id = attribute "id"
 {-# INLINE id #-}
 
@@ -679,7 +679,7 @@ id = attribute "id"
 -- > <img label="bar" />
 --
 label :: AttributeValue  -- ^ Attribute value.
-      -> Attribute       -- ^ Resulting attribute.
+      -> Attribute a     -- ^ Resulting attribute.
 label = attribute "label"
 {-# INLINE label #-}
 
@@ -694,7 +694,7 @@ label = attribute "label"
 -- > <img lang="bar" />
 --
 lang :: AttributeValue  -- ^ Attribute value.
-     -> Attribute       -- ^ Resulting attribute.
+     -> Attribute a     -- ^ Resulting attribute.
 lang = attribute "lang"
 {-# INLINE lang #-}
 
@@ -709,7 +709,7 @@ lang = attribute "lang"
 -- > <img maxlength="bar" />
 --
 maxlength :: AttributeValue  -- ^ Attribute value.
-          -> Attribute       -- ^ Resulting attribute.
+          -> Attribute a     -- ^ Resulting attribute.
 maxlength = attribute "maxlength"
 {-# INLINE maxlength #-}
 
@@ -724,7 +724,7 @@ maxlength = attribute "maxlength"
 -- > <img media="bar" />
 --
 media :: AttributeValue  -- ^ Attribute value.
-      -> Attribute       -- ^ Resulting attribute.
+      -> Attribute a     -- ^ Resulting attribute.
 media = attribute "media"
 {-# INLINE media #-}
 
@@ -739,7 +739,7 @@ media = attribute "media"
 -- > <img method="bar" />
 --
 method :: AttributeValue  -- ^ Attribute value.
-       -> Attribute       -- ^ Resulting attribute.
+       -> Attribute a     -- ^ Resulting attribute.
 method = attribute "method"
 {-# INLINE method #-}
 
@@ -754,7 +754,7 @@ method = attribute "method"
 -- > <img multiple="bar" />
 --
 multiple :: AttributeValue  -- ^ Attribute value.
-         -> Attribute       -- ^ Resulting attribute.
+         -> Attribute a     -- ^ Resulting attribute.
 multiple = attribute "multiple"
 {-# INLINE multiple #-}
 
@@ -769,7 +769,7 @@ multiple = attribute "multiple"
 -- > <img name="bar" />
 --
 name :: AttributeValue  -- ^ Attribute value.
-     -> Attribute       -- ^ Resulting attribute.
+     -> Attribute a     -- ^ Resulting attribute.
 name = attribute "name"
 {-# INLINE name #-}
 
@@ -784,7 +784,7 @@ name = attribute "name"
 -- > <img nohref="bar" />
 --
 nohref :: AttributeValue  -- ^ Attribute value.
-       -> Attribute       -- ^ Resulting attribute.
+       -> Attribute a     -- ^ Resulting attribute.
 nohref = attribute "nohref"
 {-# INLINE nohref #-}
 
@@ -799,7 +799,7 @@ nohref = attribute "nohref"
 -- > <img onabort="bar" />
 --
 onabort :: AttributeValue  -- ^ Attribute value.
-        -> Attribute       -- ^ Resulting attribute.
+        -> Attribute a     -- ^ Resulting attribute.
 onabort = attribute "onabort"
 {-# INLINE onabort #-}
 
@@ -814,7 +814,7 @@ onabort = attribute "onabort"
 -- > <img onblur="bar" />
 --
 onblur :: AttributeValue  -- ^ Attribute value.
-       -> Attribute       -- ^ Resulting attribute.
+       -> Attribute a     -- ^ Resulting attribute.
 onblur = attribute "onblur"
 {-# INLINE onblur #-}
 
@@ -829,7 +829,7 @@ onblur = attribute "onblur"
 -- > <img onchange="bar" />
 --
 onchange :: AttributeValue  -- ^ Attribute value.
-         -> Attribute       -- ^ Resulting attribute.
+         -> Attribute a     -- ^ Resulting attribute.
 onchange = attribute "onchange"
 {-# INLINE onchange #-}
 
@@ -844,7 +844,7 @@ onchange = attribute "onchange"
 -- > <img onclick="bar" />
 --
 onclick :: AttributeValue  -- ^ Attribute value.
-        -> Attribute       -- ^ Resulting attribute.
+        -> Attribute a     -- ^ Resulting attribute.
 onclick = attribute "onclick"
 {-# INLINE onclick #-}
 
@@ -859,7 +859,7 @@ onclick = attribute "onclick"
 -- > <img ondblclick="bar" />
 --
 ondblclick :: AttributeValue  -- ^ Attribute value.
-           -> Attribute       -- ^ Resulting attribute.
+           -> Attribute a     -- ^ Resulting attribute.
 ondblclick = attribute "ondblclick"
 {-# INLINE ondblclick #-}
 
@@ -874,7 +874,7 @@ ondblclick = attribute "ondblclick"
 -- > <img onfocus="bar" />
 --
 onfocus :: AttributeValue  -- ^ Attribute value.
-        -> Attribute       -- ^ Resulting attribute.
+        -> Attribute a     -- ^ Resulting attribute.
 onfocus = attribute "onfocus"
 {-# INLINE onfocus #-}
 
@@ -889,7 +889,7 @@ onfocus = attribute "onfocus"
 -- > <img onkeydown="bar" />
 --
 onkeydown :: AttributeValue  -- ^ Attribute value.
-          -> Attribute       -- ^ Resulting attribute.
+          -> Attribute a     -- ^ Resulting attribute.
 onkeydown = attribute "onkeydown"
 {-# INLINE onkeydown #-}
 
@@ -904,7 +904,7 @@ onkeydown = attribute "onkeydown"
 -- > <img onkeypress="bar" />
 --
 onkeypress :: AttributeValue  -- ^ Attribute value.
-           -> Attribute       -- ^ Resulting attribute.
+           -> Attribute a     -- ^ Resulting attribute.
 onkeypress = attribute "onkeypress"
 {-# INLINE onkeypress #-}
 
@@ -919,7 +919,7 @@ onkeypress = attribute "onkeypress"
 -- > <img onkeyup="bar" />
 --
 onkeyup :: AttributeValue  -- ^ Attribute value.
-        -> Attribute       -- ^ Resulting attribute.
+        -> Attribute a     -- ^ Resulting attribute.
 onkeyup = attribute "onkeyup"
 {-# INLINE onkeyup #-}
 
@@ -934,7 +934,7 @@ onkeyup = attribute "onkeyup"
 -- > <img onload="bar" />
 --
 onload :: AttributeValue  -- ^ Attribute value.
-       -> Attribute       -- ^ Resulting attribute.
+       -> Attribute a     -- ^ Resulting attribute.
 onload = attribute "onload"
 {-# INLINE onload #-}
 
@@ -949,7 +949,7 @@ onload = attribute "onload"
 -- > <img onmousedown="bar" />
 --
 onmousedown :: AttributeValue  -- ^ Attribute value.
-            -> Attribute       -- ^ Resulting attribute.
+            -> Attribute a     -- ^ Resulting attribute.
 onmousedown = attribute "onmousedown"
 {-# INLINE onmousedown #-}
 
@@ -964,7 +964,7 @@ onmousedown = attribute "onmousedown"
 -- > <img onmousemove="bar" />
 --
 onmousemove :: AttributeValue  -- ^ Attribute value.
-            -> Attribute       -- ^ Resulting attribute.
+            -> Attribute a     -- ^ Resulting attribute.
 onmousemove = attribute "onmousemove"
 {-# INLINE onmousemove #-}
 
@@ -979,7 +979,7 @@ onmousemove = attribute "onmousemove"
 -- > <img onmouseout="bar" />
 --
 onmouseout :: AttributeValue  -- ^ Attribute value.
-           -> Attribute       -- ^ Resulting attribute.
+           -> Attribute a     -- ^ Resulting attribute.
 onmouseout = attribute "onmouseout"
 {-# INLINE onmouseout #-}
 
@@ -994,7 +994,7 @@ onmouseout = attribute "onmouseout"
 -- > <img onmouseover="bar" />
 --
 onmouseover :: AttributeValue  -- ^ Attribute value.
-            -> Attribute       -- ^ Resulting attribute.
+            -> Attribute a     -- ^ Resulting attribute.
 onmouseover = attribute "onmouseover"
 {-# INLINE onmouseover #-}
 
@@ -1009,7 +1009,7 @@ onmouseover = attribute "onmouseover"
 -- > <img onmouseup="bar" />
 --
 onmouseup :: AttributeValue  -- ^ Attribute value.
-          -> Attribute       -- ^ Resulting attribute.
+          -> Attribute a     -- ^ Resulting attribute.
 onmouseup = attribute "onmouseup"
 {-# INLINE onmouseup #-}
 
@@ -1024,7 +1024,7 @@ onmouseup = attribute "onmouseup"
 -- > <img onreset="bar" />
 --
 onreset :: AttributeValue  -- ^ Attribute value.
-        -> Attribute       -- ^ Resulting attribute.
+        -> Attribute a     -- ^ Resulting attribute.
 onreset = attribute "onreset"
 {-# INLINE onreset #-}
 
@@ -1039,7 +1039,7 @@ onreset = attribute "onreset"
 -- > <img onselect="bar" />
 --
 onselect :: AttributeValue  -- ^ Attribute value.
-         -> Attribute       -- ^ Resulting attribute.
+         -> Attribute a     -- ^ Resulting attribute.
 onselect = attribute "onselect"
 {-# INLINE onselect #-}
 
@@ -1054,7 +1054,7 @@ onselect = attribute "onselect"
 -- > <img onsubmit="bar" />
 --
 onsubmit :: AttributeValue  -- ^ Attribute value.
-         -> Attribute       -- ^ Resulting attribute.
+         -> Attribute a     -- ^ Resulting attribute.
 onsubmit = attribute "onsubmit"
 {-# INLINE onsubmit #-}
 
@@ -1069,7 +1069,7 @@ onsubmit = attribute "onsubmit"
 -- > <img onunload="bar" />
 --
 onunload :: AttributeValue  -- ^ Attribute value.
-         -> Attribute       -- ^ Resulting attribute.
+         -> Attribute a     -- ^ Resulting attribute.
 onunload = attribute "onunload"
 {-# INLINE onunload #-}
 
@@ -1084,7 +1084,7 @@ onunload = attribute "onunload"
 -- > <img profile="bar" />
 --
 profile :: AttributeValue  -- ^ Attribute value.
-        -> Attribute       -- ^ Resulting attribute.
+        -> Attribute a     -- ^ Resulting attribute.
 profile = attribute "profile"
 {-# INLINE profile #-}
 
@@ -1099,7 +1099,7 @@ profile = attribute "profile"
 -- > <img readonly="bar" />
 --
 readonly :: AttributeValue  -- ^ Attribute value.
-         -> Attribute       -- ^ Resulting attribute.
+         -> Attribute a     -- ^ Resulting attribute.
 readonly = attribute "readonly"
 {-# INLINE readonly #-}
 
@@ -1114,7 +1114,7 @@ readonly = attribute "readonly"
 -- > <img rel="bar" />
 --
 rel :: AttributeValue  -- ^ Attribute value.
-    -> Attribute       -- ^ Resulting attribute.
+    -> Attribute a     -- ^ Resulting attribute.
 rel = attribute "rel"
 {-# INLINE rel #-}
 
@@ -1129,7 +1129,7 @@ rel = attribute "rel"
 -- > <img rev="bar" />
 --
 rev :: AttributeValue  -- ^ Attribute value.
-    -> Attribute       -- ^ Resulting attribute.
+    -> Attribute a     -- ^ Resulting attribute.
 rev = attribute "rev"
 {-# INLINE rev #-}
 
@@ -1144,7 +1144,7 @@ rev = attribute "rev"
 -- > <img rows="bar" />
 --
 rows :: AttributeValue  -- ^ Attribute value.
-     -> Attribute       -- ^ Resulting attribute.
+     -> Attribute a     -- ^ Resulting attribute.
 rows = attribute "rows"
 {-# INLINE rows #-}
 
@@ -1159,7 +1159,7 @@ rows = attribute "rows"
 -- > <img rowspan="bar" />
 --
 rowspan :: AttributeValue  -- ^ Attribute value.
-        -> Attribute       -- ^ Resulting attribute.
+        -> Attribute a     -- ^ Resulting attribute.
 rowspan = attribute "rowspan"
 {-# INLINE rowspan #-}
 
@@ -1174,7 +1174,7 @@ rowspan = attribute "rowspan"
 -- > <img rules="bar" />
 --
 rules :: AttributeValue  -- ^ Attribute value.
-      -> Attribute       -- ^ Resulting attribute.
+      -> Attribute a     -- ^ Resulting attribute.
 rules = attribute "rules"
 {-# INLINE rules #-}
 
@@ -1189,7 +1189,7 @@ rules = attribute "rules"
 -- > <img scheme="bar" />
 --
 scheme :: AttributeValue  -- ^ Attribute value.
-       -> Attribute       -- ^ Resulting attribute.
+       -> Attribute a     -- ^ Resulting attribute.
 scheme = attribute "scheme"
 {-# INLINE scheme #-}
 
@@ -1204,7 +1204,7 @@ scheme = attribute "scheme"
 -- > <img scope="bar" />
 --
 scope :: AttributeValue  -- ^ Attribute value.
-      -> Attribute       -- ^ Resulting attribute.
+      -> Attribute a     -- ^ Resulting attribute.
 scope = attribute "scope"
 {-# INLINE scope #-}
 
@@ -1219,7 +1219,7 @@ scope = attribute "scope"
 -- > <img selected="bar" />
 --
 selected :: AttributeValue  -- ^ Attribute value.
-         -> Attribute       -- ^ Resulting attribute.
+         -> Attribute a     -- ^ Resulting attribute.
 selected = attribute "selected"
 {-# INLINE selected #-}
 
@@ -1234,7 +1234,7 @@ selected = attribute "selected"
 -- > <img shape="bar" />
 --
 shape :: AttributeValue  -- ^ Attribute value.
-      -> Attribute       -- ^ Resulting attribute.
+      -> Attribute a     -- ^ Resulting attribute.
 shape = attribute "shape"
 {-# INLINE shape #-}
 
@@ -1249,7 +1249,7 @@ shape = attribute "shape"
 -- > <img size="bar" />
 --
 size :: AttributeValue  -- ^ Attribute value.
-     -> Attribute       -- ^ Resulting attribute.
+     -> Attribute a     -- ^ Resulting attribute.
 size = attribute "size"
 {-# INLINE size #-}
 
@@ -1264,7 +1264,7 @@ size = attribute "size"
 -- > <img span="bar" />
 --
 span :: AttributeValue  -- ^ Attribute value.
-     -> Attribute       -- ^ Resulting attribute.
+     -> Attribute a     -- ^ Resulting attribute.
 span = attribute "span"
 {-# INLINE span #-}
 
@@ -1279,7 +1279,7 @@ span = attribute "span"
 -- > <img src="bar" />
 --
 src :: AttributeValue  -- ^ Attribute value.
-    -> Attribute       -- ^ Resulting attribute.
+    -> Attribute a     -- ^ Resulting attribute.
 src = attribute "src"
 {-# INLINE src #-}
 
@@ -1294,7 +1294,7 @@ src = attribute "src"
 -- > <img standby="bar" />
 --
 standby :: AttributeValue  -- ^ Attribute value.
-        -> Attribute       -- ^ Resulting attribute.
+        -> Attribute a     -- ^ Resulting attribute.
 standby = attribute "standby"
 {-# INLINE standby #-}
 
@@ -1309,7 +1309,7 @@ standby = attribute "standby"
 -- > <img style="bar" />
 --
 style :: AttributeValue  -- ^ Attribute value.
-      -> Attribute       -- ^ Resulting attribute.
+      -> Attribute a     -- ^ Resulting attribute.
 style = attribute "style"
 {-# INLINE style #-}
 
@@ -1324,7 +1324,7 @@ style = attribute "style"
 -- > <img summary="bar" />
 --
 summary :: AttributeValue  -- ^ Attribute value.
-        -> Attribute       -- ^ Resulting attribute.
+        -> Attribute a     -- ^ Resulting attribute.
 summary = attribute "summary"
 {-# INLINE summary #-}
 
@@ -1339,7 +1339,7 @@ summary = attribute "summary"
 -- > <img tabindex="bar" />
 --
 tabindex :: AttributeValue  -- ^ Attribute value.
-         -> Attribute       -- ^ Resulting attribute.
+         -> Attribute a     -- ^ Resulting attribute.
 tabindex = attribute "tabindex"
 {-# INLINE tabindex #-}
 
@@ -1354,7 +1354,7 @@ tabindex = attribute "tabindex"
 -- > <img title="bar" />
 --
 title :: AttributeValue  -- ^ Attribute value.
-      -> Attribute       -- ^ Resulting attribute.
+      -> Attribute a     -- ^ Resulting attribute.
 title = attribute "title"
 {-# INLINE title #-}
 
@@ -1369,7 +1369,7 @@ title = attribute "title"
 -- > <img type="bar" />
 --
 type_ :: AttributeValue  -- ^ Attribute value.
-      -> Attribute       -- ^ Resulting attribute.
+      -> Attribute a     -- ^ Resulting attribute.
 type_ = attribute "type"
 {-# INLINE type_ #-}
 
@@ -1384,7 +1384,7 @@ type_ = attribute "type"
 -- > <img usemap="bar" />
 --
 usemap :: AttributeValue  -- ^ Attribute value.
-       -> Attribute       -- ^ Resulting attribute.
+       -> Attribute a     -- ^ Resulting attribute.
 usemap = attribute "usemap"
 {-# INLINE usemap #-}
 
@@ -1399,7 +1399,7 @@ usemap = attribute "usemap"
 -- > <img valign="bar" />
 --
 valign :: AttributeValue  -- ^ Attribute value.
-       -> Attribute       -- ^ Resulting attribute.
+       -> Attribute a     -- ^ Resulting attribute.
 valign = attribute "valign"
 {-# INLINE valign #-}
 
@@ -1414,7 +1414,7 @@ valign = attribute "valign"
 -- > <img value="bar" />
 --
 value :: AttributeValue  -- ^ Attribute value.
-      -> Attribute       -- ^ Resulting attribute.
+      -> Attribute a     -- ^ Resulting attribute.
 value = attribute "value"
 {-# INLINE value #-}
 
@@ -1429,7 +1429,7 @@ value = attribute "value"
 -- > <img valuetype="bar" />
 --
 valuetype :: AttributeValue  -- ^ Attribute value.
-          -> Attribute       -- ^ Resulting attribute.
+          -> Attribute a     -- ^ Resulting attribute.
 valuetype = attribute "valuetype"
 {-# INLINE valuetype #-}
 
@@ -1444,6 +1444,6 @@ valuetype = attribute "valuetype"
 -- > <img width="bar" />
 --
 width :: AttributeValue  -- ^ Attribute value.
-      -> Attribute       -- ^ Resulting attribute.
+      -> Attribute a     -- ^ Resulting attribute.
 width = attribute "width"
 {-# INLINE width #-}

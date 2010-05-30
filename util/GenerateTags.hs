@@ -110,7 +110,7 @@ makeDocType lines' = unlines
     , "-- Result:"
     , "--"
     , unlines (map ("-- > " ++) lines') ++ "--"
-    , "docType :: Html  -- ^ The document type HTML."
+    , "docType :: Html a  -- ^ The document type HTML."
     , "docType = preEscapedText " ++ (show $ unlines lines')
     , "{-# INLINE docType #-}"
     ]
@@ -129,8 +129,8 @@ makeParent tag = unlines
     , "--"
     , "-- > <" ++ tag ++ "><span>foo</span></" ++ tag ++ ">"
     , "--"
-    , function        ++ " :: Html  -- ^ Inner HTML."
-    , spaces function ++ " -> Html  -- ^ Resulting HTML."
+    , function        ++ " :: Html a  -- ^ Inner HTML."
+    , spaces function ++ " -> Html a  -- ^ Resulting HTML."
     , function ++ " = parent \"" ++ tag ++ "\""
     , "{-# INLINE " ++ function ++ " #-}"
     ]
@@ -151,7 +151,7 @@ makeLeaf tag = unlines
     , "--"
     , "-- > <" ++ tag ++ " />"
     , "--"
-    , function        ++ " :: Html  -- ^ Resulting HTML."
+    , function        ++ " :: Html a  -- ^ Resulting HTML."
     , function ++ " = leaf \"" ++ tag ++ "\""
     , "{-# INLINE " ++ function ++ " #-}"
     ]
@@ -172,7 +172,7 @@ makeOpen tag = unlines
     , "--"
     , "-- > <" ++ tag ++ ">"
     , "--"
-    , function        ++ " :: Html  -- ^ Resulting HTML."
+    , function        ++ " :: Html a  -- ^ Resulting HTML."
     , function ++ " = open \"" ++ tag ++ "\""
     , "{-# INLINE " ++ function ++ " #-}"
     ]
@@ -194,7 +194,7 @@ makeAttribute name = unlines
     , "-- > <img " ++ name ++ "=\"bar\" />"
     , "--"
     , function        ++ " :: AttributeValue  -- ^ Attribute value."
-    , spaces function ++ " -> Attribute       -- ^ Resulting attribute."
+    , spaces function ++ " -> Attribute a     -- ^ Resulting attribute."
     , function ++ " = attribute \"" ++ name ++ "\""
     , "{-# INLINE " ++ function ++ " #-}"
     ]

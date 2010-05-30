@@ -590,3 +590,36 @@ I abstracted away our builder a bit, and the result is that the escaping is
 now optimized. The benchmark I wrote for escaping dropped from initially 1.61ms
 to 1.12ms. Yay. There's also been a slight speedup in the other benchmarks as
 well, because some optimizations were quite general.
+
+Sunday, May 30th, morning
+=========================
+
+Correction and type safety are very important for Haskell programmers. Until
+now, we used `Html` for our main HTML type, where
+
+    type Html = HtmlM ()
+
+This means code like this was possible:
+
+    page :: Html
+    page = html $ do
+        x <- p $ "Foobar"
+        p $ string $ show x
+
+The user would expect `show x` to give `()` back. But it doesn't -- it crashes
+with an error. This is because `>>=` is not _really_ supported in our monad, for
+efficiency reasons. However, we do not want the user to get errors like these
+either.
+
+I dropped the `Html` type alias, and moved `HtmlM` to `Html`. And instead of
+using `Html ()` as main HTML type, we now use `Html a`.
+
+    page :: Html a
+    page = html $ do
+        x <- p $ "Foobar"
+        p $ string $ show x
+
+It is now impossible to compile this snippet. This is because `a` is too
+_general_ to actually do anything with it, and it can thus no longer be
+evaluated (unless you're using type hacks, in which case you deserve the
+error ;-)).

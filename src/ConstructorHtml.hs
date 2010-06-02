@@ -83,3 +83,18 @@ instance IsString MultiString where
 --
 -- We could also use the same trick to cover different renderers by preparing
 -- the right strings for the tags up front.
+--
+-- Note that for the interpreter to be as fast as possible, I think the
+-- attributes should be tracked in a recursive argument instead of in a
+-- closure; i.e. the intepreter would be based directly on HtmlByteString.
+-- Moreover, I think a tradeoff has to be found between the number of
+-- constructors and the nesting involved. In the end, we just want that the
+-- overhead per combinator is as low as possible.
+--
+-- However, I think this constructor based approch could be quite efficient, as
+-- we can still ensure that all the copying and encoding happens in not
+-- too-small units and non-redundant for literal strings. Moreover, we trade
+-- the construction of closures against the matching with a small set of
+-- constructors. Perhaps this is a fair trade.
+--
+-- Looking forward to the first results for the BigTable benchmark :-)

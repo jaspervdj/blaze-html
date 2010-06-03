@@ -118,12 +118,12 @@ renderHtml = UB.toLazyByteString . renderBuilder
 
 renderBuilder :: Html -> Utf8Builder
 renderBuilder (Parent open content close) =
-              (UB.unsafeFromByteString $ getUtf8ByteString open)
+              getUtf8Builder open
     `mappend` renderBuilder content
-    `mappend` (UB.unsafeFromByteString $ getUtf8ByteString close)
+    `mappend` getUtf8Builder close
 renderBuilder (Leaf _) = undefined
 renderBuilder (Content content) = case content of
-    StaticString   s -> UB.unsafeFromByteString $ getUtf8ByteString s
+    StaticString   s -> getUtf8Builder s
     HaskellString  s -> UB.fromString s
     Utf8ByteString s -> UB.unsafeFromByteString s
     Text           s -> UB.fromText s
@@ -136,15 +136,15 @@ renderBuilder (List hs) = mconcat $ map renderBuilder hs
 --
 -- Note that I'm using a lazy ByteString where we should probably use a
 -- Utf8Builder. The same holds in some cases for Text, which may eventually
--- better be replaced by a builder. 
+-- better be replaced by a builder.
 data StaticMultiString = StaticMultiString
-       { getHaskellString  :: String  
-       , getUtf8ByteString :: S.ByteString 
-       , getText           :: Text
+       { getHaskellString :: String
+       , getUtf8Builder   :: Utf8Builder
+       , getText          :: Text
        }
 
 -- | A string denoting input from different string representations.
-data MultiString = 
+data MultiString =
      StaticString   StaticMultiString -- ^ Input from a set of precomputed
                                       --   representations.
    | HaskellString  String            -- ^ Input from a Haskell String
@@ -155,7 +155,7 @@ data MultiString =
 -- | A static string that is built once and used many times. Here, we could
 -- also use the `cached` (optimizePiece) construction for our builder.
 staticMultiString :: String -> StaticMultiString
-staticMultiString s = StaticMultiString s (T.encodeUtf8 t) t
+staticMultiString s = StaticMultiString s (UB.optimizePiece $ UB.fromText t) t
   where
     t = T.pack s
 {-# INLINE staticMultiString #-}

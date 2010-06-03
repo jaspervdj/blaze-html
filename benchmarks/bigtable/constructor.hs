@@ -87,12 +87,34 @@ instance Monoid Html where
     mconcat = List
     {-# INLINE mconcat #-}
 
+instance IsString Html where
+    fromString = string
+    {-# INLINE fromString #-}
+
+attribute :: StaticMultiString  -- ^ Key.
+          -> MultiString        -- ^ Value.
+          -> Html               -- ^ Element to apply attribute on.
+          -> Html               -- ^ Resulting element.
+attribute key value html =
+    case html of
+        Parent open content close -> Parent (open `mappend` attr) content close
+        _                         -> html
+  where
+    entry = optimizeStaticMultiString $        staticMultiString " "
+                                      `mappend` key
+                                      `mappend` staticMultiString "=\""
+    attr = entry `mappend` toStaticMultiString value
+                 `mappend` staticMultiString "\""
+{-# INLINE attribute #-}
+
+test = attribute (staticMultiString "id") (HaskellString "key") (table "lol")
+
 parent :: String -> Html -> Html
 parent tag content =
-    let open = "<" `mappend` tag `mappend` ">"
-        openTag = staticMultiString open
+    let open = "<" `mappend` tag
+        openTag = optimizeStaticMultiString $ staticMultiString open
         close = "</" `mappend` tag `mappend` ">"
-        closeTag = staticMultiString close
+        closeTag = optimizeStaticMultiString $ staticMultiString close
     in Parent openTag content closeTag
 {-# INLINE parent #-}
 
@@ -119,6 +141,7 @@ renderHtml = UB.toLazyByteString . renderBuilder
 renderBuilder :: Html -> Utf8Builder
 renderBuilder (Parent open content close) =
               getUtf8Builder open
+    `mappend` UB.fromChar '>'
     `mappend` renderBuilder content
     `mappend` getUtf8Builder close
 renderBuilder (Leaf _) = undefined
@@ -143,6 +166,26 @@ data StaticMultiString = StaticMultiString
        , getText          :: Text
        }
 
+instance Monoid StaticMultiString where
+    mempty = StaticMultiString mempty mempty mempty
+    {-# INLINE mempty #-}
+    mappend (StaticMultiString x1 y1 z1) (StaticMultiString x2 y2 z2) =
+        StaticMultiString (x1 `mappend` x2) (y1 `mappend` y2) (z1 `mappend` z2)
+    {-# INLINE mappend #-}
+
+-- | A static string that is built once and used many times. Here, we could
+-- also use the `cached` (optimizePiece) construction for our builder.
+staticMultiString :: String -> StaticMultiString
+staticMultiString s = StaticMultiString s (UB.fromText t) t
+  where
+    t = T.pack s
+{-# INLINE staticMultiString #-}
+
+optimizeStaticMultiString :: StaticMultiString -> StaticMultiString
+optimizeStaticMultiString (StaticMultiString s u t) =
+    StaticMultiString s (UB.optimizePiece u) t
+{-# INLINE optimizeStaticMultiString #-}
+
 -- | A string denoting input from different string representations.
 data MultiString =
      StaticString   StaticMultiString -- ^ Input from a set of precomputed
@@ -152,13 +195,13 @@ data MultiString =
    | Text           Text            -- ^ Input from a Text value
 
 
--- | A static string that is built once and used many times. Here, we could
--- also use the `cached` (optimizePiece) construction for our builder.
-staticMultiString :: String -> StaticMultiString
-staticMultiString s = StaticMultiString s (UB.optimizePiece $ UB.fromText t) t
-  where
-    t = T.pack s
-{-# INLINE staticMultiString #-}
+toStaticMultiString :: MultiString -> StaticMultiString
+toStaticMultiString (StaticString  s)  = s
+toStaticMultiString (HaskellString s)  = staticMultiString s
+toStaticMultiString (Utf8ByteString b) =
+    let text = T.decodeUtf8 b
+    in StaticMultiString (T.unpack text) (UB.unsafeFromByteString b) text
+toStaticMultiString (Text t) = StaticMultiString (T.unpack t) (UB.fromText t) t
 
 -- Overloaded strings support
 -----------------------------

@@ -100,7 +100,7 @@ attribute key value html =
         Parent open content close -> Parent (open `mappend` attr) content close
         _                         -> html
   where
-    entry = optimizeStaticMultiString $        staticMultiString " "
+    entry = optimizeStaticMultiString $         staticMultiString " "
                                       `mappend` key
                                       `mappend` staticMultiString "=\""
     attr = entry `mappend` toStaticMultiString value
@@ -176,7 +176,7 @@ instance Monoid StaticMultiString where
 -- | A static string that is built once and used many times. Here, we could
 -- also use the `cached` (optimizePiece) construction for our builder.
 staticMultiString :: String -> StaticMultiString
-staticMultiString s = StaticMultiString s (UB.fromText t) t
+staticMultiString s = StaticMultiString s (UB.optimizePiece $ UB.fromText t) t
   where
     t = T.pack s
 {-# INLINE staticMultiString #-}

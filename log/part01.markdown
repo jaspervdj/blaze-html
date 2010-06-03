@@ -623,3 +623,21 @@ It is now impossible to compile this snippet. This is because `a` is too
 _general_ to actually do anything with it, and it can thus no longer be
 evaluated (unless you're using type hacks, in which case you deserve the
 error ;-)).
+
+Thursday, June 3rd, morning
+===========================
+
+So, I notice I haven't written too much logs lately. I should certainly try to
+increase my output here again, since it's interesting for myself as well as for
+possible readers (more interesting than the git log, at least).
+
+We discussed an implementation based on an algebraic datatype yesterday. This
+means our `Html` type would be an actual datatype:
+
+    data Html = ...
+
+instead of the closures and newtypes we now use. This approach gives us
+excellent flexibility, but the question is if we can get it fast enough. I just
+added an initial test implementation, it appears to be twice as slow as the
+current performance of the develop branch. But, of course, there's room for
+optimization.

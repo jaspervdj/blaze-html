@@ -641,3 +641,16 @@ excellent flexibility, but the question is if we can get it fast enough. I just
 added an initial test implementation, it appears to be twice as slow as the
 current performance of the develop branch. But, of course, there's room for
 optimization.
+
+Friday June 4th, afternoon
+==========================
+
+We decided it was time for a more advanced and real-world benchmark, so I wrote
+a bigtable HTTP server. The idea is very simple: you run the server like
+
+    make bench-bigtableserver
+    ./benchmarks/BigTableServer 3000
+
+You can then navigate to `localhost:3000/100/50` using your favorite webbrowser
+and you will an HTML table of 100 rows and 50 columns. You can then measure the
+performance using a tool like `httperf` or `ab`.

@@ -18,6 +18,7 @@ import qualified Text.Blaze.Internal.Utf8Builder as UB
 main :: IO ()
 main = defaultMain
     [ benchHtml "bigTable" bigTable bigTableData
+    , benchHtml "manyAttributes" manyAttributes manyAttributesData
     ]
   where
     benchHtml name f x = bench name $ nf (L.length . f) x
@@ -29,6 +30,14 @@ main = defaultMain
     bigTableData = replicate rows [1..10]
     {-# NOINLINE bigTableData #-}
 
+    wideTreeData :: [Text]
+    wideTreeData = take 5000 $
+        cycle ["λf.(λx.fxx)(λx.fxx)", "These & Those", "Foobar", "lol"]
+    {-# NOINLINE wideTreeData #-}
+    
+    manyAttributesData :: [Text]
+    manyAttributesData = wideTreeData
+
 -- | Render the argument matrix as an HTML table.
 --
 bigTable :: [[Int]]        -- ^ Matrix.
@@ -36,6 +45,15 @@ bigTable :: [[Int]]        -- ^ Matrix.
 bigTable t = renderHtml $ table $ mconcat $ map row t
   where
     row r = tr $ mconcat $ map (td . string . show) r
+
+-- | Create an element with many attributes.
+--
+manyAttributes :: [Text]         -- ^ List of attribute values.
+               -> L.ByteString  -- ^ Result.
+manyAttributes = renderHtml . foldl setAttribute img
+  where
+    setAttribute html value = idA (Text value) html
+    {-# INLINE setAttribute #-}
 
 ------------------------------------------------------------------------------
 -- Html Constructors
@@ -68,36 +86,41 @@ bigTable t = renderHtml $ table $ mconcat $ map row t
 -- Looking forward to the first results for the BigTable benchmark :-)
 
 data Html = Parent  StaticMultiString  -- ^ Open tag.
-                    Html               -- ^ Content.
                     StaticMultiString  -- ^ End tag.
-          | Leaf    StaticMultiString  -- ^ Leaf tag.
+                    Html               -- ^ Content.
+          | Leaf    StaticMultiString  -- ^ Begin of leaf tag.
+                    StaticMultiString  -- ^ End of leaf tag.
           | Content MultiString        -- ^ Html content.
-          | List    [Html]             -- ^ Concatenation.
+          | Append  Html Html          -- ^ Concatenation.
+          | Empty                      -- ^ Empty Html
+          | AddAttribute StaticMultiString -- ^ Key with ="
+                         MultiString       -- ^ Value
+                         Html           -- ^ Html that takes attribute
 
 instance Monoid Html where
-    mempty = List []
+    mempty = Empty
     {-# INLINE mempty #-}
 
-    mappend (List x) (List y) = List (x `mappend` y)
-    mappend (List x) y = List $ x `mappend` [y]
-    mappend x (List y) = List $ x : y
-    mappend x y = List $ [x, y]
+    mappend = Append
     {-# INLINE mappend #-}
 
-    mconcat = List
+    mconcat = foldr Append Empty
     {-# INLINE mconcat #-}
 
 instance IsString Html where
     fromString = string
     {-# INLINE fromString #-}
 
+type Attribute = MultiString -> Html -> Html
+
+{-
 attribute :: StaticMultiString  -- ^ Key.
           -> MultiString        -- ^ Value.
           -> Html               -- ^ Element to apply attribute on.
           -> Html               -- ^ Resulting element.
 attribute key value html =
     case html of
-        Parent open content close -> Parent (open `mappend` attr) content close
+        Parent open close content -> Parent (open `mappend` attr) close content
         _                         -> html
   where
     entry = optimizeStaticMultiString $         staticMultiString " "
@@ -108,49 +131,79 @@ attribute key value html =
 {-# INLINE attribute #-}
 
 test = attribute (staticMultiString "id") (HaskellString "key") (table "lol")
+-}
+
+idA :: Attribute
+idA = AddAttribute " id=\""
+{-# INLINE idA #-}
+
 
 parent :: String -> Html -> Html
-parent tag content =
+parent tag =
     let open = "<" `mappend` tag
         openTag = optimizeStaticMultiString $ staticMultiString open
         close = "</" `mappend` tag `mappend` ">"
         closeTag = optimizeStaticMultiString $ staticMultiString close
-    in Parent openTag content closeTag
+    in Parent openTag closeTag
 {-# INLINE parent #-}
 
 table :: Html -> Html
-table = parent "table"
+table = Parent "<table" "</table>"
 {-# INLINE table #-}
 
 tr :: Html -> Html
-tr = parent "tr"
+tr = Parent "<tr" "</tr>"
 {-# INLINE tr #-}
 
 td :: Html -> Html
-td = parent "td"
+td = Parent "<td" "</td>"
 {-# INLINE td #-}
+
+img :: Html
+img = Leaf "<img" ">"
+{-# INLINE img #-}
 
 string :: String -> Html
 string = Content . HaskellString
 {-# INLINE string #-}
+
+text :: Text -> Html
+text = Content . Text
+{-# INLINE text #-}
 
 renderHtml :: Html -> L.ByteString
 renderHtml = UB.toLazyByteString . renderBuilder
 {-# INLINE renderHtml #-}
 
 renderBuilder :: Html -> Utf8Builder
-renderBuilder (Parent open content close) =
-              getUtf8Builder open
-    `mappend` UB.fromChar '>'
-    `mappend` renderBuilder content
-    `mappend` getUtf8Builder close
-renderBuilder (Leaf _) = undefined
-renderBuilder (Content content) = case content of
-    StaticString   s -> getUtf8Builder s
-    HaskellString  s -> UB.fromString s
-    Utf8ByteString s -> UB.unsafeFromByteString s
-    Text           s -> UB.fromText s
-renderBuilder (List hs) = mconcat $ map renderBuilder hs
+renderBuilder = go mempty 
+  where
+    go attrs (Parent open close content) =
+                  getUtf8Builder open
+        `mappend` attrs
+        `mappend` UB.fromChar '>'
+        `mappend` go mempty content
+        `mappend` getUtf8Builder close
+    go attrs (Leaf begin end) = 
+                  getUtf8Builder begin
+        `mappend` attrs
+        `mappend` getUtf8Builder end
+    go attrs (AddAttribute key value h) =
+      go (attrs `mappend` getUtf8Builder key 
+                `mappend` fromMultiString value
+                `mappend` UB.fromChar '"')
+         h
+    go _ (Content content) = fromMultiString content
+    go attrs (Append h1 h2) = go attrs h1 `mappend` go attrs h2
+    go attrs Empty          = mempty
+    {-# NOINLINE go #-}
+
+    fromMultiString (StaticString   s) = getUtf8Builder s
+    fromMultiString (HaskellString  s) = UB.fromString s
+    fromMultiString (Utf8ByteString s) = UB.unsafeFromByteString s
+    fromMultiString (Text           s) = UB.fromText s
+    {-# INLINE fromMultiString #-}
+
 {-# INLINE renderBuilder #-}
 
 -- | The key ingredient is a string representation that supports all possible

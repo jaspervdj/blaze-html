@@ -15,6 +15,7 @@ module BigTableServer where
 
 import Prelude hiding (putStrLn)
 
+import Control.Concurrent (forkIO)
 import Data.Monoid (mappend)
 import Control.Applicative ((<$>))
 import Control.Monad (forever, mapM_)
@@ -34,10 +35,11 @@ main :: IO ()
 main = do
     port <- PortNumber . fromIntegral . read . head <$> getArgs
     socket <- listenOn port
-    forever $ respond socket
-  where
-    respond socket = do
+    forever $ do
         (s, _) <- accept socket 
+        forkIO (respond s)
+  where
+    respond s = do
         string <- recv s 1024
         let words = SB.split (fromIntegral $ ord ' ') string
             requestUrl = words !! 1

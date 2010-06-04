@@ -1,6 +1,6 @@
 -- | This is a possible library implementation experiment and benchmark.
 {-# LANGUAGE OverloadedStrings #-}
-module Main where
+module Utf8Html where
 
 import Data.Monoid (Monoid, mempty, mconcat, mappend)
 import Prelude hiding (div, id, head)

@@ -7,3 +7,4 @@ local
 
 benchmarks/Utf8Builder
 benchmarks/Utf8Html
+benchmarks/BigTableServer

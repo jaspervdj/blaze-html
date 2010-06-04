@@ -1,5 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
-module Main where
+module Utf8Builder where
 
 import Data.Char (ord)
 import Data.Int (Int64)

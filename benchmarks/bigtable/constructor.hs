@@ -60,7 +60,7 @@ manyAttributes = renderHtml . foldl setAttribute img
 ------------------------------------------------------------------------------
 
 -- Html constructors can then use StaticMultiStrings to represents begin and
--- end tag and a MultiString to represent content. Moreover, we can also take care
+-- end tag and a ChoiceString to represent content. Moreover, we can also take care
 -- to precompute the escaping where possible using a similar construction.
 --
 -- Hence, we will have a small algebraic Data Type for Html constructors and
@@ -90,12 +90,12 @@ data Html = Parent  StaticMultiString  -- ^ Open tag.
                     Html               -- ^ Content.
           | Leaf    StaticMultiString  -- ^ Begin of leaf tag.
                     StaticMultiString  -- ^ End of leaf tag.
-          | Content MultiString        -- ^ Html content.
+          | Content ChoiceString       -- ^ Html content.
           | Append  Html Html          -- ^ Concatenation.
           | Empty                      -- ^ Empty Html
           | AddAttribute StaticMultiString -- ^ Key with ="
-                         MultiString       -- ^ Value
-                         Html           -- ^ Html that takes attribute
+                         ChoiceString  -- ^ Value
+                         Html          -- ^ Html that takes attribute
 
 instance Monoid Html where
     mempty = Empty
@@ -111,39 +111,18 @@ instance IsString Html where
     fromString = string
     {-# INLINE fromString #-}
 
-type Attribute = MultiString -> Html -> Html
-
-{-
-attribute :: StaticMultiString  -- ^ Key.
-          -> MultiString        -- ^ Value.
-          -> Html               -- ^ Element to apply attribute on.
-          -> Html               -- ^ Resulting element.
-attribute key value html =
-    case html of
-        Parent open close content -> Parent (open `mappend` attr) close content
-        _                         -> html
-  where
-    entry = optimizeStaticMultiString $         staticMultiString " "
-                                      `mappend` key
-                                      `mappend` staticMultiString "=\""
-    attr = entry `mappend` toStaticMultiString value
-                 `mappend` staticMultiString "\""
-{-# INLINE attribute #-}
-
-test = attribute (staticMultiString "id") (HaskellString "key") (table "lol")
--}
+type Attribute = ChoiceString -> Html -> Html
 
 idA :: Attribute
 idA = AddAttribute " id=\""
 {-# INLINE idA #-}
 
-
 parent :: String -> Html -> Html
 parent tag =
     let open = "<" `mappend` tag
-        openTag = optimizeStaticMultiString $ staticMultiString open
+        openTag = staticMultiString open
         close = "</" `mappend` tag `mappend` ">"
-        closeTag = optimizeStaticMultiString $ staticMultiString close
+        closeTag = staticMultiString close
     in Parent openTag closeTag
 {-# INLINE parent #-}
 
@@ -223,7 +202,9 @@ instance Monoid StaticMultiString where
     mempty = StaticMultiString mempty mempty mempty
     {-# INLINE mempty #-}
     mappend (StaticMultiString x1 y1 z1) (StaticMultiString x2 y2 z2) =
-        StaticMultiString (x1 `mappend` x2) (y1 `mappend` y2) (z1 `mappend` z2)
+        StaticMultiString (x1 `mappend` x2)
+                          (y1 `mappend` y2)
+                          (z1 `mappend` z2)
     {-# INLINE mappend #-}
 
 -- | A static string that is built once and used many times. Here, we could
@@ -234,27 +215,13 @@ staticMultiString s = StaticMultiString s (UB.optimizePiece $ UB.fromText t) t
     t = T.pack s
 {-# INLINE staticMultiString #-}
 
-optimizeStaticMultiString :: StaticMultiString -> StaticMultiString
-optimizeStaticMultiString (StaticMultiString s u t) =
-    StaticMultiString s (UB.optimizePiece u) t
-{-# INLINE optimizeStaticMultiString #-}
-
 -- | A string denoting input from different string representations.
-data MultiString =
+data ChoiceString =
      StaticString   StaticMultiString -- ^ Input from a set of precomputed
                                       --   representations.
    | HaskellString  String            -- ^ Input from a Haskell String
    | Utf8ByteString S.ByteString      -- ^ Input from a Utf8 encoded bytestring
    | Text           Text            -- ^ Input from a Text value
-
-
-toStaticMultiString :: MultiString -> StaticMultiString
-toStaticMultiString (StaticString  s)  = s
-toStaticMultiString (HaskellString s)  = staticMultiString s
-toStaticMultiString (Utf8ByteString b) =
-    let text = T.decodeUtf8 b
-    in StaticMultiString (T.unpack text) (UB.unsafeFromByteString b) text
-toStaticMultiString (Text t) = StaticMultiString (T.unpack t) (UB.fromText t) t
 
 -- Overloaded strings support
 -----------------------------
@@ -262,5 +229,5 @@ toStaticMultiString (Text t) = StaticMultiString (T.unpack t) (UB.fromText t) t
 instance IsString StaticMultiString where
   fromString = staticMultiString
 
-instance IsString MultiString where
+instance IsString ChoiceString where
   fromString = HaskellString

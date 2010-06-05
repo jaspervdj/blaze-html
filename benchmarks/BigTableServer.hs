@@ -25,6 +25,7 @@ import System (getArgs)
 import Data.Char (ord)
 
 import Network.Socket.ByteString (recv, send, sendMany)
+import Network.Socket.ByteString.Lazy (sendAll)
 import qualified Data.ByteString as SB
 import qualified Data.ByteString.Char8 as SBC
 import qualified Data.ByteString.Lazy as LB
@@ -52,7 +53,36 @@ main = do
                 _ <- send s $ "HTTP/1.1 200 OK\r\n"
                     `mappend` "Content-Type: text/html; charset=UTF-8\r\n"
                     `mappend` "\r\n"
-                sendMany s $ LB.toChunks $ bigTable matrix
+                -- SM: Perhaps this ^^ could also be added directly to the
+                -- builder.  Thus saving a system call and getting some more
+                -- speed.
+                sendAll s $ bigTable matrix
+                -- SM: using `sendAll` makes it already a bit faster. However,
+                -- currently we are still spending way too much time in the
+                -- server part.
+                --
+                -- A simple optimization is in network-bytestring.Lazy
+                --
+                -- 
+                -- sendAll :: Socket      -- ^ Connected socket
+                --         -> ByteString  -- ^ Data to send
+                --         -> IO ()
+                -- sendAll sock bs = do
+                --   sent <- send sock bs
+                --   when (sent < L.length bs) $ sendAll sock (L.drop sent bs)
+                --
+                --                ^ here the the length is computed twice ^
+                --                ( event worse: the lazy bytestring is forced
+                --                  completely! )
+                --
+                -- a more efficient version is:
+                -- ----------------------------
+                --
+                -- sendAll sock bs = do
+                --   sent <- send sock bs
+                --   let bs' = L.drop sent bs
+                --   when (L.null bs') $ sendAll sock bs'
+                --
             _ -> do
                 _<- send s $ "HTTP/1.1 404 Not Found\r\n"
                     `mappend` "Content-Type: text/html; charset=UTF-8\r\n"

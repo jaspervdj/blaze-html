@@ -44,18 +44,18 @@ main = do
         string <- recv s 1024
         let words = SB.split (fromIntegral $ ord ' ') string
             requestUrl = words !! 1
+        _ <- send s $ "HTTP/1.1 200 OK\r\n"
+            `mappend` "Content-Type: text/html; charset=UTF-8\r\n"
+            `mappend` "\r\n"
+        -- SM: Perhaps this ^^ could also be added directly to the
+        -- builder.  Thus saving a system call and getting some more
+        -- speed.
         case SB.split (fromIntegral $ ord '/') requestUrl of
             (_ : h : w : _) -> do
                 let height = read $ SBC.unpack h
                     width = read $ SBC.unpack w
                     rows = [1 .. width]
                     matrix = replicate height rows
-                _ <- send s $ "HTTP/1.1 200 OK\r\n"
-                    `mappend` "Content-Type: text/html; charset=UTF-8\r\n"
-                    `mappend` "\r\n"
-                -- SM: Perhaps this ^^ could also be added directly to the
-                -- builder.  Thus saving a system call and getting some more
-                -- speed.
                 sendAll s $ bigTable matrix
                 -- SM: using `sendAll` makes it already a bit faster. However,
                 -- currently we are still spending way too much time in the
@@ -83,10 +83,7 @@ main = do
                 --   let bs' = L.drop sent bs
                 --   when (L.null bs') $ sendAll sock bs'
                 --
+            -- For any other URL, send a fixed-size matrix.
             _ -> do
-                _<- send s $ "HTTP/1.1 404 Not Found\r\n"
-                    `mappend` "Content-Type: text/html; charset=UTF-8\r\n"
-                    `mappend` "\r\n"
-                    `mappend` "<h1>Not Found</h1>\r\n"
-                return ()
+                sendAll s $ bigTable $ replicate 1000 [1 .. 50]
         sClose s

@@ -12,4 +12,4 @@ bench-builder:
 	./benchmarks/Utf8Builder --resamples 10000
 
 bench-bigtableserver:
-	ghc --make -O2 -fforce-recomp -isrc -ilib/binary-0.5.0.2/src -ibenchmarks -main-is BigTableServer benchmarks/BigTableServer.hs
+	ghc --make -threaded -O2 -fforce-recomp -isrc -ilib/binary-0.5.0.2/src -ibenchmarks -main-is BigTableServer benchmarks/BigTableServer.hs

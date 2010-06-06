@@ -10,7 +10,7 @@ import Data.Binary.Builder (Builder, toLazyByteString)
 import Data.ByteString.Char8 (ByteString)
 import Data.Text (Text)
 import GHC.Exts (IsString, fromString)
-import qualified Data.ByteString.Lazy as BL
+import qualified Data.ByteString.Lazy as LB
 import qualified Data.Text as T
 
 import Text.Blaze.Html4.Strict hiding (map)
@@ -25,7 +25,7 @@ main = defaultMain
     , benchHtml "manyAttributes" manyAttributes manyAttributesData
     ]
   where
-    benchHtml name f x = bench name $ nf (BL.length . f) x
+    benchHtml name f x = bench name $ nf (LB.length . f) x
 
     rows :: Int
     rows = 1000
@@ -63,7 +63,7 @@ main = defaultMain
 -- | Render the argument matrix as an HTML table.
 --
 bigTable :: [[Int]]        -- ^ Matrix.
-         -> BL.ByteString  -- ^ Result.
+         -> LB.ByteString  -- ^ Result.
 bigTable t = renderHtml $ table $ mconcat $ map row t
   where
     row r = tr $ mconcat $ map (td . string . show) r
@@ -71,7 +71,7 @@ bigTable t = renderHtml $ table $ mconcat $ map row t
 -- | Render a simple HTML page with some data.
 --
 basic :: (Text, Text, [Text])  -- ^ (Title, User, Items)
-      -> BL.ByteString         -- ^ Result.
+      -> LB.ByteString         -- ^ Result.
 basic (title', user, items) = renderHtml $ html $ do
     head $ title $ text title'
     body $ do
@@ -86,19 +86,19 @@ basic (title', user, items) = renderHtml $ html $ do
 -- | A benchmark producing a very wide but very shallow tree.
 --
 wideTree :: [Text]         -- ^ Text to create a tree from.
-         -> BL.ByteString  -- ^ Result.
+         -> LB.ByteString  -- ^ Result.
 wideTree = renderHtml . div . mapM_ ((p ! id "foo") . text)
 
 -- | Create a very deep tree with the specified tags.
 --
 deepTree :: [Html a -> Html a]  -- ^ List of parent elements to nest.
-         -> BL.ByteString   -- ^ Result.
+         -> LB.ByteString   -- ^ Result.
 deepTree = renderHtml . ($ text "deep") . foldl1 (.)
 
 -- | Create an element with many attributes.
 --
 manyAttributes :: [Text]         -- ^ List of attribute values.
-               -> BL.ByteString  -- ^ Result.
+               -> LB.ByteString  -- ^ Result.
 manyAttributes = renderHtml . foldl setAttribute img
   where
     setAttribute html value = html ! id (textValue value)

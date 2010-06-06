@@ -40,7 +40,7 @@ main = defaultMain
 
 -- | Render the argument matrix as an HTML table.
 --
-bigTable :: [[Int]]        -- ^ Matrix.
+bigTable :: [[Int]]       -- ^ Matrix.
          -> L.ByteString  -- ^ Result.
 bigTable t = renderHtml $ table $ mconcat $ map row t
   where

@@ -122,9 +122,11 @@ parent tag = \inner -> Html $ \attrs ->
   where
     begin :: Utf8Builder
     begin = B.optimizePiece $ B.fromChar '<' `mappend` unTag tag
+    {-# INLINE begin #-}
     end :: Utf8Builder
     end = B.optimizePiece $ B.fromText "</" `mappend` unTag tag
                                             `mappend` B.fromChar '>'
+    {-# INLINE end #-}
 {-# INLINE parent #-}
 
 -- | Create an HTML leaf element.
@@ -138,8 +140,10 @@ leaf tag = Html $ \attrs ->
   where
     begin :: Utf8Builder
     begin = B.optimizePiece $ B.fromChar '<' `mappend` unTag tag
+    {-# INLINE begin #-}
     end :: Utf8Builder
     end = B.optimizePiece $ B.fromText $ " />"
+    {-# INLINE end #-}
 {-# INLINE leaf #-}
 
 -- | Produce an open tag. This can be used for open tags in HTML 4.01, like
@@ -154,6 +158,7 @@ open tag = Html $ \attrs ->
   where
     begin :: Utf8Builder
     begin = B.optimizePiece $ B.fromChar '<' `mappend` unTag tag
+    {-# INLINE begin #-}
 {-# INLINE open #-}
 
 -- | Create an HTML attribute.
@@ -169,6 +174,7 @@ attribute key value = Attribute $ \(Html h) -> Html $ \attrs ->
     begin :: Utf8Builder
     begin = B.optimizePiece $ B.fromChar ' ' `mappend` unTag key
                                              `mappend` B.fromText "=\""
+    {-# INLINE begin #-}
 {-# INLINE attribute #-}
 
 class Attributable h where

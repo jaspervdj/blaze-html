@@ -20,6 +20,8 @@ module Text.Blaze
     , preEscapedText
     , string
     , preEscapedString
+    , showHtml
+    , preEscapedShowHtml
 
       -- * Converting values to tags.
     , textTag
@@ -174,7 +176,6 @@ attribute key value = Attribute $ \(Html h) -> Html $ \attrs ->
     begin :: Utf8Builder
     begin = B.optimizePiece $ B.fromChar ' ' `mappend` unTag key
                                              `mappend` B.fromText "=\""
-    {-# INLINE begin #-}
 {-# INLINE attribute #-}
 
 class Attributable h where
@@ -223,29 +224,54 @@ preEscapedText :: Text    -- ^ Text to insert.
 preEscapedText = Html . const . B.fromText
 {-# INLINE preEscapedText #-}
 
--- | Create a HTML snippet from a 'String'.
+-- | Create an HTML snippet from a 'String'.
 --
-string :: String -> Html a
+string :: String  -- ^ String to insert.
+       -> Html a  -- ^ Resulting HTML fragment.
 string = Html . const . B.escapeHtmlFromString
 {-# INLINE string #-}
 
--- Why not provide a 'fromShow :: Show a => a -> Html' method?
-
--- | Create a HTML snippet from a 'String' without escaping
+-- | Create an HTML snippet from a 'String' without escaping
 --
 preEscapedString :: String -> Html a
 preEscapedString = Html . const . B.fromString
 {-# INLINE preEscapedString #-}
 
-textTag :: Text -> Tag
+-- | Create an HTML snippet from a datatype that instantiates 'Show'.
+--
+showHtml :: Show a
+         => a       -- ^ Value to insert.
+         -> Html b  -- ^ Resulting HTML fragment.
+showHtml = string . show
+{-# INLINE showHtml #-}
+
+-- | Create an HTML snippet from a datatype that instantiates 'Show'. This
+-- function will not do any HTML entity escaping.
+--
+preEscapedShowHtml :: Show a
+                   => a       -- ^ Value to insert.
+                   -> Html b  -- ^ Resulting HTML fragment.
+preEscapedShowHtml = preEscapedString . show
+{-# INLINE preEscapedShowHtml #-}
+
+-- | Create a tag from a 'Text' value. A tag is a string used to denote a
+-- certain HTML element, for example @img@.
+--
+-- This is only useful if you want to create custom HTML combinators.
+--
+textTag :: Text  -- ^ 'Text' for the tag.
+        -> Tag   -- ^ Resulting tag.
 textTag = Tag . B.fromText
 {-# INLINE textTag #-}
 
-stringTag :: String -> Tag
+-- | Create a tag from a 'String' value. For more information, see 'textTag'.
+--
+stringTag :: String  -- ^ 'String' for the tag.
+          -> Tag     -- ^ Resulting tag.
 stringTag = Tag . B.fromString
 {-# INLINE stringTag #-}
 
--- | Render an attrbitute value from 'Text'.
+-- | Render an attribute value from 'Text'.
 --
 textValue :: Text            -- ^ The actual value.
           -> AttributeValue  -- ^ Resulting attribute value.
@@ -273,6 +299,7 @@ preEscapedStringValue = AttributeValue . B.fromString
 
 -- | /O(n)./ Render the HTML fragment to lazy 'L.ByteString'.
 --
-renderHtml :: Html a -> L.ByteString
+renderHtml :: Html a        -- ^ Document to render.
+           -> L.ByteString  -- ^ Resulting output.
 renderHtml = B.toLazyByteString . flip unHtml mempty
 {-# INLINE renderHtml #-}

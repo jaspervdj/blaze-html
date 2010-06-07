@@ -85,5 +85,5 @@ main = do
                 --
             -- For any other URL, send a fixed-size matrix.
             _ -> do
-                sendAll s $ bigTable $ replicate 1000 [1 .. 50]
+                sendAll s $ bigTable $ replicate 1000 [1 .. 10]
         sClose s

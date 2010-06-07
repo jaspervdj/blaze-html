@@ -130,7 +130,7 @@ makeParent tag = unlines
     , "-- > <" ++ tag ++ "><span>foo</span></" ++ tag ++ ">"
     , "--"
     , function        ++ " :: Html a  -- ^ Inner HTML."
-    , spaces function ++ " -> Html a  -- ^ Resulting HTML."
+    , spaces function ++ " -> Html b  -- ^ Resulting HTML."
     , function ++ " = parent \"" ++ tag ++ "\""
     , "{-# INLINE " ++ function ++ " #-}"
     ]

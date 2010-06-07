@@ -112,7 +112,7 @@ instance IsString AttributeValue where
 --
 parent :: Tag     -- ^ HTML element tag.
        -> Html a  -- ^ Inner HTML, to place in this element.
-       -> Html a  -- ^ Resulting HTML.
+       -> Html b  -- ^ Resulting HTML.
 parent tag = \inner -> Html $ \attrs ->
     begin
       `mappend` attrs
@@ -204,7 +204,7 @@ instance Attributable (Html a) where
     h ! (Attribute f) = f h
     {-# INLINE (!) #-}
 
-instance Attributable (Html a -> Html a) where
+instance Attributable (Html a -> Html b) where
     h ! (Attribute f) = f . h
     {-# INLINE (!) #-}
 

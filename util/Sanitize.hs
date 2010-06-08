@@ -25,7 +25,11 @@ keywords = S.fromList
 -- > sanitize "http-equiv" = "http_equiv"
 --
 sanitize :: String -> String
-sanitize = appendUnderscore . map replace'
+sanitize tag = if tag == "html" -- We make an exception for the html tag, since
+                                -- we want the regular html combinator to
+                                -- include the doctype.
+                                then "htmlNoDocType"
+                                else appendUnderscore $ map replace' tag
   where
     replace' '-' = '_'
     replace' x   = x

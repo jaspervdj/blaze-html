@@ -1,4 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
+-- | This module exports combinators that provide you with the
+-- ability to set attributes on HTML elements.
+--
 module Text.Blaze.Html4.Strict.Attributes
     ( abbr
     , accept

@@ -1,6 +1,9 @@
 {-# LANGUAGE OverloadedStrings #-}
+-- | This module exports HTML combinators used to create documents.
+--
 module Text.Blaze.Html4.Strict
     ( module Text.Blaze
+    , html
     , docType
     , a
     , abbr
@@ -36,7 +39,7 @@ module Text.Blaze.Html4.Strict
     , h6
     , head
     , hr
-    , html
+    , htmlNoDocType
     , i
     , img
     , input
@@ -81,8 +84,27 @@ module Text.Blaze.Html4.Strict
     ) where
 
 import Prelude ()
+import Data.Monoid (mappend)
 
 import Text.Blaze
+
+-- | Combinator for the @\<html>@ element. This combinator will also
+-- insert the correct doctype.
+--
+-- Example:
+--
+-- > html $ span $ text "foo"
+--
+-- Result:
+--
+-- > <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+-- >     "http://www.w3.org/TR/html4/strict.dtd">
+-- > <html><span>foo</span></html>
+--
+html :: Html a  -- ^ Inner HTML.
+     -> Html b  -- ^ Resulting HTML.
+html inner = docType `mappend` htmlNoDocType inner
+{-# INLINE html #-}
 
 -- | Combinator for the document type. This should be placed at the top
 -- of every HTML page.
@@ -610,16 +632,16 @@ hr = open "hr"
 --
 -- Example:
 --
--- > html $ span $ text "foo"
+-- > htmlNoDocType $ span $ text "foo"
 --
 -- Result:
 --
 -- > <html><span>foo</span></html>
 --
-html :: Html a  -- ^ Inner HTML.
-     -> Html b  -- ^ Resulting HTML.
-html = parent "html"
-{-# INLINE html #-}
+htmlNoDocType :: Html a  -- ^ Inner HTML.
+              -> Html b  -- ^ Resulting HTML.
+htmlNoDocType = parent "html"
+{-# INLINE htmlNoDocType #-}
 
 -- | Combinator for the @\<i>@ element.
 --

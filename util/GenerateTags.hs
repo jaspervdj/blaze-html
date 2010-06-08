@@ -37,12 +37,18 @@ writeHtmlVariant htmlVariant = do
     -- Write the main module.
     writeFile (basePath <.> "hs") $ removeTrailingNewlines $ unlines
         [ "{-# LANGUAGE OverloadedStrings #-}"
-        , exportList moduleName $
-            "module Text.Blaze" : "docType" : (map fst sortedTags)
+        , "-- | This module exports HTML combinators used to create documents."
+        , "--"
+        , exportList moduleName $ "module Text.Blaze"
+                                : "html"
+                                : "docType"
+                                : (map (sanitize . fst) sortedTags)
         , "import Prelude ()"
+        , "import Data.Monoid (mappend)"
         , ""
         , "import Text.Blaze"
         , ""
+        , makeHtml $ docType htmlVariant
         , makeDocType $ docType htmlVariant
         , unlines appliedTags
         ]
@@ -52,7 +58,10 @@ writeHtmlVariant htmlVariant = do
     -- Write the attribute module.
     writeFile (basePath </> "Attributes.hs") $ removeTrailingNewlines $ unlines
         [ "{-# LANGUAGE OverloadedStrings #-}"
-        , exportList attributeModuleName sortedAttributes
+        , "-- | This module exports combinators that provide you with the"
+        , "-- ability to set attributes on HTML elements."
+        , "--"
+        , exportList attributeModuleName $ map sanitize sortedAttributes
         , "import Prelude ()"
         , ""
         , "import Data.Text (Text)"
@@ -86,14 +95,14 @@ unblocks = unlines . intersperse "\n"
 -- | Generate an export list for a Haskell module.
 --
 exportList :: String   -- ^ Module name.
-           -> [String] -- ^ List of tags.
+           -> [String] -- ^ List of functions.
            -> String   -- ^ Resulting string.
 exportList _    []            = error "exportList without functions."
 exportList name (f:functions) = unlines $
     [ "module " ++ name
     , "    ( " ++ sanitize f
     ] ++
-    map (("    , " ++) . sanitize) functions ++
+    map ("    , " ++) functions ++
     [ "    ) where"]
 
 -- | Generate a function for a doctype.
@@ -113,6 +122,28 @@ makeDocType lines' = unlines
     , "docType :: Html a  -- ^ The document type HTML."
     , "docType = preEscapedText " ++ (show $ unlines lines')
     , "{-# INLINE docType #-}"
+    ]
+
+-- | Generate a function for the HTML tag (including the doctype).
+--
+makeHtml :: [String]  -- ^ The doctype.
+         -> String    -- ^ Resulting combinator function.
+makeHtml lines' = unlines
+    [ "-- | Combinator for the @\\<html>@ element. This combinator will also"
+    , "-- insert the correct doctype."
+    , "--"
+    , "-- Example:"
+    , "--"
+    , "-- > html $ span $ text \"foo\""
+    , "--"
+    , "-- Result:"
+    , "--"
+    , unlines (map ("-- > " ++) lines') ++ "-- > <html><span>foo</span></html>"
+    , "--"
+    , "html :: Html a  -- ^ Inner HTML."
+    , "     -> Html b  -- ^ Resulting HTML."
+    , "html inner = docType `mappend` htmlNoDocType inner"
+    , "{-# INLINE html #-}"
     ]
 
 -- | Generate a function for an HTML tag that can be a parent.

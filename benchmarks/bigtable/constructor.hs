@@ -4,6 +4,7 @@
 
 import Data.Monoid (Monoid (..))
 
+import Prelude hiding (div, head)
 import Criterion.Main
 import qualified Data.ByteString.Lazy as L
 import qualified Data.ByteString as S
@@ -16,41 +17,107 @@ import Text.Blaze.Internal.Utf8Builder (Utf8Builder)
 import qualified Text.Blaze.Internal.Utf8Builder as UB
 
 main :: IO ()
-main = defaultMain
-    [ benchHtml "bigTable" bigTable bigTableData
-    , benchHtml "manyAttributes" manyAttributes manyAttributesData
-    ]
+main = defaultMain $ 
+    benchAll "bigTable"         bigTable bigTableData ++
+    benchAll "basic"            basic basicData ++
+    benchAll "wideTree"         wideTree wideTreeData ++
+    benchAll "wideTreeEscaping" wideTree wideTreeEscapingData ++
+    benchAll "deepTree"         deepTree deepTreeData ++
+    benchAll "manyAttributes"   manyAttributes manyAttributesData
   where
-    benchHtml name f x = bench name $ nf (L.length . f) x
+    benchRender name f x = 
+      bench ("render/"++name) $ nf (L.length . renderHtml . f) x
 
-    rows :: Int
-    rows = 1000
+    benchFlatten name f x = 
+      bench ("flatten/"++name) $ nf (\a -> length (flattenHtml (f a) [])) x
 
-    bigTableData :: [[Int]]
-    bigTableData = replicate rows [1..10]
-    {-# NOINLINE bigTableData #-}
+    benchFlattenEncode name f x = 
+      bench ("flatten+encode/"++name) $ nf (L.length . flattenAndEncode . f) x
 
-    wideTreeData :: [Text]
-    wideTreeData = take 5000 $
-        cycle ["λf.(λx.fxx)(λx.fxx)", "These & Those", "Foobar", "lol"]
-    {-# NOINLINE wideTreeData #-}
-    
-    manyAttributesData :: [Text]
-    manyAttributesData = wideTreeData
+    benchAll n f x = 
+      [benchFlatten n f x, benchFlattenEncode n f x, benchRender n f x]
+
+------------------------------------------------------------------------------
+-- Data for benchmarks
+------------------------------------------------------------------------------
+
+rows :: Int
+rows = 1000
+
+bigTableData :: [[Int]]
+bigTableData = replicate rows [1..10]
+{-# NOINLINE bigTableData #-}
+
+manyAttributesData :: [Text]
+manyAttributesData = wideTreeData
+
+basicData :: (Text, Text, [Text])
+basicData = ("Just a test", "joe", items)
+{-# NOINLINE basicData #-}
+
+items :: [Text]
+items = map (("Number " `mappend`) . T.pack . show) [1 .. 14]
+{-# NOINLINE items #-}
+
+wideTreeData :: [Text]
+wideTreeData = take 5000 $
+    cycle ["λf.(λx.fxx)(λx.fxx)", "These & Those", "Foobar", "lol"]
+{-# NOINLINE wideTreeData #-}
+
+wideTreeEscapingData :: [Text]
+wideTreeEscapingData = take 1000 $
+    cycle ["<><>", "\"lol\"", "<&>", "'>>'"]
+{-# NOINLINE wideTreeEscapingData #-}
+
+deepTreeData :: [Html -> Html]
+deepTreeData = take 1000 $
+    cycle [table, tr, td, p, div]
+{-# NOINLINE deepTreeData #-}
+
+------------------------------------------------------------------------------
+-- Html generators
+------------------------------------------------------------------------------
 
 -- | Render the argument matrix as an HTML table.
 --
-bigTable :: [[Int]]       -- ^ Matrix.
-         -> L.ByteString  -- ^ Result.
-bigTable t = renderHtml $ table $ mconcat $ map row t
+bigTable :: [[Int]]        -- ^ Matrix.
+         -> Html  -- ^ Result.
+bigTable t = table $ mconcat $ map row t
   where
     row r = tr $ mconcat $ map (td . string . show) r
 
+-- | Render a simple HTML page with some data.
+--
+basic :: (Text, Text, [Text])  -- ^ (Title, User, Items)
+      -> Html                  -- ^ Result.
+basic (title', user, items) =  html $
+    (head $ title $ text title') <>
+    (body $
+        (idA "header" $ div $ (h1 $ text title')) <>
+        (p $ "Hello, " `mappend` text user `mappend` text "!") <>
+        (p $ "Hello, me!") <>
+        (p $ "Hello, world!") <>
+        (h2 $ "loop") <>
+        (mconcat $ map (li . text) items) <>
+        (idA "footer" $ div mempty))
+
+-- | A benchmark producing a very wide but very shallow tree.
+--
+wideTree :: [Text]  -- ^ Text to create a tree from.
+         -> Html    -- ^ Result.
+wideTree = div . mconcat . map ((idA "foo" . p) . text)
+
+-- | Create a very deep tree with the specified tags.
+--
+deepTree :: [Html -> Html]  -- ^ List of parent elements to nest.
+         -> Html                -- ^ Result.
+deepTree = ($ text "deep") . foldl1 (.)
+
 -- | Create an element with many attributes.
 --
-manyAttributes :: [Text]         -- ^ List of attribute values.
-               -> L.ByteString  -- ^ Result.
-manyAttributes = renderHtml . foldl setAttribute img
+manyAttributes :: [Text]  -- ^ List of attribute values.
+               -> Html    -- ^ Result.
+manyAttributes = foldl setAttribute img
   where
     setAttribute html value = idA (Text value) html
     {-# INLINE setAttribute #-}
@@ -92,10 +159,10 @@ data Html = Parent  StaticMultiString  -- ^ Open tag.
                     StaticMultiString  -- ^ End of leaf tag.
           | Content ChoiceString       -- ^ Html content.
           | Append  Html Html          -- ^ Concatenation.
-          | Empty                      -- ^ Empty Html
           | AddAttribute StaticMultiString -- ^ Key with ="
                          ChoiceString  -- ^ Value
                          Html          -- ^ Html that takes attribute
+          | Empty                      -- ^ Empty Html
 
 instance Monoid Html where
     mempty = Empty
@@ -150,6 +217,47 @@ text :: Text -> Html
 text = Content . Text
 {-# INLINE text #-}
 
+head :: Html -> Html
+head = Parent "<head" "</head>"
+{-# INLINE head #-}
+
+div :: Html -> Html
+div = Parent "<div" "</div>"
+{-# INLINE div #-}
+
+p :: Html -> Html
+p = Parent "<p" "</p>"
+{-# INLINE p #-}
+
+h1 :: Html -> Html
+h1 = Parent "<h1" "<h1/>"
+{-# INLINE h1 #-}
+
+h2 :: Html -> Html
+h2 = Parent "<h2" "<h2/>"
+{-# INLINE h2 #-}
+
+li :: Html -> Html
+li = Parent "<li" "<li/>"
+{-# INLINE li #-}
+
+html :: Html -> Html
+html = Parent "<html" "<html/>"
+{-# INLINE html #-}
+
+title :: Html -> Html
+title = Parent "<title" "<title/>"
+{-# INLINE title #-}
+
+body :: Html -> Html
+body = Parent "<body" "<body/>"
+{-# INLINE body #-}
+
+h ! a = h a
+
+(<>) :: Monoid a => a -> a -> a 
+(<>) = mappend
+
 renderHtml :: Html -> L.ByteString
 renderHtml = UB.toLazyByteString . renderBuilder
 {-# INLINE renderHtml #-}
@@ -169,21 +277,23 @@ renderBuilder = go mempty
         `mappend` getUtf8Builder end
     go attrs (AddAttribute key value h) =
       go (attrs `mappend` getUtf8Builder key 
-                `mappend` fromMultiString value
+                `mappend` fromChoiceString value
                 `mappend` UB.fromChar '"')
          h
-    go _ (Content content) = fromMultiString content
+    go _ (Content content) = fromChoiceString content
     go attrs (Append h1 h2) = go attrs h1 `mappend` go attrs h2
     go attrs Empty          = mempty
     {-# NOINLINE go #-}
 
-    fromMultiString (StaticString   s) = getUtf8Builder s
-    fromMultiString (HaskellString  s) = UB.fromString s
-    fromMultiString (Utf8ByteString s) = UB.unsafeFromByteString s
-    fromMultiString (Text           s) = UB.fromText s
-    {-# INLINE fromMultiString #-}
 
 {-# INLINE renderBuilder #-}
+
+fromChoiceString :: ChoiceString -> Utf8Builder
+fromChoiceString (StaticString   s) = getUtf8Builder s
+fromChoiceString (HaskellString  s) = UB.fromString s
+fromChoiceString (Utf8ByteString s) = UB.unsafeFromByteString s
+fromChoiceString (Text           s) = UB.fromText s
+{-# INLINE fromChoiceString #-}
 
 -- | The key ingredient is a string representation that supports all possible
 -- outputs well. However, we cannot care for *all possible* output formats, but
@@ -220,8 +330,8 @@ data ChoiceString =
      StaticString   StaticMultiString -- ^ Input from a set of precomputed
                                       --   representations.
    | HaskellString  String            -- ^ Input from a Haskell String
+   | Text           Text              -- ^ Input from a Text value
    | Utf8ByteString S.ByteString      -- ^ Input from a Utf8 encoded bytestring
-   | Text           Text            -- ^ Input from a Text value
 
 -- Overloaded strings support
 -----------------------------
@@ -231,3 +341,72 @@ instance IsString StaticMultiString where
 
 instance IsString ChoiceString where
   fromString = HaskellString
+
+-- Monad support
+----------------
+
+------------------------------------------------------------------------------
+-- Constructor Flattening
+------------------------------------------------------------------------------
+
+type HtmlPiece = ChoiceString
+
+staticPiece :: StaticMultiString -> HtmlPiece
+staticPiece = StaticString
+{-# INLINE staticPiece #-}
+
+staticDoubleQuote :: ChoiceString
+staticDoubleQuote = StaticString "\""
+
+staticGreater :: ChoiceString
+staticGreater = StaticString ">"
+
+flattenHtml :: Html -> [HtmlPiece] -> [HtmlPiece]
+flattenHtml h = go id h
+  where
+    go attrs c ps = case c of
+      Empty           -> ps
+      Content content -> content : ps
+      Append h1 h2    -> go attrs h1 (go attrs h2 ps)
+      Leaf begin end  -> staticPiece begin : attrs (staticPiece end : ps)
+      AddAttribute key value content ->
+        go (\as -> attrs (staticPiece key : value : staticDoubleQuote : as)) content ps
+      Parent open close content ->
+        staticPiece open : 
+          attrs (staticGreater : go id content (staticPiece close : ps))
+    {-# NOINLINE go #-}
+{-# INLINE flattenHtml #-}
+
+-- | This function needs to be customized such that it works directly on the
+-- buffer and forms a single tight loop.
+--
+-- Note that for this to work perfectly the language of HtmlPieces has to be
+-- adjusted.
+encodeUtf8 :: [HtmlPiece] -> Utf8Builder
+encodeUtf8 = mconcat . map fromChoiceString
+
+flattenAndEncode :: Html -> L.ByteString
+flattenAndEncode h = UB.toLazyByteString . encodeUtf8 $ flattenHtml h []
+
+
+-- Remarks
+--   * for the deepTree benchmark the constructor based approach is 4x faster
+--     while producing the same output. Perhaps the unnecessary polymorphism is
+--     hurting the Utf8Html based approach.
+--
+--   * It will be very interesting too see how the closure based HtmlPiece
+--     generation works out in terms of flattening speed. If we are fast enough
+--     there and implement a really fast encoder, then we could probably
+--     achieve the speed of the Utf8Builder based approach.
+--
+--   * One trick which may help a bit is to get rid of the requirement for
+--     providing the 'end' of a leaf tag by providing more specialized commands
+--     in the HtmlPiece language. Again a trade-off between the number of
+--     constructors and the number of savings has to be found. However, I guess
+--     matching one constructor more is cheaper than constructing and mathcing
+--     one list element more.
+--
+--   * Finally, note that the order of the constructors is relevant. If I
+--     remember correctly, the case distinctions are done according to this
+--     order. So make sure that the most used constructors come first.
+--

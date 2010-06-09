@@ -14,7 +14,7 @@ import qualified Data.ByteString.Lazy as LB
 import qualified Data.Text as T
 
 import Text.Blaze.Html4.Strict hiding (map)
-import Text.Blaze.Html4.Strict.Attributes hiding (title)
+import Text.Blaze.Html4.Strict.Attributes hiding (title, rows)
 
 main = defaultMain
     [ benchHtml "bigTable" bigTable bigTableData
@@ -27,38 +27,38 @@ main = defaultMain
   where
     benchHtml name f x = bench name $ nf (LB.length . f) x
 
-    rows :: Int
-    rows = 1000
+rows :: Int
+rows = 1000
 
-    bigTableData :: [[Int]]
-    bigTableData = replicate rows [1..10]
-    {-# NOINLINE bigTableData #-}
+bigTableData :: [[Int]]
+bigTableData = replicate rows [1..10]
+{-# NOINLINE bigTableData #-}
 
-    basicData :: (Text, Text, [Text])
-    basicData = ("Just a test", "joe", items)
-    {-# NOINLINE basicData #-}
+basicData :: (Text, Text, [Text])
+basicData = ("Just a test", "joe", items)
+{-# NOINLINE basicData #-}
 
-    items :: [Text]
-    items = map (("Number " `mappend`) . T.pack . show) [1 .. 14]
-    {-# NOINLINE items #-}
+items :: [Text]
+items = map (("Number " `mappend`) . T.pack . show) [1 .. 14]
+{-# NOINLINE items #-}
 
-    wideTreeData :: [Text]
-    wideTreeData = take 5000 $
-        cycle ["λf.(λx.fxx)(λx.fxx)", "These & Those", "Foobar", "lol"]
-    {-# NOINLINE wideTreeData #-}
-    
-    wideTreeEscapingData :: [Text]
-    wideTreeEscapingData = take 1000 $
-        cycle ["<><>", "\"lol\"", "<&>", "'>>'"]
-    {-# NOINLINE wideTreeEscapingData #-}
+wideTreeData :: [Text]
+wideTreeData = take 5000 $
+    cycle ["λf.(λx.fxx)(λx.fxx)", "These & Those", "Foobar", "lol"]
+{-# NOINLINE wideTreeData #-}
 
-    deepTreeData :: [Html a -> Html a]
-    deepTreeData = take 1000 $
-        cycle [table, tr, td, p, div]
-    {-# NOINLINE deepTreeData #-}
+wideTreeEscapingData :: [Text]
+wideTreeEscapingData = take 1000 $
+    cycle ["<><>", "\"lol\"", "<&>", "'>>'"]
+{-# NOINLINE wideTreeEscapingData #-}
 
-    manyAttributesData :: [Text]
-    manyAttributesData = wideTreeData
+deepTreeData :: [Html a -> Html a]
+deepTreeData = take 1000 $
+    cycle [table, tr, td, p, div]
+{-# NOINLINE deepTreeData #-}
+
+manyAttributesData :: [Text]
+manyAttributesData = wideTreeData
 
 -- | Render the argument matrix as an HTML table.
 --

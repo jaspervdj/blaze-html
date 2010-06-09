@@ -23,6 +23,9 @@ module Text.Blaze
     , showHtml
     , preEscapedShowHtml
 
+      -- * Inserting literal 'ByteString's.
+    , unsafeByteString
+
       -- * Converting values to tags.
     , textTag
     , stringTag
@@ -253,6 +256,18 @@ preEscapedShowHtml :: Show a
                    -> Html b  -- ^ Resulting HTML fragment.
 preEscapedShowHtml = preEscapedString . show
 {-# INLINE preEscapedShowHtml #-}
+
+-- | Insert a 'ByteString'. This is an unsafe operation:
+--
+-- * The 'ByteString' could have the wrong encoding.
+--
+-- * The 'ByteString' might contain illegal HTML characters (no escaping is
+--   done).
+--
+unsafeByteString :: ByteString  -- ^ Value to insert.
+                 -> Html a      -- ^ Resulting HTML fragment.
+unsafeByteString = Html . const . B.unsafeFromByteString
+{-# INLINE unsafeByteString #-}
 
 -- | Create a tag from a 'Text' value. A tag is a string used to denote a
 -- certain HTML element, for example @img@.

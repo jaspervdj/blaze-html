@@ -7,6 +7,10 @@ bench-constructor-html:
 	ghc --make -O2 -fforce-recomp -isrc -ilib/binary-0.5.0.2/src -main-is Main benchmarks/bigtable/constructor.hs
 	./benchmarks/bigtable/constructor --resamples 10000
 
+bench-closure-constructor-html:
+	ghc --make -O2 -fforce-recomp -isrc -ilib/binary-0.5.0.2/src -main-is Main benchmarks/bigtable/closure-constructor.hs
+	./benchmarks/bigtable/closure-constructor --resamples 10000
+
 bench-builder:
 	ghc --make -O2 -fforce-recomp -isrc -ilib/binary-0.5.0.2/src -main-is Utf8Builder benchmarks/Utf8Builder.hs
 	./benchmarks/Utf8Builder --resamples 10000

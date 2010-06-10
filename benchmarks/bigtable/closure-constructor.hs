@@ -1,6 +1,6 @@
 -- | Bigtable benchmark using a constructor-based implementation.
 --
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE OverloadedStrings, BangPatterns #-}
 
 import Data.Monoid (Monoid (..))
 
@@ -21,7 +21,7 @@ main = defaultMain $
     benchAll "bigTable" bigTable bigTableData
   where
     benchFlatten name f x = 
-      bench ("flatten/"++name) $ nf (length . flattenHtml . f) x
+      bench ("flatten/"++name) $ nf (pieceSize . flattenHtml . f) x
 
     benchFlattenEncode name f x = 
       bench ("flatten+encode/"++name) $ nf (L.length . flattenAndEncode . f) x
@@ -56,7 +56,7 @@ bigTable t = table $ mconcat $ map row t
 ------------------------------------------------------------------------------
 
 -- Html constructors can then use StaticMultiStrings to represents begin and
--- end tag and a ChoiceString to represent content. Moreover, we can also take care
+-- end tag and a HtmlPiece to represent content. Moreover, we can also take care
 -- to precompute the escaping where possible using a similar construction.
 --
 -- Hence, we will have a small algebraic Data Type for Html constructors and
@@ -82,11 +82,11 @@ bigTable t = table $ mconcat $ map row t
 -- Looking forward to the first results for the BigTable benchmark :-)
 
 newtype Html = Html
-    { unHtml :: ([HtmlPiece] -> [HtmlPiece]) -> [HtmlPiece] -> [HtmlPiece]
+    { unHtml :: (HtmlPiece -> HtmlPiece) -> HtmlPiece -> HtmlPiece
     }
 
 instance Monoid Html where
-    mempty = Html id
+    mempty = Html $ const id
     {-# INLINE mempty #-}
 
     mappend (Html f) (Html g) = Html $ \x -> f x . g x
@@ -96,14 +96,14 @@ instance Monoid Html where
     {-# INLINE mconcat #-}
 
 instance IsString Html where
-    fromString s = Html $ \_ k -> fromString s : k
+    fromString s = Html $ \_ k -> StaticString (fromString s) k
     {-# INLINE fromString #-}
 
-type Attribute = ChoiceString -> Html -> Html
+type Attribute = HtmlPiece -> Html -> Html
 
-parent :: HtmlPiece -> HtmlPiece -> Html -> Html
+parent :: StaticMultiString -> StaticMultiString -> Html -> Html
 parent open close (Html inner) = Html $ \attrs k ->
-    open : attrs (staticGreater : inner id (close : k))
+    StaticString open (attrs (staticGreater (inner id (StaticString close k))))
 {-# INLINE parent #-}
 
 table :: Html -> Html
@@ -119,11 +119,11 @@ td = parent "<td" "</td>"
 {-# INLINE td #-}
 
 string :: String -> Html
-string s = Html $ \_ k -> (HaskellString s : k)
+string s = Html $ \_ -> HaskellString s
 {-# INLINE string #-}
 
-flattenHtml :: Html -> [HtmlPiece]
-flattenHtml (Html f) = f id []
+flattenHtml :: Html -> HtmlPiece
+flattenHtml (Html f) = f id EmptyPiece
 {-# INLINE flattenHtml #-}
 
 -- This is the key function. It needs to be as fast as possible. Use ghc-core to
@@ -141,7 +141,8 @@ flattenHtml (Html f) = f id []
 -- building and deconstruction the intermediate list is tough. However, I dare
 -- say that this amortization is simpler for more realistic benchmarks. Hence,
 -- the additional flexibility of this intermediate representation is not too
--- expensive.
+-- expensive. Hence, it would be good to compare the different implementations
+-- on all benchmarks and not just the bigtable one.
 --
 -- This flexibility is actually *very* high. By choosing the right HtmlPiece
 -- language not only pretty printing, but also lossy formats become supportable
@@ -158,23 +159,25 @@ flattenHtml (Html f) = f id []
 --
 -- So the next step would be to see how you can get encodeUtf8 super fast while
 -- still keeping it lazy.
-encodeUtf8 :: [HtmlPiece] -> L.ByteString
+--
+-- Update: Nice, Removing the another indirection allowed me to shave off
+-- another 16% from the original HtmlPiece based approach. Flattening takes
+-- still almost the same time, but now the required data is directly available
+-- :-)
+encodeUtf8 :: HtmlPiece -> L.ByteString
 encodeUtf8 = UB.toLazyByteString . go
   where
-  go []     = mempty
-  go (x:xs) = fromChoiceString x `mappend` go xs
+  go EmptyPiece           = mempty
+  go (StaticString   s p) = (UB.unsafeFromByteString $ getByteString s) `mappend` go p
+  go (HaskellString  s p) = (UB.fromString s) `mappend` go p
+  go (Utf8ByteString s p) = (UB.unsafeFromByteString s) `mappend` go p
+  go (Text           s p) = (UB.fromText s) `mappend` go p
 {-# INLINE encodeUtf8 #-}
 
 flattenAndEncode :: Html -> L.ByteString
 flattenAndEncode = encodeUtf8 . flattenHtml
 {-# INLINE flattenAndEncode #-}
 
-fromChoiceString :: ChoiceString -> Utf8Builder
-fromChoiceString (StaticString   s) = UB.unsafeFromByteString $ getByteString s
-fromChoiceString (HaskellString  s) = UB.fromString s
-fromChoiceString (Utf8ByteString s) = UB.unsafeFromByteString s
-fromChoiceString (Text           s) = UB.fromText s
-{-# INLINE fromChoiceString #-}
 
 -- | The key ingredient is a string representation that supports all possible
 -- outputs well. However, we cannot care for *all possible* output formats, but
@@ -210,12 +213,37 @@ staticMultiString s = StaticMultiString s bs t
 {-# INLINE staticMultiString #-}
 
 -- | A string denoting input from different string representations.
-data ChoiceString =
-     StaticString   StaticMultiString -- ^ Input from a set of precomputed
-                                      --   representations.
-   | HaskellString  String            -- ^ Input from a Haskell String
-   | Text           Text              -- ^ Input from a Text value
-   | Utf8ByteString S.ByteString      -- ^ Input from a Utf8 encoded bytestring
+data HtmlPiece =
+     -- SM: Perhaps it would help to remove an additional indirection by
+     -- inlining the different required output formats in the constructor for
+     -- static string. However, I'm not sure. I tried doing that by using
+     -- making the first argument strict, but that didn't help at all.
+     --
+     -- Make this low priority.
+     --
+     -- Before trying out such optimizations, I would rather make the
+     -- implementation of encodeUtf8 faster for the existing HtmlPiece datatype
+     -- or a similar one.
+     --
+     StaticString   StaticMultiString HtmlPiece -- ^ Input from a set of precomputed
+                                                --   representations.
+   | HaskellString  String            HtmlPiece -- ^ Input from a Haskell String
+   | Text           Text              HtmlPiece -- ^ Input from a Text value
+   | Utf8ByteString S.ByteString      HtmlPiece -- ^ Input from a Utf8 encoded bytestring
+   | EmptyPiece                                 -- ^ An empty html piece.
+
+-- | Compute the size of the Html piece; i.e. the number of constructors. This
+-- can be used to measure the time for 'flattening' it.
+pieceSize :: HtmlPiece -> Int
+pieceSize = go 0
+  where
+  go !s p = case p of
+    StaticString   _ p -> go (1 + s) p
+    HaskellString  _ p -> go (1 + s) p
+    Text           _ p -> go (1 + s) p
+    Utf8ByteString _ p -> go (1 + s) p
+    EmptyPiece         -> s
+  
 
 -- Overloaded strings support
 -----------------------------
@@ -224,9 +252,6 @@ instance IsString StaticMultiString where
   fromString = staticMultiString
   {-# INLINE fromString #-}
 
-instance IsString ChoiceString where
-  fromString = StaticString . staticMultiString
-  {-# INLINE fromString #-}
 
 -- Monad support
 ----------------
@@ -235,14 +260,8 @@ instance IsString ChoiceString where
 -- Constructor Flattening
 ------------------------------------------------------------------------------
 
-type HtmlPiece = ChoiceString
-
-staticPiece :: StaticMultiString -> HtmlPiece
-staticPiece = StaticString
-{-# INLINE staticPiece #-}
-
-staticDoubleQuote :: ChoiceString
+staticDoubleQuote :: HtmlPiece -> HtmlPiece
 staticDoubleQuote = StaticString "\""
 
-staticGreater :: ChoiceString
+staticGreater :: HtmlPiece -> HtmlPiece
 staticGreater = StaticString ">"

@@ -20,13 +20,13 @@ main :: IO ()
 main = defaultMain $ 
     benchAll "bigTable" bigTable bigTableData
   where
-    -- benchFlatten name f x = 
-      -- bench ("flatten/"++name) $ nf (\a -> length (flattenHtml (f a) [])) x
+    benchFlatten name f x = 
+      bench ("flatten/"++name) $ nf (length . flattenHtml . f) x
 
     benchFlattenEncode name f x = 
       bench ("flatten+encode/"++name) $ nf (L.length . flattenAndEncode . f) x
 
-    benchAll n f x = [benchFlattenEncode n f x]
+    benchAll n f x = [benchFlatten n f x, benchFlattenEncode n f x]
 
 ------------------------------------------------------------------------------
 -- Data for benchmarks
@@ -96,7 +96,7 @@ instance Monoid Html where
     {-# INLINE mconcat #-}
 
 instance IsString Html where
-    fromString = string
+    fromString s = Html $ \_ k -> fromString s : k
     {-# INLINE fromString #-}
 
 type Attribute = ChoiceString -> Html -> Html
@@ -123,11 +123,46 @@ string s = Html $ \_ k -> (HaskellString s : k)
 {-# INLINE string #-}
 
 flattenHtml :: Html -> [HtmlPiece]
-flattenHtml (Html f) = f id mempty
+flattenHtml (Html f) = f id []
 {-# INLINE flattenHtml #-}
 
+-- This is the key function. It needs to be as fast as possible. Use ghc-core to
+-- investigate its implementation. Ideally we would have one straight loop
+-- gathering the input and filling the buffer. I guess that using the builder
+-- is hurting us here a bit. Instead this should be implemented directly on the
+-- representation of a builder. Such that it yields an Utf8Builder in the end,
+-- but internally uses all sorts of tricks to get the best speed possible.
+--
+-- Already the small change from idiomatic haskell to a tail-recursive function
+-- brought a speed-up of 16% on my machine. I assume that there's quite some
+-- more possible. Moreoever, note that the bigtable benchmark is especially
+-- tough when using this intermediate representation, because the each piece is
+-- short and takes only little encoding time. Hence, amortizing the cost of
+-- building and deconstruction the intermediate list is tough. However, I dare
+-- say that this amortization is simpler for more realistic benchmarks. Hence,
+-- the additional flexibility of this intermediate representation is not too
+-- expensive.
+--
+-- This flexibility is actually *very* high. By choosing the right HtmlPiece
+-- language not only pretty printing, but also lossy formats become supportable
+-- with good speed again. Static strings are preescaped for all possible
+-- encodings, while dynamic strings are escaped accordingly. I'm not sure if we
+-- want that, but this discussion
+--
+--   http://www.reddit.com/r/haskell/comments/cbzbo/optimizing_hamlet/c0rjo9r?context=3
+--
+-- points towards a direction that this could once be needed. Currently, I'm
+-- happy with the fact that we have a possible way of efficiently supporting
+-- UTF-8, Text, and String without any type system hacks. Just a nice single
+-- datatype catering for our needs :-)
+--
+-- So the next step would be to see how you can get encodeUtf8 super fast while
+-- still keeping it lazy.
 encodeUtf8 :: [HtmlPiece] -> L.ByteString
-encodeUtf8 = UB.toLazyByteString . mconcat . map fromChoiceString
+encodeUtf8 = UB.toLazyByteString . go
+  where
+  go []     = mempty
+  go (x:xs) = fromChoiceString x `mappend` go xs
 {-# INLINE encodeUtf8 #-}
 
 flattenAndEncode :: Html -> L.ByteString
@@ -135,7 +170,7 @@ flattenAndEncode = encodeUtf8 . flattenHtml
 {-# INLINE flattenAndEncode #-}
 
 fromChoiceString :: ChoiceString -> Utf8Builder
-fromChoiceString (StaticString   s) = getUtf8Builder s
+fromChoiceString (StaticString   s) = UB.unsafeFromByteString $ getByteString s
 fromChoiceString (HaskellString  s) = UB.fromString s
 fromChoiceString (Utf8ByteString s) = UB.unsafeFromByteString s
 fromChoiceString (Text           s) = UB.fromText s
@@ -150,10 +185,11 @@ fromChoiceString (Text           s) = UB.fromText s
 -- better be replaced by a builder.
 data StaticMultiString = StaticMultiString
        { getHaskellString :: String
-       , getUtf8Builder   :: Utf8Builder
+       , getByteString    :: S.ByteString
        , getText          :: Text
        }
 
+{-
 instance Monoid StaticMultiString where
     mempty = StaticMultiString mempty mempty mempty
     {-# INLINE mempty #-}
@@ -162,13 +198,15 @@ instance Monoid StaticMultiString where
                           (y1 `mappend` y2)
                           (z1 `mappend` z2)
     {-# INLINE mappend #-}
+-}
 
 -- | A static string that is built once and used many times. Here, we could
 -- also use the `cached` (optimizePiece) construction for our builder.
 staticMultiString :: String -> StaticMultiString
-staticMultiString s = StaticMultiString s (UB.optimizePiece $ UB.fromText t) t
+staticMultiString s = StaticMultiString s bs t
   where
-    t = T.pack s
+    bs = S.pack $ L.unpack $ UB.toLazyByteString $ UB.fromString s
+    t  = T.pack s
 {-# INLINE staticMultiString #-}
 
 -- | A string denoting input from different string representations.

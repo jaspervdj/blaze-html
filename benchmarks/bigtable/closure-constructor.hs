@@ -101,13 +101,9 @@ instance IsString Html where
 
 type Attribute = ChoiceString -> Html -> Html
 
-parent :: String -> String -> Html -> Html
-parent open close (Html inner) =
-    let openTag = StaticString $ staticMultiString open
-        closeTag = StaticString $ staticMultiString close
-        g :: ([HtmlPiece] -> [HtmlPiece]) -> [HtmlPiece] -> [HtmlPiece]
-        g attrs k = openTag : attrs (staticGreater : inner id (closeTag : k))
-    in Html $ \attrs f -> g attrs f
+parent :: HtmlPiece -> HtmlPiece -> Html -> Html
+parent open close (Html inner) = Html $ \attrs k ->
+    open : attrs (staticGreater : inner id (close : k))
 {-# INLINE parent #-}
 
 table :: Html -> Html
@@ -188,9 +184,11 @@ data ChoiceString =
 
 instance IsString StaticMultiString where
   fromString = staticMultiString
+  {-# INLINE fromString #-}
 
 instance IsString ChoiceString where
-  fromString = HaskellString
+  fromString = StaticString . staticMultiString
+  {-# INLINE fromString #-}
 
 -- Monad support
 ----------------

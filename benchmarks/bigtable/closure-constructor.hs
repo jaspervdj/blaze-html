@@ -17,13 +17,18 @@ import Text.Blaze.Internal.Utf8Builder (Utf8Builder)
 import qualified Text.Blaze.Internal.Utf8Builder as UB
 
 main :: IO ()
-main = defaultMain $ 
-    benchAll "bigTable" bigTable bigTableData
+main = defaultMain $
+    benchAll "bigTable"         bigTable bigTableData ++
+    benchAll "basic"            basic basicData ++
+    benchAll "wideTree"         wideTree wideTreeData ++
+    benchAll "wideTreeEscaping" wideTree wideTreeEscapingData ++
+    benchAll "deepTree"         deepTree deepTreeData ++
+    benchAll "manyAttributes"   manyAttributes manyAttributesData
   where
-    benchFlatten name f x = 
+    benchFlatten name f x =
       bench ("flatten/"++name) $ nf (pieceSize . flattenHtml . f) x
 
-    benchFlattenEncode name f x = 
+    benchFlattenEncode name f x =
       bench ("flatten+encode/"++name) $ nf (L.length . flattenAndEncode . f) x
 
     benchAll n f x = [benchFlatten n f x, benchFlattenEncode n f x]
@@ -39,6 +44,32 @@ bigTableData :: [[Int]]
 bigTableData = replicate rows [1..10]
 {-# NOINLINE bigTableData #-}
 
+manyAttributesData :: [Text]
+manyAttributesData = wideTreeData
+
+basicData :: (Text, Text, [Text])
+basicData = ("Just a test", "joe", items)
+{-# NOINLINE basicData #-}
+
+items :: [Text]
+items = map (("Number " `mappend`) . T.pack . show) [1 .. 14]
+{-# NOINLINE items #-}
+
+wideTreeData :: [Text]
+wideTreeData = take 5000 $
+    cycle ["λf.(λx.fxx)(λx.fxx)", "These & Those", "Foobar", "lol"]
+{-# NOINLINE wideTreeData #-}
+
+wideTreeEscapingData :: [Text]
+wideTreeEscapingData = take 1000 $
+    cycle ["<><>", "\"lol\"", "<&>", "'>>'"]
+{-# NOINLINE wideTreeEscapingData #-}
+
+deepTreeData :: [Html -> Html]
+deepTreeData = take 1000 $
+    cycle [table, tr, td, p, div]
+{-# NOINLINE deepTreeData #-}
+
 ------------------------------------------------------------------------------
 -- Html generators
 ------------------------------------------------------------------------------
@@ -50,6 +81,42 @@ bigTable :: [[Int]]        -- ^ Matrix.
 bigTable t = table $ mconcat $ map row t
   where
     row r = tr $ mconcat $ map (td . string . show) r
+
+-- | Render a simple HTML page with some data.
+--
+basic :: (Text, Text, [Text])  -- ^ (Title, User, Items)
+      -> Html                  -- ^ Result.
+basic (title', user, items) =  html $
+    (head $ title $ text title') <>
+    (body $
+        (idA "header" $ div $ (h1 $ text title')) <>
+        (p $ "Hello, " `mappend` text user `mappend` text "!") <>
+        (p $ "Hello, me!") <>
+        (p $ "Hello, world!") <>
+        (h2 $ "loop") <>
+        (mconcat $ map (li . text) items) <>
+        (idA "footer" $ div mempty))
+
+-- | A benchmark producing a very wide but very shallow tree.
+--
+wideTree :: [Text]  -- ^ Text to create a tree from.
+         -> Html    -- ^ Result.
+wideTree = div . mconcat . map ((idA "foo" . p) . text)
+
+-- | Create a very deep tree with the specified tags.
+--
+deepTree :: [Html -> Html]  -- ^ List of parent elements to nest.
+         -> Html                -- ^ Result.
+deepTree = ($ text "deep") . foldl1 (.)
+
+-- | Create an element with many attributes.
+--
+manyAttributes :: [Text]  -- ^ List of attribute values.
+               -> Html    -- ^ Result.
+manyAttributes = foldl setAttribute img
+  where
+    setAttribute html value = idA (textValue value) html
+    {-# INLINE setAttribute #-}
 
 ------------------------------------------------------------------------------
 -- Html Constructors
@@ -99,12 +166,29 @@ instance IsString Html where
     fromString s = Html $ \_ k -> StaticString (fromString s) k
     {-# INLINE fromString #-}
 
-type Attribute = HtmlPiece -> Html -> Html
+type Attribute = AttributeValue -> Html -> Html
+
+newtype AttributeValue = AttributeValue
+    { unAttributeValue :: HtmlPiece -> HtmlPiece
+    }
+
+instance IsString AttributeValue where
+    fromString s = AttributeValue $ \k -> StaticString (staticMultiString s) k
 
 parent :: StaticMultiString -> StaticMultiString -> Html -> Html
-parent open close (Html inner) = Html $ \attrs k ->
-    StaticString open (attrs (staticGreater (inner id (StaticString close k))))
+parent open close = \inner -> Html $ \attrs k ->
+    StaticString open (attrs (staticGreater (unHtml inner id (StaticString close k))))
 {-# INLINE parent #-}
+
+leaf :: StaticMultiString -> Html
+leaf open = Html $ \attrs k ->
+    StaticString open (attrs (staticLeafEnd k))
+{-# INLINE leaf #-}
+
+attribute :: StaticMultiString -> Attribute
+attribute key = \(AttributeValue value) h -> Html $ \attrs k ->
+    unHtml h (\j -> attrs (StaticString key (staticGreater $ value j))) k
+{-# INLINE attribute #-}
 
 table :: Html -> Html
 table = parent "<table" "</table>"
@@ -118,9 +202,65 @@ td :: Html -> Html
 td = parent "<td" "</td>"
 {-# INLINE td #-}
 
+idA :: Attribute
+idA = attribute " id=\""
+{-# INLINE idA #-}
+
+img :: Html
+img = leaf "<img"
+{-# INLINE img #-}
+
+head :: Html -> Html
+head = parent "<head" "</head>"
+{-# INLINE head #-}
+
+div :: Html -> Html
+div = parent "<div" "</div>"
+{-# INLINE div #-}
+
+p :: Html -> Html
+p = parent "<p" "</p>"
+{-# INLINE p #-}
+
+h1 :: Html -> Html
+h1 = parent "<h1" "<h1/>"
+{-# INLINE h1 #-}
+
+h2 :: Html -> Html
+h2 = parent "<h2" "<h2/>"
+{-# INLINE h2 #-}
+
+li :: Html -> Html
+li = parent "<li" "<li/>"
+{-# INLINE li #-}
+
+html :: Html -> Html
+html = parent "<html" "<html/>"
+{-# INLINE html #-}
+
+title :: Html -> Html
+title = parent "<title" "<title/>"
+{-# INLINE title #-}
+
+body :: Html -> Html
+body = parent "<body" "<body/>"
+{-# INLINE body #-}
+
+h ! a = h a
+
+(<>) :: Monoid a => a -> a -> a
+(<>) = mappend
+
 string :: String -> Html
 string s = Html $ \_ -> HaskellString s
 {-# INLINE string #-}
+
+text :: Text -> Html
+text t = Html $ \_ -> Text t
+{-# INLINE text #-}
+
+textValue :: Text -> AttributeValue
+textValue t = AttributeValue $ \k -> Text t k
 
 flattenHtml :: Html -> HtmlPiece
 flattenHtml (Html f) = f id EmptyPiece
@@ -172,6 +312,7 @@ encodeUtf8 = UB.toLazyByteString . go
   go (HaskellString  s p) = (UB.fromString s) `mappend` go p
   go (Utf8ByteString s p) = (UB.unsafeFromByteString s) `mappend` go p
   go (Text           s p) = (UB.fromText s) `mappend` go p
+  go (Append         s p) = go s `mappend` go p
 {-# INLINE encodeUtf8 #-}
 
 flattenAndEncode :: Html -> L.ByteString
@@ -230,6 +371,7 @@ data HtmlPiece =
    | HaskellString  String            HtmlPiece -- ^ Input from a Haskell String
    | Text           Text              HtmlPiece -- ^ Input from a Text value
    | Utf8ByteString S.ByteString      HtmlPiece -- ^ Input from a Utf8 encoded bytestring
+   | Append         HtmlPiece         HtmlPiece -- ^ Appending of two pieces.
    | EmptyPiece                                 -- ^ An empty html piece.
 
 -- | Compute the size of the Html piece; i.e. the number of constructors. This
@@ -243,7 +385,7 @@ pieceSize = go 0
     Text           _ p -> go (1 + s) p
     Utf8ByteString _ p -> go (1 + s) p
     EmptyPiece         -> s
-  
+
 
 -- Overloaded strings support
 -----------------------------
@@ -265,3 +407,6 @@ staticDoubleQuote = StaticString "\""
 
 staticGreater :: HtmlPiece -> HtmlPiece
 staticGreater = StaticString ">"
+
+staticLeafEnd :: HtmlPiece -> HtmlPiece
+staticLeafEnd = StaticString " />"

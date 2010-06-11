@@ -190,7 +190,7 @@ leaf open = Html $ \attrs k ->
 
 attribute :: StaticMultiString -> Attribute
 attribute key = \(AttributeValue value) h -> Html $ \attrs k ->
-    unHtml h (\j -> attrs (StaticString key (staticGreater $ value j))) k
+    unHtml h (\j -> attrs (StaticString key (value $ staticDoubleQuote j))) k
 {-# INLINE attribute #-}
 
 table :: Html -> Html

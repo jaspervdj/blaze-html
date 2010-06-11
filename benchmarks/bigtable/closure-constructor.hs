@@ -31,7 +31,10 @@ main = defaultMain $
     benchFlattenEncode name f x =
       bench ("flatten+encode/"++name) $ nf (L.length . flattenAndEncode . f) x
 
-    benchAll n f x = [benchFlatten n f x, benchFlattenEncode n f x]
+    benchString name f x =
+      bench ("string/"++name) $ nf (flip encodeString [] . flattenHtml . f) x
+
+    benchAll n f x = [benchString n f x] -- [benchFlatten n f x, benchFlattenEncode n f x]
 
 ------------------------------------------------------------------------------
 -- Data for benchmarks
@@ -312,12 +315,30 @@ encodeUtf8 = UB.toLazyByteString . go
   go (HaskellString  s p) = (UB.fromString s) `mappend` go p
   go (Utf8ByteString s p) = (UB.unsafeFromByteString s) `mappend` go p
   go (Text           s p) = (UB.fromText s) `mappend` go p
-  go (Append         s p) = go s `mappend` go p
-{-# INLINE encodeUtf8 #-}
 
 flattenAndEncode :: Html -> L.ByteString
 flattenAndEncode = encodeUtf8 . flattenHtml
 {-# INLINE flattenAndEncode #-}
+
+encodeString :: HtmlPiece -> String -> String
+encodeString p0 s0 = go p0
+  where
+  go EmptyPiece           = s0
+  go (StaticString   s p) = getHaskellString s (go p)
+  go (HaskellString  s p) = s                  ++ go p
+  go (Utf8ByteString s p) = error "encodeString: BytesString not yet supported."
+  go (Text           s p) = T.unpack s         ++ go p
+
+{-
+pieceToBuilder :: HtmlPiece -> Utf8Builder
+pieceToBuilder = go
+  where
+  go EmptyPiece           = mempty
+  go (StaticString   s p) = (UB.unsafeFromByteString $ getByteString s) `mappend` go p
+  go (HaskellString  s p) = (UB.fromString s) `mappend` go p
+  go (Utf8ByteString s p) = (UB.unsafeFromByteString s) `mappend` go p
+  go (Text           s p) = (UB.fromText s) `mappend` go p
+-}
 
 
 -- | The key ingredient is a string representation that supports all possible
@@ -328,7 +349,7 @@ flattenAndEncode = encodeUtf8 . flattenHtml
 -- Utf8Builder. The same holds in some cases for Text, which may eventually
 -- better be replaced by a builder.
 data StaticMultiString = StaticMultiString
-       { getHaskellString :: String
+       { getHaskellString :: String -> String
        , getByteString    :: S.ByteString
        , getText          :: Text
        }
@@ -347,10 +368,15 @@ instance Monoid StaticMultiString where
 -- | A static string that is built once and used many times. Here, we could
 -- also use the `cached` (optimizePiece) construction for our builder.
 staticMultiString :: String -> StaticMultiString
-staticMultiString s = StaticMultiString s bs t
+staticMultiString s = StaticMultiString (cpsAppend s) bs t
   where
     bs = S.pack $ L.unpack $ UB.toLazyByteString $ UB.fromString s
     t  = T.pack s
+
+    cpsAppend :: [a] -> [a] -> [a]
+    cpsAppend []     = id
+    cpsAppend (x:xs) = \k -> x : cpsAppend xs k
+
 {-# INLINE staticMultiString #-}
 
 -- | A string denoting input from different string representations.
@@ -371,7 +397,6 @@ data HtmlPiece =
    | HaskellString  String            HtmlPiece -- ^ Input from a Haskell String
    | Text           Text              HtmlPiece -- ^ Input from a Text value
    | Utf8ByteString S.ByteString      HtmlPiece -- ^ Input from a Utf8 encoded bytestring
-   | Append         HtmlPiece         HtmlPiece -- ^ Appending of two pieces.
    | EmptyPiece                                 -- ^ An empty html piece.
 
 -- | Compute the size of the Html piece; i.e. the number of constructors. This

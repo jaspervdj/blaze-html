@@ -52,9 +52,8 @@ wideTreeEscapingData = take 1000 $
     cycle ["<><>", "\"lol\"", "<&>", "'>>'"]
 {-# NOINLINE wideTreeEscapingData #-}
 
-deepTreeData :: [Html a -> Html a]
-deepTreeData = take 1000 $
-    cycle [table, tr, td, p, div]
+deepTreeData :: Int
+deepTreeData = 1000
 {-# NOINLINE deepTreeData #-}
 
 manyAttributesData :: [Text]
@@ -91,9 +90,12 @@ wideTree = renderHtml . div . mapM_ ((p ! id "foo") . text)
 
 -- | Create a very deep tree with the specified tags.
 --
-deepTree :: [Html a -> Html a]  -- ^ List of parent elements to nest.
-         -> LB.ByteString   -- ^ Result.
-deepTree = renderHtml . ($ text "deep") . foldl1 (.)
+deepTree :: Int            -- ^ Number of parent elements to nest.
+         -> LB.ByteString  -- ^ Result.
+deepTree = renderHtml . deepTree'
+  where
+    deepTree' 0 = text "foo"
+    deepTree' x = (if even x then div else p) $ deepTree' (x - 1)
 
 -- | Create an element with many attributes.
 --

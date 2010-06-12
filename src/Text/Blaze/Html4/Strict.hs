@@ -134,7 +134,7 @@ docType = preEscapedText "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\"\n 
 --
 a :: Html a  -- ^ Inner HTML.
   -> Html b  -- ^ Resulting HTML.
-a = parent "a"
+a = parent "<a" "</a>"
 {-# INLINE a #-}
 
 -- | Combinator for the @\<abbr>@ element.
@@ -149,7 +149,7 @@ a = parent "a"
 --
 abbr :: Html a  -- ^ Inner HTML.
      -> Html b  -- ^ Resulting HTML.
-abbr = parent "abbr"
+abbr = parent "<abbr" "</abbr>"
 {-# INLINE abbr #-}
 
 -- | Combinator for the @\<acronym>@ element.
@@ -164,7 +164,7 @@ abbr = parent "abbr"
 --
 acronym :: Html a  -- ^ Inner HTML.
         -> Html b  -- ^ Resulting HTML.
-acronym = parent "acronym"
+acronym = parent "<acronym" "</acronym>"
 {-# INLINE acronym #-}
 
 -- | Combinator for the @\<address>@ element.
@@ -179,7 +179,7 @@ acronym = parent "acronym"
 --
 address :: Html a  -- ^ Inner HTML.
         -> Html b  -- ^ Resulting HTML.
-address = parent "address"
+address = parent "<address" "</address>"
 {-# INLINE address #-}
 
 -- | Combinator for the @\<area>@ element.
@@ -193,7 +193,7 @@ address = parent "address"
 -- > <area>
 --
 area :: Html a  -- ^ Resulting HTML.
-area = open "area"
+area = open "<area"
 {-# INLINE area #-}
 
 -- | Combinator for the @\<b>@ element.
@@ -208,7 +208,7 @@ area = open "area"
 --
 b :: Html a  -- ^ Inner HTML.
   -> Html b  -- ^ Resulting HTML.
-b = parent "b"
+b = parent "<b" "</b>"
 {-# INLINE b #-}
 
 -- | Combinator for the @\<bdo>@ element.
@@ -223,7 +223,7 @@ b = parent "b"
 --
 bdo :: Html a  -- ^ Inner HTML.
     -> Html b  -- ^ Resulting HTML.
-bdo = parent "bdo"
+bdo = parent "<bdo" "</bdo>"
 {-# INLINE bdo #-}
 
 -- | Combinator for the @\<big>@ element.
@@ -238,7 +238,7 @@ bdo = parent "bdo"
 --
 big :: Html a  -- ^ Inner HTML.
     -> Html b  -- ^ Resulting HTML.
-big = parent "big"
+big = parent "<big" "</big>"
 {-# INLINE big #-}
 
 -- | Combinator for the @\<blockquote>@ element.
@@ -253,7 +253,7 @@ big = parent "big"
 --
 blockquote :: Html a  -- ^ Inner HTML.
            -> Html b  -- ^ Resulting HTML.
-blockquote = parent "blockquote"
+blockquote = parent "<blockquote" "</blockquote>"
 {-# INLINE blockquote #-}
 
 -- | Combinator for the @\<body>@ element.
@@ -268,7 +268,7 @@ blockquote = parent "blockquote"
 --
 body :: Html a  -- ^ Inner HTML.
      -> Html b  -- ^ Resulting HTML.
-body = parent "body"
+body = parent "<body" "</body>"
 {-# INLINE body #-}
 
 -- | Combinator for the @\<br>@ element.
@@ -282,7 +282,7 @@ body = parent "body"
 -- > <br>
 --
 br :: Html a  -- ^ Resulting HTML.
-br = open "br"
+br = open "<br"
 {-# INLINE br #-}
 
 -- | Combinator for the @\<button>@ element.
@@ -297,7 +297,7 @@ br = open "br"
 --
 button :: Html a  -- ^ Inner HTML.
        -> Html b  -- ^ Resulting HTML.
-button = parent "button"
+button = parent "<button" "</button>"
 {-# INLINE button #-}
 
 -- | Combinator for the @\<caption>@ element.
@@ -312,7 +312,7 @@ button = parent "button"
 --
 caption :: Html a  -- ^ Inner HTML.
         -> Html b  -- ^ Resulting HTML.
-caption = parent "caption"
+caption = parent "<caption" "</caption>"
 {-# INLINE caption #-}
 
 -- | Combinator for the @\<cite>@ element.
@@ -327,7 +327,7 @@ caption = parent "caption"
 --
 cite :: Html a  -- ^ Inner HTML.
      -> Html b  -- ^ Resulting HTML.
-cite = parent "cite"
+cite = parent "<cite" "</cite>"
 {-# INLINE cite #-}
 
 -- | Combinator for the @\<code>@ element.
@@ -342,7 +342,7 @@ cite = parent "cite"
 --
 code :: Html a  -- ^ Inner HTML.
      -> Html b  -- ^ Resulting HTML.
-code = parent "code"
+code = parent "<code" "</code>"
 {-# INLINE code #-}
 
 -- | Combinator for the @\<col>@ element.
@@ -356,7 +356,7 @@ code = parent "code"
 -- > <col>
 --
 col :: Html a  -- ^ Resulting HTML.
-col = open "col"
+col = open "<col"
 {-# INLINE col #-}
 
 -- | Combinator for the @\<colgroup>@ element.
@@ -371,7 +371,7 @@ col = open "col"
 --
 colgroup :: Html a  -- ^ Inner HTML.
          -> Html b  -- ^ Resulting HTML.
-colgroup = parent "colgroup"
+colgroup = parent "<colgroup" "</colgroup>"
 {-# INLINE colgroup #-}
 
 -- | Combinator for the @\<dd>@ element.
@@ -386,7 +386,7 @@ colgroup = parent "colgroup"
 --
 dd :: Html a  -- ^ Inner HTML.
    -> Html b  -- ^ Resulting HTML.
-dd = parent "dd"
+dd = parent "<dd" "</dd>"
 {-# INLINE dd #-}
 
 -- | Combinator for the @\<del>@ element.
@@ -401,7 +401,7 @@ dd = parent "dd"
 --
 del :: Html a  -- ^ Inner HTML.
     -> Html b  -- ^ Resulting HTML.
-del = parent "del"
+del = parent "<del" "</del>"
 {-# INLINE del #-}
 
 -- | Combinator for the @\<dfn>@ element.
@@ -416,7 +416,7 @@ del = parent "del"
 --
 dfn :: Html a  -- ^ Inner HTML.
     -> Html b  -- ^ Resulting HTML.
-dfn = parent "dfn"
+dfn = parent "<dfn" "</dfn>"
 {-# INLINE dfn #-}
 
 -- | Combinator for the @\<div>@ element.
@@ -431,7 +431,7 @@ dfn = parent "dfn"
 --
 div :: Html a  -- ^ Inner HTML.
     -> Html b  -- ^ Resulting HTML.
-div = parent "div"
+div = parent "<div" "</div>"
 {-# INLINE div #-}
 
 -- | Combinator for the @\<dl>@ element.
@@ -446,7 +446,7 @@ div = parent "div"
 --
 dl :: Html a  -- ^ Inner HTML.
    -> Html b  -- ^ Resulting HTML.
-dl = parent "dl"
+dl = parent "<dl" "</dl>"
 {-# INLINE dl #-}
 
 -- | Combinator for the @\<dt>@ element.
@@ -461,7 +461,7 @@ dl = parent "dl"
 --
 dt :: Html a  -- ^ Inner HTML.
    -> Html b  -- ^ Resulting HTML.
-dt = parent "dt"
+dt = parent "<dt" "</dt>"
 {-# INLINE dt #-}
 
 -- | Combinator for the @\<em>@ element.
@@ -476,7 +476,7 @@ dt = parent "dt"
 --
 em :: Html a  -- ^ Inner HTML.
    -> Html b  -- ^ Resulting HTML.
-em = parent "em"
+em = parent "<em" "</em>"
 {-# INLINE em #-}
 
 -- | Combinator for the @\<fieldset>@ element.
@@ -491,7 +491,7 @@ em = parent "em"
 --
 fieldset :: Html a  -- ^ Inner HTML.
          -> Html b  -- ^ Resulting HTML.
-fieldset = parent "fieldset"
+fieldset = parent "<fieldset" "</fieldset>"
 {-# INLINE fieldset #-}
 
 -- | Combinator for the @\<form>@ element.
@@ -506,7 +506,7 @@ fieldset = parent "fieldset"
 --
 form :: Html a  -- ^ Inner HTML.
      -> Html b  -- ^ Resulting HTML.
-form = parent "form"
+form = parent "<form" "</form>"
 {-# INLINE form #-}
 
 -- | Combinator for the @\<h1>@ element.
@@ -521,7 +521,7 @@ form = parent "form"
 --
 h1 :: Html a  -- ^ Inner HTML.
    -> Html b  -- ^ Resulting HTML.
-h1 = parent "h1"
+h1 = parent "<h1" "</h1>"
 {-# INLINE h1 #-}
 
 -- | Combinator for the @\<h2>@ element.
@@ -536,7 +536,7 @@ h1 = parent "h1"
 --
 h2 :: Html a  -- ^ Inner HTML.
    -> Html b  -- ^ Resulting HTML.
-h2 = parent "h2"
+h2 = parent "<h2" "</h2>"
 {-# INLINE h2 #-}
 
 -- | Combinator for the @\<h3>@ element.
@@ -551,7 +551,7 @@ h2 = parent "h2"
 --
 h3 :: Html a  -- ^ Inner HTML.
    -> Html b  -- ^ Resulting HTML.
-h3 = parent "h3"
+h3 = parent "<h3" "</h3>"
 {-# INLINE h3 #-}
 
 -- | Combinator for the @\<h4>@ element.
@@ -566,7 +566,7 @@ h3 = parent "h3"
 --
 h4 :: Html a  -- ^ Inner HTML.
    -> Html b  -- ^ Resulting HTML.
-h4 = parent "h4"
+h4 = parent "<h4" "</h4>"
 {-# INLINE h4 #-}
 
 -- | Combinator for the @\<h5>@ element.
@@ -581,7 +581,7 @@ h4 = parent "h4"
 --
 h5 :: Html a  -- ^ Inner HTML.
    -> Html b  -- ^ Resulting HTML.
-h5 = parent "h5"
+h5 = parent "<h5" "</h5>"
 {-# INLINE h5 #-}
 
 -- | Combinator for the @\<h6>@ element.
@@ -596,7 +596,7 @@ h5 = parent "h5"
 --
 h6 :: Html a  -- ^ Inner HTML.
    -> Html b  -- ^ Resulting HTML.
-h6 = parent "h6"
+h6 = parent "<h6" "</h6>"
 {-# INLINE h6 #-}
 
 -- | Combinator for the @\<head>@ element.
@@ -611,7 +611,7 @@ h6 = parent "h6"
 --
 head :: Html a  -- ^ Inner HTML.
      -> Html b  -- ^ Resulting HTML.
-head = parent "head"
+head = parent "<head" "</head>"
 {-# INLINE head #-}
 
 -- | Combinator for the @\<hr>@ element.
@@ -625,7 +625,7 @@ head = parent "head"
 -- > <hr>
 --
 hr :: Html a  -- ^ Resulting HTML.
-hr = open "hr"
+hr = open "<hr"
 {-# INLINE hr #-}
 
 -- | Combinator for the @\<html>@ element.
@@ -640,7 +640,7 @@ hr = open "hr"
 --
 htmlNoDocType :: Html a  -- ^ Inner HTML.
               -> Html b  -- ^ Resulting HTML.
-htmlNoDocType = parent "html"
+htmlNoDocType = parent "<html" "</html>"
 {-# INLINE htmlNoDocType #-}
 
 -- | Combinator for the @\<i>@ element.
@@ -655,7 +655,7 @@ htmlNoDocType = parent "html"
 --
 i :: Html a  -- ^ Inner HTML.
   -> Html b  -- ^ Resulting HTML.
-i = parent "i"
+i = parent "<i" "</i>"
 {-# INLINE i #-}
 
 -- | Combinator for the @\<img>@ element.
@@ -669,7 +669,7 @@ i = parent "i"
 -- > <img>
 --
 img :: Html a  -- ^ Resulting HTML.
-img = open "img"
+img = open "<img"
 {-# INLINE img #-}
 
 -- | Combinator for the @\<input>@ element.
@@ -683,7 +683,7 @@ img = open "img"
 -- > <input>
 --
 input :: Html a  -- ^ Resulting HTML.
-input = open "input"
+input = open "<input"
 {-# INLINE input #-}
 
 -- | Combinator for the @\<ins>@ element.
@@ -698,7 +698,7 @@ input = open "input"
 --
 ins :: Html a  -- ^ Inner HTML.
     -> Html b  -- ^ Resulting HTML.
-ins = parent "ins"
+ins = parent "<ins" "</ins>"
 {-# INLINE ins #-}
 
 -- | Combinator for the @\<kbd>@ element.
@@ -713,7 +713,7 @@ ins = parent "ins"
 --
 kbd :: Html a  -- ^ Inner HTML.
     -> Html b  -- ^ Resulting HTML.
-kbd = parent "kbd"
+kbd = parent "<kbd" "</kbd>"
 {-# INLINE kbd #-}
 
 -- | Combinator for the @\<label>@ element.
@@ -728,7 +728,7 @@ kbd = parent "kbd"
 --
 label :: Html a  -- ^ Inner HTML.
       -> Html b  -- ^ Resulting HTML.
-label = parent "label"
+label = parent "<label" "</label>"
 {-# INLINE label #-}
 
 -- | Combinator for the @\<legend>@ element.
@@ -743,7 +743,7 @@ label = parent "label"
 --
 legend :: Html a  -- ^ Inner HTML.
        -> Html b  -- ^ Resulting HTML.
-legend = parent "legend"
+legend = parent "<legend" "</legend>"
 {-# INLINE legend #-}
 
 -- | Combinator for the @\<li>@ element.
@@ -758,7 +758,7 @@ legend = parent "legend"
 --
 li :: Html a  -- ^ Inner HTML.
    -> Html b  -- ^ Resulting HTML.
-li = parent "li"
+li = parent "<li" "</li>"
 {-# INLINE li #-}
 
 -- | Combinator for the @\<link>@ element.
@@ -772,7 +772,7 @@ li = parent "li"
 -- > <link>
 --
 link :: Html a  -- ^ Resulting HTML.
-link = open "link"
+link = open "<link"
 {-# INLINE link #-}
 
 -- | Combinator for the @\<map>@ element.
@@ -787,7 +787,7 @@ link = open "link"
 --
 map :: Html a  -- ^ Inner HTML.
     -> Html b  -- ^ Resulting HTML.
-map = parent "map"
+map = parent "<map" "</map>"
 {-# INLINE map #-}
 
 -- | Combinator for the @\<meta>@ element.
@@ -801,7 +801,7 @@ map = parent "map"
 -- > <meta>
 --
 meta :: Html a  -- ^ Resulting HTML.
-meta = open "meta"
+meta = open "<meta"
 {-# INLINE meta #-}
 
 -- | Combinator for the @\<noscript>@ element.
@@ -816,7 +816,7 @@ meta = open "meta"
 --
 noscript :: Html a  -- ^ Inner HTML.
          -> Html b  -- ^ Resulting HTML.
-noscript = parent "noscript"
+noscript = parent "<noscript" "</noscript>"
 {-# INLINE noscript #-}
 
 -- | Combinator for the @\<object>@ element.
@@ -831,7 +831,7 @@ noscript = parent "noscript"
 --
 object :: Html a  -- ^ Inner HTML.
        -> Html b  -- ^ Resulting HTML.
-object = parent "object"
+object = parent "<object" "</object>"
 {-# INLINE object #-}
 
 -- | Combinator for the @\<ol>@ element.
@@ -846,7 +846,7 @@ object = parent "object"
 --
 ol :: Html a  -- ^ Inner HTML.
    -> Html b  -- ^ Resulting HTML.
-ol = parent "ol"
+ol = parent "<ol" "</ol>"
 {-# INLINE ol #-}
 
 -- | Combinator for the @\<optgroup>@ element.
@@ -861,7 +861,7 @@ ol = parent "ol"
 --
 optgroup :: Html a  -- ^ Inner HTML.
          -> Html b  -- ^ Resulting HTML.
-optgroup = parent "optgroup"
+optgroup = parent "<optgroup" "</optgroup>"
 {-# INLINE optgroup #-}
 
 -- | Combinator for the @\<option>@ element.
@@ -876,7 +876,7 @@ optgroup = parent "optgroup"
 --
 option :: Html a  -- ^ Inner HTML.
        -> Html b  -- ^ Resulting HTML.
-option = parent "option"
+option = parent "<option" "</option>"
 {-# INLINE option #-}
 
 -- | Combinator for the @\<p>@ element.
@@ -891,7 +891,7 @@ option = parent "option"
 --
 p :: Html a  -- ^ Inner HTML.
   -> Html b  -- ^ Resulting HTML.
-p = parent "p"
+p = parent "<p" "</p>"
 {-# INLINE p #-}
 
 -- | Combinator for the @\<param>@ element.
@@ -905,7 +905,7 @@ p = parent "p"
 -- > <param>
 --
 param :: Html a  -- ^ Resulting HTML.
-param = open "param"
+param = open "<param"
 {-# INLINE param #-}
 
 -- | Combinator for the @\<pre>@ element.
@@ -920,7 +920,7 @@ param = open "param"
 --
 pre :: Html a  -- ^ Inner HTML.
     -> Html b  -- ^ Resulting HTML.
-pre = parent "pre"
+pre = parent "<pre" "</pre>"
 {-# INLINE pre #-}
 
 -- | Combinator for the @\<q>@ element.
@@ -935,7 +935,7 @@ pre = parent "pre"
 --
 q :: Html a  -- ^ Inner HTML.
   -> Html b  -- ^ Resulting HTML.
-q = parent "q"
+q = parent "<q" "</q>"
 {-# INLINE q #-}
 
 -- | Combinator for the @\<samp>@ element.
@@ -950,7 +950,7 @@ q = parent "q"
 --
 samp :: Html a  -- ^ Inner HTML.
      -> Html b  -- ^ Resulting HTML.
-samp = parent "samp"
+samp = parent "<samp" "</samp>"
 {-# INLINE samp #-}
 
 -- | Combinator for the @\<script>@ element.
@@ -965,7 +965,7 @@ samp = parent "samp"
 --
 script :: Html a  -- ^ Inner HTML.
        -> Html b  -- ^ Resulting HTML.
-script = parent "script"
+script = parent "<script" "</script>"
 {-# INLINE script #-}
 
 -- | Combinator for the @\<select>@ element.
@@ -980,7 +980,7 @@ script = parent "script"
 --
 select :: Html a  -- ^ Inner HTML.
        -> Html b  -- ^ Resulting HTML.
-select = parent "select"
+select = parent "<select" "</select>"
 {-# INLINE select #-}
 
 -- | Combinator for the @\<small>@ element.
@@ -995,7 +995,7 @@ select = parent "select"
 --
 small :: Html a  -- ^ Inner HTML.
       -> Html b  -- ^ Resulting HTML.
-small = parent "small"
+small = parent "<small" "</small>"
 {-# INLINE small #-}
 
 -- | Combinator for the @\<span>@ element.
@@ -1010,7 +1010,7 @@ small = parent "small"
 --
 span :: Html a  -- ^ Inner HTML.
      -> Html b  -- ^ Resulting HTML.
-span = parent "span"
+span = parent "<span" "</span>"
 {-# INLINE span #-}
 
 -- | Combinator for the @\<strong>@ element.
@@ -1025,7 +1025,7 @@ span = parent "span"
 --
 strong :: Html a  -- ^ Inner HTML.
        -> Html b  -- ^ Resulting HTML.
-strong = parent "strong"
+strong = parent "<strong" "</strong>"
 {-# INLINE strong #-}
 
 -- | Combinator for the @\<style>@ element.
@@ -1040,7 +1040,7 @@ strong = parent "strong"
 --
 style :: Html a  -- ^ Inner HTML.
       -> Html b  -- ^ Resulting HTML.
-style = parent "style"
+style = parent "<style" "</style>"
 {-# INLINE style #-}
 
 -- | Combinator for the @\<sub>@ element.
@@ -1055,7 +1055,7 @@ style = parent "style"
 --
 sub :: Html a  -- ^ Inner HTML.
     -> Html b  -- ^ Resulting HTML.
-sub = parent "sub"
+sub = parent "<sub" "</sub>"
 {-# INLINE sub #-}
 
 -- | Combinator for the @\<sup>@ element.
@@ -1070,7 +1070,7 @@ sub = parent "sub"
 --
 sup :: Html a  -- ^ Inner HTML.
     -> Html b  -- ^ Resulting HTML.
-sup = parent "sup"
+sup = parent "<sup" "</sup>"
 {-# INLINE sup #-}
 
 -- | Combinator for the @\<table>@ element.
@@ -1085,7 +1085,7 @@ sup = parent "sup"
 --
 table :: Html a  -- ^ Inner HTML.
       -> Html b  -- ^ Resulting HTML.
-table = parent "table"
+table = parent "<table" "</table>"
 {-# INLINE table #-}
 
 -- | Combinator for the @\<tbody>@ element.
@@ -1100,7 +1100,7 @@ table = parent "table"
 --
 tbody :: Html a  -- ^ Inner HTML.
       -> Html b  -- ^ Resulting HTML.
-tbody = parent "tbody"
+tbody = parent "<tbody" "</tbody>"
 {-# INLINE tbody #-}
 
 -- | Combinator for the @\<td>@ element.
@@ -1115,7 +1115,7 @@ tbody = parent "tbody"
 --
 td :: Html a  -- ^ Inner HTML.
    -> Html b  -- ^ Resulting HTML.
-td = parent "td"
+td = parent "<td" "</td>"
 {-# INLINE td #-}
 
 -- | Combinator for the @\<textarea>@ element.
@@ -1130,7 +1130,7 @@ td = parent "td"
 --
 textarea :: Html a  -- ^ Inner HTML.
          -> Html b  -- ^ Resulting HTML.
-textarea = parent "textarea"
+textarea = parent "<textarea" "</textarea>"
 {-# INLINE textarea #-}
 
 -- | Combinator for the @\<tfoot>@ element.
@@ -1145,7 +1145,7 @@ textarea = parent "textarea"
 --
 tfoot :: Html a  -- ^ Inner HTML.
       -> Html b  -- ^ Resulting HTML.
-tfoot = parent "tfoot"
+tfoot = parent "<tfoot" "</tfoot>"
 {-# INLINE tfoot #-}
 
 -- | Combinator for the @\<th>@ element.
@@ -1160,7 +1160,7 @@ tfoot = parent "tfoot"
 --
 th :: Html a  -- ^ Inner HTML.
    -> Html b  -- ^ Resulting HTML.
-th = parent "th"
+th = parent "<th" "</th>"
 {-# INLINE th #-}
 
 -- | Combinator for the @\<thead>@ element.
@@ -1175,7 +1175,7 @@ th = parent "th"
 --
 thead :: Html a  -- ^ Inner HTML.
       -> Html b  -- ^ Resulting HTML.
-thead = parent "thead"
+thead = parent "<thead" "</thead>"
 {-# INLINE thead #-}
 
 -- | Combinator for the @\<title>@ element.
@@ -1190,7 +1190,7 @@ thead = parent "thead"
 --
 title :: Html a  -- ^ Inner HTML.
       -> Html b  -- ^ Resulting HTML.
-title = parent "title"
+title = parent "<title" "</title>"
 {-# INLINE title #-}
 
 -- | Combinator for the @\<tr>@ element.
@@ -1205,7 +1205,7 @@ title = parent "title"
 --
 tr :: Html a  -- ^ Inner HTML.
    -> Html b  -- ^ Resulting HTML.
-tr = parent "tr"
+tr = parent "<tr" "</tr>"
 {-# INLINE tr #-}
 
 -- | Combinator for the @\<tt>@ element.
@@ -1220,7 +1220,7 @@ tr = parent "tr"
 --
 tt :: Html a  -- ^ Inner HTML.
    -> Html b  -- ^ Resulting HTML.
-tt = parent "tt"
+tt = parent "<tt" "</tt>"
 {-# INLINE tt #-}
 
 -- | Combinator for the @\<ul>@ element.
@@ -1235,7 +1235,7 @@ tt = parent "tt"
 --
 ul :: Html a  -- ^ Inner HTML.
    -> Html b  -- ^ Resulting HTML.
-ul = parent "ul"
+ul = parent "<ul" "</ul>"
 {-# INLINE ul #-}
 
 -- | Combinator for the @\<var>@ element.
@@ -1250,5 +1250,5 @@ ul = parent "ul"
 --
 var :: Html a  -- ^ Inner HTML.
     -> Html b  -- ^ Resulting HTML.
-var = parent "var"
+var = parent "<var" "</var>"
 {-# INLINE var #-}

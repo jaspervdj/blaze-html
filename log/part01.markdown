@@ -654,3 +654,27 @@ a bigtable HTTP server. The idea is very simple: you run the server like
 You can then navigate to `localhost:3000/100/50` using your favorite webbrowser
 and you will an HTML table of 100 rows and 50 columns. You can then measure the
 performance using a tool like `httperf` or `ab`.
+
+Saturday, June 12th, afternoon
+==============================
+
+So, it's been a week of heavy experimenting, and it's a shame I haven't logged
+a lot. While trying out different options that would provide us with more
+flexibility, we noticed that the `deepTree` benchmark performed *very* poorly in
+our main trunk.
+
+Because we cannot have sudden, unexplainable slowdowns, I have changed a bit in
+the structure of the code. Calls to functions such as `parent` and `leaf` now
+explicitly take the "shared" parts as arguments, e.g.
+
+    table = parent "<table" "</table>"
+
+instead of
+
+    table = parent "table"
+
+While the second option is probably more elegant, this doesn't *really* matter
+since we are talking about generated code anyway.
+
+This change has caused a slight slowdown in all benchmarks, but it has
+normalized the `deepTree` benchmark -- hence, I think this is worth it.

@@ -21,8 +21,7 @@ main = defaultMain
     , benchHtml "basic" basic basicData
     , benchHtml "wideTree" wideTree wideTreeData
     , benchHtml "wideTreeEscaping" wideTree wideTreeEscapingData
-    , benchHtml "deepTree1" deepTree1 deepTree1Data
-    , benchHtml "deepTree2" deepTree2 deepTree2Data
+    , benchHtml "deepTree" deepTree deepTreeData
     , benchHtml "manyAttributes" manyAttributes manyAttributesData
     ]
   where
@@ -53,14 +52,10 @@ wideTreeEscapingData = take 1000 $
     cycle ["<><>", "\"lol\"", "<&>", "'>>'"]
 {-# NOINLINE wideTreeEscapingData #-}
 
-deepTree1Data :: [Html a -> Html a]
-deepTree1Data = take 1000 $
+deepTreeData :: [Html a -> Html a]
+deepTreeData = take 1000 $
     cycle [table, tr, td, p, div]
-{-# NOINLINE deepTree1Data #-}
-
-deepTree2Data :: Int
-deepTree2Data = 1000
-{-# NOINLINE deepTree2Data #-}
+{-# NOINLINE deepTreeData #-}
 
 manyAttributesData :: [Text]
 manyAttributesData = wideTreeData
@@ -96,19 +91,10 @@ wideTree = renderHtml . div . mapM_ ((p ! id "foo") . text)
 
 -- | Create a very deep tree with the specified tags.
 --
-deepTree1 :: [Html a -> Html a]  -- ^ Elements to nest.
+deepTree :: [Html a -> Html a]  -- ^ Elements to nest.
           -> LB.ByteString       -- ^ Result.
-deepTree1 = renderHtml . ($ "foo") . foldl1 (.)
-{-# NOINLINE deepTree1 #-}
-
--- | Create a very deep tree with a given number of tags.
---
-deepTree2 :: Int            -- ^ Number of parent elements to nest.
-          -> LB.ByteString  -- ^ Result.
-deepTree2 = renderHtml . deepTree'
-  where
-    deepTree' 0 = text "foo"
-    deepTree' x = (if even x then div else p) $ deepTree' (x - 1)
+deepTree = renderHtml . ($ "foo") . foldl1 (.)
+{-# NOINLINE deepTree #-}
 
 -- | Create an element with many attributes.
 --

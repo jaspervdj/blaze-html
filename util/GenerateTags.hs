@@ -162,7 +162,7 @@ makeParent tag = unlines
     , "--"
     , function        ++ " :: Html a  -- ^ Inner HTML."
     , spaces function ++ " -> Html b  -- ^ Resulting HTML."
-    , function ++ " = parent \"" ++ tag ++ "\""
+    , function ++ " = parent \"<" ++ tag ++ "\" \"</" ++ tag ++ ">\""
     , "{-# INLINE " ++ function ++ " #-}"
     ]
   where
@@ -183,7 +183,7 @@ makeLeaf tag = unlines
     , "-- > <" ++ tag ++ " />"
     , "--"
     , function        ++ " :: Html a  -- ^ Resulting HTML."
-    , function ++ " = leaf \"" ++ tag ++ "\""
+    , function ++ " = leaf \"<" ++ tag ++ "\""
     , "{-# INLINE " ++ function ++ " #-}"
     ]
   where
@@ -204,7 +204,7 @@ makeOpen tag = unlines
     , "-- > <" ++ tag ++ ">"
     , "--"
     , function        ++ " :: Html a  -- ^ Resulting HTML."
-    , function ++ " = open \"" ++ tag ++ "\""
+    , function ++ " = open \"<" ++ tag ++ "\""
     , "{-# INLINE " ++ function ++ " #-}"
     ]
   where
@@ -226,7 +226,7 @@ makeAttribute name = unlines
     , "--"
     , function        ++ " :: AttributeValue  -- ^ Attribute value."
     , spaces function ++ " -> Attribute       -- ^ Resulting attribute."
-    , function ++ " = attribute \"" ++ name ++ "\""
+    , function ++ " = attribute \" " ++ name ++ "=\\\"\""
     , "{-# INLINE " ++ function ++ " #-}"
     ]
   where

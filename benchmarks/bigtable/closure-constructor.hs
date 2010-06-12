@@ -15,9 +15,13 @@ import GHC.Exts (IsString(..))
 
 import Text.Blaze.Internal.Utf8Builder (Utf8Builder)
 import qualified Text.Blaze.Internal.Utf8Builder as UB
+import qualified Text.Blaze.Internal.Utf8BuilderHtml as HB
 
 main :: IO ()
 main = defaultMain $
+    -- SM: Note that currently we are not escaping everywhere, where we should!
+    --     This may be part of the difference between the numbers here and the
+    --     numbers for the Utf8Builder benchmark.
     benchAll "bigTable"         bigTable bigTableData ++
     benchAll "basic"            basic basicData ++
     benchAll "wideTree"         wideTree wideTreeData ++
@@ -34,7 +38,7 @@ main = defaultMain $
     benchString name f x =
       bench ("string/"++name) $ nf (flip encodeString [] . flattenHtml . f) x
 
-    benchAll n f x = [benchString n f x] -- [benchFlatten n f x, benchFlattenEncode n f x]
+    benchAll n f x = [{-benchString n f x, benchFlatten n f x,-}  benchFlattenEncode n f x]
 
 ------------------------------------------------------------------------------
 -- Data for benchmarks
@@ -312,9 +316,9 @@ encodeUtf8 = UB.toLazyByteString . go
   where
   go EmptyPiece           = mempty
   go (StaticString   s p) = (UB.unsafeFromByteString $ getByteString s) `mappend` go p
-  go (HaskellString  s p) = (UB.fromString s) `mappend` go p
+  go (HaskellString  s p) = (HB.escapeHtmlFromString s) `mappend` go p
   go (Utf8ByteString s p) = (UB.unsafeFromByteString s) `mappend` go p
-  go (Text           s p) = (UB.fromText s) `mappend` go p
+  go (Text           s p) = (HB.escapeHtmlFromText s) `mappend` go p
 
 flattenAndEncode :: Html -> L.ByteString
 flattenAndEncode = encodeUtf8 . flattenHtml

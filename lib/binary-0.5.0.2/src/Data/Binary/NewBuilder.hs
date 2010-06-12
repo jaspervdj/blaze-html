@@ -193,11 +193,19 @@ singleton x = NewBuilder step
 
 -- SM: This performance is what we would like to allow also for clients of the
 -- library with minimal effort.
+--
+-- Should be easily generalizable to storables.
+--
+-- Perhaps it can also be generalized without a loss of performance something
+-- similar to the 'Write' construction in the Utf8Builder. This way one could
+-- abstract some of the gory details by a higher-order function that gets
+-- specialized accordingly due to the inlining.
+--
 word8List :: [Word8] -> NewBuilder
 word8List []  = empty -- ensure non-emptyness postcondition
 word8List xs0 = NewBuilder $ step xs0
   where
-    step xs1 k p0 l0 w0= go xs1 w0
+    step xs1 k p0 l0 w0 = go xs1 w0
       where
         go []          !w = k (p0 `plusPtr` w) (l0 - w) w
         go xs@(x':xs') !w

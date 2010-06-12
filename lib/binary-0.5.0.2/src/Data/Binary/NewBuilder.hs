@@ -16,8 +16,15 @@
 --
 -- Modified: June 12th, 2010, Simon Meier <simon.meier@inf.ethz.ch>
 --
---   Different representation of builder with a more straight-forward control
---   flow that is optimized towards sequencing the different writers.
+--   Goal: As little as possible abstraction overhead. Therefore, we've changed
+--   the definition of the Builder type such that less data needs to be passed
+--   between calls to the build functions filling the buffer.
+--
+--   The results are pretty convincing for sequencing singleton builders built
+--   from a Word8 list. Use 'make bench-new-builder' to check the numbers.
+--
+--      factor 2.6 speedup from old builder to new builder using singletons
+--      factor 9   speedup from old builder to new builder using word8list
 --
 -----------------------------------------------------------------------------
 
@@ -96,39 +103,10 @@ import GHC.Word (uncheckedShiftRL64#)
 
 ------------------------------------------------------------------------
 
--- | A 'NewBuilder' is an efficient way to build lazy 'L.ByteString's.
--- There are several functions for constructing 'NewBuilder's, but only one
--- to inspect them: to extract any data, you have to turn them into lazy
--- 'L.ByteString's using 'toLazyByteString'.
---
--- Internally, a 'NewBuilder' constructs a lazy 'L.Bytestring' by filling byte
--- arrays piece by piece.  As each buffer is filled, it is \'popped\'
--- off, to become a new chunk of the resulting lazy 'L.ByteString'.
--- All this is hidden from the user of the 'NewBuilder'.
-
-data BuildSignal =
-    -- | Signal the completion of the write process.
-    Done {-# UNPACK #-} !Int -- ^ Number of bytes written to the buffer.
-    -- | Signal that the buffer is full and a new one needs to be allocated.
-  | BufferFull
-      {-# UNPACK #-} !Int -- ^ Minimal size required for the next buffer.
-      {-# UNPACK #-} !Int -- ^ Number of bytes written to the buffer.
-      {-# UNPACK #-} !BuildStep
-
-type BuildStep =  Ptr Word8 -- ^ Ptr to the next free byte in the buffer.
-               -> Int -- ^ Number of remaining free bytes in the buffer.
-               -> Int -- ^ Number of bytes already written to the buffer.
-               -> IO BuildSignal -- ^ Signal the next step to be taken.
-
-newtype NewBuilder = NewBuilder {
-      unNewBuilder :: BuildStep -> BuildStep
-    }
-
-
 main = defaultMain 
-    -- [ bench "new/singletons" $ nf benchNBsingletons byteData
-    [ bench "new/singletons-opt" $ nf benchNBOptsingletons byteData
-    -- , bench "old/singletons" $ nf benchOBsingletons byteData
+    [ bench "[Word8]/old/singletons" $ nf benchOBsingletons byteData
+    , bench "[Word8]/new/singletons" $ nf benchNBsingletons byteData
+    , bench "[Word8]/new/word8list" $ nf benchNBOptsingletons byteData
     ]
   where
     benchOBsingletons :: [Word8] -> Int64
@@ -147,19 +125,38 @@ main = defaultMain
     byteData = replicate repetitions 1
     {-# NOINLINE byteData #-}
 
+------------------------------------------------------------------------
 
-{-
-hdata Buffer = Buffer {-# UNPACK #-} !(ForeignPtr Word8)
-                     {-# UNPACK #-} !Int                -- offset
-                     {-# UNPACK #-} !Int                -- used bytes
-                     {-# UNPACK #-} !Int                -- length left
+-- | A 'NewBuilder' is an efficient way to build lazy 'L.ByteString's.
+-- There are several functions for constructing 'NewBuilder's, but only one
+-- to inspect them: to extract any data, you have to turn them into lazy
+-- 'L.ByteString's using 'toLazyByteString'.
+--
+-- Internally, a 'NewBuilder' constructs a lazy 'L.Bytestring' by filling byte
+-- arrays piece by piece.  As each buffer is filled, it is \'popped\'
+-- off, to become a new chunk of the resulting lazy 'L.ByteString'.
+-- All this is hidden from the user of the 'NewBuilder'.
+
+data BuildSignal =
+    -- | Signal the completion of the write process.
+    Done {-# UNPACK #-} !(Ptr Word8) -- ^ Pointer to the next free byte.
+    -- | Signal that the buffer is full and a new one needs to be allocated.
+  | BufferFull
+      {-# UNPACK #-} !Int         -- ^ Minimal size required for the next buffer.
+      {-# UNPACK #-} !(Ptr Word8) -- ^ Pointer to the next free byte.
+      {-# UNPACK #-} !BuildStep
+
+-- every build step checks that free + bytes-written <= last
+type BuildStep =  Ptr Word8      -- ^ Ptr to the next free byte in the buffer.
+               -> Ptr Word8      -- ^ Ptr to the first byte AFTER the buffer.
+               -> IO BuildSignal -- ^ Signal the next step to be taken.
+
+-- NOTE: Above we are lacking the capability to specify the strictness of the 
+-- first two arguments.
 
 newtype NewBuilder = NewBuilder {
-        -- Invariant (from Data.ByteString.Lazy):
-        --      The lists include no null ByteStrings.
-        runNewBuilder :: (Buffer -> [S.ByteString]) -> Buffer -> [S.ByteString]
+      unNewBuilder :: BuildStep -> BuildStep
     }
--}
 
 instance Monoid NewBuilder where
     mempty  = empty
@@ -184,10 +181,11 @@ empty = NewBuilder id
 singleton :: Word8 -> NewBuilder
 singleton x = NewBuilder step
   where
-    step k p l w
-      | 1 <= l    = do poke p x
-                       k (p `plusPtr` 1) (l-1) (w+1)
-      | otherwise = do return $ BufferFull 1 w (step k)
+    step k pf pe
+      | pf < pe    = do poke pf x
+                        let pf' = pf `plusPtr` 1
+                        pf' `seq` k pf' pe
+      | otherwise = do return $ BufferFull 1 pf (step k)
     {-# INLINE step #-}
 {-# INLINE singleton #-}
 
@@ -205,13 +203,13 @@ word8List :: [Word8] -> NewBuilder
 word8List []  = empty -- ensure non-emptyness postcondition
 word8List xs0 = NewBuilder $ step xs0
   where
-    step xs1 k p0 l0 w0 = go xs1 w0
+    step xs1 k pf0 pe0 = go xs1 pf0
       where
-        go []          !w = k (p0 `plusPtr` w) (l0 - w) w
-        go xs@(x':xs') !w
-          | w + 1 <= l0 = do pokeElemOff p0 w x'
-                             go xs' (w + 1)
-          | otherwise   = do return $ BufferFull 1 w (step xs k)
+        go []          !pf = k pf pe0
+        go xs@(x':xs') !pf
+          | pf < pe0  = do poke pf x'
+                           go xs' (pf `plusPtr` 1)
+          | otherwise = do return $ BufferFull 1 pf (step xs k)
         {-# INLINE go #-}
     {-# INLINE step #-}
 {-# INLINE word8List #-}
@@ -220,17 +218,18 @@ runBuilder :: NewBuilder -> [S.ByteString] -> [S.ByteString]
 runBuilder (NewBuilder b) k = 
     inlinePerformIO $ go defaultSize (b finalStep)
   where
-    finalStep _ _ !w = return $ Done w
+    finalStep pf _ = return $ Done pf
     go !size !step = do
        buf <- S.mallocByteString size
-       next <- withForeignPtr buf (\p -> step p size 0)
-       case next of
-         Done w | w /= 0    -> return $ S.PS buf 0 w : k 
-                | otherwise -> return $ k
-         BufferFull newSize w nextStep ->
-           -- INV: w must be non-zero
-           return $ S.PS buf 0 w : 
-                    inlinePerformIO (go (max newSize defaultSize) nextStep)
+       withForeignPtr buf $ \pf -> do
+         next <- step pf (pf `plusPtr` size)
+         case next of
+           Done pf' | pf == pf' -> return k
+                    | otherwise -> return $ S.PS buf 0 (pf' `minusPtr` pf) : k 
+           BufferFull newSize pf' nextStep ->
+             -- INV: pf < pf', i.e., some data must have been written  
+             return $ S.PS buf 0 (pf' `minusPtr` pf) : 
+                      inlinePerformIO (go (max newSize defaultSize) nextStep)
 {-# INLINE runBuilder #-}
 
 toLazyByteString :: NewBuilder -> L.ByteString

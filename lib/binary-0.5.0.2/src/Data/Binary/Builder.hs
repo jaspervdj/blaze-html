@@ -33,6 +33,8 @@ module Data.Binary.Builder (
     , fromByteString        -- :: S.ByteString -> Builder
     , fromLazyByteString    -- :: L.ByteString -> Builder
     , fromUnsafeWrite
+    , fillBuffer
+    , forceNewBuffer
 
     -- * Flushing the buffer state
     , flush
@@ -242,6 +244,34 @@ newBuffer size = do
     fp <- S.mallocByteString size
     return $! Buffer fp 0 0 size
 {-# INLINE newBuffer #-}
+
+-- SM: A function that allows for handing over control flow to the given
+-- function. 
+--
+--   The arguments are: length available, ptr to first byte.
+--   The results are  : the number of written bytes and a builder to be
+--                      executed for appending the remaining data.
+--
+-- NOTE: The returned builder must not reference the given Ptr Word8 anymore.
+--
+-- NOTE: There may be nicer constructions for achieving the same effect. This
+-- is just a first hack and I'm not 100% sure that it will always work
+-- correctly. That still needs to be verified.
+fillBuffer :: (Int -> Ptr Word8 -> IO (Int, Maybe Builder)) -> Builder
+fillBuffer f = Builder $ \ k buf@(Buffer fp o u l) -> inlinePerformIO $ do
+    (n, next) <- withForeignPtr fp (\p -> f l (p `plusPtr` (o+u)))
+    let buf' = Buffer fp o (u+n) (l-n)
+    case next of
+      Nothing -> return (k buf')
+      Just b  -> return (runBuilder b k buf')
+{-# INLINE fillBuffer #-}
+
+-- | SM: Forces the construction of a new buffer. Currently used in implementations
+-- making use of fillBuffer to ensure that a new buffer gets created if no more
+-- bytes were free.
+forceNewBuffer :: Builder
+forceNewBuffer = flush `append` unsafeLiftIO (const (newBuffer defaultSize))
+{-# INLINE forceNewBuffer #-}
 
 ------------------------------------------------------------------------
 -- Aligned, host order writes of storable values

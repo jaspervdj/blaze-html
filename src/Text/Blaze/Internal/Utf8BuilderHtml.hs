@@ -39,8 +39,9 @@ escapeHtmlFromText text = fromUnsafeWrite $
 -- proper escaping for HTML entities.
 --
 escapeHtmlFromString :: String -> Utf8Builder
-escapeHtmlFromString string = fromUnsafeWrite $
-    foldl (\w c -> w `mappend` escapeHtmlWriteChar c) mempty string
+escapeHtmlFromString = writeList escapeHtmlWriteChar
+ -- fromUnsafeWrite $ 
+  --  foldl (\w c -> w `mappend` escapeHtmlWriteChar c) mempty string
 
 -- | Write an unicode character to a 'Builder', doing HTML escaping.
 --

@@ -1,4 +1,4 @@
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving, BangPatterns #-}
 -- | A module for efficiently constructing a 'Builder'. This module offers more
 -- functions than the standard ones, optimized for HTML generation.
 --
@@ -34,6 +34,7 @@ module Text.Blaze.Internal.Utf8Builder
     , Write
     , fromUnsafeWrite
     , optimizeWriteBuilder
+    , writeList
 
       -- ** Functions to create a write.
     , writeChar
@@ -76,8 +77,10 @@ fromText text = fromUnsafeWrite $
 -- this function will not do any escaping.
 --
 fromString :: String -> Utf8Builder
-fromString string = fromUnsafeWrite $
-    foldl (\w c -> w `mappend` writeChar c) mempty string
+fromString = writeList writeChar
+  -- fromUnsafeWrite $
+    -- foldl (\w c -> w `mappend` writeChar c) mempty string
+
 
 -- | /O(n)./ A Builder taking a 'S.ByteString`, copying it. This function is
 -- considered unsafe, as a `S.ByteString` can contain invalid UTF-8 bytes, so
@@ -119,6 +122,25 @@ instance Monoid Write where
     mappend (Write l1 f1) (Write l2 f2) =
         Write (l1 + l2) (\ptr -> f1 ptr >> f2 (ptr `plusPtr` l1))
     {-# INLINE mappend #-}
+
+-- INV: The writes must be smaller than the default buffer size.
+--
+-- SM: Note that moving the control flow away from the Builder will give us the
+-- next level of speed. This way we have simple tail-recursive functions
+-- consuming data and filling the buffer.
+writeList :: (a -> Write) -> [a] -> Utf8Builder
+writeList f xs0 = Utf8Builder $ B.fillBuffer (go xs0 0)
+  where
+    go []         !w !l !p = return (w, Nothing) -- here should come the call to the next filler.
+    go xs@(x:xs') !w !l !p  = case f x of
+      Write n g 
+        | n <= l -> do
+            g p
+            go xs' (w+n) (l-n) (p `plusPtr` n)
+        | otherwise ->
+            return (w, Just (B.forceNewBuffer `mappend` B.fillBuffer (go xs 0)))
+    {-# INLINE go #-}
+{-# INLINE writeList #-}
 
 -- | Create a builder from a write.
 --

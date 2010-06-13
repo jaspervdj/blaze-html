@@ -104,23 +104,27 @@ import GHC.Word (uncheckedShiftRL64#)
 ------------------------------------------------------------------------
 
 main = defaultMain $
-    [ bench "[Word8]/old/singletons" $ nf benchOBsingletons byteData   ] ++
-    [ bench "[Word8]/new/singletons" $ nf benchNBsingletons byteData   ] ++
-    [ bench "[Word8]/new/word8list" $ nf benchNBOptsingletons byteData ] ++
-    [ bench "[Word8]/new/bytestring" $ nf benchNBbyteString byteStringData ] ++
+    -- [ bench "[Word8]/old/singletons" $ nf benchOBsingletons byteData   ] ++
+    -- [ bench "[Word8]/new/singletons" $ nf benchNBsingletons byteData   ] ++
+    -- [ bench "[Word8]/new/word8list" $ nf benchNBOptsingletons byteData ] ++
+    [ bench "[Bytestring]/new/fromByteString" $ nf benchNBbyteString byteStringData ] ++
+    [ bench "[Bytestring]/old/fromByteString" $ nf benchOBbyteString byteStringData ] ++
     []
-  where
-    benchOBsingletons :: [Word8] -> Int64
-    benchOBsingletons = L.length . B.toLazyByteString . mconcat . map B.singleton
 
-    benchNBsingletons :: [Word8] -> Int64
-    benchNBsingletons = L.length . toLazyByteString . mconcat . map singleton
+benchOBsingletons :: [Word8] -> Int64
+benchOBsingletons = L.length . B.toLazyByteString . mconcat . map B.singleton
 
-    benchNBOptsingletons :: [Word8] -> Int64
-    benchNBOptsingletons = L.length . toLazyByteString . word8List
+benchNBsingletons :: [Word8] -> Int64
+benchNBsingletons = L.length . toLazyByteString . mconcat . map singleton
 
-    benchNBbyteString :: [S.ByteString] -> Int64
-    benchNBbyteString = L.length . toLazyByteString . mconcat . map fromByteString
+benchNBOptsingletons :: [Word8] -> Int64
+benchNBOptsingletons = L.length . toLazyByteString . word8List
+
+benchNBbyteString :: [S.ByteString] -> Int64
+benchNBbyteString = L.length . toLazyByteString . mconcat . map copyByteString
+
+benchOBbyteString :: [S.ByteString] -> Int64
+benchOBbyteString = L.length . B.toLazyByteString . mconcat . map B.copyByteString
 
 
 repetitions :: Int
@@ -131,7 +135,7 @@ byteData = take repetitions $ cycle [1..]
 {-# NOINLINE byteData #-}
 
 byteStringData :: [S.ByteString]
-byteStringData = replicate 100 "<img>"
+byteStringData = replicate 20000 "<img>"
 {-# NOINLINE byteStringData #-}
 
 ------------------------------------------------------------------------
@@ -201,8 +205,8 @@ singleton x = fromWrite $ Write 1 (\pf -> poke pf x)
 
 -- | /O(n)./ A Builder taking a 'S.ByteString`, copying it.
 --
-fromByteString :: S.ByteString -> NewBuilder
-fromByteString byteString = fromWrite $ Write l f
+copyByteString :: S.ByteString -> NewBuilder
+copyByteString byteString = fromWrite $ Write l f
   where
     (fptr, o, l) = S.toForeignPtr byteString
     f pf = do copyBytes pf (unsafeForeignPtrToPtr fptr `plusPtr` o) l

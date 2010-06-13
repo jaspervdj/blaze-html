@@ -1,4 +1,4 @@
-{-# LANGUAGE CPP, BangPatterns #-}
+{-# LANGUAGE CPP, BangPatterns, OverloadedStrings #-}
 {-# OPTIONS_GHC -fglasgow-exts #-}
 -- for unboxed shifts
 
@@ -107,6 +107,7 @@ main = defaultMain $
     [ bench "[Word8]/old/singletons" $ nf benchOBsingletons byteData   ] ++
     [ bench "[Word8]/new/singletons" $ nf benchNBsingletons byteData   ] ++
     [ bench "[Word8]/new/word8list" $ nf benchNBOptsingletons byteData ] ++
+    [ bench "[Word8]/new/bytestring" $ nf benchNBbyteString byteStringData ] ++
     []
   where
     benchOBsingletons :: [Word8] -> Int64
@@ -118,12 +119,20 @@ main = defaultMain $
     benchNBOptsingletons :: [Word8] -> Int64
     benchNBOptsingletons = L.length . toLazyByteString . word8List
 
+    benchNBbyteString :: [S.ByteString] -> Int64
+    benchNBbyteString = L.length . toLazyByteString . mconcat . map fromByteString
+
+
 repetitions :: Int
 repetitions = 100000
 
 byteData :: [Word8]
 byteData = take repetitions $ cycle [1..]
 {-# NOINLINE byteData #-}
+
+byteStringData :: [S.ByteString]
+byteStringData = replicate 100 "<img>"
+{-# NOINLINE byteStringData #-}
 
 ------------------------------------------------------------------------
 
@@ -189,6 +198,15 @@ empty = NewBuilder id
 --
 singleton :: Word8 -> NewBuilder
 singleton x = fromWrite $ Write 1 (\pf -> poke pf x)
+
+-- | /O(n)./ A Builder taking a 'S.ByteString`, copying it.
+--
+fromByteString :: S.ByteString -> NewBuilder
+fromByteString byteString = fromWrite $ Write l f
+  where
+    (fptr, o, l) = S.toForeignPtr byteString
+    f pf = do copyBytes pf (unsafeForeignPtrToPtr fptr `plusPtr` o) l
+              touchForeignPtr fptr
 
 -- | /O(n)./ Construct a NewBuilder from a write abstraction.
 --

@@ -15,8 +15,9 @@ module Text.Blaze.Internal
       -- * Creating custom tags and attributes.
     , parent
     , leaf
-    , attribute
     , open
+    , attribute
+    , dataAttribute
 
       -- * Converting values to HTML.
     , text
@@ -165,6 +166,23 @@ attribute key value = Attribute $ \(Html h) -> Html $ \attrs ->
               `mappend` attributeValue value
               `mappend` B.fromChar '"'
 {-# INLINE attribute #-}
+
+-- | From HTML 5 onwards, the user is able to specify custom data attributes.
+--
+-- An example:
+--
+-- > <p data-foo="bar">Hello.</p>
+--
+-- We support this in BlazeHtml using this funcion. The above fragment could
+-- be described using BlazeHtml with:
+--
+-- > p ! dataAttribute "foo" "bar" $ "Hello."
+--
+dataAttribute :: Tag             -- ^ Name of the attribute.
+              -> AttributeValue  -- ^ Value for the attribute.
+              -> Attribute       -- ^ Resulting HTML attribute.
+dataAttribute tag = attribute (" data-" `mappend` tag `mappend` "=\"")
+{-# INLINE dataAttribute #-}
 
 class Attributable h where
     -- | Apply an attribute to an element.

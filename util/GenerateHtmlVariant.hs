@@ -219,7 +219,7 @@ makeAttribute name = unlines
     , "--"
     , "-- Example:"
     , "--"
-    , "-- > div <! " ++ function ++ " \"bar\" $ \"Hello.\""
+    , "-- > div ! " ++ function ++ " \"bar\" $ \"Hello.\""
     , "--"
     , "-- Result:"
     , "--"

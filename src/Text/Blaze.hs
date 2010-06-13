@@ -9,6 +9,9 @@ module Text.Blaze
     , Attribute
     , AttributeValue
 
+      -- * Creating attributes.
+    , dataAttribute
+
       -- * Converting values to HTML.
     , text
     , preEscapedText

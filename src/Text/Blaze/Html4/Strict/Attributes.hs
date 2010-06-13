@@ -113,7 +113,7 @@ import Text.Blaze (Attribute, AttributeValue, attribute)
 --
 abbr :: AttributeValue  -- ^ Attribute value.
      -> Attribute       -- ^ Resulting attribute.
-abbr = attribute "abbr"
+abbr = attribute " abbr=\""
 {-# INLINE abbr #-}
 
 -- | Combinator for the @accept@ attribute.
@@ -128,7 +128,7 @@ abbr = attribute "abbr"
 --
 accept :: AttributeValue  -- ^ Attribute value.
        -> Attribute       -- ^ Resulting attribute.
-accept = attribute "accept"
+accept = attribute " accept=\""
 {-# INLINE accept #-}
 
 -- | Combinator for the @accesskey@ attribute.
@@ -143,7 +143,7 @@ accept = attribute "accept"
 --
 accesskey :: AttributeValue  -- ^ Attribute value.
           -> Attribute       -- ^ Resulting attribute.
-accesskey = attribute "accesskey"
+accesskey = attribute " accesskey=\""
 {-# INLINE accesskey #-}
 
 -- | Combinator for the @action@ attribute.
@@ -158,7 +158,7 @@ accesskey = attribute "accesskey"
 --
 action :: AttributeValue  -- ^ Attribute value.
        -> Attribute       -- ^ Resulting attribute.
-action = attribute "action"
+action = attribute " action=\""
 {-# INLINE action #-}
 
 -- | Combinator for the @align@ attribute.
@@ -173,7 +173,7 @@ action = attribute "action"
 --
 align :: AttributeValue  -- ^ Attribute value.
       -> Attribute       -- ^ Resulting attribute.
-align = attribute "align"
+align = attribute " align=\""
 {-# INLINE align #-}
 
 -- | Combinator for the @alt@ attribute.
@@ -188,7 +188,7 @@ align = attribute "align"
 --
 alt :: AttributeValue  -- ^ Attribute value.
     -> Attribute       -- ^ Resulting attribute.
-alt = attribute "alt"
+alt = attribute " alt=\""
 {-# INLINE alt #-}
 
 -- | Combinator for the @archive@ attribute.
@@ -203,7 +203,7 @@ alt = attribute "alt"
 --
 archive :: AttributeValue  -- ^ Attribute value.
         -> Attribute       -- ^ Resulting attribute.
-archive = attribute "archive"
+archive = attribute " archive=\""
 {-# INLINE archive #-}
 
 -- | Combinator for the @axis@ attribute.
@@ -218,7 +218,7 @@ archive = attribute "archive"
 --
 axis :: AttributeValue  -- ^ Attribute value.
      -> Attribute       -- ^ Resulting attribute.
-axis = attribute "axis"
+axis = attribute " axis=\""
 {-# INLINE axis #-}
 
 -- | Combinator for the @border@ attribute.
@@ -233,7 +233,7 @@ axis = attribute "axis"
 --
 border :: AttributeValue  -- ^ Attribute value.
        -> Attribute       -- ^ Resulting attribute.
-border = attribute "border"
+border = attribute " border=\""
 {-# INLINE border #-}
 
 -- | Combinator for the @cellpadding@ attribute.
@@ -248,7 +248,7 @@ border = attribute "border"
 --
 cellpadding :: AttributeValue  -- ^ Attribute value.
             -> Attribute       -- ^ Resulting attribute.
-cellpadding = attribute "cellpadding"
+cellpadding = attribute " cellpadding=\""
 {-# INLINE cellpadding #-}
 
 -- | Combinator for the @cellspacing@ attribute.
@@ -263,7 +263,7 @@ cellpadding = attribute "cellpadding"
 --
 cellspacing :: AttributeValue  -- ^ Attribute value.
             -> Attribute       -- ^ Resulting attribute.
-cellspacing = attribute "cellspacing"
+cellspacing = attribute " cellspacing=\""
 {-# INLINE cellspacing #-}
 
 -- | Combinator for the @char@ attribute.
@@ -278,7 +278,7 @@ cellspacing = attribute "cellspacing"
 --
 char :: AttributeValue  -- ^ Attribute value.
      -> Attribute       -- ^ Resulting attribute.
-char = attribute "char"
+char = attribute " char=\""
 {-# INLINE char #-}
 
 -- | Combinator for the @charoff@ attribute.
@@ -293,7 +293,7 @@ char = attribute "char"
 --
 charoff :: AttributeValue  -- ^ Attribute value.
         -> Attribute       -- ^ Resulting attribute.
-charoff = attribute "charoff"
+charoff = attribute " charoff=\""
 {-# INLINE charoff #-}
 
 -- | Combinator for the @charset@ attribute.
@@ -308,7 +308,7 @@ charoff = attribute "charoff"
 --
 charset :: AttributeValue  -- ^ Attribute value.
         -> Attribute       -- ^ Resulting attribute.
-charset = attribute "charset"
+charset = attribute " charset=\""
 {-# INLINE charset #-}
 
 -- | Combinator for the @checked@ attribute.
@@ -323,7 +323,7 @@ charset = attribute "charset"
 --
 checked :: AttributeValue  -- ^ Attribute value.
         -> Attribute       -- ^ Resulting attribute.
-checked = attribute "checked"
+checked = attribute " checked=\""
 {-# INLINE checked #-}
 
 -- | Combinator for the @cite@ attribute.
@@ -338,7 +338,7 @@ checked = attribute "checked"
 --
 cite :: AttributeValue  -- ^ Attribute value.
      -> Attribute       -- ^ Resulting attribute.
-cite = attribute "cite"
+cite = attribute " cite=\""
 {-# INLINE cite #-}
 
 -- | Combinator for the @class@ attribute.
@@ -353,7 +353,7 @@ cite = attribute "cite"
 --
 class_ :: AttributeValue  -- ^ Attribute value.
        -> Attribute       -- ^ Resulting attribute.
-class_ = attribute "class"
+class_ = attribute " class=\""
 {-# INLINE class_ #-}
 
 -- | Combinator for the @classid@ attribute.
@@ -368,7 +368,7 @@ class_ = attribute "class"
 --
 classid :: AttributeValue  -- ^ Attribute value.
         -> Attribute       -- ^ Resulting attribute.
-classid = attribute "classid"
+classid = attribute " classid=\""
 {-# INLINE classid #-}
 
 -- | Combinator for the @codebase@ attribute.
@@ -383,7 +383,7 @@ classid = attribute "classid"
 --
 codebase :: AttributeValue  -- ^ Attribute value.
          -> Attribute       -- ^ Resulting attribute.
-codebase = attribute "codebase"
+codebase = attribute " codebase=\""
 {-# INLINE codebase #-}
 
 -- | Combinator for the @codetype@ attribute.
@@ -398,7 +398,7 @@ codebase = attribute "codebase"
 --
 codetype :: AttributeValue  -- ^ Attribute value.
          -> Attribute       -- ^ Resulting attribute.
-codetype = attribute "codetype"
+codetype = attribute " codetype=\""
 {-# INLINE codetype #-}
 
 -- | Combinator for the @cols@ attribute.
@@ -413,7 +413,7 @@ codetype = attribute "codetype"
 --
 cols :: AttributeValue  -- ^ Attribute value.
      -> Attribute       -- ^ Resulting attribute.
-cols = attribute "cols"
+cols = attribute " cols=\""
 {-# INLINE cols #-}
 
 -- | Combinator for the @colspan@ attribute.
@@ -428,7 +428,7 @@ cols = attribute "cols"
 --
 colspan :: AttributeValue  -- ^ Attribute value.
         -> Attribute       -- ^ Resulting attribute.
-colspan = attribute "colspan"
+colspan = attribute " colspan=\""
 {-# INLINE colspan #-}
 
 -- | Combinator for the @content@ attribute.
@@ -443,7 +443,7 @@ colspan = attribute "colspan"
 --
 content :: AttributeValue  -- ^ Attribute value.
         -> Attribute       -- ^ Resulting attribute.
-content = attribute "content"
+content = attribute " content=\""
 {-# INLINE content #-}
 
 -- | Combinator for the @coords@ attribute.
@@ -458,7 +458,7 @@ content = attribute "content"
 --
 coords :: AttributeValue  -- ^ Attribute value.
        -> Attribute       -- ^ Resulting attribute.
-coords = attribute "coords"
+coords = attribute " coords=\""
 {-# INLINE coords #-}
 
 -- | Combinator for the @data@ attribute.
@@ -473,7 +473,7 @@ coords = attribute "coords"
 --
 data_ :: AttributeValue  -- ^ Attribute value.
       -> Attribute       -- ^ Resulting attribute.
-data_ = attribute "data"
+data_ = attribute " data=\""
 {-# INLINE data_ #-}
 
 -- | Combinator for the @datetime@ attribute.
@@ -488,7 +488,7 @@ data_ = attribute "data"
 --
 datetime :: AttributeValue  -- ^ Attribute value.
          -> Attribute       -- ^ Resulting attribute.
-datetime = attribute "datetime"
+datetime = attribute " datetime=\""
 {-# INLINE datetime #-}
 
 -- | Combinator for the @declare@ attribute.
@@ -503,7 +503,7 @@ datetime = attribute "datetime"
 --
 declare :: AttributeValue  -- ^ Attribute value.
         -> Attribute       -- ^ Resulting attribute.
-declare = attribute "declare"
+declare = attribute " declare=\""
 {-# INLINE declare #-}
 
 -- | Combinator for the @defer@ attribute.
@@ -518,7 +518,7 @@ declare = attribute "declare"
 --
 defer :: AttributeValue  -- ^ Attribute value.
       -> Attribute       -- ^ Resulting attribute.
-defer = attribute "defer"
+defer = attribute " defer=\""
 {-# INLINE defer #-}
 
 -- | Combinator for the @dir@ attribute.
@@ -533,7 +533,7 @@ defer = attribute "defer"
 --
 dir :: AttributeValue  -- ^ Attribute value.
     -> Attribute       -- ^ Resulting attribute.
-dir = attribute "dir"
+dir = attribute " dir=\""
 {-# INLINE dir #-}
 
 -- | Combinator for the @disabled@ attribute.
@@ -548,7 +548,7 @@ dir = attribute "dir"
 --
 disabled :: AttributeValue  -- ^ Attribute value.
          -> Attribute       -- ^ Resulting attribute.
-disabled = attribute "disabled"
+disabled = attribute " disabled=\""
 {-# INLINE disabled #-}
 
 -- | Combinator for the @for@ attribute.
@@ -563,7 +563,7 @@ disabled = attribute "disabled"
 --
 for :: AttributeValue  -- ^ Attribute value.
     -> Attribute       -- ^ Resulting attribute.
-for = attribute "for"
+for = attribute " for=\""
 {-# INLINE for #-}
 
 -- | Combinator for the @frame@ attribute.
@@ -578,7 +578,7 @@ for = attribute "for"
 --
 frame :: AttributeValue  -- ^ Attribute value.
       -> Attribute       -- ^ Resulting attribute.
-frame = attribute "frame"
+frame = attribute " frame=\""
 {-# INLINE frame #-}
 
 -- | Combinator for the @headers@ attribute.
@@ -593,7 +593,7 @@ frame = attribute "frame"
 --
 headers :: AttributeValue  -- ^ Attribute value.
         -> Attribute       -- ^ Resulting attribute.
-headers = attribute "headers"
+headers = attribute " headers=\""
 {-# INLINE headers #-}
 
 -- | Combinator for the @height@ attribute.
@@ -608,7 +608,7 @@ headers = attribute "headers"
 --
 height :: AttributeValue  -- ^ Attribute value.
        -> Attribute       -- ^ Resulting attribute.
-height = attribute "height"
+height = attribute " height=\""
 {-# INLINE height #-}
 
 -- | Combinator for the @href@ attribute.
@@ -623,7 +623,7 @@ height = attribute "height"
 --
 href :: AttributeValue  -- ^ Attribute value.
      -> Attribute       -- ^ Resulting attribute.
-href = attribute "href"
+href = attribute " href=\""
 {-# INLINE href #-}
 
 -- | Combinator for the @hreflang@ attribute.
@@ -638,7 +638,7 @@ href = attribute "href"
 --
 hreflang :: AttributeValue  -- ^ Attribute value.
          -> Attribute       -- ^ Resulting attribute.
-hreflang = attribute "hreflang"
+hreflang = attribute " hreflang=\""
 {-# INLINE hreflang #-}
 
 -- | Combinator for the @http-equiv@ attribute.
@@ -653,7 +653,7 @@ hreflang = attribute "hreflang"
 --
 http_equiv :: AttributeValue  -- ^ Attribute value.
            -> Attribute       -- ^ Resulting attribute.
-http_equiv = attribute "http-equiv"
+http_equiv = attribute " http-equiv=\""
 {-# INLINE http_equiv #-}
 
 -- | Combinator for the @id@ attribute.
@@ -668,7 +668,7 @@ http_equiv = attribute "http-equiv"
 --
 id :: AttributeValue  -- ^ Attribute value.
    -> Attribute       -- ^ Resulting attribute.
-id = attribute "id"
+id = attribute " id=\""
 {-# INLINE id #-}
 
 -- | Combinator for the @label@ attribute.
@@ -683,7 +683,7 @@ id = attribute "id"
 --
 label :: AttributeValue  -- ^ Attribute value.
       -> Attribute       -- ^ Resulting attribute.
-label = attribute "label"
+label = attribute " label=\""
 {-# INLINE label #-}
 
 -- | Combinator for the @lang@ attribute.
@@ -698,7 +698,7 @@ label = attribute "label"
 --
 lang :: AttributeValue  -- ^ Attribute value.
      -> Attribute       -- ^ Resulting attribute.
-lang = attribute "lang"
+lang = attribute " lang=\""
 {-# INLINE lang #-}
 
 -- | Combinator for the @maxlength@ attribute.
@@ -713,7 +713,7 @@ lang = attribute "lang"
 --
 maxlength :: AttributeValue  -- ^ Attribute value.
           -> Attribute       -- ^ Resulting attribute.
-maxlength = attribute "maxlength"
+maxlength = attribute " maxlength=\""
 {-# INLINE maxlength #-}
 
 -- | Combinator for the @media@ attribute.
@@ -728,7 +728,7 @@ maxlength = attribute "maxlength"
 --
 media :: AttributeValue  -- ^ Attribute value.
       -> Attribute       -- ^ Resulting attribute.
-media = attribute "media"
+media = attribute " media=\""
 {-# INLINE media #-}
 
 -- | Combinator for the @method@ attribute.
@@ -743,7 +743,7 @@ media = attribute "media"
 --
 method :: AttributeValue  -- ^ Attribute value.
        -> Attribute       -- ^ Resulting attribute.
-method = attribute "method"
+method = attribute " method=\""
 {-# INLINE method #-}
 
 -- | Combinator for the @multiple@ attribute.
@@ -758,7 +758,7 @@ method = attribute "method"
 --
 multiple :: AttributeValue  -- ^ Attribute value.
          -> Attribute       -- ^ Resulting attribute.
-multiple = attribute "multiple"
+multiple = attribute " multiple=\""
 {-# INLINE multiple #-}
 
 -- | Combinator for the @name@ attribute.
@@ -773,7 +773,7 @@ multiple = attribute "multiple"
 --
 name :: AttributeValue  -- ^ Attribute value.
      -> Attribute       -- ^ Resulting attribute.
-name = attribute "name"
+name = attribute " name=\""
 {-# INLINE name #-}
 
 -- | Combinator for the @nohref@ attribute.
@@ -788,7 +788,7 @@ name = attribute "name"
 --
 nohref :: AttributeValue  -- ^ Attribute value.
        -> Attribute       -- ^ Resulting attribute.
-nohref = attribute "nohref"
+nohref = attribute " nohref=\""
 {-# INLINE nohref #-}
 
 -- | Combinator for the @onabort@ attribute.
@@ -803,7 +803,7 @@ nohref = attribute "nohref"
 --
 onabort :: AttributeValue  -- ^ Attribute value.
         -> Attribute       -- ^ Resulting attribute.
-onabort = attribute "onabort"
+onabort = attribute " onabort=\""
 {-# INLINE onabort #-}
 
 -- | Combinator for the @onblur@ attribute.
@@ -818,7 +818,7 @@ onabort = attribute "onabort"
 --
 onblur :: AttributeValue  -- ^ Attribute value.
        -> Attribute       -- ^ Resulting attribute.
-onblur = attribute "onblur"
+onblur = attribute " onblur=\""
 {-# INLINE onblur #-}
 
 -- | Combinator for the @onchange@ attribute.
@@ -833,7 +833,7 @@ onblur = attribute "onblur"
 --
 onchange :: AttributeValue  -- ^ Attribute value.
          -> Attribute       -- ^ Resulting attribute.
-onchange = attribute "onchange"
+onchange = attribute " onchange=\""
 {-# INLINE onchange #-}
 
 -- | Combinator for the @onclick@ attribute.
@@ -848,7 +848,7 @@ onchange = attribute "onchange"
 --
 onclick :: AttributeValue  -- ^ Attribute value.
         -> Attribute       -- ^ Resulting attribute.
-onclick = attribute "onclick"
+onclick = attribute " onclick=\""
 {-# INLINE onclick #-}
 
 -- | Combinator for the @ondblclick@ attribute.
@@ -863,7 +863,7 @@ onclick = attribute "onclick"
 --
 ondblclick :: AttributeValue  -- ^ Attribute value.
            -> Attribute       -- ^ Resulting attribute.
-ondblclick = attribute "ondblclick"
+ondblclick = attribute " ondblclick=\""
 {-# INLINE ondblclick #-}
 
 -- | Combinator for the @onfocus@ attribute.
@@ -878,7 +878,7 @@ ondblclick = attribute "ondblclick"
 --
 onfocus :: AttributeValue  -- ^ Attribute value.
         -> Attribute       -- ^ Resulting attribute.
-onfocus = attribute "onfocus"
+onfocus = attribute " onfocus=\""
 {-# INLINE onfocus #-}
 
 -- | Combinator for the @onkeydown@ attribute.
@@ -893,7 +893,7 @@ onfocus = attribute "onfocus"
 --
 onkeydown :: AttributeValue  -- ^ Attribute value.
           -> Attribute       -- ^ Resulting attribute.
-onkeydown = attribute "onkeydown"
+onkeydown = attribute " onkeydown=\""
 {-# INLINE onkeydown #-}
 
 -- | Combinator for the @onkeypress@ attribute.
@@ -908,7 +908,7 @@ onkeydown = attribute "onkeydown"
 --
 onkeypress :: AttributeValue  -- ^ Attribute value.
            -> Attribute       -- ^ Resulting attribute.
-onkeypress = attribute "onkeypress"
+onkeypress = attribute " onkeypress=\""
 {-# INLINE onkeypress #-}
 
 -- | Combinator for the @onkeyup@ attribute.
@@ -923,7 +923,7 @@ onkeypress = attribute "onkeypress"
 --
 onkeyup :: AttributeValue  -- ^ Attribute value.
         -> Attribute       -- ^ Resulting attribute.
-onkeyup = attribute "onkeyup"
+onkeyup = attribute " onkeyup=\""
 {-# INLINE onkeyup #-}
 
 -- | Combinator for the @onload@ attribute.
@@ -938,7 +938,7 @@ onkeyup = attribute "onkeyup"
 --
 onload :: AttributeValue  -- ^ Attribute value.
        -> Attribute       -- ^ Resulting attribute.
-onload = attribute "onload"
+onload = attribute " onload=\""
 {-# INLINE onload #-}
 
 -- | Combinator for the @onmousedown@ attribute.
@@ -953,7 +953,7 @@ onload = attribute "onload"
 --
 onmousedown :: AttributeValue  -- ^ Attribute value.
             -> Attribute       -- ^ Resulting attribute.
-onmousedown = attribute "onmousedown"
+onmousedown = attribute " onmousedown=\""
 {-# INLINE onmousedown #-}
 
 -- | Combinator for the @onmousemove@ attribute.
@@ -968,7 +968,7 @@ onmousedown = attribute "onmousedown"
 --
 onmousemove :: AttributeValue  -- ^ Attribute value.
             -> Attribute       -- ^ Resulting attribute.
-onmousemove = attribute "onmousemove"
+onmousemove = attribute " onmousemove=\""
 {-# INLINE onmousemove #-}
 
 -- | Combinator for the @onmouseout@ attribute.
@@ -983,7 +983,7 @@ onmousemove = attribute "onmousemove"
 --
 onmouseout :: AttributeValue  -- ^ Attribute value.
            -> Attribute       -- ^ Resulting attribute.
-onmouseout = attribute "onmouseout"
+onmouseout = attribute " onmouseout=\""
 {-# INLINE onmouseout #-}
 
 -- | Combinator for the @onmouseover@ attribute.
@@ -998,7 +998,7 @@ onmouseout = attribute "onmouseout"
 --
 onmouseover :: AttributeValue  -- ^ Attribute value.
             -> Attribute       -- ^ Resulting attribute.
-onmouseover = attribute "onmouseover"
+onmouseover = attribute " onmouseover=\""
 {-# INLINE onmouseover #-}
 
 -- | Combinator for the @onmouseup@ attribute.
@@ -1013,7 +1013,7 @@ onmouseover = attribute "onmouseover"
 --
 onmouseup :: AttributeValue  -- ^ Attribute value.
           -> Attribute       -- ^ Resulting attribute.
-onmouseup = attribute "onmouseup"
+onmouseup = attribute " onmouseup=\""
 {-# INLINE onmouseup #-}
 
 -- | Combinator for the @onreset@ attribute.
@@ -1028,7 +1028,7 @@ onmouseup = attribute "onmouseup"
 --
 onreset :: AttributeValue  -- ^ Attribute value.
         -> Attribute       -- ^ Resulting attribute.
-onreset = attribute "onreset"
+onreset = attribute " onreset=\""
 {-# INLINE onreset #-}
 
 -- | Combinator for the @onselect@ attribute.
@@ -1043,7 +1043,7 @@ onreset = attribute "onreset"
 --
 onselect :: AttributeValue  -- ^ Attribute value.
          -> Attribute       -- ^ Resulting attribute.
-onselect = attribute "onselect"
+onselect = attribute " onselect=\""
 {-# INLINE onselect #-}
 
 -- | Combinator for the @onsubmit@ attribute.
@@ -1058,7 +1058,7 @@ onselect = attribute "onselect"
 --
 onsubmit :: AttributeValue  -- ^ Attribute value.
          -> Attribute       -- ^ Resulting attribute.
-onsubmit = attribute "onsubmit"
+onsubmit = attribute " onsubmit=\""
 {-# INLINE onsubmit #-}
 
 -- | Combinator for the @onunload@ attribute.
@@ -1073,7 +1073,7 @@ onsubmit = attribute "onsubmit"
 --
 onunload :: AttributeValue  -- ^ Attribute value.
          -> Attribute       -- ^ Resulting attribute.
-onunload = attribute "onunload"
+onunload = attribute " onunload=\""
 {-# INLINE onunload #-}
 
 -- | Combinator for the @profile@ attribute.
@@ -1088,7 +1088,7 @@ onunload = attribute "onunload"
 --
 profile :: AttributeValue  -- ^ Attribute value.
         -> Attribute       -- ^ Resulting attribute.
-profile = attribute "profile"
+profile = attribute " profile=\""
 {-# INLINE profile #-}
 
 -- | Combinator for the @readonly@ attribute.
@@ -1103,7 +1103,7 @@ profile = attribute "profile"
 --
 readonly :: AttributeValue  -- ^ Attribute value.
          -> Attribute       -- ^ Resulting attribute.
-readonly = attribute "readonly"
+readonly = attribute " readonly=\""
 {-# INLINE readonly #-}
 
 -- | Combinator for the @rel@ attribute.
@@ -1118,7 +1118,7 @@ readonly = attribute "readonly"
 --
 rel :: AttributeValue  -- ^ Attribute value.
     -> Attribute       -- ^ Resulting attribute.
-rel = attribute "rel"
+rel = attribute " rel=\""
 {-# INLINE rel #-}
 
 -- | Combinator for the @rev@ attribute.
@@ -1133,7 +1133,7 @@ rel = attribute "rel"
 --
 rev :: AttributeValue  -- ^ Attribute value.
     -> Attribute       -- ^ Resulting attribute.
-rev = attribute "rev"
+rev = attribute " rev=\""
 {-# INLINE rev #-}
 
 -- | Combinator for the @rows@ attribute.
@@ -1148,7 +1148,7 @@ rev = attribute "rev"
 --
 rows :: AttributeValue  -- ^ Attribute value.
      -> Attribute       -- ^ Resulting attribute.
-rows = attribute "rows"
+rows = attribute " rows=\""
 {-# INLINE rows #-}
 
 -- | Combinator for the @rowspan@ attribute.
@@ -1163,7 +1163,7 @@ rows = attribute "rows"
 --
 rowspan :: AttributeValue  -- ^ Attribute value.
         -> Attribute       -- ^ Resulting attribute.
-rowspan = attribute "rowspan"
+rowspan = attribute " rowspan=\""
 {-# INLINE rowspan #-}
 
 -- | Combinator for the @rules@ attribute.
@@ -1178,7 +1178,7 @@ rowspan = attribute "rowspan"
 --
 rules :: AttributeValue  -- ^ Attribute value.
       -> Attribute       -- ^ Resulting attribute.
-rules = attribute "rules"
+rules = attribute " rules=\""
 {-# INLINE rules #-}
 
 -- | Combinator for the @scheme@ attribute.
@@ -1193,7 +1193,7 @@ rules = attribute "rules"
 --
 scheme :: AttributeValue  -- ^ Attribute value.
        -> Attribute       -- ^ Resulting attribute.
-scheme = attribute "scheme"
+scheme = attribute " scheme=\""
 {-# INLINE scheme #-}
 
 -- | Combinator for the @scope@ attribute.
@@ -1208,7 +1208,7 @@ scheme = attribute "scheme"
 --
 scope :: AttributeValue  -- ^ Attribute value.
       -> Attribute       -- ^ Resulting attribute.
-scope = attribute "scope"
+scope = attribute " scope=\""
 {-# INLINE scope #-}
 
 -- | Combinator for the @selected@ attribute.
@@ -1223,7 +1223,7 @@ scope = attribute "scope"
 --
 selected :: AttributeValue  -- ^ Attribute value.
          -> Attribute       -- ^ Resulting attribute.
-selected = attribute "selected"
+selected = attribute " selected=\""
 {-# INLINE selected #-}
 
 -- | Combinator for the @shape@ attribute.
@@ -1238,7 +1238,7 @@ selected = attribute "selected"
 --
 shape :: AttributeValue  -- ^ Attribute value.
       -> Attribute       -- ^ Resulting attribute.
-shape = attribute "shape"
+shape = attribute " shape=\""
 {-# INLINE shape #-}
 
 -- | Combinator for the @size@ attribute.
@@ -1253,7 +1253,7 @@ shape = attribute "shape"
 --
 size :: AttributeValue  -- ^ Attribute value.
      -> Attribute       -- ^ Resulting attribute.
-size = attribute "size"
+size = attribute " size=\""
 {-# INLINE size #-}
 
 -- | Combinator for the @span@ attribute.
@@ -1268,7 +1268,7 @@ size = attribute "size"
 --
 span :: AttributeValue  -- ^ Attribute value.
      -> Attribute       -- ^ Resulting attribute.
-span = attribute "span"
+span = attribute " span=\""
 {-# INLINE span #-}
 
 -- | Combinator for the @src@ attribute.
@@ -1283,7 +1283,7 @@ span = attribute "span"
 --
 src :: AttributeValue  -- ^ Attribute value.
     -> Attribute       -- ^ Resulting attribute.
-src = attribute "src"
+src = attribute " src=\""
 {-# INLINE src #-}
 
 -- | Combinator for the @standby@ attribute.
@@ -1298,7 +1298,7 @@ src = attribute "src"
 --
 standby :: AttributeValue  -- ^ Attribute value.
         -> Attribute       -- ^ Resulting attribute.
-standby = attribute "standby"
+standby = attribute " standby=\""
 {-# INLINE standby #-}
 
 -- | Combinator for the @style@ attribute.
@@ -1313,7 +1313,7 @@ standby = attribute "standby"
 --
 style :: AttributeValue  -- ^ Attribute value.
       -> Attribute       -- ^ Resulting attribute.
-style = attribute "style"
+style = attribute " style=\""
 {-# INLINE style #-}
 
 -- | Combinator for the @summary@ attribute.
@@ -1328,7 +1328,7 @@ style = attribute "style"
 --
 summary :: AttributeValue  -- ^ Attribute value.
         -> Attribute       -- ^ Resulting attribute.
-summary = attribute "summary"
+summary = attribute " summary=\""
 {-# INLINE summary #-}
 
 -- | Combinator for the @tabindex@ attribute.
@@ -1343,7 +1343,7 @@ summary = attribute "summary"
 --
 tabindex :: AttributeValue  -- ^ Attribute value.
          -> Attribute       -- ^ Resulting attribute.
-tabindex = attribute "tabindex"
+tabindex = attribute " tabindex=\""
 {-# INLINE tabindex #-}
 
 -- | Combinator for the @title@ attribute.
@@ -1358,7 +1358,7 @@ tabindex = attribute "tabindex"
 --
 title :: AttributeValue  -- ^ Attribute value.
       -> Attribute       -- ^ Resulting attribute.
-title = attribute "title"
+title = attribute " title=\""
 {-# INLINE title #-}
 
 -- | Combinator for the @type@ attribute.
@@ -1373,7 +1373,7 @@ title = attribute "title"
 --
 type_ :: AttributeValue  -- ^ Attribute value.
       -> Attribute       -- ^ Resulting attribute.
-type_ = attribute "type"
+type_ = attribute " type=\""
 {-# INLINE type_ #-}
 
 -- | Combinator for the @usemap@ attribute.
@@ -1388,7 +1388,7 @@ type_ = attribute "type"
 --
 usemap :: AttributeValue  -- ^ Attribute value.
        -> Attribute       -- ^ Resulting attribute.
-usemap = attribute "usemap"
+usemap = attribute " usemap=\""
 {-# INLINE usemap #-}
 
 -- | Combinator for the @valign@ attribute.
@@ -1403,7 +1403,7 @@ usemap = attribute "usemap"
 --
 valign :: AttributeValue  -- ^ Attribute value.
        -> Attribute       -- ^ Resulting attribute.
-valign = attribute "valign"
+valign = attribute " valign=\""
 {-# INLINE valign #-}
 
 -- | Combinator for the @value@ attribute.
@@ -1418,7 +1418,7 @@ valign = attribute "valign"
 --
 value :: AttributeValue  -- ^ Attribute value.
       -> Attribute       -- ^ Resulting attribute.
-value = attribute "value"
+value = attribute " value=\""
 {-# INLINE value #-}
 
 -- | Combinator for the @valuetype@ attribute.
@@ -1433,7 +1433,7 @@ value = attribute "value"
 --
 valuetype :: AttributeValue  -- ^ Attribute value.
           -> Attribute       -- ^ Resulting attribute.
-valuetype = attribute "valuetype"
+valuetype = attribute " valuetype=\""
 {-# INLINE valuetype #-}
 
 -- | Combinator for the @width@ attribute.
@@ -1448,5 +1448,5 @@ valuetype = attribute "valuetype"
 --
 width :: AttributeValue  -- ^ Attribute value.
       -> Attribute       -- ^ Resulting attribute.
-width = attribute "width"
+width = attribute " width=\""
 {-# INLINE width #-}

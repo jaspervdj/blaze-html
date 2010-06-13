@@ -106,7 +106,8 @@ instance IsString (Html a) where
     {-# INLINE fromString #-}
 
 instance IsString Tag where
-    fromString = stringTag
+    -- String literals can always be optimized.
+    fromString = Tag . B.optimizePiece . B.fromString
     {-# INLINE fromString #-}
 
 instance IsString AttributeValue where
@@ -115,37 +116,27 @@ instance IsString AttributeValue where
 
 -- | Create an HTML parent element.
 --
-parent :: Tag     -- ^ HTML element tag.
+parent :: Tag     -- ^ Start of the open HTML tag.
+       -> Tag     -- ^ The closing tag.
        -> Html a  -- ^ Inner HTML, to place in this element.
        -> Html b  -- ^ Resulting HTML.
-parent tag = \inner -> Html $ \attrs ->
-    begin
+parent begin end = \inner -> Html $ \attrs ->
+    unTag begin
       `mappend` attrs
       `mappend` B.fromChar '>'
       `mappend` unHtml inner mempty
-      `mappend` end
-  where
-    begin :: Utf8Builder
-    begin = B.optimizePiece $ B.fromChar '<' `mappend` unTag tag
-    {-# INLINE begin #-}
-    end :: Utf8Builder
-    end = B.optimizePiece $ B.fromText "</" `mappend` unTag tag
-                                            `mappend` B.fromChar '>'
-    {-# INLINE end #-}
+      `mappend` unTag end
 {-# INLINE parent #-}
 
 -- | Create an HTML leaf element.
 --
-leaf :: Tag    -- ^ HTML element tag.
+leaf :: Tag     -- ^ Start of the open HTML tag.
      -> Html a  -- ^ Resulting HTML.
-leaf tag = Html $ \attrs ->
-    begin
+leaf begin = Html $ \attrs ->
+    unTag begin
       `mappend` attrs
       `mappend` end
   where
-    begin :: Utf8Builder
-    begin = B.optimizePiece $ B.fromChar '<' `mappend` unTag tag
-    {-# INLINE begin #-}
     end :: Utf8Builder
     end = B.optimizePiece $ B.fromText $ " />"
     {-# INLINE end #-}
@@ -154,31 +145,23 @@ leaf tag = Html $ \attrs ->
 -- | Produce an open tag. This can be used for open tags in HTML 4.01, like
 -- for example @<br>@.
 --
-open :: Tag     -- ^ Tag for the open HTML element.
+open :: Tag     -- ^ Start of the open HTML tag.
      -> Html a  -- ^ Resulting HTML.
-open tag = Html $ \attrs ->
-    begin
+open begin = Html $ \attrs ->
+    unTag begin
       `mappend` attrs
       `mappend` B.fromChar '>'
-  where
-    begin :: Utf8Builder
-    begin = B.optimizePiece $ B.fromChar '<' `mappend` unTag tag
-    {-# INLINE begin #-}
 {-# INLINE open #-}
 
 -- | Create an HTML attribute.
 --
-attribute :: Tag             -- ^ Key for the HTML attribute.
+attribute :: Tag             -- ^ Shared key string for the HTML attribute.
           -> AttributeValue  -- ^ Value for the HTML attribute.
           -> Attribute       -- ^ Resulting HTML attribute.
 attribute key value = Attribute $ \(Html h) -> Html $ \attrs ->
-    h $ attrs `mappend` begin
+    h $ attrs `mappend` unTag key
               `mappend` attributeValue value
               `mappend` B.fromChar '"'
-  where
-    begin :: Utf8Builder
-    begin = B.optimizePiece $ B.fromChar ' ' `mappend` unTag key
-                                             `mappend` B.fromText "=\""
 {-# INLINE attribute #-}
 
 class Attributable h where

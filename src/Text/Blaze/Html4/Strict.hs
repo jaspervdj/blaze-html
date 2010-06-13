@@ -87,6 +87,7 @@ import Prelude ()
 import Data.Monoid (mappend)
 
 import Text.Blaze
+import Text.Blaze.Internal (parent, leaf, open)
 
 -- | Combinator for the @\<html>@ element. This combinator will also
 -- insert the correct doctype.

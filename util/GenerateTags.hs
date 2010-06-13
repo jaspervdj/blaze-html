@@ -47,6 +47,7 @@ writeHtmlVariant htmlVariant = do
         , "import Data.Monoid (mappend)"
         , ""
         , "import Text.Blaze"
+        , "import Text.Blaze.Internal (parent, leaf, open)"
         , ""
         , makeHtml $ docType htmlVariant
         , makeDocType $ docType htmlVariant
@@ -66,7 +67,7 @@ writeHtmlVariant htmlVariant = do
         , ""
         , "import Data.Text (Text)"
         , ""
-        , "import Text.Blaze (Attribute, AttributeValue, attribute)"
+        , "import Text.Blaze.Internal (Attribute, AttributeValue, attribute)"
         , ""
         , unlines (map makeAttribute sortedAttributes)
         ]

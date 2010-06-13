@@ -99,7 +99,7 @@ import Prelude ()
 
 import Data.Text (Text)
 
-import Text.Blaze (Attribute, AttributeValue, attribute)
+import Text.Blaze.Internal (Attribute, AttributeValue, attribute)
 
 -- | Combinator for the @abbr@ attribute.
 --

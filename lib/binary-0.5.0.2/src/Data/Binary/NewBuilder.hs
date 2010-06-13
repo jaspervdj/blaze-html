@@ -103,11 +103,11 @@ import GHC.Word (uncheckedShiftRL64#)
 
 ------------------------------------------------------------------------
 
-main = defaultMain 
-    [ bench "[Word8]/old/singletons" $ nf benchOBsingletons byteData
-    , bench "[Word8]/new/singletons" $ nf benchNBsingletons byteData
-    , bench "[Word8]/new/word8list" $ nf benchNBOptsingletons byteData
-    ]
+main = defaultMain $
+    [ bench "[Word8]/old/singletons" $ nf benchOBsingletons byteData   ] ++
+    [ bench "[Word8]/new/singletons" $ nf benchNBsingletons byteData   ] ++
+    [ bench "[Word8]/new/word8list" $ nf benchNBOptsingletons byteData ] ++
+    []
   where
     benchOBsingletons :: [Word8] -> Int64
     benchOBsingletons = L.length . B.toLazyByteString . mconcat . map B.singleton
@@ -118,12 +118,12 @@ main = defaultMain
     benchNBOptsingletons :: [Word8] -> Int64
     benchNBOptsingletons = L.length . toLazyByteString . word8List
 
-    repetitions :: Int
-    repetitions = 100000
+repetitions :: Int
+repetitions = 100000
 
-    byteData :: [Word8]
-    byteData = replicate repetitions 1
-    {-# NOINLINE byteData #-}
+byteData :: [Word8]
+byteData = take repetitions $ cycle [1..]
+{-# NOINLINE byteData #-}
 
 ------------------------------------------------------------------------
 
@@ -163,6 +163,9 @@ instance Monoid NewBuilder where
     {-# INLINE mempty #-}
     mappend = append
     {-# INLINE mappend #-}
+    mconcat = foldr append mempty
+    {-# INLINE mconcat #-}
+
 
 ------------------------------------------------------------------------
 
@@ -186,8 +189,9 @@ singleton x = NewBuilder step
                         let pf' = pf `plusPtr` 1
                         pf' `seq` k pf' pe
       | otherwise = do return $ BufferFull 1 pf (step k)
-    {-# INLINE step #-}
-{-# INLINE singleton #-}
+-- AGAIN ^^ do *not* put inline pragmas here. They are bad for the runtime.
+-- I guess these are code-cache issues.
+
 
 -- SM: This performance is what we would like to allow also for clients of the
 -- library with minimal effort.
@@ -199,6 +203,7 @@ singleton x = NewBuilder step
 -- abstract some of the gory details by a higher-order function that gets
 -- specialized accordingly due to the inlining.
 --
+-- INTERESTING: *not* inlining gives a huge speedup!
 word8List :: [Word8] -> NewBuilder
 word8List []  = empty -- ensure non-emptyness postcondition
 word8List xs0 = NewBuilder $ step xs0
@@ -210,9 +215,12 @@ word8List xs0 = NewBuilder $ step xs0
           | pf < pe0  = do poke pf x'
                            go xs' (pf `plusPtr` 1)
           | otherwise = do return $ BufferFull 1 pf (step xs k)
-        {-# INLINE go #-}
-    {-# INLINE step #-}
-{-# INLINE word8List #-}
+
+-- copied from Data.ByteString.Lazy
+defaultSize :: Int
+defaultSize = 32 * k - overhead
+    where k = 1024
+          overhead = 2 * sizeOf (undefined :: Int)
 
 runBuilder :: NewBuilder -> [S.ByteString] -> [S.ByteString]
 runBuilder (NewBuilder b) k = 
@@ -230,7 +238,6 @@ runBuilder (NewBuilder b) k =
              -- INV: pf < pf', i.e., some data must have been written  
              return $ S.PS buf 0 (pf' `minusPtr` pf) : 
                       inlinePerformIO (go (max newSize defaultSize) nextStep)
-{-# INLINE runBuilder #-}
 
 toLazyByteString :: NewBuilder -> L.ByteString
 toLazyByteString = L.fromChunks . flip runBuilder []
@@ -247,6 +254,16 @@ test = toLazyByteString $ singleton 65 `append` singleton 65
 append :: NewBuilder -> NewBuilder -> NewBuilder
 append (NewBuilder f) (NewBuilder g) = NewBuilder (f . g)
 {-# INLINE append #-}
+
+
+
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+---
+---  OLD CODE FROM standard binary builder
+---
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
 
 {-
 -- | /O(1)./ A NewBuilder taking a 'S.ByteString', satisfying
@@ -303,17 +320,6 @@ flush = NewBuilder $ \ k buf@(Buffer p o u l) ->
 
 ------------------------------------------------------------------------
 
--}
-
---
--- copied from Data.ByteString.Lazy
---
-defaultSize :: Int
-defaultSize = 32 * k - overhead
-    where k = 1024
-          overhead = 2 * sizeOf (undefined :: Int)
-
-{-
 ------------------------------------------------------------------------
 
 -- | Sequence an IO operation on the buffer

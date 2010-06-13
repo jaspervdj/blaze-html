@@ -1,6 +1,6 @@
 -- | Generates code for HTML tags.
 --
-module GenerateTags where
+module GenerateHtmlVariant where
 
 import Sanitize (sanitize)
 
@@ -235,6 +235,7 @@ makeAttribute name = unlines
 
 -- | HTML 4.01 Strict.
 -- A good reference can be found here: http://www.w3schools.com/tags/default.asp
+--
 html4Strict :: HtmlVariant
 html4Strict = HtmlVariant
     { version = ["Html4", "Strict"]
@@ -275,6 +276,58 @@ html4Strict = HtmlVariant
         ]
     }
 
+-- | HTML 5.0
+-- A good reference can be found here:
+-- http://www.w3schools.com/html5/html5_reference.asp
+--
+html5 :: HtmlVariant
+html5 = HtmlVariant
+    { version = ["Html5"]
+    , docType = ["<!DOCTYPE HTML>"]
+    , parents =
+        [ "a", "abbr", "address", "article", "aside", "audio", "b", "base"
+        , "bdo", "blockquote", "body", "button", "canvas", "caption", "cite"
+        , "code", "colgroup", "command", "datalist", "dd", "del", "details"
+        , "dfn", "div", "dl", "dt", "em", "fieldset", "figcaption", "figure"
+        , "footer", "form", "h1", "h2", "h3", "h4", "h5", "h6", "head", "header"
+        , "hgroup", "html", "i", "iframe", "ins", "keygen", "kbd", "label"
+        , "legend", "li", "map", "mark", "menu", "meter", "nav", "noscript"
+        , "object", "ol", "optgroup", "option", "output", "p", "pre", "progress"
+        , "q", "rp", "rt", "ruby", "samp", "script", "section", "select"
+        , "small", "source", "span", "strong", "style", "sub", "summary", "sup"
+        , "table", "tbody", "td", "textarea", "tfoot", "th", "thead", "time"
+        , "title", "tr", "ul", "var", "video"
+        ]
+    , leafs =
+        [ "area", "br", "col", "embed", "hr", "img", "input", "meta", "link"
+        , "param"
+        ]
+    , opens = []
+    , attributes = 
+        [ "accept", "accept-charset", "accesskey", "action", "alt", "async"
+        , "autocomplete", "autofocus", "autoplay", "challenge", "charset"
+        , "checked", "cite", "class", "cols", "colspan", "content"
+        , "contenteditable", "contextmenu", "controls", "coords", "data"
+        , "datetime", "defer", "dir", "disabled", "draggable", "enctype", "for"
+        , "form", "formaction", "formenctype", "formmethod", "formnovalidate"
+        , "formtarget", "headers", "height", "hidden", "high", "href"
+        , "hreflang", "http-equiv", "icon", "id", "ismap", "item", "itemprop"
+        , "keytype", "label", "lang", "list", "loop", "low", "manifest", "max"
+        , "maxlength", "media", "method", "min", "multiple", "name"
+        , "novalidate", "onafterprint", "onbeforeonload", "onbeforeprint"
+        , "onblur", "onerror", "onfocus", "onhaschange", "onload", "onmessage"
+        , "onoffline", "ononline", "onpagehide", "onpageshow", "onpropstate"
+        , "onredo", "onresize", "onstorage", "onundo", "onunload", "open"
+        , "optimum", "pattern", "ping", "placeholder", "preload", "pubdate"
+        , "radiogroup", "readonly", "rel", "required", "reversed", "rows"
+        , "rowspan", "sandbox", "scope", "scoped", "seamless", "selected"
+        , "shape", "size", "sizes", "span", "spellcheck", "src", "srcdoc"
+        , "start", "step", "style", "subject", "summary", "tabindex", "target"
+        , "title", "type", "usemap", "value", "width", "wrap", "xmlns"
+        ]
+    }
+
 main :: IO ()
 main = do
     writeHtmlVariant html4Strict
+    writeHtmlVariant html5

@@ -158,6 +158,12 @@ newtype NewBuilder = NewBuilder {
       unNewBuilder :: BuildStep -> BuildStep
     }
 
+-- Write abstraction so we can avoid some gory and bloody details.
+--
+data Write = Write
+    {-# UNPACK #-} !Int
+    (Ptr Word8 -> IO ())
+
 instance Monoid NewBuilder where
     mempty  = empty
     {-# INLINE mempty #-}
@@ -182,16 +188,19 @@ empty = NewBuilder id
 --  * @'toLazyByteString' ('singleton' b) = 'L.singleton' b@
 --
 singleton :: Word8 -> NewBuilder
-singleton x = NewBuilder step
+singleton x = fromWrite $ Write 1 (\pf -> poke pf x)
+
+-- | /O(n)./ Construct a NewBuilder from a write abstraction.
+--
+fromWrite :: Write -> NewBuilder
+fromWrite (Write !size !f) = NewBuilder step
   where
     step k pf pe
-      | pf < pe    = do poke pf x
-                        let pf' = pf `plusPtr` 1
-                        pf' `seq` k pf' pe
-      | otherwise = do return $ BufferFull 1 pf (step k)
--- AGAIN ^^ do *not* put inline pragmas here. They are bad for the runtime.
--- I guess these are code-cache issues.
-
+      | pf `plusPtr` size <= pe = do f pf
+                                     let pf' = pf `plusPtr` size
+                                     pf' `seq` k pf' pe
+      | otherwise               = return $ BufferFull size pf (step k)
+{-# INLINE fromWrite #-}
 
 -- SM: This performance is what we would like to allow also for clients of the
 -- library with minimal effort.

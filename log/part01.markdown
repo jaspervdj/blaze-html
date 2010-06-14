@@ -678,3 +678,21 @@ since we are talking about generated code anyway.
 
 This change has caused a slight slowdown in all benchmarks, but it has
 normalized the `deepTree` benchmark -- hence, I think this is worth it.
+
+Monday, June 14th, morning
+==========================
+
+I'm now writing some test cases. Testing is not *very* hard for this project,
+given that the control flow is quite simple (except perhaps in the Builder).
+
+However, a number of tests is always very handy since it saves you from having
+to check the output manually. I've decided to use Max Bolingbroke's
+[test-framework][] because it lets you combine [QuickCheck][] properties and
+[HUnit][] tests in a quite elegant way.
+
+[test-framework]: http://batterseapower.github.com/test-framework/
+[QuickCheck]: http://hackage.haskell.org/cgi-bin/hackage-scripts/package/QuickCheck
+[HUnit]: http://hunit.sourceforge.net/
+
+So, I've first written an `Arbitrary` instance for `Html a` (quite a fun task,
+in fact), so we can later check properties on that.

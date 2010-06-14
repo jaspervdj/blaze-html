@@ -3,7 +3,7 @@ module Text.Blaze.Tests
     ( tests
     ) where
 
-import Prelude hiding (div)
+import Prelude hiding (div, id)
 import Data.Monoid (mconcat, mempty, mappend)
 import Control.Monad (replicateM)
 import Control.Applicative ((<$>))
@@ -32,7 +32,7 @@ arbitraryHtml :: Int           -- ^ Maximum depth.
               -> Gen (Html a)  -- ^ Resulting arbitrary HTML snippet.
 arbitraryHtml depth = do 
     -- Choose the size (width) of this element.
-    size <- choose (0, 10 :: Int)
+    size <- choose (0, 10)
 
     -- Generate `size` new HTML snippets.
     children <- replicateM size arbitraryChild
@@ -42,13 +42,19 @@ arbitraryHtml depth = do
   where
     -- Generate an arbitrary child. Do not take a parent when we have no depth
     -- left, obviously.
-    -- TODO: set attributes here?
-    arbitraryChild = oneof $
-        [arbitraryLeaf, arbitraryString] ++ [arbitraryParent | depth > 0]
+    arbitraryChild = do
+        child <- oneof $  [arbitraryLeaf, arbitraryString]
+                       ++ [arbitraryParent | depth > 0]
+
+        -- Generate some attributes for the child.
+        size <- choose (0, 3)
+        attributes <- replicateM size arbitraryAttribute
+        return $ foldl (!) child attributes
 
     -- Generate an arbitrary parent element.
-    arbitraryParent =
-        oneof $ map (<$> arbitraryHtml (depth - 1)) [p, div, table]
+    arbitraryParent = do
+        parent <- elements [p, div, table]
+        parent <$> arbitraryHtml (depth - 1)
 
     -- Generate an arbitrary leaf element.
     arbitraryLeaf = oneof $ map return [img, br, area]
@@ -57,3 +63,9 @@ arbitraryHtml depth = do
     arbitraryString = do
         s <- arbitrary
         return $ string s
+
+    -- Generate an arbitrary HTML attribute.
+    arbitraryAttribute = do
+        attribute <- elements [id, class_, name]
+        value <- arbitrary
+        return $ attribute $ stringValue value

@@ -696,3 +696,12 @@ to check the output manually. I've decided to use Max Bolingbroke's
 
 So, I've first written an `Arbitrary` instance for `Html a` (quite a fun task,
 in fact), so we can later check properties on that.
+
+Monday, June 14th, evening
+==========================
+
+I've written some more unit tests and quickcheck properties, and I have also
+created a small website for BlazeHtml, since we are going to make a small
+release soon. The website contains a tutorial (which should be enough for now,
+in the long term I'd also like to add a number of examples). For now, the
+website can be found at [jaspervdj.be/blaze](http://jaspervdj.be/blaze).

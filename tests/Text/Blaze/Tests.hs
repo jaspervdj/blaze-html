@@ -7,7 +7,12 @@ import Prelude hiding (div, id)
 import Data.Monoid (mconcat, mempty, mappend)
 import Control.Monad (replicateM)
 import Control.Applicative ((<$>))
+import Data.Word (Word8)
+import Data.Char (ord)
 
+import Debug.Trace (traceShow)
+import qualified Data.ByteString.Lazy.Char8 as LBC
+import qualified Data.ByteString.Lazy as LB
 import Test.Framework
 import Test.Framework.Providers.QuickCheck2
 import Test.QuickCheck
@@ -22,6 +27,9 @@ tests = [ testProperty "left identity Monoid law"  monoidLeftIdentity
         , testProperty "right identity Monoid law" monoidRightIdentity
         , testProperty "associativity Monoid law"  monoidAssociativity
         , testProperty "mconcat Monoid law"        monoidConcat
+        , testCase     "escaping case 1"           escaping1
+        , testCase     "escaping case 2"           escaping2
+        , testProperty "post escaping characters"  postEscapingCharacters
         ]
 
 -- | The left identity Monoid law.
@@ -43,6 +51,24 @@ monoidAssociativity x y z = mappend x (mappend y z) == mappend (mappend x y) z
 --
 monoidConcat :: [Html a] -> Bool
 monoidConcat xs = mconcat xs == foldr mappend mempty xs
+
+-- | Simple escaping test case.
+--
+escaping1 :: Assertion
+escaping1 = "&quot;&amp;&quot;" @=? renderHtml (string "\"&\"")
+
+-- | Simple escaping test case.
+--
+escaping2 :: Assertion
+escaping2 = "&lt;img&gt;" @=? renderHtml (text "<img>")
+
+-- | Escaped content cannot contain certain characters.
+--
+postEscapingCharacters :: String -> Bool
+postEscapingCharacters str =
+    LB.all (`notElem` forbidden) $ renderHtml (string str)
+  where
+    forbidden = map (fromIntegral . ord) "\"'<>"
 
 -- Show instance for the HTML type, so we can debug.
 --

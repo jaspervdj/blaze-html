@@ -11,7 +11,7 @@ template = Erubis::Eruby.new <<-EOF
     <tr>
       <% row.each do |value| %>
         <td>
-            <%== value %>
+            <%= value %>
         </td>
       <% end %>
     </tr>
@@ -19,4 +19,13 @@ template = Erubis::Eruby.new <<-EOF
 </table>
 EOF
 
-puts Benchmark.measure { 100.times do |_| template.result(binding) end }
+number_runs = 100
+start_time = Time.now.to_f
+number_runs.times do
+    template.result(binding)
+end
+end_time = Time.now.to_f
+
+# start_time and end_time are both in seconds now
+ms = (end_time - start_time) * 1000 / number_runs
+puts "\"Erubis\", #{ms}"

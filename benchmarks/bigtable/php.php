@@ -38,5 +38,5 @@ for ($i = 0; $i < $request_count; $i++)
 }
 $elapsed = microtime(true) - $start;
 $time_per_request = ($elapsed / $request_count) * 1000;
-echo "PHP: $time_per_request ms\n";
+echo "\"PHP\", $time_per_request\n";
 ?>

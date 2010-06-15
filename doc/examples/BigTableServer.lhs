@@ -40,16 +40,13 @@ As always in a literate Haskell file, feel free to skip the imports.
 > import Text.Blaze.Html5 hiding (map, head)
 
 We only have one simple template in this benchmark: a template that takes a
-matrix as input, and produces an HTML table containing this matrix. Since this
-example is a performance test as well, we have chosen to inline this template,
-since it gives us a decent performance boost.
+matrix as input, and produces an HTML table containing this matrix.
 
 > bigTable :: [[Int]]  -- ^ Matrix.
 >          -> Html a   -- ^ Result.
 > bigTable t = table $ mconcat $ map row t
 >   where
 >     row r = tr $ mconcat $ map (td . string . show) r
-> {-# INLINE bigTable #-}
 
 This is the main function that runs the server. It takes one command line
 argument: the port it should listen on.

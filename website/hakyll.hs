@@ -15,6 +15,7 @@ main = hakyll "http://example.com" $ do
     mapM_ render [ "index.markdown"
                  , "tutorial.lhs"
                  , "about.markdown"
+                 , "benchmarks.markdown"
                  ]
   where
     render = renderChain ["templates/default.html"] . createPage

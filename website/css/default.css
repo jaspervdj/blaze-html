@@ -39,6 +39,11 @@ pre code {
     border: 1px dashed #bbbbbb;
 }
 
+img {
+    margin: 0px auto 0px auto;
+    display: block;
+}
+
 #navigation {
     background: white url("../images/header.png") no-repeat center top;
     padding: 5px 50px 0px 50px;
@@ -85,4 +90,8 @@ pre code {
     text-align: center;
     margin-top: 20px;
     padding: 10px;
+}
+
+.caption {
+    display: none;
 }

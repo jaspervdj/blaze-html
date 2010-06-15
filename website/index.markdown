@@ -7,7 +7,7 @@ BlazeHtml is a blazingly fast HTML combinator library for the [Haskell]
 programming language. It embeds HTML templates in Haskell code for optimal
 efficiency and composability.  To get started, just
 
-    cabal install BlazeHtml
+    cabal install blaze-html
 
 [Haskell]: http://haskell.org/
 
@@ -21,6 +21,12 @@ The best way to get started with BlazeHtml is to have a look at our [tutorial].
 [tutorial]: $root/tutorial.html
 
 --- body
+
+# Features
+
+- Pretty fast -- have a look at [our benchmarks]
+
+[our benchmarks]: $root/benchmarks.html
 
 # Status
 

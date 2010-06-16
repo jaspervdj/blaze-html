@@ -12,12 +12,21 @@ the time it takes to send off the response, because different templating systems
 are tied to different webservers. Therefore, we measure the time it takes us to
 assemble the result of a template in memory.
 
---- column2
-
-__TODO__
-
 All benchmarks have been executed on the same machine, an Intel CPU T2080 @
 1.73GHz.
+
+--- column2
+
+We also have to be very careful about *what* we are actually producing and
+measuring. BlazeHtml produces a lazy `ByteString`. We have seen that the
+chunksize of this `ByteString` can be important: [this is a graph] of a
+benchmark we did where a large (128 kilobyte) HTML page is sent, with varying
+chunk sizes.
+
+[this is a graph]: $root/images/benchmarks-chunksize.png
+
+This chunksize is now fixed for BlazeHtml: every chunk will contain around 32k
+bytes.
 
 ---
 

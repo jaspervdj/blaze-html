@@ -8,3 +8,7 @@ local
 benchmarks/Utf8Builder
 benchmarks/Utf8Html
 benchmarks/BigTableServer
+
+website/_site
+website/_cache
+website/hakyll

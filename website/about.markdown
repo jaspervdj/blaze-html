@@ -24,6 +24,7 @@ Simon Meier and Johan Tibell.
 - Jim Whitehead
 - Johan Tibell
 - Oliver Mueller
+- Pieter De Baets
 - Simon Meier
 - Tom Harper
 

@@ -25,6 +25,9 @@ The best way to get started with BlazeHtml is to have a look at our [tutorial].
 # Features
 
 - Pretty fast -- have a look at [our benchmarks]
+- Lightweight DSL syntax
+- Embedded in Haskell
+- Efficient Unicode support
 
 [our benchmarks]: $root/benchmarks.html
 
@@ -35,6 +38,24 @@ good chance to break your code. Nevertheless, we like to encourage you to try
 it and tell us what you think, and submit possible bugs to the [issue tracker].
 
 [issue tracker]: http://github.com/jaspervdj/BlazeHtml/issues/
+
+# Google Summer of Code
+
+Jasper Van der Jeugt is working on this project for [Google Summer of Code]
+2010. This means we have made a roadmap for this summer:
+
+[Google Summer of Code]: http://code.google.com/soc/
+
+- Initial release.
+- Fix implementation such that it works for outputting UTF-8 encoded
+  `ByteString`, `Text`, and `String`.
+- Add further HTML, XHTML variants depending on requests.
+- Document and, where possible, package implementation techniques such that
+  other projects can use them; e.g. faster binary builder, `Utf8Builder`,
+  `TextBuilder`, and `StaticMultiString`.
+- If time remains: Write a BlazeHtml generator translating a Html page to the
+  corresponding BlazeHtml haskell code. This greatly simplifies initial imports
+  and importing of new snippets.
 
 # Code
 

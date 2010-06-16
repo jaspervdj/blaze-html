@@ -152,6 +152,13 @@ A lazy `ByteString` is basically a list of _byte chunks_. The list of byte
 chunks the `renderHtml` is your HTML page, encoded in UTF-8. Furthermore, all
 chunks will be nicely-sized, so the overhead is minimal.
 
-__TODO__: link to examples here.
+Further examples
+================
+
+This tutorial should have given you a good idea of how BlazeHtml works. We have
+also provided some more real-world examples, you can find them all in [this
+directory] on github.
+
+[this directory]: http://github.com/jaspervdj/BlazeHtml/tree/master/doc/examples/
 
 Go forth, and generate some HTML!

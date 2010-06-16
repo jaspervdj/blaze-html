@@ -53,7 +53,7 @@ Jasper Van der Jeugt is working on this project for [Google Summer of Code]
 - Document and, where possible, package implementation techniques such that
   other projects can use them; e.g. faster binary builder, `Utf8Builder`,
   `TextBuilder`, and `StaticMultiString`.
-- If time remains: Write a BlazeHtml generator translating a Html page to the
+- If time remains: Write a BlazeHtml generator translating an HTML page to the
   corresponding BlazeHtml haskell code. This greatly simplifies initial imports
   and importing of new snippets.
 

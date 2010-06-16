@@ -1,4 +1,3 @@
-
 bench-html:
 	ghc --make -O2 -fforce-recomp -isrc -ilib/binary-0.5.0.2/src -main-is Utf8Html benchmarks/Utf8Html.hs
 	./benchmarks/Utf8Html --resamples 10000
@@ -29,4 +28,7 @@ core-new-builder:
 	ghc-core -- --make -O2 -fforce-recomp -isrc -ilib/binary-0.5.0.2/src -main-is Data.Binary.NewBuilder lib/binary-0.5.0.2/src/Data/Binary/NewBuilder.hs
 
 
-
+bench-bigtable-non-haskell:
+	ruby benchmarks/bigtable/erb.rb
+	ruby benchmarks/bigtable/erubis.rb
+	php -n benchmarks/bigtable/php.php

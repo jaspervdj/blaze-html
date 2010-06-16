@@ -20,7 +20,7 @@ Simon Meier and Johan Tibell.
 
 - Chris Done
 - Harald Holtmann
-- Japser van der Jeugt
+- Jasper van der Jeugt
 - Jim Whitehead
 - Johan Tibell
 - Oliver Mueller

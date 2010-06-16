@@ -1,32 +1,20 @@
-<?
+<?php
+$table = array_fill(0, 1000, array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
 
-$table = array_fill(0, 1000, array("a"=>1, "b"=>2, "c"=>3, "d"=>4, "e"=>5, "f"=>6, "g"=>7, "h"=>8, "i"=>9, "j"=>10));
-
-function test_bigtable($table)
-{
-ob_start();
+function test_bigtable($table) {
+	ob_start();
 ?>
 <table>
-<?
-foreach($table as $rowNum => $row)
-{
-?>
+<?php foreach($table as $row) { ?>
 <tr>
-<?
-foreach($row as $value)
-{
-?>
-<td><? echo $value; ?></td>
-<?
-}
-?>
+<?php foreach($row as $value) { ?>
+<td><?php echo $value; ?></td>
+<?php } ?>
 </tr>
-<?
-}
-?>
+<?php } ?>
 </table>
-<?
-return ob_get_clean();
+<?php
+	return ob_get_clean();
 }
 
 $request_count = 1000;

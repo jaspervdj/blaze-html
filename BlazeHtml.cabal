@@ -71,7 +71,3 @@ Library
                      Text.Blaze.Internal
                      Text.Blaze.Internal.Utf8Builder
                      Text.Blaze.Internal.Utf8BuilderHtml
-  
-  -- Extra tools (e.g. alex, hsc2hs, ...) needed to build the source.
-  -- Build-tools:         
-  

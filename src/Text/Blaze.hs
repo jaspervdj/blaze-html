@@ -6,6 +6,7 @@ module Text.Blaze
     (
       -- * Important types.
       Html
+    , Tag
     , Attribute
     , AttributeValue
 
@@ -22,6 +23,10 @@ module Text.Blaze
 
       -- * Inserting literal 'ByteString's.
     , unsafeByteString
+
+      -- * Creating 'Tag's.
+    , textTag
+    , stringTag
 
       -- * Converting values to attribute values.
     , textValue

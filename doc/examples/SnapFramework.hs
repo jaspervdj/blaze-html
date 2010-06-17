@@ -19,9 +19,9 @@ welcomePage = html $ do
         title $ "Snap & BlazeHtml"
     body $ do
         h1 $ "Snap & BlazeHtml"
-        p $ "This is an example of BlazeHtml running begind the snap framework."
+        p $ "This is an example of BlazeHtml running behind the snap framework."
 
--- | Auxiliary function to render a BlazeHtlm template to a `Snap ()` type.
+-- | Auxiliary function to render a BlazeHtml template to a @Snap ()@ type.
 --
 blazeTemplate :: Html a -> Snap ()
 blazeTemplate = writeLBS . renderHtml

@@ -1,5 +1,6 @@
 -- | This is a possible library implementation experiment and benchmark.
-{-# LANGUAGE OverloadedStrings #-}
+--
+{-# LANGUAGE OverloadedStrings, ExistentialQuantification #-}
 module Utf8Html where
 
 import Data.Monoid (Monoid, mempty, mconcat, mappend)
@@ -16,16 +17,26 @@ import qualified Data.Text as T
 import Text.Blaze.Html4.Strict hiding (map)
 import Text.Blaze.Html4.Strict.Attributes hiding (title, rows)
 
-main = defaultMain
-    [ benchHtml "bigTable" bigTable bigTableData
-    , benchHtml "basic" basic basicData
-    , benchHtml "wideTree" wideTree wideTreeData
-    , benchHtml "wideTreeEscaping" wideTree wideTreeEscapingData
-    , benchHtml "deepTree" deepTree deepTreeData
-    , benchHtml "manyAttributes" manyAttributes manyAttributesData
-    ]
+main = defaultMain $ map benchHtml benchmarks
   where
-    benchHtml name f x = bench name $ nf (LB.length . f) x
+    benchHtml (HtmlBenchmark name f x) = bench name $ nf (LB.length . f) x
+
+data HtmlBenchmark = forall a. HtmlBenchmark
+    String                -- ^ Name.
+    (a -> LB.ByteString)  -- ^ Rendering function.
+    a                     -- ^ Data.
+
+-- | List containing all benchmarks.
+--
+benchmarks :: [HtmlBenchmark]
+benchmarks =
+    [ HtmlBenchmark "bigTable"         bigTable       bigTableData
+    , HtmlBenchmark "basic"            basic          basicData
+    , HtmlBenchmark "wideTree"         wideTree       wideTreeData
+    , HtmlBenchmark "wideTreeEscaping" wideTree       wideTreeEscapingData
+    , HtmlBenchmark "deepTree"         deepTree       deepTreeData
+    , HtmlBenchmark "manyAttributes"   manyAttributes manyAttributesData
+    ]
 
 rows :: Int
 rows = 1000

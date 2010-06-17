@@ -20,6 +20,9 @@ bench-builder:
 bench-bigtableserver:
 	ghc --make -threaded -O2 -fforce-recomp -isrc -ilib/binary-0.5.0.2/src doc/examples/BigTableServer.lhs
 
+bench-benchmarkserver:
+	ghc --make -threaded -O2 -fforce-recomp -isrc -ilib/binary-0.5.0.2/src -ibenchmarks benchmarks/BenchmarkServer.hs
+
 bench-new-builder:
 	ghc --make -O2 -fforce-recomp -isrc -ilib/binary-0.5.0.2/src -main-is Data.Binary.NewBuilder lib/binary-0.5.0.2/src/Data/Binary/NewBuilder.hs
 	./lib/binary-0.5.0.2/src/Data/Binary/NewBuilder --resamples 10000

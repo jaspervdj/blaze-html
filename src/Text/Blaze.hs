@@ -21,10 +21,10 @@ module Text.Blaze
     , showHtml
     , preEscapedShowHtml
 
-      -- * Inserting literal 'ByteString's.
+      -- * Inserting literal ByteString's.
     , unsafeByteString
 
-      -- * Creating 'Tag's.
+      -- * Creating tags.
     , textTag
     , stringTag
 

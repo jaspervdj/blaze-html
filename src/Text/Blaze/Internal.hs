@@ -66,7 +66,8 @@ newtype Html a = Html
       unHtml :: Utf8Builder -> Utf8Builder
     }
 
--- | Type for an HTML tag.
+-- | Type for an HTML tag. This can be seen as an internal string type used by
+-- BlazeHtml.
 --
 newtype Tag = Tag { unTag :: Utf8Builder }
     deriving (Monoid)
@@ -75,7 +76,7 @@ newtype Tag = Tag { unTag :: Utf8Builder }
 --
 newtype Attribute = Attribute (forall a. Html a -> Html a)
 
--- | The type for an attribute value.
+-- | The type for the value part of an attribute.
 --
 newtype AttributeValue = AttributeValue { attributeValue :: Utf8Builder }
     deriving (Monoid)
@@ -156,7 +157,8 @@ open begin = Html $ \attrs ->
       `mappend` B.fromChar '>'
 {-# INLINE open #-}
 
--- | Create an HTML attribute.
+-- | Create an HTML attribute that can be applied to an HTML element later using
+-- the '!' operator.
 --
 attribute :: Tag             -- ^ Shared key string for the HTML attribute.
           -> AttributeValue  -- ^ Value for the HTML attribute.
@@ -215,8 +217,7 @@ instance Attributable (Html a -> Html b) where
     h ! (Attribute f) = f . h
     {-# INLINE (!) #-}
 
--- | Render text. This is the preferred way of converting string
--- datatypes to HTML.
+-- | Render text. Functions like these can be used to supply content in HTML.
 --
 text :: Text    -- ^ Text to render.
      -> Html a  -- ^ Resulting HTML fragment.

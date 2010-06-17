@@ -19,6 +19,7 @@ Simon Meier and Johan Tibell.
 # Contributors
 
 - Chris Done
+- Frederick Ross
 - Harald Holtmann
 - Jasper van der Jeugt
 - Jim Whitehead

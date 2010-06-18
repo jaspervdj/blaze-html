@@ -107,8 +107,9 @@ main = defaultMain $
     -- [ bench "[Word8]/old/singletons" $ nf benchOBsingletons byteData   ] ++
     -- [ bench "[Word8]/new/singletons" $ nf benchNBsingletons byteData   ] ++
     -- [ bench "[Word8]/new/word8list" $ nf benchNBOptsingletons byteData ] ++
+    [ bench "[Bytestring]/new/byteStringList" $ nf benchNBOptbyteString byteStringData ] ++
     [ bench "[Bytestring]/new/fromByteString" $ nf benchNBbyteString byteStringData ] ++
-    [ bench "[Bytestring]/old/fromByteString" $ nf benchOBbyteString byteStringData ] ++
+    -- [ bench "[Bytestring]/old/fromByteString" $ nf benchOBbyteString byteStringData ] ++
     []
 
 benchOBsingletons :: [Word8] -> Int64
@@ -122,6 +123,9 @@ benchNBOptsingletons = L.length . toLazyByteString . word8List
 
 benchNBbyteString :: [S.ByteString] -> Int64
 benchNBbyteString = L.length . toLazyByteString . mconcat . map copyByteString
+
+benchNBOptbyteString :: [S.ByteString] -> Int64
+benchNBOptbyteString = L.length . toLazyByteString . byteStringList
 
 benchOBbyteString :: [S.ByteString] -> Int64
 benchOBbyteString = L.length . B.toLazyByteString . mconcat . map B.copyByteString
@@ -209,8 +213,7 @@ copyByteString :: S.ByteString -> NewBuilder
 copyByteString byteString = fromWrite $ Write l f
   where
     (fptr, o, l) = S.toForeignPtr byteString
-    f pf = do copyBytes pf (unsafeForeignPtrToPtr fptr `plusPtr` o) l
-              touchForeignPtr fptr
+    f pfree = do withForeignPtr fptr $ \p -> copyBytes pfree (p `plusPtr` o) l
 
 -- | /O(n)./ Construct a NewBuilder from a write abstraction.
 --
@@ -236,7 +239,7 @@ fromWrite (Write !size !f) = NewBuilder step
 --
 -- INTERESTING: *not* inlining gives a huge speedup!
 word8List :: [Word8] -> NewBuilder
-word8List []  = empty -- ensure non-emptyness postcondition
+word8List []  = empty
 word8List xs0 = NewBuilder $ step xs0
   where
     step xs1 k pf0 pe0 = go xs1 pf0
@@ -246,6 +249,27 @@ word8List xs0 = NewBuilder $ step xs0
           | pf < pe0  = do poke pf x'
                            go xs' (pf `plusPtr` 1)
           | otherwise = do return $ BufferFull 1 pf (step xs k)
+{-# NOINLINE word8List #-} -- NOT inlining is crucial for performance. I don't know yet why :-(
+
+-- | Inlining the construction for lists makes a HUGE difference!
+--
+-- THIS should be abstractable as well using Writes
+byteStringList :: [S.ByteString] -> NewBuilder
+byteStringList []  = empty
+byteStringList xs0 = NewBuilder $ step xs0
+  where
+    step xs1 k pf0 pe0 = go xs1 pf0
+      where
+        go []          !pf = k pf pe0
+        go xs@(x':xs') !pf
+          | pf `plusPtr` l <= pe0  = do 
+              withForeignPtr fptr $ \p -> copyBytes pf (p `plusPtr` o) l
+              go xs' (pf `plusPtr` l)
+          | otherwise = do return $ BufferFull l pf (step xs k)
+          where
+          (fptr, o, l) = S.toForeignPtr x'
+{-# NOINLINE byteStringList #-}
+
 
 -- copied from Data.ByteString.Lazy
 defaultSize :: Int
@@ -267,6 +291,7 @@ runBuilder (NewBuilder b) k =
                     | otherwise -> return $ S.PS buf 0 (pf' `minusPtr` pf) : k 
            BufferFull newSize pf' nextStep ->
              -- INV: pf < pf', i.e., some data must have been written  
+             -- FIXME: Remove this invariant!
              return $ S.PS buf 0 (pf' `minusPtr` pf) : 
                       inlinePerformIO (go (max newSize defaultSize) nextStep)
 

@@ -104,12 +104,12 @@ import GHC.Word (uncheckedShiftRL64#)
 ------------------------------------------------------------------------
 
 main = defaultMain $
-    -- [ bench "[Word8]/old/singletons" $ nf benchOBsingletons byteData   ] ++
-    -- [ bench "[Word8]/new/singletons" $ nf benchNBsingletons byteData   ] ++
-    -- [ bench "[Word8]/new/word8list" $ nf benchNBOptsingletons byteData ] ++
-    [ bench "[Bytestring]/new/byteStringList" $ nf benchNBOptbyteString byteStringData ] ++
+    [ bench "[Word8]/old/singletons" $ nf benchOBsingletons byteData   ] ++
+    [ bench "[Word8]/new/singletons" $ nf benchNBsingletons byteData   ] ++
+    [ bench "[Word8]/new/word8list" $ nf benchNBOptsingletons byteData ] ++
+    [ bench "[Bytestring]/old/fromByteString" $ nf benchOBbyteString byteStringData ] ++
     [ bench "[Bytestring]/new/fromByteString" $ nf benchNBbyteString byteStringData ] ++
-    -- [ bench "[Bytestring]/old/fromByteString" $ nf benchOBbyteString byteStringData ] ++
+    [ bench "[Bytestring]/new/byteStringList" $ nf benchNBOptbyteString byteStringData ] ++
     []
 
 benchOBsingletons :: [Word8] -> Int64
@@ -119,13 +119,13 @@ benchNBsingletons :: [Word8] -> Int64
 benchNBsingletons = L.length . toLazyByteString . mconcat . map singleton
 
 benchNBOptsingletons :: [Word8] -> Int64
-benchNBOptsingletons = L.length . toLazyByteString . word8List
+benchNBOptsingletons = L.length . toLazyByteString . listWord8
 
 benchNBbyteString :: [S.ByteString] -> Int64
 benchNBbyteString = L.length . toLazyByteString . mconcat . map copyByteString
 
 benchNBOptbyteString :: [S.ByteString] -> Int64
-benchNBOptbyteString = L.length . toLazyByteString . byteStringList
+benchNBOptbyteString = L.length . toLazyByteString . listCopyByteString
 
 benchOBbyteString :: [S.ByteString] -> Int64
 benchOBbyteString = L.length . B.toLazyByteString . mconcat . map B.copyByteString
@@ -189,6 +189,55 @@ instance Monoid NewBuilder where
     mconcat = foldr append mempty
     {-# INLINE mconcat #-}
 
+------------------------------------------------------------------------
+-- Writes 
+
+writeByte :: Word8 -> Write
+writeByte x = Write 1 (\pf -> poke pf x)
+{-# INLINE writeByte #-}
+
+writeByteString :: S.ByteString -> Write
+writeByteString bs = Write l io
+  where
+  (fptr, o, l) = S.toForeignPtr bs
+  io pf = withForeignPtr fptr $ \p -> copyBytes pf (p `plusPtr` o) l
+{-# INLINE writeByteString #-}
+
+-- | /O(n)./ Construct a NewBuilder from a write abstraction.
+--
+writeSingleton :: (a -> Write) -> a -> NewBuilder
+writeSingleton write = mkBuilder
+  where 
+  mkBuilder x = NewBuilder step
+    where
+      step k pf pe
+        | pf `plusPtr` size <= pe = do 
+            io pf
+            let pf' = pf `plusPtr` size
+            pf' `seq` k pf' pe
+        | otherwise               = return $ BufferFull size pf (step k)
+        where
+        Write size io = write x
+{-# INLINE writeSingleton #-}
+
+-- | Construct a builder writing a list of data from a write abstraction.
+writeList :: (a -> Write) -> [a] -> NewBuilder
+writeList write = mkBuilder
+  where
+  mkBuilder []  = empty
+  mkBuilder xs0 = NewBuilder $ step xs0
+    where
+      step xs1 k pf0 pe0 = go xs1 pf0
+        where
+          go []          !pf = k pf pe0
+          go xs@(x':xs') !pf
+            | pf `plusPtr` size <= pe0  = do 
+                io pf
+                go xs' (pf `plusPtr` size)
+            | otherwise = do return $ BufferFull size pf (step xs k)
+            where
+            Write size io = write x'
+{-# INLINE writeList #-}
 
 ------------------------------------------------------------------------
 
@@ -205,70 +254,21 @@ empty = NewBuilder id
 --  * @'toLazyByteString' ('singleton' b) = 'L.singleton' b@
 --
 singleton :: Word8 -> NewBuilder
-singleton x = fromWrite $ Write 1 (\pf -> poke pf x)
+singleton = writeSingleton writeByte
 
 -- | /O(n)./ A Builder taking a 'S.ByteString`, copying it.
 --
 copyByteString :: S.ByteString -> NewBuilder
-copyByteString byteString = fromWrite $ Write l f
-  where
-    (fptr, o, l) = S.toForeignPtr byteString
-    f pfree = do withForeignPtr fptr $ \p -> copyBytes pfree (p `plusPtr` o) l
+copyByteString = writeSingleton writeByteString
 
--- | /O(n)./ Construct a NewBuilder from a write abstraction.
---
-fromWrite :: Write -> NewBuilder
-fromWrite (Write !size !f) = NewBuilder step
-  where
-    step k pf pe
-      | pf `plusPtr` size <= pe = do f pf
-                                     let pf' = pf `plusPtr` size
-                                     pf' `seq` k pf' pe
-      | otherwise               = return $ BufferFull size pf (step k)
-{-# INLINE fromWrite #-}
+-- | Copy the bytes of the list to the buffer of the builder.
+listWord8 :: [Word8] -> NewBuilder
+listWord8 = writeList writeByte
 
--- SM: This performance is what we would like to allow also for clients of the
--- library with minimal effort.
---
--- Should be easily generalizable to storables.
---
--- Perhaps it can also be generalized without a loss of performance something
--- similar to the 'Write' construction in the Utf8Builder. This way one could
--- abstract some of the gory details by a higher-order function that gets
--- specialized accordingly due to the inlining.
---
--- INTERESTING: *not* inlining gives a huge speedup!
-word8List :: [Word8] -> NewBuilder
-word8List []  = empty
-word8List xs0 = NewBuilder $ step xs0
-  where
-    step xs1 k pf0 pe0 = go xs1 pf0
-      where
-        go []          !pf = k pf pe0
-        go xs@(x':xs') !pf
-          | pf < pe0  = do poke pf x'
-                           go xs' (pf `plusPtr` 1)
-          | otherwise = do return $ BufferFull 1 pf (step xs k)
-{-# NOINLINE word8List #-} -- NOT inlining is crucial for performance. I don't know yet why :-(
-
--- | Inlining the construction for lists makes a HUGE difference!
---
--- THIS should be abstractable as well using Writes
-byteStringList :: [S.ByteString] -> NewBuilder
-byteStringList []  = empty
-byteStringList xs0 = NewBuilder $ step xs0
-  where
-    step xs1 k pf0 pe0 = go xs1 pf0
-      where
-        go []          !pf = k pf pe0
-        go xs@(x':xs') !pf
-          | pf `plusPtr` l <= pe0  = do 
-              withForeignPtr fptr $ \p -> copyBytes pf (p `plusPtr` o) l
-              go xs' (pf `plusPtr` l)
-          | otherwise = do return $ BufferFull l pf (step xs k)
-          where
-          (fptr, o, l) = S.toForeignPtr x'
-{-# NOINLINE byteStringList #-}
+-- | Copy each bytestring from the list of bytestrings to the buffer of the
+-- builder.
+listCopyByteString :: [S.ByteString] -> NewBuilder
+listCopyByteString = writeList writeByteString
 
 
 -- copied from Data.ByteString.Lazy
@@ -277,6 +277,8 @@ defaultSize = 32 * k - overhead
     where k = 1024
           overhead = 2 * sizeOf (undefined :: Int)
 
+-- SM: Note it would be simple to extend this function such that the
+-- defaultSize can be given explicitely.
 runBuilder :: NewBuilder -> [S.ByteString] -> [S.ByteString]
 runBuilder (NewBuilder b) k = 
     inlinePerformIO $ go defaultSize (b finalStep)
@@ -289,11 +291,11 @@ runBuilder (NewBuilder b) k =
          case next of
            Done pf' | pf == pf' -> return k
                     | otherwise -> return $ S.PS buf 0 (pf' `minusPtr` pf) : k 
-           BufferFull newSize pf' nextStep ->
-             -- INV: pf < pf', i.e., some data must have been written  
-             -- FIXME: Remove this invariant!
-             return $ S.PS buf 0 (pf' `minusPtr` pf) : 
-                      inlinePerformIO (go (max newSize defaultSize) nextStep)
+           BufferFull newSize pf' nextStep
+             | pf == pf' -> error "runBuilder: buffer cannot be full; no data was written."
+             | otherwise ->
+                 return $ S.PS buf 0 (pf' `minusPtr` pf) : 
+                          inlinePerformIO (go (max newSize defaultSize) nextStep)
 
 toLazyByteString :: NewBuilder -> L.ByteString
 toLazyByteString = L.fromChunks . flip runBuilder []

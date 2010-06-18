@@ -104,12 +104,16 @@ import GHC.Word (uncheckedShiftRL64#)
 ------------------------------------------------------------------------
 
 main = defaultMain $
-    [ bench "[Word8]/old/singletons" $ nf benchOBsingletons byteData   ] ++
-    [ bench "[Word8]/new/singletons" $ nf benchNBsingletons byteData   ] ++
-    [ bench "[Word8]/new/word8list" $ nf benchNBOptsingletons byteData ] ++
-    [ bench "[Bytestring]/old/fromByteString" $ nf benchOBbyteString byteStringData ] ++
-    [ bench "[Bytestring]/new/fromByteString" $ nf benchNBbyteString byteStringData ] ++
-    [ bench "[Bytestring]/new/byteStringList" $ nf benchNBOptbyteString byteStringData ] ++
+    -- [ bench "[Word8]/old/singletons" $ nf benchOBsingletons byteData   ] ++
+    -- [ bench "[Word8]/new/singletons" $ nf benchNBsingletons byteData   ] ++
+    -- [ bench "[Char]/new/singletons" $ nf benchNBcharSingletons charData ] ++
+    -- [ bench "[HtmlChar]/new/singletons" $ nf benchNBhtmlCharSingletons charData ] ++
+    [ bench "[Word8]/new/list" $ nf benchNBword8List byteData ] ++
+    [ bench "[Char]/new/list" $ nf benchNBcharList charData ] ++
+    [ bench "[HtmlChar]/new/list" $ nf benchNBhtmlCharList charData ] ++
+    -- [ bench "[Bytestring]/old/fromByteString" $ nf benchOBbyteString byteStringData ] ++
+    -- [ bench "[Bytestring]/new/fromByteString" $ nf benchNBbyteString byteStringData ] ++
+    -- [ bench "[Bytestring]/new/list" $ nf benchNBOptbyteString byteStringData ] ++
     []
 
 benchOBsingletons :: [Word8] -> Int64
@@ -118,8 +122,22 @@ benchOBsingletons = L.length . B.toLazyByteString . mconcat . map B.singleton
 benchNBsingletons :: [Word8] -> Int64
 benchNBsingletons = L.length . toLazyByteString . mconcat . map singleton
 
-benchNBOptsingletons :: [Word8] -> Int64
-benchNBOptsingletons = L.length . toLazyByteString . listWord8
+benchNBword8List :: [Word8] -> Int64
+benchNBword8List = L.length . toLazyByteString . listWord8
+
+benchNBcharSingletons :: [Char] -> Int64
+benchNBcharSingletons = L.length . toLazyByteString . mconcat . map utf8Char
+
+benchNBhtmlCharSingletons :: [Char] -> Int64
+benchNBhtmlCharSingletons = L.length . toLazyByteString . mconcat . map htmlEscapedUtf8Char
+
+benchNBcharList :: [Char] -> Int64
+benchNBcharList = L.length . toLazyByteString . utf8CharList
+
+benchNBhtmlCharList :: [Char] -> Int64
+benchNBhtmlCharList = L.length . toLazyByteString . htmlEscapedUtf8CharList
+
+
 
 benchNBbyteString :: [S.ByteString] -> Int64
 benchNBbyteString = L.length . toLazyByteString . mconcat . map copyByteString
@@ -138,8 +156,13 @@ byteData :: [Word8]
 byteData = take repetitions $ cycle [1..]
 {-# NOINLINE byteData #-}
 
+charData :: [Char]
+charData = take repetitions $ cycle ['a'..'z']  
+-- For now choose the data such that the same number of bytes is written as for
+-- the byteData.
+
 byteStringData :: [S.ByteString]
-byteStringData = replicate 20000 "<img>"
+byteStringData = replicate (repetitions `div` 5) "<img>"
 {-# NOINLINE byteStringData #-}
 
 ------------------------------------------------------------------------
@@ -239,6 +262,68 @@ writeList write = mkBuilder
             Write size io = write x'
 {-# INLINE writeList #-}
 
+-- | Write a Unicode character, encoding it as UTF-8.
+--
+writeChar :: Char   -- ^ Character to write.
+          -> Write  -- ^ Resulting write.
+writeChar = encodeCharUtf8 f1 f2 f3 f4
+  where
+    f1 x = Write 1 $ \ptr -> poke ptr x
+
+    f2 x1 x2 = Write 2 $ \ptr -> do poke ptr x1
+                                    poke (ptr `plusPtr` 1) x2
+
+    f3 x1 x2 x3 = Write 3 $ \ptr -> do poke ptr x1
+                                       poke (ptr `plusPtr` 1) x2
+                                       poke (ptr `plusPtr` 2) x3
+
+    f4 x1 x2 x3 x4 = Write 4 $ \ptr -> do poke ptr x1
+                                          poke (ptr `plusPtr` 1) x2
+                                          poke (ptr `plusPtr` 2) x3
+                                          poke (ptr `plusPtr` 3) x4
+{-# INLINE writeChar #-}
+
+-- | Encode a Unicode character to another datatype, using UTF-8. This function
+-- acts as an abstract way of encoding characters, as it is unaware of what
+-- needs to happen with the resulting bytes: you have to specify functions to
+-- deal with those.
+--
+encodeCharUtf8 :: (Word8 -> a)                             -- ^ 1-byte UTF-8.
+               -> (Word8 -> Word8 -> a)                    -- ^ 2-byte UTF-8.
+               -> (Word8 -> Word8 -> Word8 -> a)           -- ^ 3-byte UTF-8.
+               -> (Word8 -> Word8 -> Word8 -> Word8 -> a)  -- ^ 4-byte UTF-8.
+               -> Char                                     -- ^ Input 'Char'.
+               -> a                                        -- ^ Result.
+encodeCharUtf8 f1 f2 f3 f4 c = case ord c of
+    x | x <= 0xFF -> f1 $ fromIntegral x
+      | x <= 0x07FF ->
+           let x1 = fromIntegral $ (x `shiftR` 6) + 0xC0
+               x2 = fromIntegral $ (x .&. 0x3F)   + 0x80
+           in f2 x1 x2
+      | x <= 0xFFFF ->
+           let x1 = fromIntegral $ (x `shiftR` 12) + 0xE0
+               x2 = fromIntegral $ ((x `shiftR` 6) .&. 0x3F) + 0x80
+               x3 = fromIntegral $ (x .&. 0x3F) + 0x80
+           in f3 x1 x2 x3
+      | otherwise ->
+           let x1 = fromIntegral $ (x `shiftR` 18) + 0xF0
+               x2 = fromIntegral $ ((x `shiftR` 12) .&. 0x3F) + 0x80
+               x3 = fromIntegral $ ((x `shiftR` 6) .&. 0x3F) + 0x80
+               x4 = fromIntegral $ (x .&. 0x3F) + 0x80
+           in f4 x1 x2 x3 x4
+{-# INLINE encodeCharUtf8 #-}
+
+-- | Write an unicode character to a 'Builder', doing HTML escaping.
+--
+writeHtmlEscapedChar :: Char -> Write
+writeHtmlEscapedChar '<'  = writeByteString "&lt;"
+writeHtmlEscapedChar '>'  = writeByteString "&gt;"
+writeHtmlEscapedChar '&'  = writeByteString "&amp;"
+writeHtmlEscapedChar '"'  = writeByteString "&quot;"
+writeHtmlEscapedChar '\'' = writeByteString "&apos;"
+writeHtmlEscapedChar c    = writeChar c
+{-# INLINE writeHtmlEscapedChar #-}
+
 ------------------------------------------------------------------------
 
 -- | /O(1)./ The empty NewBuilder, satisfying
@@ -260,6 +345,22 @@ singleton = writeSingleton writeByte
 --
 copyByteString :: S.ByteString -> NewBuilder
 copyByteString = writeSingleton writeByteString
+
+-- | An unescaped, utf8 encoded character.
+utf8Char :: Char -> NewBuilder
+utf8Char = writeSingleton writeChar
+
+-- | A list of unescaped, utf8 encoded character.
+utf8CharList :: [Char] -> NewBuilder
+utf8CharList = writeList writeChar
+
+-- | A HTML escaped, utf8 encoded character.
+htmlEscapedUtf8Char :: Char -> NewBuilder
+htmlEscapedUtf8Char = writeSingleton writeHtmlEscapedChar
+
+-- | A list of HTML escaped, utf8 encoded character.
+htmlEscapedUtf8CharList :: [Char] -> NewBuilder
+htmlEscapedUtf8CharList = writeList writeHtmlEscapedChar
 
 -- | Copy the bytes of the list to the buffer of the builder.
 listWord8 :: [Word8] -> NewBuilder

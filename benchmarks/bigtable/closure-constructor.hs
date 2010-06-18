@@ -13,9 +13,7 @@ import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
 import GHC.Exts (IsString(..))
 
-import Text.Blaze.Internal.Utf8Builder (Utf8Builder)
-import qualified Text.Blaze.Internal.Utf8Builder as UB
-import qualified Text.Blaze.Internal.Utf8BuilderHtml as HB
+import Data.Binary.NewBuilder as NB hiding (main)
 
 main :: IO ()
 main = defaultMain $
@@ -51,23 +49,23 @@ bigTableData :: [[Int]]
 bigTableData = replicate rows [1..10]
 {-# NOINLINE bigTableData #-}
 
-manyAttributesData :: [Text]
+manyAttributesData :: [String]
 manyAttributesData = wideTreeData
 
-basicData :: (Text, Text, [Text])
+basicData :: (String, String, [String])
 basicData = ("Just a test", "joe", items)
 {-# NOINLINE basicData #-}
 
-items :: [Text]
-items = map (("Number " `mappend`) . T.pack . show) [1 .. 14]
+items :: [String]
+items = map (("Number " `mappend`) . show) [1 .. 14]
 {-# NOINLINE items #-}
 
-wideTreeData :: [Text]
+wideTreeData :: [String]
 wideTreeData = take 5000 $
     cycle ["λf.(λx.fxx)(λx.fxx)", "These & Those", "Foobar", "lol"]
 {-# NOINLINE wideTreeData #-}
 
-wideTreeEscapingData :: [Text]
+wideTreeEscapingData :: [String]
 wideTreeEscapingData = take 1000 $
     cycle ["<><>", "\"lol\"", "<&>", "'>>'"]
 {-# NOINLINE wideTreeEscapingData #-}
@@ -91,38 +89,38 @@ bigTable t = table $ mconcat $ map row t
 
 -- | Render a simple HTML page with some data.
 --
-basic :: (Text, Text, [Text])  -- ^ (Title, User, Items)
+basic :: (String, String, [String])  -- ^ (Title, User, Items)
       -> Html                  -- ^ Result.
 basic (title', user, items) =  html $
-    (head $ title $ text title') <>
+    (head $ title $ string title') <>
     (body $
-        (idA "header" $ div $ (h1 $ text title')) <>
-        (p $ "Hello, " `mappend` text user `mappend` text "!") <>
+        (idA "header" $ div $ (h1 $ string title')) <>
+        (p $ "Hello, " `mappend` string user `mappend` string "!") <>
         (p $ "Hello, me!") <>
         (p $ "Hello, world!") <>
         (h2 $ "loop") <>
-        (mconcat $ map (li . text) items) <>
+        (mconcat $ map (li . string) items) <>
         (idA "footer" $ div mempty))
 
 -- | A benchmark producing a very wide but very shallow tree.
 --
-wideTree :: [Text]  -- ^ Text to create a tree from.
+wideTree :: [String]  -- ^ String to create a tree from.
          -> Html    -- ^ Result.
-wideTree = div . mconcat . map ((idA "foo" . p) . text)
+wideTree = div . mconcat . map ((idA "foo" . p) . string)
 
 -- | Create a very deep tree with the specified tags.
 --
 deepTree :: [Html -> Html]  -- ^ List of parent elements to nest.
          -> Html                -- ^ Result.
-deepTree = ($ text "deep") . foldl1 (.)
+deepTree = ($ "deep") . foldl1 (.)
 
 -- | Create an element with many attributes.
 --
-manyAttributes :: [Text]  -- ^ List of attribute values.
+manyAttributes :: [String]  -- ^ List of attribute values.
                -> Html    -- ^ Result.
 manyAttributes = foldl setAttribute img
   where
-    setAttribute html value = idA (textValue value) html
+    setAttribute html value = idA (stringValue value) html
     {-# INLINE setAttribute #-}
 
 ------------------------------------------------------------------------------
@@ -269,6 +267,9 @@ text t = Html $ \_ -> Text t
 textValue :: Text -> AttributeValue
 textValue t = AttributeValue $ \k -> Text t k
 
+stringValue :: String -> AttributeValue
+stringValue t = AttributeValue $ \k -> HaskellString t k
+
 flattenHtml :: Html -> HtmlPiece
 flattenHtml (Html f) = f id EmptyPiece
 {-# INLINE flattenHtml #-}
@@ -312,13 +313,13 @@ flattenHtml (Html f) = f id EmptyPiece
 -- still almost the same time, but now the required data is directly available
 -- :-)
 encodeUtf8 :: HtmlPiece -> L.ByteString
-encodeUtf8 = UB.toLazyByteString . go
+encodeUtf8 = NB.toLazyByteString . go
   where
   go EmptyPiece           = mempty
-  go (StaticString   s p) = (UB.unsafeFromByteString $ getByteString s) `mappend` go p
-  go (HaskellString  s p) = (HB.escapeHtmlFromString s) `mappend` go p
-  go (Utf8ByteString s p) = (UB.unsafeFromByteString s) `mappend` go p
-  go (Text           s p) = (HB.escapeHtmlFromText s) `mappend` go p
+  go (StaticString   s p) = (NB.copyByteString $ getByteString s) `mappend` go p
+  go (HaskellString  s p) = (NB.htmlEscapedUtf8CharList s) `mappend` go p
+  go (Utf8ByteString s p) = error "encodeUtf8: utf8bytestring not yet implemented" -- (UB.unsafeFromByteString s) `mappend` go p
+  go (Text           s p) = error "encodeUtf8: text not yet implemented" -- (HB.escapeHtmlFromText s) `mappend` go p
 
 flattenAndEncode :: Html -> L.ByteString
 flattenAndEncode = encodeUtf8 . flattenHtml
@@ -374,7 +375,7 @@ instance Monoid StaticMultiString where
 staticMultiString :: String -> StaticMultiString
 staticMultiString s = StaticMultiString (cpsAppend s) bs t
   where
-    bs = S.pack $ L.unpack $ UB.toLazyByteString $ UB.fromString s
+    bs = S.pack $ L.unpack $ NB.toLazyByteString $ NB.utf8CharList s
     t  = T.pack s
 
     cpsAppend :: [a] -> [a] -> [a]

@@ -277,11 +277,20 @@ defaultSize = 32 * k - overhead
     where k = 1024
           overhead = 2 * sizeOf (undefined :: Int)
 
--- SM: Note it would be simple to extend this function such that the
--- defaultSize can be given explicitely.
+-- | Run the builder with the default buffer size.
 runBuilder :: NewBuilder -> [S.ByteString] -> [S.ByteString]
-runBuilder (NewBuilder b) k = 
-    inlinePerformIO $ go defaultSize (b finalStep)
+runBuilder = genRunBuilder defaultSize
+
+-- | Run the builder with buffers of at least the given size.
+--
+-- Note that the builders should guarantee that on average the desired buffer
+-- size is attained almost perfectly. "Almost" because builders may decide to
+-- start a new buffer and not completely fill the existing buffer, if this is
+-- faster. However, they should not spill too much of the buffer, if they
+-- cannot compensate for it.
+genRunBuilder :: Int -> NewBuilder -> [S.ByteString] -> [S.ByteString]
+genRunBuilder bufSize (NewBuilder b) k = 
+    inlinePerformIO $ go bufSize (b finalStep)
   where
     finalStep pf _ = return $ Done pf
     go !size !step = do
@@ -295,7 +304,7 @@ runBuilder (NewBuilder b) k =
              | pf == pf' -> error "runBuilder: buffer cannot be full; no data was written."
              | otherwise ->
                  return $ S.PS buf 0 (pf' `minusPtr` pf) : 
-                          inlinePerformIO (go (max newSize defaultSize) nextStep)
+                          inlinePerformIO (go (max newSize bufSize) nextStep)
 
 toLazyByteString :: NewBuilder -> L.ByteString
 toLazyByteString = L.fromChunks . flip runBuilder []

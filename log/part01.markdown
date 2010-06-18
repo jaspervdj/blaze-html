@@ -705,3 +705,18 @@ created a small website for BlazeHtml, since we are going to make a small
 release soon. The website contains a tutorial (which should be enough for now,
 in the long term I'd also like to add a number of examples). For now, the
 website can be found at [jaspervdj.be/blaze](http://jaspervdj.be/blaze).
+
+Friday, June 18th, morning
+==========================
+
+The "BigTableServer" has advanced further in the meanwhile. We adapted it
+into a more generic server, which serves all benchmarks available in the
+`Utf8Html` benchmark module. That way, the server gives some information about
+the benchmarks, as well as serving the benchmarks themselves.
+
+The information about the benchmarks is served at the root ('/') URL. The
+benchmarks are then served on '/benchmarkName', for example, '/bigTable'. Our
+first (empirical) tests of this server shown that the overhead for sending the
+response is quite small, so most time is spent generating HTML. This is what we
+want, since it means these benchmarks should also give a good idea on how fast
+we are.

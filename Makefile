@@ -17,11 +17,8 @@ bench-builder:
 	ghc --make -O2 -fforce-recomp -isrc -ilib/binary-0.5.0.2/src -main-is Utf8Builder benchmarks/Utf8Builder.hs
 	./benchmarks/Utf8Builder --resamples 10000
 
-bench-bigtableserver:
-	ghc --make -threaded -O2 -fforce-recomp -isrc -ilib/binary-0.5.0.2/src doc/examples/BigTableServer.lhs
-
 bench-benchmarkserver:
-	ghc --make -threaded -O2 -fforce-recomp -isrc -ilib/binary-0.5.0.2/src -ibenchmarks benchmarks/BenchmarkServer.hs
+	ghc --make -threaded -O2 -fforce-recomp -isrc -ilib/binary-0.5.0.2/src -ibenchmarks doc/examples/BenchmarkServer.lhs
 
 bench-new-builder:
 	ghc --make -O2 -fforce-recomp -isrc -ilib/binary-0.5.0.2/src -main-is Data.Binary.NewBuilder lib/binary-0.5.0.2/src/Data/Binary/NewBuilder.hs

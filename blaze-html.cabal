@@ -2,7 +2,7 @@
 -- options, see
 -- http://www.haskell.org/cabal/release/cabal-latest/doc/users-guide/authors.html#pkg-descr.
 -- The name of the package.
-Name:                BlazeHtml
+Name:                blaze-html
 
 -- The package version. See the Haskell package versioning policy
 -- (http://www.haskell.org/haskellwiki/Package_versioning_policy) for
@@ -10,13 +10,16 @@ Name:                BlazeHtml
 Version:             0.1
 
 -- A short (one-line) description of the package.
-Synopsis:            A blazingly fast HTML generation library.
+Synopsis:            A blazingly fast HTML combinator library.
+Description:         A blazingly fast HTML combinator library for the Haskell
+                     programming language.
 
 -- A longer description of the package.
 -- Description:         
 
 -- URL for the project homepage or repository.
-Homepage:            http://github.com/jaspervdj/BlazeHtml
+Homepage:            http://jaspervdj.be/blaze
+Bug-Reports:         http://github.com/jaspervdj/BlazeHtml/issues
 
 -- The license under which the package is released.
 License:             BSD3

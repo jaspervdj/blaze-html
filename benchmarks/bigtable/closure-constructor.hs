@@ -1,10 +1,11 @@
 -- | Bigtable benchmark using a constructor-based implementation.
 --
-{-# LANGUAGE OverloadedStrings, BangPatterns #-}
+{-# LANGUAGE OverloadedStrings, BangPatterns, Rank2Types #-}
 
 import Data.Monoid (Monoid (..))
 
 import Prelude hiding (div, head)
+import Control.Monad (forM_)
 import Criterion.Main
 import qualified Data.ByteString.Lazy as L
 import qualified Data.ByteString as S
@@ -70,7 +71,7 @@ wideTreeEscapingData = take 1000 $
     cycle ["<><>", "\"lol\"", "<&>", "'>>'"]
 {-# NOINLINE wideTreeEscapingData #-}
 
-deepTreeData :: [Html -> Html]
+deepTreeData :: [Html a -> Html a]
 deepTreeData = take 1000 $
     cycle [table, tr, td, p, div]
 {-# NOINLINE deepTreeData #-}
@@ -81,8 +82,8 @@ deepTreeData = take 1000 $
 
 -- | Render the argument matrix as an HTML table.
 --
-bigTable :: [[Int]]        -- ^ Matrix.
-         -> Html  -- ^ Result.
+bigTable :: [[Int]]  -- ^ Matrix.
+         -> Html a   -- ^ Result.
 bigTable t = table $ mconcat $ map row t
   where
     row r = tr $ mconcat $ map (td . string . show) r
@@ -90,7 +91,7 @@ bigTable t = table $ mconcat $ map row t
 -- | Render a simple HTML page with some data.
 --
 basic :: (String, String, [String])  -- ^ (Title, User, Items)
-      -> Html                  -- ^ Result.
+      -> Html a                  -- ^ Result.
 basic (title', user, items) =  html $
     (head $ title $ string title') <>
     (body $
@@ -105,19 +106,19 @@ basic (title', user, items) =  html $
 -- | A benchmark producing a very wide but very shallow tree.
 --
 wideTree :: [String]  -- ^ String to create a tree from.
-         -> Html    -- ^ Result.
+         -> Html a    -- ^ Result.
 wideTree = div . mconcat . map ((idA "foo" . p) . string)
 
 -- | Create a very deep tree with the specified tags.
 --
-deepTree :: [Html -> Html]  -- ^ List of parent elements to nest.
-         -> Html                -- ^ Result.
+deepTree :: [Html a -> Html a]  -- ^ List of parent elements to nest.
+         -> Html a                -- ^ Result.
 deepTree = ($ "deep") . foldl1 (.)
 
 -- | Create an element with many attributes.
 --
 manyAttributes :: [String]  -- ^ List of attribute values.
-               -> Html    -- ^ Result.
+               -> Html a    -- ^ Result.
 manyAttributes = foldl setAttribute img
   where
     setAttribute html value = idA (stringValue value) html
@@ -153,11 +154,11 @@ manyAttributes = foldl setAttribute img
 --
 -- Looking forward to the first results for the BigTable benchmark :-)
 
-newtype Html = Html
+newtype Html a = Html
     { unHtml :: (HtmlPiece -> HtmlPiece) -> HtmlPiece -> HtmlPiece
     }
 
-instance Monoid Html where
+instance Monoid (Html a) where
     mempty = Html $ const id
     {-# INLINE mempty #-}
 
@@ -167,11 +168,21 @@ instance Monoid Html where
     mconcat = foldr mappend mempty
     {-# INLINE mconcat #-}
 
-instance IsString Html where
+instance Monad Html where
+    return a = mempty
+    {-# INLINE return #-}
+
+    (Html f) >> (Html g) = Html $ \x -> f x . g x
+    {-# INLINE (>>) #-}
+
+    f >>= g = f >> g (error "_|_")
+    {-# INLINE (>>=) #-}
+
+instance IsString (Html a) where
     fromString s = Html $ \_ k -> StaticString (fromString s) k
     {-# INLINE fromString #-}
 
-type Attribute = AttributeValue -> Html -> Html
+type Attribute = forall a. AttributeValue -> Html a -> Html a
 
 newtype AttributeValue = AttributeValue
     { unAttributeValue :: HtmlPiece -> HtmlPiece
@@ -180,12 +191,12 @@ newtype AttributeValue = AttributeValue
 instance IsString AttributeValue where
     fromString s = AttributeValue $ \k -> StaticString (staticMultiString s) k
 
-parent :: StaticMultiString -> StaticMultiString -> Html -> Html
+parent :: StaticMultiString -> StaticMultiString -> Html a -> Html a
 parent open close = \inner -> Html $ \attrs k ->
     StaticString open (attrs (staticGreater (unHtml inner id (StaticString close k))))
 {-# INLINE parent #-}
 
-leaf :: StaticMultiString -> Html
+leaf :: StaticMultiString -> Html a
 leaf open = Html $ \attrs k ->
     StaticString open (attrs (staticLeafEnd k))
 {-# INLINE leaf #-}
@@ -195,15 +206,15 @@ attribute key = \(AttributeValue value) h -> Html $ \attrs k ->
     unHtml h (\j -> attrs (StaticString key (value $ staticDoubleQuote j))) k
 {-# INLINE attribute #-}
 
-table :: Html -> Html
+table :: Html a -> Html a
 table = parent "<table" "</table>"
 {-# INLINE table #-}
 
-tr :: Html -> Html
+tr :: Html a -> Html a
 tr = parent "<tr" "</tr>"
 {-# INLINE tr #-}
 
-td :: Html -> Html
+td :: Html a -> Html a
 td = parent "<td" "</td>"
 {-# INLINE td #-}
 
@@ -211,43 +222,43 @@ idA :: Attribute
 idA = attribute " id=\""
 {-# INLINE idA #-}
 
-img :: Html
+img :: Html a
 img = leaf "<img"
 {-# INLINE img #-}
 
-head :: Html -> Html
+head :: Html a -> Html a
 head = parent "<head" "</head>"
 {-# INLINE head #-}
 
-div :: Html -> Html
+div :: Html a -> Html a
 div = parent "<div" "</div>"
 {-# INLINE div #-}
 
-p :: Html -> Html
+p :: Html a -> Html a
 p = parent "<p" "</p>"
 {-# INLINE p #-}
 
-h1 :: Html -> Html
+h1 :: Html a -> Html a
 h1 = parent "<h1" "<h1/>"
 {-# INLINE h1 #-}
 
-h2 :: Html -> Html
+h2 :: Html a -> Html a
 h2 = parent "<h2" "<h2/>"
 {-# INLINE h2 #-}
 
-li :: Html -> Html
+li :: Html a -> Html a
 li = parent "<li" "<li/>"
 {-# INLINE li #-}
 
-html :: Html -> Html
+html :: Html a -> Html a
 html = parent "<html" "<html/>"
 {-# INLINE html #-}
 
-title :: Html -> Html
+title :: Html a -> Html a
 title = parent "<title" "<title/>"
 {-# INLINE title #-}
 
-body :: Html -> Html
+body :: Html a -> Html a
 body = parent "<body" "<body/>"
 {-# INLINE body #-}
 
@@ -256,11 +267,11 @@ h ! a = h a
 (<>) :: Monoid a => a -> a -> a
 (<>) = mappend
 
-string :: String -> Html
+string :: String -> Html a
 string s = Html $ \_ -> HaskellString s
 {-# INLINE string #-}
 
-text :: Text -> Html
+text :: Text -> Html a
 text t = Html $ \_ -> Text t
 {-# INLINE text #-}
 
@@ -270,7 +281,7 @@ textValue t = AttributeValue $ \k -> Text t k
 stringValue :: String -> AttributeValue
 stringValue t = AttributeValue $ \k -> HaskellString t k
 
-flattenHtml :: Html -> HtmlPiece
+flattenHtml :: Html a -> HtmlPiece
 flattenHtml (Html f) = f id EmptyPiece
 {-# INLINE flattenHtml #-}
 
@@ -321,7 +332,7 @@ encodeUtf8 = NB.toLazyByteString . go
   go (Utf8ByteString s p) = error "encodeUtf8: utf8bytestring not yet implemented" -- (UB.unsafeFromByteString s) `mappend` go p
   go (Text           s p) = error "encodeUtf8: text not yet implemented" -- (HB.escapeHtmlFromText s) `mappend` go p
 
-flattenAndEncode :: Html -> L.ByteString
+flattenAndEncode :: Html a -> L.ByteString
 flattenAndEncode = encodeUtf8 . flattenHtml
 {-# INLINE flattenAndEncode #-}
 

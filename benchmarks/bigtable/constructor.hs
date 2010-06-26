@@ -1,6 +1,7 @@
 -- | Bigtable benchmark using a constructor-based implementation.
 --
 {-# LANGUAGE OverloadedStrings #-}
+module Main where
 
 import Data.Monoid (Monoid (..))
 
@@ -13,8 +14,7 @@ import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
 import GHC.Exts (IsString(..))
 
-import Text.Blaze.Internal.Utf8Builder (Utf8Builder)
-import qualified Text.Blaze.Internal.Utf8Builder as UB
+import qualified Data.Binary.NewBuilder as NB
 
 main :: IO ()
 main = defaultMain $ 
@@ -48,23 +48,23 @@ bigTableData :: [[Int]]
 bigTableData = replicate rows [1..10]
 {-# NOINLINE bigTableData #-}
 
-manyAttributesData :: [Text]
+manyAttributesData :: [String]
 manyAttributesData = wideTreeData
 
-basicData :: (Text, Text, [Text])
+basicData :: (String, String, [String])
 basicData = ("Just a test", "joe", items)
 {-# NOINLINE basicData #-}
 
-items :: [Text]
-items = map (("Number " `mappend`) . T.pack . show) [1 .. 14]
+items :: [String]
+items = map (("Number " `mappend`) . show) [1 .. 14]
 {-# NOINLINE items #-}
 
-wideTreeData :: [Text]
+wideTreeData :: [String]
 wideTreeData = take 5000 $
     cycle ["λf.(λx.fxx)(λx.fxx)", "These & Those", "Foobar", "lol"]
 {-# NOINLINE wideTreeData #-}
 
-wideTreeEscapingData :: [Text]
+wideTreeEscapingData :: [String]
 wideTreeEscapingData = take 1000 $
     cycle ["<><>", "\"lol\"", "<&>", "'>>'"]
 {-# NOINLINE wideTreeEscapingData #-}
@@ -88,38 +88,38 @@ bigTable t = table $ mconcat $ map row t
 
 -- | Render a simple HTML page with some data.
 --
-basic :: (Text, Text, [Text])  -- ^ (Title, User, Items)
+basic :: (String, String, [String])  -- ^ (Title, User, Items)
       -> Html                  -- ^ Result.
 basic (title', user, items) =  html $
-    (head $ title $ text title') <>
+    (head $ title $ string title') <>
     (body $
-        (idA "header" $ div $ (h1 $ text title')) <>
-        (p $ "Hello, " `mappend` text user `mappend` text "!") <>
+        (idA "header" $ div $ (h1 $ string title')) <>
+        (p $ "Hello, " `mappend` string user `mappend` string "!") <>
         (p $ "Hello, me!") <>
         (p $ "Hello, world!") <>
         (h2 $ "loop") <>
-        (mconcat $ map (li . text) items) <>
+        (mconcat $ map (li . string) items) <>
         (idA "footer" $ div mempty))
 
 -- | A benchmark producing a very wide but very shallow tree.
 --
-wideTree :: [Text]  -- ^ Text to create a tree from.
+wideTree :: [String]  -- ^ Text to create a tree from.
          -> Html    -- ^ Result.
-wideTree = div . mconcat . map ((idA "foo" . p) . text)
+wideTree = div . mconcat . map ((idA "foo" . p) . string)
 
 -- | Create a very deep tree with the specified tags.
 --
 deepTree :: [Html -> Html]  -- ^ List of parent elements to nest.
          -> Html                -- ^ Result.
-deepTree = ($ text "deep") . foldl1 (.)
+deepTree = ($ string "deep") . foldl1 (.)
 
 -- | Create an element with many attributes.
 --
-manyAttributes :: [Text]  -- ^ List of attribute values.
+manyAttributes :: [String]  -- ^ List of attribute values.
                -> Html    -- ^ Result.
 manyAttributes = foldl setAttribute img
   where
-    setAttribute html value = idA (Text value) html
+    setAttribute html value = idA (HaskellString value) html
     {-# INLINE setAttribute #-}
 
 ------------------------------------------------------------------------------
@@ -259,26 +259,26 @@ h ! a = h a
 (<>) = mappend
 
 renderHtml :: Html -> L.ByteString
-renderHtml = UB.toLazyByteString . renderBuilder
+renderHtml = NB.toLazyByteString . renderBuilder
 {-# INLINE renderHtml #-}
 
-renderBuilder :: Html -> Utf8Builder
+renderBuilder :: Html -> NB.NewBuilder
 renderBuilder = go mempty 
   where
     go attrs (Parent open close content) =
-                  getUtf8Builder open
+                  getNewBuilder  open
         `mappend` attrs
-        `mappend` UB.fromChar '>'
+        `mappend` NB.utf8Char '>'
         `mappend` go mempty content
-        `mappend` getUtf8Builder close
+        `mappend` getNewBuilder  close
     go attrs (Leaf begin end) = 
-                  getUtf8Builder begin
+                  getNewBuilder  begin
         `mappend` attrs
-        `mappend` getUtf8Builder end
+        `mappend` getNewBuilder  end
     go attrs (AddAttribute key value h) =
-      go (attrs `mappend` getUtf8Builder key 
+      go (attrs `mappend` getNewBuilder  key 
                 `mappend` fromChoiceString value
-                `mappend` UB.fromChar '"')
+                `mappend` NB.utf8Char '"')
          h
     go _ (Content content) = fromChoiceString content
     go attrs (Append h1 h2) = go attrs h1 `mappend` go attrs h2
@@ -288,11 +288,11 @@ renderBuilder = go mempty
 
 {-# INLINE renderBuilder #-}
 
-fromChoiceString :: ChoiceString -> Utf8Builder
-fromChoiceString (StaticString   s) = getUtf8Builder s
-fromChoiceString (HaskellString  s) = UB.fromString s
-fromChoiceString (Utf8ByteString s) = UB.unsafeFromByteString s
-fromChoiceString (Text           s) = UB.fromText s
+fromChoiceString :: ChoiceString -> NB.NewBuilder
+fromChoiceString (StaticString   s) = getNewBuilder s
+fromChoiceString (HaskellString  s) = NB.utf8CharList s
+fromChoiceString (Utf8ByteString s) = NB.copyByteString s
+fromChoiceString (Text           s) = error "Text not supported yet."
 {-# INLINE fromChoiceString #-}
 
 -- | The key ingredient is a string representation that supports all possible
@@ -304,7 +304,7 @@ fromChoiceString (Text           s) = UB.fromText s
 -- better be replaced by a builder.
 data StaticMultiString = StaticMultiString
        { getHaskellString :: String
-       , getUtf8Builder   :: Utf8Builder
+       , getNewBuilder    :: NB.NewBuilder
        , getText          :: Text
        }
 
@@ -320,8 +320,10 @@ instance Monoid StaticMultiString where
 -- | A static string that is built once and used many times. Here, we could
 -- also use the `cached` (optimizePiece) construction for our builder.
 staticMultiString :: String -> StaticMultiString
-staticMultiString s = StaticMultiString s (UB.optimizePiece $ UB.fromText t) t
+staticMultiString s = StaticMultiString s b t
   where
+    b = NB.copyByteString $ S.pack $ L.unpack $
+            NB.toLazyByteString $ NB.utf8CharList s
     t = T.pack s
 {-# INLINE staticMultiString #-}
 
@@ -382,12 +384,11 @@ flattenHtml h = go id h
 --
 -- Note that for this to work perfectly the language of HtmlPieces has to be
 -- adjusted.
-encodeUtf8 :: [HtmlPiece] -> Utf8Builder
+encodeUtf8 :: [HtmlPiece] -> NB.NewBuilder
 encodeUtf8 = mconcat . map fromChoiceString
 
 flattenAndEncode :: Html -> L.ByteString
-flattenAndEncode h = UB.toLazyByteString . encodeUtf8 $ flattenHtml h []
-
+flattenAndEncode h = NB.toLazyByteString . encodeUtf8 $ flattenHtml h []
 
 -- Remarks
 --   * for the deepTree benchmark the constructor based approach is 4x faster

@@ -266,17 +266,17 @@ renderBuilder :: Html -> NB.NewBuilder
 renderBuilder = go mempty 
   where
     go attrs (Parent open close content) =
-                  getNewBuilder  open
+                  NB.copyByteString (getByteString open)
         `mappend` attrs
         `mappend` NB.utf8Char '>'
         `mappend` go mempty content
-        `mappend` getNewBuilder  close
+        `mappend` NB.copyByteString (getByteString close)
     go attrs (Leaf begin end) = 
-                  getNewBuilder  begin
+                  NB.copyByteString (getByteString begin)
         `mappend` attrs
-        `mappend` getNewBuilder  end
+        `mappend` NB.copyByteString (getByteString end)
     go attrs (AddAttribute key value h) =
-      go (attrs `mappend` getNewBuilder  key 
+      go (attrs `mappend` NB.copyByteString (getByteString key)
                 `mappend` fromChoiceString value
                 `mappend` NB.utf8Char '"')
          h
@@ -289,7 +289,7 @@ renderBuilder = go mempty
 {-# INLINE renderBuilder #-}
 
 fromChoiceString :: ChoiceString -> NB.NewBuilder
-fromChoiceString (StaticString   s) = getNewBuilder s
+fromChoiceString (StaticString   s) = NB.copyByteString $ getByteString s
 fromChoiceString (HaskellString  s) = NB.utf8CharList s
 fromChoiceString (Utf8ByteString s) = NB.copyByteString s
 fromChoiceString (Text           s) = error "Text not supported yet."
@@ -304,26 +304,16 @@ fromChoiceString (Text           s) = error "Text not supported yet."
 -- better be replaced by a builder.
 data StaticMultiString = StaticMultiString
        { getHaskellString :: String
-       , getNewBuilder    :: NB.NewBuilder
+       , getByteString    :: S.ByteString
        , getText          :: Text
        }
-
-instance Monoid StaticMultiString where
-    mempty = StaticMultiString mempty mempty mempty
-    {-# INLINE mempty #-}
-    mappend (StaticMultiString x1 y1 z1) (StaticMultiString x2 y2 z2) =
-        StaticMultiString (x1 `mappend` x2)
-                          (y1 `mappend` y2)
-                          (z1 `mappend` z2)
-    {-# INLINE mappend #-}
 
 -- | A static string that is built once and used many times. Here, we could
 -- also use the `cached` (optimizePiece) construction for our builder.
 staticMultiString :: String -> StaticMultiString
 staticMultiString s = StaticMultiString s b t
   where
-    b = NB.copyByteString $ S.pack $ L.unpack $
-            NB.toLazyByteString $ NB.utf8CharList s
+    b = S.pack $ L.unpack $ NB.toLazyByteString $ NB.utf8CharList s
     t = T.pack s
 {-# INLINE staticMultiString #-}
 

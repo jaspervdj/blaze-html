@@ -10,10 +10,8 @@ import qualified Prelude as P
 import Criterion.Main
 import Data.Binary.Builder (Builder, toLazyByteString)
 import Data.ByteString.Char8 (ByteString)
-import Data.Text (Text)
 import GHC.Exts (IsString, fromString)
 import qualified Data.ByteString.Lazy as LB
-import qualified Data.Text as T
 
 import Text.Blaze.Html5 hiding (map)
 import qualified Text.Blaze.Html5 as H
@@ -59,20 +57,20 @@ bigTableData :: [[Int]]
 bigTableData = replicate rows [1..10]
 {-# NOINLINE bigTableData #-}
 
-basicData :: (Text, Text, [Text])
+basicData :: (String, String, [String])
 basicData = ("Just a test", "joe", items)
 {-# NOINLINE basicData #-}
 
-items :: [Text]
-items = map (("Number " `mappend`) . T.pack . show) [1 .. 14]
+items :: [String]
+items = map (("Number " `mappend`) . show) [1 .. 14]
 {-# NOINLINE items #-}
 
-wideTreeData :: [Text]
+wideTreeData :: [String]
 wideTreeData = take 5000 $
     cycle ["λf.(λx.fxx)(λx.fxx)", "These & Those", "Foobar", "lol"]
 {-# NOINLINE wideTreeData #-}
 
-wideTreeEscapingData :: [Text]
+wideTreeEscapingData :: [String]
 wideTreeEscapingData = take 1000 $
     cycle ["<><>", "\"lol\"", "<&>", "'>>'"]
 {-# NOINLINE wideTreeEscapingData #-}
@@ -82,7 +80,7 @@ deepTreeData = take 1000 $
     cycle [table, tr, td, p, div]
 {-# NOINLINE deepTreeData #-}
 
-manyAttributesData :: [Text]
+manyAttributesData :: [String]
 manyAttributesData = wideTreeData
 
 -- | Render the argument matrix as an HTML table.
@@ -95,24 +93,24 @@ bigTable t = renderHtml $ table $ mconcat $ map row t
 
 -- | Render a simple HTML page with some data.
 --
-basic :: (Text, Text, [Text])  -- ^ (Title, User, Items)
-      -> LB.ByteString         -- ^ Result.
+basic :: (String, String, [String])  -- ^ (Title, User, Items)
+      -> LB.ByteString               -- ^ Result.
 basic (title', user, items) = renderHtml $ html $ do
-    H.head $ title $ text title'
+    H.head $ title $ string title'
     body $ do
-        div ! id "header" $ (h1 $ text title')
-        p $ "Hello, " `mappend` text user `mappend` text "!"
+        div ! id "header" $ (h1 $ string title')
+        p $ "Hello, " `mappend` string user `mappend` string "!"
         p $ "Hello, me!"
         p $ "Hello, world!"
         h2 $ "loop"
-        mconcat $ map (li . text) items
+        mconcat $ map (li . string) items
         div ! id "footer" $ mempty
 
 -- | A benchmark producing a very wide but very shallow tree.
 --
-wideTree :: [Text]         -- ^ Text to create a tree from.
+wideTree :: [String]       -- ^ Text to create a tree from.
          -> LB.ByteString  -- ^ Result.
-wideTree = renderHtml . div . mapM_ ((p ! id "foo") . text)
+wideTree = renderHtml . div . mapM_ ((p ! id "foo") . string)
 
 -- | Create a very deep tree with the specified tags.
 --
@@ -123,9 +121,9 @@ deepTree = renderHtml . ($ "foo") . foldl1 (.)
 
 -- | Create an element with many attributes.
 --
-manyAttributes :: [Text]         -- ^ List of attribute values.
+manyAttributes :: [String]       -- ^ List of attribute values.
                -> LB.ByteString  -- ^ Result.
 manyAttributes = renderHtml . foldl setAttribute img
   where
-    setAttribute html value = html ! id (textValue value)
+    setAttribute html value = html ! id (stringValue value)
     {-# INLINE setAttribute #-}

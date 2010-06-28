@@ -1,6 +1,7 @@
 -- | Bigtable benchmark using a constructor-based implementation.
 --
 {-# LANGUAGE OverloadedStrings, BangPatterns, Rank2Types #-}
+module Main where
 
 import Data.Monoid (Monoid (..))
 
@@ -71,9 +72,8 @@ wideTreeEscapingData = take 1000 $
     cycle ["<><>", "\"lol\"", "<&>", "'>>'"]
 {-# NOINLINE wideTreeEscapingData #-}
 
-deepTreeData :: [Html a -> Html a]
-deepTreeData = take 1000 $
-    cycle [table, tr, td, p, div]
+deepTreeData :: Int
+deepTreeData = 1000
 {-# NOINLINE deepTreeData #-}
 
 ------------------------------------------------------------------------------
@@ -111,9 +111,10 @@ wideTree = div . mconcat . map ((idA "foo" . p) . string)
 
 -- | Create a very deep tree with the specified tags.
 --
-deepTree :: [Html a -> Html a]  -- ^ List of parent elements to nest.
-         -> Html a                -- ^ Result.
-deepTree = ($ "deep") . foldl1 (.)
+deepTree :: Int     -- ^ List of parent elements to nest.
+         -> Html a  -- ^ Result.
+deepTree 0 = "foo"
+deepTree n = p $ table $ tr $ td $ div $ deepTree (n - 1)
 
 -- | Create an element with many attributes.
 --

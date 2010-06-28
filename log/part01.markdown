@@ -720,3 +720,41 @@ first (empirical) tests of this server shown that the overhead for sending the
 response is quite small, so most time is spent generating HTML. This is what we
 want, since it means these benchmarks should also give a good idea on how fast
 we are.
+
+Monday, June 28th, morning
+==========================
+
+A quick update on the benchmarks. We have three designs we are currently
+experimenting with.
+
+Constructor/closure based approach
+----------------------------------
+
+- `bigTable`: 6.332854 ms (std dev: 354.7847 us)
+- `basic`: 17.54945 us (std dev: 531.6649 ns)
+- `wideTree`: 6.263176 ms (std dev: 332.7486 us)
+- `wideTreeEscaping`: 1.265716 ms (std dev: 117.6897 us)
+- `deepTree`: 526.1868 us (std dev: 27.13230 us)
+- `manyAttributes`: 3.951393 ms (std dev: 184.5850 us)
+
+Constructor based approach
+--------------------------
+
+- `bigTable`: 4.677727 ms (std dev: 179.9385 us)
+- `basic`: 13.68241 us (std dev: 528.0389 ns)
+- `wideTree`: 4.221389 ms (std dev: 229.3142 us)
+- `wideTreeEscaping`: 749.9637 us (std dev: 36.57938 us)
+- `deepTree`: 323.5577 us (std dev: 20.06558 us)
+- `manyAttributes`: 2.784801 ms (std dev: 168.8520 us)
+
+Main trunk
+----------
+
+- `bigTable`: 5.277057 ms (std dev: 81.53013 us)
+- `basic`: 20.01565 us (std dev: 877.0071 ns)
+- `wideTree`: 6.776730 ms (std dev: 121.0832 us)
+- `wideTreeEscaping`: 1.480301 ms (std dev: 41.72682 us)
+- `deepTree`: 681.6863 us (std dev: 28.03643 us)
+- `manyAttributes`: 4.841820 ms (std dev: 123.6140 us)
+
+It seems clear that constructor based approach is the way to go for now.

@@ -1,18 +1,27 @@
 module Text.Blaze.Internal.Builder.Utf8
-    ( writeChar
+    ( 
+      -- * Custom writes to the builder
+      writeChar
+
+      -- * Creating builders
     , fromChar
     , fromString
+    , fromText
     ) where
 
 import Foreign
 import Data.Char (ord)
+import Data.Monoid (mempty, mappend)
+
+import Data.Text (Text)
+import qualified Data.Text as T
 
 import Text.Blaze.Internal.Builder.Core
 
 -- | Write a Unicode character, encoding it as UTF-8.
 --
-writeChar :: Char   -- ^ Character to write.
-          -> Write  -- ^ Resulting write.
+writeChar :: Char   -- ^ Character to write
+          -> Write  -- ^ Resulting write
 writeChar = encodeCharUtf8 f1 f2 f3 f4
   where
     f1 x = Write 1 $ \ptr -> poke ptr x
@@ -35,12 +44,12 @@ writeChar = encodeCharUtf8 f1 f2 f3 f4
 -- needs to happen with the resulting bytes: you have to specify functions to
 -- deal with those.
 --
-encodeCharUtf8 :: (Word8 -> a)                             -- ^ 1-byte UTF-8.
-               -> (Word8 -> Word8 -> a)                    -- ^ 2-byte UTF-8.
-               -> (Word8 -> Word8 -> Word8 -> a)           -- ^ 3-byte UTF-8.
-               -> (Word8 -> Word8 -> Word8 -> Word8 -> a)  -- ^ 4-byte UTF-8.
-               -> Char                                     -- ^ Input 'Char'.
-               -> a                                        -- ^ Result.
+encodeCharUtf8 :: (Word8 -> a)                             -- ^ 1-byte UTF-8
+               -> (Word8 -> Word8 -> a)                    -- ^ 2-byte UTF-8
+               -> (Word8 -> Word8 -> Word8 -> a)           -- ^ 3-byte UTF-8
+               -> (Word8 -> Word8 -> Word8 -> Word8 -> a)  -- ^ 4-byte UTF-8
+               -> Char                                     -- ^ Input 'Char'
+               -> a                                        -- ^ Result
 encodeCharUtf8 f1 f2 f3 f4 c = case ord c of
     x | x <= 0xFF -> f1 $ fromIntegral x
       | x <= 0x07FF ->
@@ -62,10 +71,18 @@ encodeCharUtf8 f1 f2 f3 f4 c = case ord c of
 
 -- | An unescaped, utf8 encoded character.
 --
-fromChar :: Char -> Builder
+fromChar :: Char     -- ^ 'Char' to insert
+         -> Builder  -- ^ Resulting 'Builder'
 fromChar = writeSingleton writeChar
 
--- | A list of unescaped, utf8 encoded character.
+-- | A list of unescaped, utf8 encoded characters.
 --
-fromString :: [Char] -> Builder
+fromString :: String   -- ^ 'String' to insert
+           -> Builder  -- ^ Resulting 'Builder'
 fromString = writeList writeChar
+
+-- | Create an UTF-8 encoded 'Builder' from some 'Text'.
+--
+fromText :: Text     -- ^ 'Text' to insert
+         -> Builder  -- ^ Resulting 'Builder'
+fromText = writeSingleton (T.foldl (\w c -> w `mappend` writeChar c) mempty)

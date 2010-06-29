@@ -56,6 +56,7 @@ renderBuilder = go mempty
     go attrs (Append h1 h2) = go attrs h1 `mappend` go attrs h2
     go _ Empty              = mempty
     {-# NOINLINE go #-}
+{-# INLINE renderBuilder #-}
 
 -- | Render HTML to a lazy UTF-8 encoded 'L.ByteString.'
 --

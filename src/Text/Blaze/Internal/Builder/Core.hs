@@ -54,6 +54,7 @@ data BuildSignal
 type BuildStep =  Ptr Word8       -- ^ Ptr to the next free byte in the buffer
                -> Ptr Word8       -- ^ Ptr to the first byte AFTER the buffer
                -> IO BuildSignal  -- ^ Signal the next step to be taken
+
 instance Monoid Builder where
     mempty = Builder id
     {-# INLINE mempty #-}
@@ -139,6 +140,7 @@ singleton = writeSingleton writeByte
 copyByteString :: S.ByteString  -- ^ Strict 'S.ByteString' to copy
                -> Builder       -- ^ Resulting 'Builder'
 copyByteString = writeSingleton writeByteString
+{-# INLINE copyByteString #-}
 
 -- | Copied from Data.ByteString.Lazy.
 --
@@ -151,6 +153,7 @@ defaultSize = 32 * k - overhead
 --
 runBuilder :: Builder -> [S.ByteString] -> [S.ByteString]
 runBuilder = runBuilderWith defaultSize
+{-# INLINE runBuilder #-}
 
 -- | Run the builder with buffers of at least the given size.
 --
@@ -187,3 +190,4 @@ runBuilderWith bufSize (Builder b) k =
 toLazyByteString :: Builder       -- ^ 'Builder' to evaluate
                  -> L.ByteString  -- ^ Resulting UTF-8 encoded 'L.ByteString'
 toLazyByteString = L.fromChunks . flip runBuilder []
+{-# INLINE toLazyByteString #-}

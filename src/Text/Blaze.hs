@@ -36,9 +36,6 @@ module Text.Blaze
 
       -- * Setting attributes
     , (!)
-
-      -- * Rendering HTML.
-    , renderHtml
     ) where
 
 import Text.Blaze.Internal

@@ -16,16 +16,18 @@ import qualified Data.ByteString.Lazy as LB
 import Text.Blaze.Html5 hiding (map)
 import qualified Text.Blaze.Html5 as H
 import Text.Blaze.Html5.Attributes hiding (title, rows)
+import Text.Blaze.Renderer.Utf8 (renderHtml)
 
 main = defaultMain $ map benchHtml benchmarks
   where
-    benchHtml (HtmlBenchmark name f x _) = bench name $ nf (LB.length . f) x
+    benchHtml (HtmlBenchmark name f x _) =
+        bench name $ nf (LB.length .  renderHtml . f) x
 
-data HtmlBenchmark = forall a b. HtmlBenchmark
-    String                -- ^ Name.
-    (a -> LB.ByteString)  -- ^ Rendering function.
-    a                     -- ^ Data.
-    (Html b)              -- ^ Longer description.
+data HtmlBenchmark = forall a b c. HtmlBenchmark
+    String         -- ^ Name.
+    (a -> Html b)  -- ^ Rendering function.
+    a              -- ^ Data.
+    (Html c)       -- ^ Longer description.
 
 -- | List containing all benchmarks.
 --
@@ -83,17 +85,17 @@ manyAttributesData = wideTreeData
 
 -- | Render the argument matrix as an HTML table.
 --
-bigTable :: [[Int]]        -- ^ Matrix.
-         -> LB.ByteString  -- ^ Result.
-bigTable t = renderHtml $ table $ mconcat $ map row t
+bigTable :: [[Int]]  -- ^ Matrix.
+         -> Html a   -- ^ Result.
+bigTable t = table $ mconcat $ map row t
   where
     row r = tr $ mconcat $ map (td . string . show) r
 
 -- | Render a simple HTML page with some data.
 --
 basic :: (String, String, [String])  -- ^ (Title, User, Items)
-      -> LB.ByteString               -- ^ Result.
-basic (title', user, items) = renderHtml $ html $ do
+      -> Html a                      -- ^ Result.
+basic (title', user, items) = html $ do
     H.head $ title $ string title'
     body $ do
         div ! id "header" $ (h1 $ string title')
@@ -106,24 +108,22 @@ basic (title', user, items) = renderHtml $ html $ do
 
 -- | A benchmark producing a very wide but very shallow tree.
 --
-wideTree :: [String]       -- ^ Text to create a tree from.
-         -> LB.ByteString  -- ^ Result.
-wideTree = renderHtml . div . mapM_ ((p ! id "foo") . string)
+wideTree :: [String]  -- ^ Text to create a tree from.
+         -> Html a    -- ^ Result.
+wideTree = div . mapM_ ((p ! id "foo") . string)
 
 -- | Create a very deep tree.
 --
-deepTree :: Int            -- ^ Depth of the tree.
-         -> LB.ByteString  -- ^ Result.
-deepTree = renderHtml . deepTree'
-  where
-    deepTree' 0 = "foo"
-    deepTree' n = p $ table $ tr $ td $ div $ deepTree' (n - 1)
+deepTree :: Int     -- ^ Depth of the tree.
+         -> Html a  -- ^ Result.
+deepTree 0 = "foo"
+deepTree n = p $ table $ tr $ td $ div $ deepTree (n - 1)
 
 -- | Create an element with many attributes.
 --
-manyAttributes :: [String]       -- ^ List of attribute values.
-               -> LB.ByteString  -- ^ Result.
-manyAttributes = renderHtml . foldl setAttribute img
+manyAttributes :: [String]  -- ^ List of attribute values.
+               -> Html a    -- ^ Result.
+manyAttributes = foldl setAttribute img
   where
     setAttribute html value = html ! id (stringValue value)
     {-# INLINE setAttribute #-}

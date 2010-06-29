@@ -4,7 +4,7 @@
 module Text.Blaze.Internal.Builder.Core
     ( 
       -- * Main builder type
-      Builder
+      Builder (..)
 
       -- * Custom writes to the builder
     , Write (..)
@@ -27,7 +27,6 @@ import qualified Data.ByteString.Char8 ()
 import qualified Data.ByteString as S
 import qualified Data.ByteString.Internal as S
 import qualified Data.ByteString.Lazy as L
-import Data.Char (ord)
 
 -- | Main builder type.
 --
@@ -116,7 +115,7 @@ writeSingleton write x = Builder step
 writeList :: (a -> Write)  -- ^ 'Write' abstraction
           -> [a]           -- ^ List of values to write
           -> Builder       -- ^ Resulting 'Builder'
-writeList write [] = mempty
+writeList _     [] = mempty
 writeList write xs0 = Builder $ step xs0
   where
     step xs1 k pf0 pe0 = go xs1 pf0

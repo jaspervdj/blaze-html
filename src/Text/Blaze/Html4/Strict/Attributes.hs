@@ -105,7 +105,7 @@ import Text.Blaze.Internal (Attribute, AttributeValue, attribute)
 --
 -- Example:
 --
--- > div <! abbr "bar" $ "Hello."
+-- > div ! abbr "bar" $ "Hello."
 --
 -- Result:
 --
@@ -120,7 +120,7 @@ abbr = attribute " abbr=\""
 --
 -- Example:
 --
--- > div <! accept "bar" $ "Hello."
+-- > div ! accept "bar" $ "Hello."
 --
 -- Result:
 --
@@ -135,7 +135,7 @@ accept = attribute " accept=\""
 --
 -- Example:
 --
--- > div <! accesskey "bar" $ "Hello."
+-- > div ! accesskey "bar" $ "Hello."
 --
 -- Result:
 --
@@ -150,7 +150,7 @@ accesskey = attribute " accesskey=\""
 --
 -- Example:
 --
--- > div <! action "bar" $ "Hello."
+-- > div ! action "bar" $ "Hello."
 --
 -- Result:
 --
@@ -165,7 +165,7 @@ action = attribute " action=\""
 --
 -- Example:
 --
--- > div <! align "bar" $ "Hello."
+-- > div ! align "bar" $ "Hello."
 --
 -- Result:
 --
@@ -180,7 +180,7 @@ align = attribute " align=\""
 --
 -- Example:
 --
--- > div <! alt "bar" $ "Hello."
+-- > div ! alt "bar" $ "Hello."
 --
 -- Result:
 --
@@ -195,7 +195,7 @@ alt = attribute " alt=\""
 --
 -- Example:
 --
--- > div <! archive "bar" $ "Hello."
+-- > div ! archive "bar" $ "Hello."
 --
 -- Result:
 --
@@ -210,7 +210,7 @@ archive = attribute " archive=\""
 --
 -- Example:
 --
--- > div <! axis "bar" $ "Hello."
+-- > div ! axis "bar" $ "Hello."
 --
 -- Result:
 --
@@ -225,7 +225,7 @@ axis = attribute " axis=\""
 --
 -- Example:
 --
--- > div <! border "bar" $ "Hello."
+-- > div ! border "bar" $ "Hello."
 --
 -- Result:
 --
@@ -240,7 +240,7 @@ border = attribute " border=\""
 --
 -- Example:
 --
--- > div <! cellpadding "bar" $ "Hello."
+-- > div ! cellpadding "bar" $ "Hello."
 --
 -- Result:
 --
@@ -255,7 +255,7 @@ cellpadding = attribute " cellpadding=\""
 --
 -- Example:
 --
--- > div <! cellspacing "bar" $ "Hello."
+-- > div ! cellspacing "bar" $ "Hello."
 --
 -- Result:
 --
@@ -270,7 +270,7 @@ cellspacing = attribute " cellspacing=\""
 --
 -- Example:
 --
--- > div <! char "bar" $ "Hello."
+-- > div ! char "bar" $ "Hello."
 --
 -- Result:
 --
@@ -285,7 +285,7 @@ char = attribute " char=\""
 --
 -- Example:
 --
--- > div <! charoff "bar" $ "Hello."
+-- > div ! charoff "bar" $ "Hello."
 --
 -- Result:
 --
@@ -300,7 +300,7 @@ charoff = attribute " charoff=\""
 --
 -- Example:
 --
--- > div <! charset "bar" $ "Hello."
+-- > div ! charset "bar" $ "Hello."
 --
 -- Result:
 --
@@ -315,7 +315,7 @@ charset = attribute " charset=\""
 --
 -- Example:
 --
--- > div <! checked "bar" $ "Hello."
+-- > div ! checked "bar" $ "Hello."
 --
 -- Result:
 --
@@ -330,7 +330,7 @@ checked = attribute " checked=\""
 --
 -- Example:
 --
--- > div <! cite "bar" $ "Hello."
+-- > div ! cite "bar" $ "Hello."
 --
 -- Result:
 --
@@ -345,7 +345,7 @@ cite = attribute " cite=\""
 --
 -- Example:
 --
--- > div <! class_ "bar" $ "Hello."
+-- > div ! class_ "bar" $ "Hello."
 --
 -- Result:
 --
@@ -360,7 +360,7 @@ class_ = attribute " class=\""
 --
 -- Example:
 --
--- > div <! classid "bar" $ "Hello."
+-- > div ! classid "bar" $ "Hello."
 --
 -- Result:
 --
@@ -375,7 +375,7 @@ classid = attribute " classid=\""
 --
 -- Example:
 --
--- > div <! codebase "bar" $ "Hello."
+-- > div ! codebase "bar" $ "Hello."
 --
 -- Result:
 --
@@ -390,7 +390,7 @@ codebase = attribute " codebase=\""
 --
 -- Example:
 --
--- > div <! codetype "bar" $ "Hello."
+-- > div ! codetype "bar" $ "Hello."
 --
 -- Result:
 --
@@ -405,7 +405,7 @@ codetype = attribute " codetype=\""
 --
 -- Example:
 --
--- > div <! cols "bar" $ "Hello."
+-- > div ! cols "bar" $ "Hello."
 --
 -- Result:
 --
@@ -420,7 +420,7 @@ cols = attribute " cols=\""
 --
 -- Example:
 --
--- > div <! colspan "bar" $ "Hello."
+-- > div ! colspan "bar" $ "Hello."
 --
 -- Result:
 --
@@ -435,7 +435,7 @@ colspan = attribute " colspan=\""
 --
 -- Example:
 --
--- > div <! content "bar" $ "Hello."
+-- > div ! content "bar" $ "Hello."
 --
 -- Result:
 --
@@ -450,7 +450,7 @@ content = attribute " content=\""
 --
 -- Example:
 --
--- > div <! coords "bar" $ "Hello."
+-- > div ! coords "bar" $ "Hello."
 --
 -- Result:
 --
@@ -465,7 +465,7 @@ coords = attribute " coords=\""
 --
 -- Example:
 --
--- > div <! data_ "bar" $ "Hello."
+-- > div ! data_ "bar" $ "Hello."
 --
 -- Result:
 --
@@ -480,7 +480,7 @@ data_ = attribute " data=\""
 --
 -- Example:
 --
--- > div <! datetime "bar" $ "Hello."
+-- > div ! datetime "bar" $ "Hello."
 --
 -- Result:
 --
@@ -495,7 +495,7 @@ datetime = attribute " datetime=\""
 --
 -- Example:
 --
--- > div <! declare "bar" $ "Hello."
+-- > div ! declare "bar" $ "Hello."
 --
 -- Result:
 --
@@ -510,7 +510,7 @@ declare = attribute " declare=\""
 --
 -- Example:
 --
--- > div <! defer "bar" $ "Hello."
+-- > div ! defer "bar" $ "Hello."
 --
 -- Result:
 --
@@ -525,7 +525,7 @@ defer = attribute " defer=\""
 --
 -- Example:
 --
--- > div <! dir "bar" $ "Hello."
+-- > div ! dir "bar" $ "Hello."
 --
 -- Result:
 --
@@ -540,7 +540,7 @@ dir = attribute " dir=\""
 --
 -- Example:
 --
--- > div <! disabled "bar" $ "Hello."
+-- > div ! disabled "bar" $ "Hello."
 --
 -- Result:
 --
@@ -555,7 +555,7 @@ disabled = attribute " disabled=\""
 --
 -- Example:
 --
--- > div <! for "bar" $ "Hello."
+-- > div ! for "bar" $ "Hello."
 --
 -- Result:
 --
@@ -570,7 +570,7 @@ for = attribute " for=\""
 --
 -- Example:
 --
--- > div <! frame "bar" $ "Hello."
+-- > div ! frame "bar" $ "Hello."
 --
 -- Result:
 --
@@ -585,7 +585,7 @@ frame = attribute " frame=\""
 --
 -- Example:
 --
--- > div <! headers "bar" $ "Hello."
+-- > div ! headers "bar" $ "Hello."
 --
 -- Result:
 --
@@ -600,7 +600,7 @@ headers = attribute " headers=\""
 --
 -- Example:
 --
--- > div <! height "bar" $ "Hello."
+-- > div ! height "bar" $ "Hello."
 --
 -- Result:
 --
@@ -615,7 +615,7 @@ height = attribute " height=\""
 --
 -- Example:
 --
--- > div <! href "bar" $ "Hello."
+-- > div ! href "bar" $ "Hello."
 --
 -- Result:
 --
@@ -630,7 +630,7 @@ href = attribute " href=\""
 --
 -- Example:
 --
--- > div <! hreflang "bar" $ "Hello."
+-- > div ! hreflang "bar" $ "Hello."
 --
 -- Result:
 --
@@ -645,7 +645,7 @@ hreflang = attribute " hreflang=\""
 --
 -- Example:
 --
--- > div <! http_equiv "bar" $ "Hello."
+-- > div ! http_equiv "bar" $ "Hello."
 --
 -- Result:
 --
@@ -660,7 +660,7 @@ http_equiv = attribute " http-equiv=\""
 --
 -- Example:
 --
--- > div <! id "bar" $ "Hello."
+-- > div ! id "bar" $ "Hello."
 --
 -- Result:
 --
@@ -675,7 +675,7 @@ id = attribute " id=\""
 --
 -- Example:
 --
--- > div <! label "bar" $ "Hello."
+-- > div ! label "bar" $ "Hello."
 --
 -- Result:
 --
@@ -690,7 +690,7 @@ label = attribute " label=\""
 --
 -- Example:
 --
--- > div <! lang "bar" $ "Hello."
+-- > div ! lang "bar" $ "Hello."
 --
 -- Result:
 --
@@ -705,7 +705,7 @@ lang = attribute " lang=\""
 --
 -- Example:
 --
--- > div <! maxlength "bar" $ "Hello."
+-- > div ! maxlength "bar" $ "Hello."
 --
 -- Result:
 --
@@ -720,7 +720,7 @@ maxlength = attribute " maxlength=\""
 --
 -- Example:
 --
--- > div <! media "bar" $ "Hello."
+-- > div ! media "bar" $ "Hello."
 --
 -- Result:
 --
@@ -735,7 +735,7 @@ media = attribute " media=\""
 --
 -- Example:
 --
--- > div <! method "bar" $ "Hello."
+-- > div ! method "bar" $ "Hello."
 --
 -- Result:
 --
@@ -750,7 +750,7 @@ method = attribute " method=\""
 --
 -- Example:
 --
--- > div <! multiple "bar" $ "Hello."
+-- > div ! multiple "bar" $ "Hello."
 --
 -- Result:
 --
@@ -765,7 +765,7 @@ multiple = attribute " multiple=\""
 --
 -- Example:
 --
--- > div <! name "bar" $ "Hello."
+-- > div ! name "bar" $ "Hello."
 --
 -- Result:
 --
@@ -780,7 +780,7 @@ name = attribute " name=\""
 --
 -- Example:
 --
--- > div <! nohref "bar" $ "Hello."
+-- > div ! nohref "bar" $ "Hello."
 --
 -- Result:
 --
@@ -795,7 +795,7 @@ nohref = attribute " nohref=\""
 --
 -- Example:
 --
--- > div <! onabort "bar" $ "Hello."
+-- > div ! onabort "bar" $ "Hello."
 --
 -- Result:
 --
@@ -810,7 +810,7 @@ onabort = attribute " onabort=\""
 --
 -- Example:
 --
--- > div <! onblur "bar" $ "Hello."
+-- > div ! onblur "bar" $ "Hello."
 --
 -- Result:
 --
@@ -825,7 +825,7 @@ onblur = attribute " onblur=\""
 --
 -- Example:
 --
--- > div <! onchange "bar" $ "Hello."
+-- > div ! onchange "bar" $ "Hello."
 --
 -- Result:
 --
@@ -840,7 +840,7 @@ onchange = attribute " onchange=\""
 --
 -- Example:
 --
--- > div <! onclick "bar" $ "Hello."
+-- > div ! onclick "bar" $ "Hello."
 --
 -- Result:
 --
@@ -855,7 +855,7 @@ onclick = attribute " onclick=\""
 --
 -- Example:
 --
--- > div <! ondblclick "bar" $ "Hello."
+-- > div ! ondblclick "bar" $ "Hello."
 --
 -- Result:
 --
@@ -870,7 +870,7 @@ ondblclick = attribute " ondblclick=\""
 --
 -- Example:
 --
--- > div <! onfocus "bar" $ "Hello."
+-- > div ! onfocus "bar" $ "Hello."
 --
 -- Result:
 --
@@ -885,7 +885,7 @@ onfocus = attribute " onfocus=\""
 --
 -- Example:
 --
--- > div <! onkeydown "bar" $ "Hello."
+-- > div ! onkeydown "bar" $ "Hello."
 --
 -- Result:
 --
@@ -900,7 +900,7 @@ onkeydown = attribute " onkeydown=\""
 --
 -- Example:
 --
--- > div <! onkeypress "bar" $ "Hello."
+-- > div ! onkeypress "bar" $ "Hello."
 --
 -- Result:
 --
@@ -915,7 +915,7 @@ onkeypress = attribute " onkeypress=\""
 --
 -- Example:
 --
--- > div <! onkeyup "bar" $ "Hello."
+-- > div ! onkeyup "bar" $ "Hello."
 --
 -- Result:
 --
@@ -930,7 +930,7 @@ onkeyup = attribute " onkeyup=\""
 --
 -- Example:
 --
--- > div <! onload "bar" $ "Hello."
+-- > div ! onload "bar" $ "Hello."
 --
 -- Result:
 --
@@ -945,7 +945,7 @@ onload = attribute " onload=\""
 --
 -- Example:
 --
--- > div <! onmousedown "bar" $ "Hello."
+-- > div ! onmousedown "bar" $ "Hello."
 --
 -- Result:
 --
@@ -960,7 +960,7 @@ onmousedown = attribute " onmousedown=\""
 --
 -- Example:
 --
--- > div <! onmousemove "bar" $ "Hello."
+-- > div ! onmousemove "bar" $ "Hello."
 --
 -- Result:
 --
@@ -975,7 +975,7 @@ onmousemove = attribute " onmousemove=\""
 --
 -- Example:
 --
--- > div <! onmouseout "bar" $ "Hello."
+-- > div ! onmouseout "bar" $ "Hello."
 --
 -- Result:
 --
@@ -990,7 +990,7 @@ onmouseout = attribute " onmouseout=\""
 --
 -- Example:
 --
--- > div <! onmouseover "bar" $ "Hello."
+-- > div ! onmouseover "bar" $ "Hello."
 --
 -- Result:
 --
@@ -1005,7 +1005,7 @@ onmouseover = attribute " onmouseover=\""
 --
 -- Example:
 --
--- > div <! onmouseup "bar" $ "Hello."
+-- > div ! onmouseup "bar" $ "Hello."
 --
 -- Result:
 --
@@ -1020,7 +1020,7 @@ onmouseup = attribute " onmouseup=\""
 --
 -- Example:
 --
--- > div <! onreset "bar" $ "Hello."
+-- > div ! onreset "bar" $ "Hello."
 --
 -- Result:
 --
@@ -1035,7 +1035,7 @@ onreset = attribute " onreset=\""
 --
 -- Example:
 --
--- > div <! onselect "bar" $ "Hello."
+-- > div ! onselect "bar" $ "Hello."
 --
 -- Result:
 --
@@ -1050,7 +1050,7 @@ onselect = attribute " onselect=\""
 --
 -- Example:
 --
--- > div <! onsubmit "bar" $ "Hello."
+-- > div ! onsubmit "bar" $ "Hello."
 --
 -- Result:
 --
@@ -1065,7 +1065,7 @@ onsubmit = attribute " onsubmit=\""
 --
 -- Example:
 --
--- > div <! onunload "bar" $ "Hello."
+-- > div ! onunload "bar" $ "Hello."
 --
 -- Result:
 --
@@ -1080,7 +1080,7 @@ onunload = attribute " onunload=\""
 --
 -- Example:
 --
--- > div <! profile "bar" $ "Hello."
+-- > div ! profile "bar" $ "Hello."
 --
 -- Result:
 --
@@ -1095,7 +1095,7 @@ profile = attribute " profile=\""
 --
 -- Example:
 --
--- > div <! readonly "bar" $ "Hello."
+-- > div ! readonly "bar" $ "Hello."
 --
 -- Result:
 --
@@ -1110,7 +1110,7 @@ readonly = attribute " readonly=\""
 --
 -- Example:
 --
--- > div <! rel "bar" $ "Hello."
+-- > div ! rel "bar" $ "Hello."
 --
 -- Result:
 --
@@ -1125,7 +1125,7 @@ rel = attribute " rel=\""
 --
 -- Example:
 --
--- > div <! rev "bar" $ "Hello."
+-- > div ! rev "bar" $ "Hello."
 --
 -- Result:
 --
@@ -1140,7 +1140,7 @@ rev = attribute " rev=\""
 --
 -- Example:
 --
--- > div <! rows "bar" $ "Hello."
+-- > div ! rows "bar" $ "Hello."
 --
 -- Result:
 --
@@ -1155,7 +1155,7 @@ rows = attribute " rows=\""
 --
 -- Example:
 --
--- > div <! rowspan "bar" $ "Hello."
+-- > div ! rowspan "bar" $ "Hello."
 --
 -- Result:
 --
@@ -1170,7 +1170,7 @@ rowspan = attribute " rowspan=\""
 --
 -- Example:
 --
--- > div <! rules "bar" $ "Hello."
+-- > div ! rules "bar" $ "Hello."
 --
 -- Result:
 --
@@ -1185,7 +1185,7 @@ rules = attribute " rules=\""
 --
 -- Example:
 --
--- > div <! scheme "bar" $ "Hello."
+-- > div ! scheme "bar" $ "Hello."
 --
 -- Result:
 --
@@ -1200,7 +1200,7 @@ scheme = attribute " scheme=\""
 --
 -- Example:
 --
--- > div <! scope "bar" $ "Hello."
+-- > div ! scope "bar" $ "Hello."
 --
 -- Result:
 --
@@ -1215,7 +1215,7 @@ scope = attribute " scope=\""
 --
 -- Example:
 --
--- > div <! selected "bar" $ "Hello."
+-- > div ! selected "bar" $ "Hello."
 --
 -- Result:
 --
@@ -1230,7 +1230,7 @@ selected = attribute " selected=\""
 --
 -- Example:
 --
--- > div <! shape "bar" $ "Hello."
+-- > div ! shape "bar" $ "Hello."
 --
 -- Result:
 --
@@ -1245,7 +1245,7 @@ shape = attribute " shape=\""
 --
 -- Example:
 --
--- > div <! size "bar" $ "Hello."
+-- > div ! size "bar" $ "Hello."
 --
 -- Result:
 --
@@ -1260,7 +1260,7 @@ size = attribute " size=\""
 --
 -- Example:
 --
--- > div <! span "bar" $ "Hello."
+-- > div ! span "bar" $ "Hello."
 --
 -- Result:
 --
@@ -1275,7 +1275,7 @@ span = attribute " span=\""
 --
 -- Example:
 --
--- > div <! src "bar" $ "Hello."
+-- > div ! src "bar" $ "Hello."
 --
 -- Result:
 --
@@ -1290,7 +1290,7 @@ src = attribute " src=\""
 --
 -- Example:
 --
--- > div <! standby "bar" $ "Hello."
+-- > div ! standby "bar" $ "Hello."
 --
 -- Result:
 --
@@ -1305,7 +1305,7 @@ standby = attribute " standby=\""
 --
 -- Example:
 --
--- > div <! style "bar" $ "Hello."
+-- > div ! style "bar" $ "Hello."
 --
 -- Result:
 --
@@ -1320,7 +1320,7 @@ style = attribute " style=\""
 --
 -- Example:
 --
--- > div <! summary "bar" $ "Hello."
+-- > div ! summary "bar" $ "Hello."
 --
 -- Result:
 --
@@ -1335,7 +1335,7 @@ summary = attribute " summary=\""
 --
 -- Example:
 --
--- > div <! tabindex "bar" $ "Hello."
+-- > div ! tabindex "bar" $ "Hello."
 --
 -- Result:
 --
@@ -1350,7 +1350,7 @@ tabindex = attribute " tabindex=\""
 --
 -- Example:
 --
--- > div <! title "bar" $ "Hello."
+-- > div ! title "bar" $ "Hello."
 --
 -- Result:
 --
@@ -1365,7 +1365,7 @@ title = attribute " title=\""
 --
 -- Example:
 --
--- > div <! type_ "bar" $ "Hello."
+-- > div ! type_ "bar" $ "Hello."
 --
 -- Result:
 --
@@ -1380,7 +1380,7 @@ type_ = attribute " type=\""
 --
 -- Example:
 --
--- > div <! usemap "bar" $ "Hello."
+-- > div ! usemap "bar" $ "Hello."
 --
 -- Result:
 --
@@ -1395,7 +1395,7 @@ usemap = attribute " usemap=\""
 --
 -- Example:
 --
--- > div <! valign "bar" $ "Hello."
+-- > div ! valign "bar" $ "Hello."
 --
 -- Result:
 --
@@ -1410,7 +1410,7 @@ valign = attribute " valign=\""
 --
 -- Example:
 --
--- > div <! value "bar" $ "Hello."
+-- > div ! value "bar" $ "Hello."
 --
 -- Result:
 --
@@ -1425,7 +1425,7 @@ value = attribute " value=\""
 --
 -- Example:
 --
--- > div <! valuetype "bar" $ "Hello."
+-- > div ! valuetype "bar" $ "Hello."
 --
 -- Result:
 --
@@ -1440,7 +1440,7 @@ valuetype = attribute " valuetype=\""
 --
 -- Example:
 --
--- > div <! width "bar" $ "Hello."
+-- > div ! width "bar" $ "Hello."
 --
 -- Result:
 --

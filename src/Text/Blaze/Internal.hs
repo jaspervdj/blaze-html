@@ -1,5 +1,5 @@
 {-# LANGUAGE OverloadedStrings, GeneralizedNewtypeDeriving, Rank2Types,
-             FlexibleInstances #-}
+             FlexibleInstances, ExistentialQuantification #-}
 -- | The BlazeHtml core, consisting of functions that offer the power to
 -- generate custom HTML elements. It also offers user-centric functions, which
 -- are exposed through 'Text.Blaze'.
@@ -7,15 +7,14 @@
 module Text.Blaze.Internal
     (
       -- * Important types.
-      Html
+      ChoiceString (..)
+    , StaticString (..)
+    , Html (..)
     , Tag
     , Attribute
     , AttributeValue
 
       -- * Creating custom tags and attributes.
-    , parent
-    , leaf
-    , open
     , attribute
     , dataAttribute
 
@@ -42,35 +41,96 @@ module Text.Blaze.Internal
 
       -- * Setting attributes
     , (!)
-
-      -- * Rendering HTML.
-    , renderHtml
     ) where
 
 import Data.Monoid (Monoid, mappend, mempty, mconcat)
 
 import Data.ByteString.Char8 (ByteString)
 import qualified Data.ByteString as S
-import qualified Data.ByteString.Lazy as L
 import Data.Text (Text)
+import qualified Data.Text as T
+import qualified Data.Text.Encoding as T
 import GHC.Exts (IsString (..))
 
-import Text.Blaze.Internal.Utf8Builder (Utf8Builder)
-import qualified Text.Blaze.Internal.Utf8Builder as B
-import qualified Text.Blaze.Internal.Utf8BuilderHtml as B
+-- | A static string that supports efficient output to all possible backends.
+--
+data StaticString = StaticString
+    { getString         :: String        -- ^ Regular Haskell string
+    , getUtf8ByteString :: S.ByteString  -- ^ UTF-8 encoded bytestring
+    , getText           :: Text          -- ^ Text value
+    }
+
+-- 'StaticString's should only be converted from string literals, as far as I
+-- can see.
+--
+instance IsString StaticString where
+    fromString s = let t = T.pack s
+                   in StaticString s (T.encodeUtf8 t) t
+
+instance Monoid StaticString where
+    mempty = fromString mempty
+    {-# INLINE mempty #-}
+    mappend (StaticString x1 y1 z1) (StaticString x2 y2 z2) =
+        StaticString (mappend x1 x2) (mappend y1 y2) (mappend z1 z2)
+    {-# INLINE mappend #-}
+
+-- | A string denoting input from different string representations.
+--
+data ChoiceString
+    = Static         StaticString  -- ^ Static data.
+    | String         String        -- ^ A Haskell String
+    | Text           Text          -- ^ A Text value
+    | ByteString     S.ByteString  -- ^ An encoded bytestring
+    | PreEscaped     ChoiceString  -- ^ Pre-escaped string
+
+instance IsString ChoiceString where
+    fromString = String
+    {-# INLINE fromString #-}
 
 -- | The core HTML datatype.
 --
-newtype Html a = Html
-    { -- | Function to extract the 'Builder'.
-      unHtml :: Utf8Builder -> Utf8Builder
-    }
+data Html a
+    -- | Open tag, end tag, content
+    = forall b. Parent StaticString StaticString (Html b)
+    -- | Open tag, end tag
+    | Leaf StaticString StaticString
+    -- | Open tag, end tag
+    | Open StaticString StaticString
+    -- | HTML content
+    | Content ChoiceString
+    -- | Concatenation of two HTML pieces
+    | forall b c. Append (Html b) (Html c)
+    -- | Add an attribute to the inner HTML. Key, value, HTML to receive the
+    -- attribute.
+    | AddAttribute StaticString ChoiceString (Html a)
+    -- | Empty HTML.
+    | Empty
+
+instance Monoid (Html a) where
+    mempty = Empty
+    {-# INLINE mempty #-}
+    mappend = Append
+    {-# INLINE mappend #-}
+    mconcat = foldr Append Empty
+    {-# INLINE mconcat #-}
+
+instance Monad Html where
+    return _ = mempty
+    {-# INLINE return #-}
+    (>>) = Append
+    {-# INLINE (>>) #-}
+    h1 >>= f = h1 >> f (error "_|_")
+    {-# INLINE (>>=) #-}
+
+instance IsString (Html a) where
+    fromString = Content . fromString
+    {-# INLINE fromString #-}
 
 -- | Type for an HTML tag. This can be seen as an internal string type used by
 -- BlazeHtml.
 --
-newtype Tag = Tag { unTag :: Utf8Builder }
-    deriving (Monoid)
+newtype Tag = Tag { unTag :: StaticString }
+    deriving (IsString)
 
 -- | Type for an attribute.
 --
@@ -78,84 +138,8 @@ newtype Attribute = Attribute (forall a. Html a -> Html a)
 
 -- | The type for the value part of an attribute.
 --
-newtype AttributeValue = AttributeValue { attributeValue :: Utf8Builder }
-    deriving (Monoid)
-
-instance Monoid (Html a) where
-    mempty = Html $ \_ -> mempty
-    {-# INLINE mempty #-}
-    --SM: Note for the benchmarks: We should test which multi-`mappend`
-    --versions are faster: right or left-associative ones. Then we can register
-    --a rewrite rule taking care of that. I actually guess that this may be one
-    --of the reasons accounting for the speed differences between monadic
-    --syntax and monoid syntax: the rewrite rules for monadic syntax bring the
-    --`>>=` into the better form which results in a better form for `mappend`.
-    (Html h1) `mappend` (Html h2) = Html $ \attrs ->
-        h1 attrs `mappend` h2 attrs
-    {-# INLINE mappend #-}
-    mconcat hs = Html $ \attrs ->
-        foldr mappend mempty $ map (flip unHtml attrs) hs
-    {-# INLINE mconcat #-}
-
-instance Monad Html where
-    return _ = mempty
-    {-# INLINE return #-}
-    (Html h1) >> (Html h2) = Html $
-        \attrs -> h1 attrs `mappend` h2 attrs
-    {-# INLINE (>>) #-}
-    h1 >>= f = h1 >> f (error "_|_")
-    {-# INLINE (>>=) #-}
-
-instance IsString (Html a) where
-    fromString = string
-    {-# INLINE fromString #-}
-
-instance IsString Tag where
-    fromString = stringTag
-    {-# INLINE fromString #-}
-
-instance IsString AttributeValue where
-    fromString = stringValue
-    {-# INLINE fromString #-}
-
--- | Create an HTML parent element.
---
-parent :: Tag     -- ^ Start of the open HTML tag.
-       -> Tag     -- ^ The closing tag.
-       -> Html a  -- ^ Inner HTML, to place in this element.
-       -> Html b  -- ^ Resulting HTML.
-parent begin end = \inner -> Html $ \attrs ->
-    unTag begin
-      `mappend` attrs
-      `mappend` B.fromChar '>'
-      `mappend` unHtml inner mempty
-      `mappend` unTag end
-{-# INLINE parent #-}
-
--- | Create an HTML leaf element.
---
-leaf :: Tag     -- ^ Start of the open HTML tag.
-     -> Html a  -- ^ Resulting HTML.
-leaf begin = Html $ \attrs ->
-    unTag begin
-      `mappend` attrs
-      `mappend` end
-  where
-    end :: Utf8Builder
-    end = B.optimizePiece $ B.fromText $ " />"
-    {-# INLINE end #-}
-{-# INLINE leaf #-}
-
--- | Produce an open tag. This can be used for open tags in HTML 4.01, like
--- for example @<br>@.
---
-open :: Tag     -- ^ Start of the open HTML tag.
-     -> Html a  -- ^ Resulting HTML.
-open begin = Html $ \attrs ->
-    unTag begin
-      `mappend` attrs
-      `mappend` B.fromChar '>'
-{-# INLINE open #-}
+newtype AttributeValue = AttributeValue { unAttributeValue :: ChoiceString }
+    deriving (IsString)
 
 -- | Create an HTML attribute that can be applied to an HTML element later using
 -- the '!' operator.
@@ -163,10 +147,8 @@ open begin = Html $ \attrs ->
 attribute :: Tag             -- ^ Shared key string for the HTML attribute.
           -> AttributeValue  -- ^ Value for the HTML attribute.
           -> Attribute       -- ^ Resulting HTML attribute.
-attribute key value = Attribute $ \(Html h) -> Html $ \attrs ->
-    h $ attrs `mappend` unTag key
-              `mappend` attributeValue value
-              `mappend` B.fromChar '"'
+attribute key value = Attribute $
+    AddAttribute (unTag key) (unAttributeValue value)
 {-# INLINE attribute #-}
 
 -- | From HTML 5 onwards, the user is able to specify custom data attributes.
@@ -183,7 +165,8 @@ attribute key value = Attribute $ \(Html h) -> Html $ \attrs ->
 dataAttribute :: Tag             -- ^ Name of the attribute.
               -> AttributeValue  -- ^ Value for the attribute.
               -> Attribute       -- ^ Resulting HTML attribute.
-dataAttribute tag = attribute (" data-" `mappend` tag `mappend` "=\"")
+dataAttribute tag =
+    attribute (Tag $ " data-" `mappend` unTag tag `mappend` "=\"")
 {-# INLINE dataAttribute #-}
 
 class Attributable h where
@@ -221,27 +204,27 @@ instance Attributable (Html a -> Html b) where
 --
 text :: Text    -- ^ Text to render.
      -> Html a  -- ^ Resulting HTML fragment.
-text = Html . const . B.escapeHtmlFromText
+text = Content . Text
 {-# INLINE text #-}
 
 -- | Render text without escaping.
 --
 preEscapedText :: Text    -- ^ Text to insert.
                -> Html a  -- Resulting HTML fragment.
-preEscapedText = Html . const . B.fromText
+preEscapedText = Content . PreEscaped . Text
 {-# INLINE preEscapedText #-}
 
 -- | Create an HTML snippet from a 'String'.
 --
 string :: String  -- ^ String to insert.
        -> Html a  -- ^ Resulting HTML fragment.
-string = Html . const . B.escapeHtmlFromString
+string = Content . String
 {-# INLINE string #-}
 
 -- | Create an HTML snippet from a 'String' without escaping
 --
 preEscapedString :: String -> Html a
-preEscapedString = Html . const . B.fromString
+preEscapedString = Content . PreEscaped . String
 {-# INLINE preEscapedString #-}
 
 -- | Create an HTML snippet from a datatype that instantiates 'Show'.
@@ -270,55 +253,43 @@ preEscapedShowHtml = preEscapedString . show
 --
 unsafeByteString :: ByteString  -- ^ Value to insert.
                  -> Html a      -- ^ Resulting HTML fragment.
-unsafeByteString = Html . const . B.unsafeFromByteString
+unsafeByteString = Content . ByteString
 {-# INLINE unsafeByteString #-}
 
--- | Create a tag from a 'Text' value. A tag is a string used to denote a
--- certain HTML element, for example @img@.
+-- | Create a 'Tag' from some 'Text'.
 --
--- This is only useful if you want to create custom HTML combinators.
---
-textTag :: Text  -- ^ 'Text' for the tag.
-        -> Tag   -- ^ Resulting tag.
-textTag = Tag . B.optimizePiece . B.fromText
-{-# INLINE textTag #-}
+textTag :: Text  -- ^ Text to create a tag from
+        -> Tag   -- ^ Resulting tag
+textTag t = Tag $ StaticString (T.unpack t) (T.encodeUtf8 t) t
 
--- | Create a tag from a 'String' value. For more information, see 'textTag'.
+-- | Create a 'Tag' from a 'String'.
 --
-stringTag :: String  -- ^ 'String' for the tag.
-          -> Tag     -- ^ Resulting tag.
-stringTag = Tag . B.optimizePiece . B.fromString
-{-# INLINE stringTag #-}
+stringTag :: String  -- ^ String to create a tag from
+          -> Tag     -- ^ Resulting tag
+stringTag = Tag . fromString
 
 -- | Render an attribute value from 'Text'.
 --
 textValue :: Text            -- ^ The actual value.
           -> AttributeValue  -- ^ Resulting attribute value.
-textValue = AttributeValue . B.escapeHtmlFromText
+textValue = AttributeValue . Text
 {-# INLINE textValue #-}
 
 -- | Render an attribute value from 'Text' without escaping.
 --
 preEscapedTextValue :: Text            -- ^ Text to insert.
                     -> AttributeValue  -- Resulting HTML fragment.
-preEscapedTextValue = AttributeValue . B.fromText
+preEscapedTextValue = AttributeValue . PreEscaped . Text
 {-# INLINE preEscapedTextValue #-}
 
 -- | Create an attribute value from a 'String'.
 --
 stringValue :: String -> AttributeValue
-stringValue = AttributeValue . B.escapeHtmlFromString
+stringValue = AttributeValue . String
 {-# INLINE stringValue #-}
 
 -- | Create an attribute value from a 'String' without escaping.
 --
 preEscapedStringValue :: String -> AttributeValue
-preEscapedStringValue = AttributeValue . B.fromString
+preEscapedStringValue = AttributeValue . PreEscaped . String
 {-# INLINE preEscapedStringValue #-}
-
--- | /O(n)./ Render the HTML fragment to lazy 'L.ByteString'.
---
-renderHtml :: Html a        -- ^ Document to render.
-           -> L.ByteString  -- ^ Resulting output.
-renderHtml = B.toLazyByteString . flip unHtml mempty
-{-# INLINE renderHtml #-}

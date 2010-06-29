@@ -47,7 +47,7 @@ writeHtmlVariant htmlVariant = do
         , "import Data.Monoid (mappend)"
         , ""
         , "import Text.Blaze"
-        , "import Text.Blaze.Internal (parent, leaf, open)"
+        , "import Text.Blaze.Internal"
         , ""
         , makeHtml $ docType htmlVariant
         , makeDocType $ docType htmlVariant
@@ -163,7 +163,7 @@ makeParent tag = unlines
     , "--"
     , function        ++ " :: Html a  -- ^ Inner HTML."
     , spaces function ++ " -> Html b  -- ^ Resulting HTML."
-    , function ++ " = parent \"<" ++ tag ++ "\" \"</" ++ tag ++ ">\""
+    , function ++ " = Parent \"<" ++ tag ++ "\" \"</" ++ tag ++ ">\""
     , "{-# INLINE " ++ function ++ " #-}"
     ]
   where
@@ -184,7 +184,7 @@ makeLeaf tag = unlines
     , "-- > <" ++ tag ++ " />"
     , "--"
     , function        ++ " :: Html a  -- ^ Resulting HTML."
-    , function ++ " = leaf \"<" ++ tag ++ "\""
+    , function ++ " = Leaf \"<" ++ tag ++ "\" \" />\""
     , "{-# INLINE " ++ function ++ " #-}"
     ]
   where
@@ -205,7 +205,7 @@ makeOpen tag = unlines
     , "-- > <" ++ tag ++ ">"
     , "--"
     , function        ++ " :: Html a  -- ^ Resulting HTML."
-    , function ++ " = open \"<" ++ tag ++ "\""
+    , function ++ " = Open \"<" ++ tag ++ "\" \">\""
     , "{-# INLINE " ++ function ++ " #-}"
     ]
   where

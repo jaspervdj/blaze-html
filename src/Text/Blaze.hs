@@ -6,6 +6,7 @@ module Text.Blaze
     (
       -- * Important types.
       Html
+    , HtmlA
     , Tag
     , Attribute
     , AttributeValue

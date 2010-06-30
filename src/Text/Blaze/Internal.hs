@@ -1,5 +1,5 @@
 {-# LANGUAGE OverloadedStrings, GeneralizedNewtypeDeriving, Rank2Types,
-             FlexibleInstances #-}
+             FlexibleInstances, TypeSynonymInstances #-}
 -- | The BlazeHtml core, consisting of functions that offer the power to
 -- generate custom HTML elements. It also offers user-centric functions, which
 -- are exposed through 'Text.Blaze'.
@@ -8,6 +8,7 @@ module Text.Blaze.Internal
     (
       -- * Important types.
       Html
+    , HtmlA
     , Tag
     , Attribute
     , AttributeValue
@@ -47,6 +48,7 @@ module Text.Blaze.Internal
     , renderHtml
     ) where
 
+import Control.Monad.Writer
 import Data.Monoid (Monoid, mappend, mempty, mconcat)
 
 import Data.ByteString.Char8 (ByteString)
@@ -61,10 +63,12 @@ import qualified Text.Blaze.Internal.Utf8BuilderHtml as B
 
 -- | The core HTML datatype.
 --
-newtype Html a = Html
+newtype Html = Html
     { -- | Function to extract the 'Builder'.
       unHtml :: Utf8Builder -> Utf8Builder
     }
+
+type HtmlA = Writer Html ()
 
 -- | Type for an HTML tag. This can be seen as an internal string type used by
 -- BlazeHtml.
@@ -74,14 +78,14 @@ newtype Tag = Tag { unTag :: Utf8Builder }
 
 -- | Type for an attribute.
 --
-newtype Attribute = Attribute (forall a. Html a -> Html a)
+newtype Attribute = Attribute (Html -> Html)
 
 -- | The type for the value part of an attribute.
 --
 newtype AttributeValue = AttributeValue { attributeValue :: Utf8Builder }
     deriving (Monoid)
 
-instance Monoid (Html a) where
+instance Monoid Html where
     mempty = Html $ \_ -> mempty
     {-# INLINE mempty #-}
     --SM: Note for the benchmarks: We should test which multi-`mappend`
@@ -97,17 +101,8 @@ instance Monoid (Html a) where
         foldr mappend mempty $ map (flip unHtml attrs) hs
     {-# INLINE mconcat #-}
 
-instance Monad Html where
-    return _ = mempty
-    {-# INLINE return #-}
-    (Html h1) >> (Html h2) = Html $
-        \attrs -> h1 attrs `mappend` h2 attrs
-    {-# INLINE (>>) #-}
-    h1 >>= f = h1 >> f (error "_|_")
-    {-# INLINE (>>=) #-}
-
-instance IsString (Html a) where
-    fromString = string
+instance IsString Html where
+    fromString = Html . const . B.escapeHtmlFromString
     {-# INLINE fromString #-}
 
 instance IsString Tag where
@@ -122,21 +117,21 @@ instance IsString AttributeValue where
 --
 parent :: Tag     -- ^ Start of the open HTML tag.
        -> Tag     -- ^ The closing tag.
-       -> Html a  -- ^ Inner HTML, to place in this element.
-       -> Html b  -- ^ Resulting HTML.
-parent begin end = \inner -> Html $ \attrs ->
+       -> HtmlA  -- ^ Inner HTML, to place in this element.
+       -> HtmlA  -- ^ Resulting HTML.
+parent begin end = \inner -> tell . Html $ \attrs ->
     unTag begin
       `mappend` attrs
       `mappend` B.fromChar '>'
-      `mappend` unHtml inner mempty
+      `mappend` unHtml (execWriter inner) mempty
       `mappend` unTag end
 {-# INLINE parent #-}
 
 -- | Create an HTML leaf element.
 --
 leaf :: Tag     -- ^ Start of the open HTML tag.
-     -> Html a  -- ^ Resulting HTML.
-leaf begin = Html $ \attrs ->
+     -> HtmlA  -- ^ Resulting HTML.
+leaf begin = tell . Html $ \attrs ->
     unTag begin
       `mappend` attrs
       `mappend` end
@@ -150,8 +145,8 @@ leaf begin = Html $ \attrs ->
 -- for example @<br>@.
 --
 open :: Tag     -- ^ Start of the open HTML tag.
-     -> Html a  -- ^ Resulting HTML.
-open begin = Html $ \attrs ->
+     -> HtmlA  -- ^ Resulting HTML.
+open begin = tell . Html $ \attrs ->
     unTag begin
       `mappend` attrs
       `mappend` B.fromChar '>'
@@ -209,46 +204,46 @@ class Attributable h where
     --
     (!) :: h -> Attribute -> h
 
-instance Attributable (Html a) where
-    h ! (Attribute f) = f h
+instance Attributable HtmlA where
+    h ! (Attribute f) = tell . f $ execWriter h
     {-# INLINE (!) #-}
 
-instance Attributable (Html a -> Html b) where
-    h ! (Attribute f) = f . h
+instance Attributable (HtmlA -> HtmlA) where
+    h ! f = (! f) . h
     {-# INLINE (!) #-}
 
 -- | Render text. Functions like these can be used to supply content in HTML.
 --
 text :: Text    -- ^ Text to render.
-     -> Html a  -- ^ Resulting HTML fragment.
-text = Html . const . B.escapeHtmlFromText
+     -> HtmlA  -- ^ Resulting HTML fragment.
+text = tell . Html . const . B.escapeHtmlFromText
 {-# INLINE text #-}
 
 -- | Render text without escaping.
 --
 preEscapedText :: Text    -- ^ Text to insert.
-               -> Html a  -- Resulting HTML fragment.
-preEscapedText = Html . const . B.fromText
+               -> HtmlA  -- Resulting HTML fragment.
+preEscapedText = tell . Html . const . B.fromText
 {-# INLINE preEscapedText #-}
 
 -- | Create an HTML snippet from a 'String'.
 --
 string :: String  -- ^ String to insert.
-       -> Html a  -- ^ Resulting HTML fragment.
-string = Html . const . B.escapeHtmlFromString
+       -> HtmlA  -- ^ Resulting HTML fragment.
+string = tell . fromString
 {-# INLINE string #-}
 
 -- | Create an HTML snippet from a 'String' without escaping
 --
-preEscapedString :: String -> Html a
-preEscapedString = Html . const . B.fromString
+preEscapedString :: String -> HtmlA
+preEscapedString = tell . Html . const . B.fromString
 {-# INLINE preEscapedString #-}
 
 -- | Create an HTML snippet from a datatype that instantiates 'Show'.
 --
 showHtml :: Show a
          => a       -- ^ Value to insert.
-         -> Html b  -- ^ Resulting HTML fragment.
+         -> HtmlA  -- ^ Resulting HTML fragment.
 showHtml = string . show
 {-# INLINE showHtml #-}
 
@@ -257,7 +252,7 @@ showHtml = string . show
 --
 preEscapedShowHtml :: Show a
                    => a       -- ^ Value to insert.
-                   -> Html b  -- ^ Resulting HTML fragment.
+                   -> HtmlA  -- ^ Resulting HTML fragment.
 preEscapedShowHtml = preEscapedString . show
 {-# INLINE preEscapedShowHtml #-}
 
@@ -269,8 +264,8 @@ preEscapedShowHtml = preEscapedString . show
 --   done).
 --
 unsafeByteString :: ByteString  -- ^ Value to insert.
-                 -> Html a      -- ^ Resulting HTML fragment.
-unsafeByteString = Html . const . B.unsafeFromByteString
+                 -> HtmlA      -- ^ Resulting HTML fragment.
+unsafeByteString = tell . Html . const . B.unsafeFromByteString
 {-# INLINE unsafeByteString #-}
 
 -- | Create a tag from a 'Text' value. A tag is a string used to denote a
@@ -318,7 +313,7 @@ preEscapedStringValue = AttributeValue . B.fromString
 
 -- | /O(n)./ Render the HTML fragment to lazy 'L.ByteString'.
 --
-renderHtml :: Html a        -- ^ Document to render.
+renderHtml :: HtmlA        -- ^ Document to render.
            -> L.ByteString  -- ^ Resulting output.
-renderHtml = B.toLazyByteString . flip unHtml mempty
+renderHtml = B.toLazyByteString . flip (unHtml . execWriter) mempty
 {-# INLINE renderHtml #-}

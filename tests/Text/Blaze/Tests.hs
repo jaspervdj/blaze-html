@@ -1,4 +1,4 @@
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE OverloadedStrings, TypeSynonymInstances #-}
 module Text.Blaze.Tests
     ( tests
     ) where
@@ -21,6 +21,7 @@ import Test.HUnit hiding (Test)
 
 import Text.Blaze.Html5 hiding (map)
 import Text.Blaze.Html5.Attributes
+import Text.Blaze.Renderer.Utf8 (renderHtml)
 
 tests :: [Test]
 tests = [ testProperty "left identity Monoid law"  monoidLeftIdentity
@@ -34,23 +35,23 @@ tests = [ testProperty "left identity Monoid law"  monoidLeftIdentity
 
 -- | The left identity Monoid law.
 --
-monoidLeftIdentity :: Html a -> Bool
-monoidLeftIdentity h = mappend mempty h == h
+monoidLeftIdentity :: Html -> Bool
+monoidLeftIdentity h = (return () >> h) == h
 
 -- | The right identity Monoid law.
 --
-monoidRightIdentity :: Html a -> Bool
-monoidRightIdentity h = mappend h mempty == h
+monoidRightIdentity :: Html -> Bool
+monoidRightIdentity h = (h >> return ()) == h
 
 -- | The associativity Monoid law.
 --
-monoidAssociativity :: Html a -> Html a -> Html a -> Bool
-monoidAssociativity x y z = mappend x (mappend y z) == mappend (mappend x y) z
+monoidAssociativity :: Html -> Html -> Html -> Bool
+monoidAssociativity x y z = (x >> (y >> z)) == ((x >> y) >> z)
 
 -- | Concatenation Monoid law.
 --
-monoidConcat :: [Html a] -> Bool
-monoidConcat xs = mconcat xs == foldr mappend mempty xs
+monoidConcat :: [Html] -> Bool
+monoidConcat xs = sequence_ xs == foldr (>>) (return ()) xs
 
 -- | Simple escaping test case.
 --
@@ -72,24 +73,24 @@ postEscapingCharacters str =
 
 -- Show instance for the HTML type, so we can debug.
 --
-instance Show (Html a) where
+instance Show Html where
     show = show . renderHtml
 
 -- Eq instance for the HTML type, so we can compare the results.
 --
-instance Eq (Html a) where
+instance Eq Html where
     h1 == h2 = renderHtml h1 == renderHtml h2
 
 -- Arbitrary instance for the HTML type.
 --
-instance Arbitrary (Html a) where
+instance Arbitrary Html where
     arbitrary = arbitraryHtml 4
 
 -- | Auxiliary function for the arbitrary instance of the HTML type, used
 -- to limit the depth and size of the type.
 --
-arbitraryHtml :: Int           -- ^ Maximum depth.
-              -> Gen (Html a)  -- ^ Resulting arbitrary HTML snippet.
+arbitraryHtml :: Int       -- ^ Maximum depth.
+              -> Gen Html  -- ^ Resulting arbitrary HTML snippet.
 arbitraryHtml depth = do 
     -- Choose the size (width) of this element.
     size <- choose (0, 3)
@@ -98,7 +99,7 @@ arbitraryHtml depth = do
     children <- replicateM size arbitraryChild
 
     -- Return a concatenation of these children.
-    return $ mconcat children
+    return $ sequence_ children
   where
     -- Generate an arbitrary child. Do not take a parent when we have no depth
     -- left, obviously.

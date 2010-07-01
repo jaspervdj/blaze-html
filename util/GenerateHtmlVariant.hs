@@ -1,10 +1,14 @@
+{-# LANGUAGE CPP #-}
+
+#define LINE codeLine __FILE__ __LINE__
+
 -- | Generates code for HTML tags.
 --
 module GenerateHtmlVariant where
 
 import Sanitize (sanitize)
 
-import Data.List (sort, sortBy)
+import Data.List (isPrefixOf, sort, sortBy)
 import Data.List (intersperse, intercalate)
 import Data.Ord (comparing)
 import System.Directory (createDirectoryIfMissing)
@@ -21,6 +25,11 @@ data HtmlVariant = HtmlVariant
     , attributes :: [String]
     } deriving (Show)
 
+codeLine :: String -> Int -> String -> String
+codeLine filename lineNo line
+    | "--" `isPrefixOf` line = line
+    | otherwise = line ++ (replicate (79 - length line) ' ') ++ " -- " ++ filename ++ ":" ++ show lineNo
+
 -- | Write an HTML variant.
 --
 writeHtmlVariant :: HtmlVariant -> IO ()
@@ -36,19 +45,19 @@ writeHtmlVariant htmlVariant = do
 
     -- Write the main module.
     writeFile (basePath <.> "hs") $ removeTrailingNewlines $ unlines
-        [ "{-# LANGUAGE OverloadedStrings #-}"
-        , "-- | This module exports HTML combinators used to create documents."
-        , "--"
-        , exportList moduleName $ "module Text.Blaze"
+        [ LINE "{-# LANGUAGE OverloadedStrings #-}"
+        , LINE "-- | This module exports HTML combinators used to create documents."
+        , LINE "--"
+        , exportList modulName $ "module Text.Blaze"
                                 : "html"
                                 : "docType"
                                 : (map (sanitize . fst) sortedTags)
-        , "import Prelude ()"
-        , "import Data.Monoid (mappend)"
-        , ""
-        , "import Text.Blaze"
-        , "import Text.Blaze.Internal"
-        , ""
+        , LINE "import Prelude ((>>))"
+        , LINE "import Data.Monoid (mappend)"
+        , LINE ""
+        , LINE "import Text.Blaze"
+        , LINE "import Text.Blaze.Internal"
+        , LINE ""
         , makeHtml $ docType htmlVariant
         , makeDocType $ docType htmlVariant
         , unlines appliedTags
@@ -58,23 +67,23 @@ writeHtmlVariant htmlVariant = do
 
     -- Write the attribute module.
     writeFile (basePath </> "Attributes.hs") $ removeTrailingNewlines $ unlines
-        [ "{-# LANGUAGE OverloadedStrings #-}"
-        , "-- | This module exports combinators that provide you with the"
-        , "-- ability to set attributes on HTML elements."
-        , "--"
+        [ LINE "{-# LANGUAGE OverloadedStrings #-}"
+        , LINE "-- | This module exports combinators that provide you with the"
+        , LINE "-- ability to set attributes on HTML elements."
+        , LINE "--"
         , exportList attributeModuleName $ map sanitize sortedAttributes
-        , "import Prelude ()"
-        , ""
-        , "import Data.Text (Text)"
-        , ""
-        , "import Text.Blaze.Internal (Attribute, AttributeValue, attribute)"
-        , ""
+        , LINE "import Prelude ()"
+        , LINE ""
+        , LINE "import Data.Text (Text)"
+        , LINE ""
+        , LINE "import Text.Blaze.Internal (Attribute, AttributeValue, attribute)"
+        , LINE ""
         , unlines (map makeAttribute sortedAttributes)
         ]
   where
     basePath = "src" </> "Text" </> "Blaze" </> foldl1 (</>) version'
-    moduleName = "Text.Blaze." ++ intercalate "." version'
-    attributeModuleName = moduleName ++ ".Attributes"
+    modulName = "Text.Blaze." ++ intercalate "." version'
+    attributeModuleName = modulName ++ ".Attributes"
     attributes' = attributes htmlVariant
     parents'    = parents htmlVariant
     leafs'      = leafs htmlVariant
@@ -100,29 +109,29 @@ exportList :: String   -- ^ Module name.
            -> String   -- ^ Resulting string.
 exportList _    []            = error "exportList without functions."
 exportList name (f:functions) = unlines $
-    [ "module " ++ name
-    , "    ( " ++ sanitize f
-    ] ++
-    map ("    , " ++) functions ++
-    [ "    ) where"]
+    [ LINE $ "module " ++ name
+    , LINE $ "    ( " ++ sanitize f
+    ] ++ 
+    map (LINE . ("    , " ++)) functions ++
+    [ LINE "    ) where"]
 
 -- | Generate a function for a doctype.
 --
 makeDocType :: [String] -> String
 makeDocType lines' = unlines
-    [ "-- | Combinator for the document type. This should be placed at the top"
-    , "-- of every HTML page."
-    , "--"
-    , "-- Example:"
-    , "--"
-    , "-- > docType"
-    , "--"
-    , "-- Result:"
-    , "--"
+    [ LINE "-- | Combinator for the document type. This should be placed at the top"
+    , LINE "-- of every HTML page."
+    , LINE "--"
+    , LINE "-- Example:"
+    , LINE "--"
+    , LINE "-- > docType"
+    , LINE "--"
+    , LINE "-- Result:"
+    , LINE "--"
     , unlines (map ("-- > " ++) lines') ++ "--"
-    , "docType :: Html a  -- ^ The document type HTML."
-    , "docType = preEscapedText " ++ (show $ unlines lines')
-    , "{-# INLINE docType #-}"
+    , LINE "docType :: Html  -- ^ The document type HTML."
+    , LINE $ "docType = preEscapedText " ++ (show $ unlines lines')
+    , LINE "{-# INLINE docType #-}"
     ]
 
 -- | Generate a function for the HTML tag (including the doctype).
@@ -130,41 +139,41 @@ makeDocType lines' = unlines
 makeHtml :: [String]  -- ^ The doctype.
          -> String    -- ^ Resulting combinator function.
 makeHtml lines' = unlines
-    [ "-- | Combinator for the @\\<html>@ element. This combinator will also"
-    , "-- insert the correct doctype."
-    , "--"
-    , "-- Example:"
-    , "--"
-    , "-- > html $ span $ text \"foo\""
-    , "--"
-    , "-- Result:"
-    , "--"
-    , unlines (map ("-- > " ++) lines') ++ "-- > <html><span>foo</span></html>"
-    , "--"
-    , "html :: Html a  -- ^ Inner HTML."
-    , "     -> Html b  -- ^ Resulting HTML."
-    , "html inner = docType `mappend` htmlNoDocType inner"
-    , "{-# INLINE html #-}"
+    [ LINE "-- | Combinator for the @\\<html>@ element. This combinator will also"
+    , LINE "-- insert the correct doctype."
+    , LINE "--"
+    , LINE "-- Example:"
+    , LINE "--"
+    , LINE "-- > html $ span $ text \"foo\""
+    , LINE "--"
+    , LINE "-- Result:"
+    , LINE "--"
+    , LINE $ unlines (map ("-- > " ++) lines') ++ "-- > <html><span>foo</span></html>"
+    , LINE "--"
+    , LINE "html :: Html  -- ^ Inner HTML."
+    , LINE "     -> Html  -- ^ Resulting HTML."
+    , LINE "html inner = docType >> htmlNoDocType inner"
+    , LINE "{-# INLINE html #-}"
     ]
 
 -- | Generate a function for an HTML tag that can be a parent.
 --
 makeParent :: String -> String
 makeParent tag = unlines
-    [ "-- | Combinator for the @\\<" ++ tag ++ ">@ element."
-    , "--"
-    , "-- Example:"
-    , "--"
-    , "-- > " ++ function ++ " $ span $ text \"foo\""
-    , "--"
-    , "-- Result:"
-    , "--"
-    , "-- > <" ++ tag ++ "><span>foo</span></" ++ tag ++ ">"
-    , "--"
-    , function        ++ " :: Html a  -- ^ Inner HTML."
-    , spaces function ++ " -> Html b  -- ^ Resulting HTML."
-    , function ++ " = Parent \"<" ++ tag ++ "\" \"</" ++ tag ++ ">\""
-    , "{-# INLINE " ++ function ++ " #-}"
+    [ LINE $ "-- | Combinator for the @\\<" ++ tag ++ ">@ element."
+    , LINE "--"
+    , LINE "-- Example:"
+    , LINE "--"
+    , LINE $ "-- > " ++ function ++ " $ span $ text \"foo\""
+    , LINE "--"
+    , LINE "-- Result:"
+    , LINE "--"
+    , LINE $ "-- > <" ++ tag ++ "><span>foo</span></" ++ tag ++ ">"
+    , LINE "--"
+    , LINE $ function        ++ " :: Html  -- ^ Inner HTML."
+    , LINE $ spaces function ++ " -> Html  -- ^ Resulting HTML."
+    , LINE $ function ++ " = Parent \"<" ++ tag ++ "\" \"</" ++ tag ++ ">\""
+    , LINE $ "{-# INLINE " ++ function ++ " #-}"
     ]
   where
     function = sanitize tag
@@ -173,19 +182,19 @@ makeParent tag = unlines
 --
 makeLeaf :: String -> String
 makeLeaf tag = unlines
-    [ "-- | Combinator for the @\\<" ++ tag ++ " />@ element."
-    , "--"
-    , "-- Example:"
-    , "--"
-    , "-- > " ++ function
-    , "--"
-    , "-- Result:"
-    , "--"
-    , "-- > <" ++ tag ++ " />"
-    , "--"
-    , function        ++ " :: Html a  -- ^ Resulting HTML."
-    , function ++ " = Leaf \"<" ++ tag ++ "\" \" />\""
-    , "{-# INLINE " ++ function ++ " #-}"
+    [ LINE $ "-- | Combinator for the @\\<" ++ tag ++ " />@ element."
+    , LINE "--"
+    , LINE "-- Example:"
+    , LINE "--"
+    , LINE $ "-- > " ++ function
+    , LINE "--"
+    , LINE "-- Result:"
+    , LINE "--"
+    , LINE $ "-- > <" ++ tag ++ " />"
+    , LINE "--"
+    , LINE $ function        ++ " :: Html  -- ^ Resulting HTML."
+    , LINE $ function ++ " = Leaf \"<" ++ tag ++ "\" \" />\""
+    , LINE $ "{-# INLINE " ++ function ++ " #-}"
     ]
   where
     function = sanitize tag
@@ -194,19 +203,19 @@ makeLeaf tag = unlines
 --
 makeOpen :: String -> String
 makeOpen tag = unlines
-    [ "-- | Combinator for the @\\<" ++ tag ++ ">@ element."
-    , "--"
-    , "-- Example:"
-    , "--"
-    , "-- > " ++ function
-    , "--"
-    , "-- Result:"
-    , "--"
-    , "-- > <" ++ tag ++ ">"
-    , "--"
-    , function        ++ " :: Html a  -- ^ Resulting HTML."
-    , function ++ " = Open \"<" ++ tag ++ "\" \">\""
-    , "{-# INLINE " ++ function ++ " #-}"
+    [ LINE $ "-- | Combinator for the @\\<" ++ tag ++ ">@ element."
+    , LINE "--"
+    , LINE "-- Example:"
+    , LINE "--"
+    , LINE $ "-- > " ++ function
+    , LINE "--"
+    , LINE "-- Result:"
+    , LINE "--"
+    , LINE $ "-- > <" ++ tag ++ ">"
+    , LINE "--"
+    , LINE $ function        ++ " :: Html  -- ^ Resulting HTML."
+    , LINE $ function ++ " = Open \"<" ++ tag ++ "\" \">\""
+    , LINE $ "{-# INLINE " ++ function ++ " #-}"
     ]
   where
     function = sanitize tag
@@ -215,20 +224,20 @@ makeOpen tag = unlines
 --
 makeAttribute :: String -> String
 makeAttribute name = unlines
-    [ "-- | Combinator for the @" ++ name ++ "@ attribute."
-    , "--"
-    , "-- Example:"
-    , "--"
-    , "-- > div ! " ++ function ++ " \"bar\" $ \"Hello.\""
-    , "--"
-    , "-- Result:"
-    , "--"
-    , "-- > <div " ++ name ++ "=\"bar\">Hello.</div>"
-    , "--"
-    , function        ++ " :: AttributeValue  -- ^ Attribute value."
-    , spaces function ++ " -> Attribute       -- ^ Resulting attribute."
-    , function ++ " = attribute \" " ++ name ++ "=\\\"\""
-    , "{-# INLINE " ++ function ++ " #-}"
+    [ LINE $ "-- | Combinator for the @" ++ name ++ "@ attribute."
+    , LINE "--"
+    , LINE "-- Example:"
+    , LINE "--"
+    , LINE $ "-- > div ! " ++ function ++ " \"bar\" $ \"Hello.\""
+    , LINE "--"
+    , LINE "-- Result:"
+    , LINE "--"
+    , LINE $ "-- > <div " ++ name ++ "=\"bar\">Hello.</div>"
+    , LINE "--"
+    , LINE $ function        ++ " :: AttributeValue  -- ^ Attribute value."
+    , LINE $ spaces function ++ " -> Attribute       -- ^ Resulting attribute."
+    , LINE $ function ++ " = attribute \" " ++ name ++ "=\\\"\""
+    , LINE $ "{-# INLINE " ++ function ++ " #-}"
     ]
   where
     function = sanitize name

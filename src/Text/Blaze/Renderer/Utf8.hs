@@ -29,11 +29,11 @@ fromChoiceString (PreEscaped s) = case s of
 
 -- | Render some 'Html' to a 'Builder'.
 --
-renderBuilder :: Html a   -- ^ HTML to render
+renderBuilder :: HtmlM a  -- ^ HTML to render
               -> Builder  -- ^ Resulting builder
 renderBuilder = go mempty 
   where
-    go :: Builder -> Html b -> Builder
+    go :: Builder -> HtmlM b -> Builder
     go attrs (Parent open close content) =
         B.copyByteString (getUtf8ByteString open)
             `mappend` attrs
@@ -60,7 +60,7 @@ renderBuilder = go mempty
 
 -- | Render HTML to a lazy UTF-8 encoded 'L.ByteString.'
 --
-renderHtml :: Html a
-           -> L.ByteString
+renderHtml :: HtmlM a       -- ^ HTML to render
+           -> L.ByteString  -- ^ Resulting 'L.ByteString'
 renderHtml = B.toLazyByteString . renderBuilder
 {-# INLINE renderHtml #-}

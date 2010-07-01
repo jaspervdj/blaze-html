@@ -24,10 +24,10 @@ main = defaultMain $ map benchHtml benchmarks
         bench name $ nf (LB.length .  renderHtml . f) x
 
 data HtmlBenchmark = forall a b c. HtmlBenchmark
-    String         -- ^ Name.
-    (a -> Html b)  -- ^ Rendering function.
-    a              -- ^ Data.
-    (Html c)       -- ^ Longer description.
+    String       -- ^ Name.
+    (a -> Html)  -- ^ Rendering function.
+    a            -- ^ Data.
+    Html         -- ^ Longer description.
 
 -- | List containing all benchmarks.
 --
@@ -86,7 +86,7 @@ manyAttributesData = wideTreeData
 -- | Render the argument matrix as an HTML table.
 --
 bigTable :: [[Int]]  -- ^ Matrix.
-         -> Html a   -- ^ Result.
+         -> Html     -- ^ Result.
 bigTable t = table $ mconcat $ map row t
   where
     row r = tr $ mconcat $ map (td . string . show) r
@@ -94,7 +94,7 @@ bigTable t = table $ mconcat $ map row t
 -- | Render a simple HTML page with some data.
 --
 basic :: (String, String, [String])  -- ^ (Title, User, Items)
-      -> Html a                      -- ^ Result.
+      -> Html                        -- ^ Result.
 basic (title', user, items) = html $ do
     H.head $ title $ string title'
     body $ do
@@ -109,20 +109,20 @@ basic (title', user, items) = html $ do
 -- | A benchmark producing a very wide but very shallow tree.
 --
 wideTree :: [String]  -- ^ Text to create a tree from.
-         -> Html a    -- ^ Result.
+         -> Html      -- ^ Result.
 wideTree = div . mapM_ ((p ! id "foo") . string)
 
 -- | Create a very deep tree.
 --
-deepTree :: Int     -- ^ Depth of the tree.
-         -> Html a  -- ^ Result.
+deepTree :: Int   -- ^ Depth of the tree.
+         -> Html  -- ^ Result.
 deepTree 0 = "foo"
 deepTree n = p $ table $ tr $ td $ div $ deepTree (n - 1)
 
 -- | Create an element with many attributes.
 --
 manyAttributes :: [String]  -- ^ List of attribute values.
-               -> Html a    -- ^ Result.
+               -> Html      -- ^ Result.
 manyAttributes = foldl setAttribute img
   where
     setAttribute html value = html ! id (stringValue value)

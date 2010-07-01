@@ -9,7 +9,8 @@ module Text.Blaze.Internal
       -- * Important types.
       ChoiceString (..)
     , StaticString (..)
-    , Html (..)
+    , HtmlM (..)
+    , Html
     , Tag
     , Attribute
     , AttributeValue
@@ -43,6 +44,7 @@ module Text.Blaze.Internal
     , (!)
     ) where
 
+import Control.Monad.Writer
 import Data.Monoid (Monoid, mappend, mempty, mconcat)
 
 import Data.ByteString.Char8 (ByteString)
@@ -89,9 +91,9 @@ instance IsString ChoiceString where
 
 -- | The core HTML datatype.
 --
-data Html a
+data HtmlM a
     -- | Open tag, end tag, content
-    = forall b. Parent StaticString StaticString (Html b)
+    = forall b. Parent StaticString StaticString (HtmlM b)
     -- | Open tag, end tag
     | Leaf StaticString StaticString
     -- | Open tag, end tag
@@ -99,14 +101,18 @@ data Html a
     -- | HTML content
     | Content ChoiceString
     -- | Concatenation of two HTML pieces
-    | forall b c. Append (Html b) (Html c)
+    | forall b c. Append (HtmlM b) (HtmlM c)
     -- | Add an attribute to the inner HTML. Key, value, HTML to receive the
     -- attribute.
-    | AddAttribute StaticString ChoiceString (Html a)
+    | AddAttribute StaticString ChoiceString (HtmlM a)
     -- | Empty HTML.
     | Empty
 
-instance Monoid (Html a) where
+-- | Simplification of the 'HtmlM' datatype.
+--
+type Html = HtmlM ()
+
+instance Monoid (HtmlM a) where
     mempty = Empty
     {-# INLINE mempty #-}
     mappend = Append
@@ -114,15 +120,15 @@ instance Monoid (Html a) where
     mconcat = foldr Append Empty
     {-# INLINE mconcat #-}
 
-instance Monad Html where
-    return _ = mempty
+instance Monad HtmlM where
+    return _ = Empty
     {-# INLINE return #-}
     (>>) = Append
     {-# INLINE (>>) #-}
     h1 >>= f = h1 >> f (error "_|_")
     {-# INLINE (>>=) #-}
 
-instance IsString (Html a) where
+instance IsString (HtmlM a) where
     fromString = Content . fromString
     {-# INLINE fromString #-}
 
@@ -134,7 +140,7 @@ newtype Tag = Tag { unTag :: StaticString }
 
 -- | Type for an attribute.
 --
-newtype Attribute = Attribute (forall a. Html a -> Html a)
+newtype Attribute = Attribute (forall a. HtmlM a -> HtmlM a)
 
 -- | The type for the value part of an attribute.
 --
@@ -192,38 +198,39 @@ class Attributable h where
     --
     (!) :: h -> Attribute -> h
 
-instance Attributable (Html a) where
+instance Attributable (HtmlM a) where
     h ! (Attribute f) = f h
     {-# INLINE (!) #-}
 
-instance Attributable (Html a -> Html b) where
-    h ! (Attribute f) = f . h
+instance Attributable (HtmlM a -> HtmlM b) where
+    h ! f = (! f) . h
     {-# INLINE (!) #-}
 
 -- | Render text. Functions like these can be used to supply content in HTML.
 --
-text :: Text    -- ^ Text to render.
-     -> Html a  -- ^ Resulting HTML fragment.
+text :: Text  -- ^ Text to render.
+     -> Html  -- ^ Resulting HTML fragment.
 text = Content . Text
 {-# INLINE text #-}
 
 -- | Render text without escaping.
 --
-preEscapedText :: Text    -- ^ Text to insert.
-               -> Html a  -- Resulting HTML fragment.
+preEscapedText :: Text  -- ^ Text to insert.
+               -> Html  -- Resulting HTML fragment.
 preEscapedText = Content . PreEscaped . Text
 {-# INLINE preEscapedText #-}
 
 -- | Create an HTML snippet from a 'String'.
 --
 string :: String  -- ^ String to insert.
-       -> Html a  -- ^ Resulting HTML fragment.
+       -> Html    -- ^ Resulting HTML fragment.
 string = Content . String
 {-# INLINE string #-}
 
 -- | Create an HTML snippet from a 'String' without escaping
 --
-preEscapedString :: String -> Html a
+preEscapedString :: String  -- ^ String to insert.
+                 -> Html    -- ^ Resulting HTML fragment.
 preEscapedString = Content . PreEscaped . String
 {-# INLINE preEscapedString #-}
 
@@ -231,7 +238,7 @@ preEscapedString = Content . PreEscaped . String
 --
 showHtml :: Show a
          => a       -- ^ Value to insert.
-         -> Html b  -- ^ Resulting HTML fragment.
+         -> Html    -- ^ Resulting HTML fragment.
 showHtml = string . show
 {-# INLINE showHtml #-}
 
@@ -239,8 +246,8 @@ showHtml = string . show
 -- function will not do any HTML entity escaping.
 --
 preEscapedShowHtml :: Show a
-                   => a       -- ^ Value to insert.
-                   -> Html b  -- ^ Resulting HTML fragment.
+                   => a     -- ^ Value to insert.
+                   -> Html  -- ^ Resulting HTML fragment.
 preEscapedShowHtml = preEscapedString . show
 {-# INLINE preEscapedShowHtml #-}
 
@@ -252,7 +259,7 @@ preEscapedShowHtml = preEscapedString . show
 --   done).
 --
 unsafeByteString :: ByteString  -- ^ Value to insert.
-                 -> Html a      -- ^ Resulting HTML fragment.
+                 -> Html        -- ^ Resulting HTML fragment.
 unsafeByteString = Content . ByteString
 {-# INLINE unsafeByteString #-}
 

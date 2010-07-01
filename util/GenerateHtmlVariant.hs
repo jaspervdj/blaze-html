@@ -45,7 +45,8 @@ writeHtmlVariant htmlVariant = do
 
     -- Write the main module.
     writeFile (basePath <.> "hs") $ removeTrailingNewlines $ unlines
-        [ LINE "{-# LANGUAGE OverloadedStrings #-}"
+        [ doNotEdit
+        , LINE "{-# LANGUAGE OverloadedStrings #-}"
         , LINE "-- | This module exports HTML combinators used to create documents."
         , LINE "--"
         , exportList modulName $ "module Text.Blaze"
@@ -67,7 +68,8 @@ writeHtmlVariant htmlVariant = do
 
     -- Write the attribute module.
     writeFile (basePath </> "Attributes.hs") $ removeTrailingNewlines $ unlines
-        [ LINE "{-# LANGUAGE OverloadedStrings #-}"
+        [ doNotEdit
+        , LINE "{-# LANGUAGE OverloadedStrings #-}"
         , LINE "-- | This module exports combinators that provide you with the"
         , LINE "-- ability to set attributes on HTML elements."
         , LINE "--"
@@ -101,6 +103,15 @@ spaces = flip replicate ' ' . length
 --
 unblocks :: [String] -> String
 unblocks = unlines . intersperse "\n"
+
+-- | A warning to not edit the generated code.
+--
+doNotEdit :: String
+doNotEdit = unlines
+    [ "-- WARNING: This code was automatically generated. You should *never*"
+    , "-- edit it directly. Instead, edit the files who generated this code,"
+    , "-- you can find them in the @util/@ directory."
+    ]
 
 -- | Generate an export list for a Haskell module.
 --

@@ -42,11 +42,12 @@ a literate Haskell file, feel free to skip the imports.
 > import qualified Text.Blaze.Html5 as H
 > import Text.Blaze.Html5.Attributes hiding (title, rows, accept)
 > import qualified Text.Blaze.Html5.Attributes as A
+> import Text.Blaze.Renderer.Utf8 (renderHtml)
 
 Our first template is the root page. It's a static template, so it takes no
 parameters.
 
-> root :: Html a
+> root :: Html
 > root = html $ do
 >     H.head $ do
 >         title "BlazeHtml benchmarks"
@@ -71,7 +72,7 @@ And so, we arrive at our second benchmark. It simply pattern matches on a
 `HtmlBenchmark` (which only has one constructor) and generates some HTML
 describing this benchmark.
 
-> benchmark :: HtmlBenchmark -> Html a
+> benchmark :: HtmlBenchmark -> Html
 > benchmark (HtmlBenchmark name _ _ description) = do
 >     h2 $ string name
 >     p $ description
@@ -135,7 +136,7 @@ If all goes well, we found a benchmark. In that case, we can run and send it.
 >                 case benchmark of
 >                     Just (HtmlBenchmark _ f x _) -> do
 >                         ok s
->                         sendAll s $ f x
+>                         sendAll s $ renderHtml $ f x
 
 If the benchmark is not found, we give a `404` error back.
 

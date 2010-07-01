@@ -10,10 +10,11 @@ import Snap.Types
 
 import Text.Blaze.Html5
 import qualified Text.Blaze.Html5 as H
+import Text.Blaze.Renderer.Utf8 (renderHtml)
 
 -- | A welcome page.
 --
-welcomePage :: Html a
+welcomePage :: Html
 welcomePage = html $ do
     H.head $ do
         title $ "Snap & BlazeHtml"
@@ -23,7 +24,7 @@ welcomePage = html $ do
 
 -- | Auxiliary function to render a BlazeHtml template to a @Snap ()@ type.
 --
-blazeTemplate :: Html a -> Snap ()
+blazeTemplate :: Html -> Snap ()
 blazeTemplate = writeLBS . renderHtml
 
 -- | Always return the welcome page.

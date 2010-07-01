@@ -100,15 +100,18 @@ writeByteString bs = Write l io
 writeSingleton :: (a -> Write)  -- ^ 'Write' abstraction
                -> a             -- ^ Actual value to write
                -> Builder       -- ^ Resulting 'Builder'
-writeSingleton write x = Builder step
+writeSingleton write = makeBuilder
   where 
-    Write size io = write x
-    step k pf pe
-      | pf `plusPtr` size <= pe = do 
-        io pf
-        let pf' = pf `plusPtr` size
-        pf' `seq` k pf' pe
-      | otherwise               = return $ BufferFull size pf (step k)
+    makeBuilder x = Builder step
+      where
+        step k pf pe
+          | pf `plusPtr` size <= pe = do
+              io pf
+              let pf' = pf `plusPtr` size
+              pf' `seq` k pf' pe
+          | otherwise               = return $ BufferFull size pf (step k)
+          where
+            Write size io = write x
 {-# INLINE writeSingleton #-}
 
 -- | Construct a builder writing a list of data from a write abstraction.
@@ -116,17 +119,21 @@ writeSingleton write x = Builder step
 writeList :: (a -> Write)  -- ^ 'Write' abstraction
           -> [a]           -- ^ List of values to write
           -> Builder       -- ^ Resulting 'Builder'
-writeList _     [] = mempty
-writeList write xs0 = Builder $ step xs0
+writeList write = makeBuilder
   where
-    step xs1 k pf0 pe0 = go xs1 pf0
+    makeBuilder []  = mempty
+    makeBuilder xs0 = Builder $ step xs0
       where
-        go []          !pf = k pf pe0
-        go xs@(x':xs') !pf
-          | pf `plusPtr` size <= pe0  = io pf >> go xs' (pf `plusPtr` size)
-          | otherwise = do return $ BufferFull size pf (step xs k)
+        step xs1 k pf0 pe0 = go xs1 pf0
           where
-            Write size io = write x'
+            go []          !pf = k pf pe0
+            go xs@(x':xs') !pf
+              | pf `plusPtr` size <= pe0  = do
+                  io pf
+                  go xs' (pf `plusPtr` size)
+              | otherwise = do return $ BufferFull size pf (step xs k)
+              where
+                Write size io = write x'
 {-# INLINE writeList #-}
 
 -- | Construct a 'Builder' from a single byte.

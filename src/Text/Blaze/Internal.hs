@@ -115,7 +115,10 @@ type Html = HtmlM ()
 instance Monoid a => Monoid (HtmlM a) where
     mempty = Empty mempty
     {-# INLINE mempty #-}
-    mappend = Append
+    mappend (Empty x) (Empty y) = Empty $ x `mappend` y
+    mappend x         (Empty _) = x
+    mappend (Empty _) x         = x
+    mappend x         y         = Append x y
     {-# INLINE mappend #-}
     mconcat = foldr Append mempty
     {-# INLINE mconcat #-}

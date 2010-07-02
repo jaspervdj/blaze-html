@@ -57,12 +57,12 @@ in the future.
 A first simple page
 ===================
 
-The main representation type in BlazeHtml is `Html`. This `Html` is free around
-one variable. Therefore, your "templates" will usually have the type signature
-`ArgumentType1 → ArgumentType2 → Html a`. We will now write a small page that
-just contains a list of natural numbers up to a given `n`.
+The main representation type in BlazeHtml is `Html`. Therefore, your "templates"
+will usually have the type signature `ArgumentType1 → ArgumentType2 → Html`.
+We will now write a small page that just contains a list of natural numbers up
+to a given `n`.
 
-> numbers :: Int -> Html a
+> numbers :: Int -> Html
 
 Note how these templates are pure. It is therefore not recommended to mix them
 with `IO` code, or complicated control paths, generally -- you should separate
@@ -81,26 +81,26 @@ Attributes
 We also provide combinators to set attributes on elements. Attribute setting
 is done using the `!` operator.
 
-> simpleImage :: Html a
+> simpleImage :: Html
 > simpleImage = img ! src "foo.png"
 
 Oh, wait! Shouldn't images have an alternate text attribute as well, according
 to the recommendations?
 
-> image :: Html a
+> image :: Html
 > image = img ! src "foo.png" ! alt "A foo image."
 
 As you can see, you can chain multiple arguments using the `!` operator. Setting
 an attribute on an element with context also uses the `!` operator:
 
-> parentAttributes :: Html a
+> parentAttributes :: Html
 > parentAttributes = p ! class_ "styled" $ em "Context here."
 
 As expected, the attribute will only be added to the `<p>` tag, and not to the
 `<em>` tag. This is an alternative definition, equivalent to `parentAttributes`,
 but arguably less readable:
 
-> altParentAttributes :: Html a
+> altParentAttributes :: Html
 > altParentAttributes = (p $ em "Context here.") ! class_ "styled"
 
 Nesting & composing
@@ -118,7 +118,7 @@ Say we have a simple datastructure:
 If the user is logged in, we want to have a snippet that displays the user's
 current status.
 
-> userInfo :: Maybe User -> Html a
+> userInfo :: Maybe User -> Html
 > userInfo u = H.div ! A.id "user-info" $ case u of
 >     Nothing ->
 >         a ! href "/login" $ "Please login."
@@ -130,7 +130,7 @@ current status.
 
 Once we have this, we can easily embed it somewhere else.
 
-> somePage :: Maybe User -> Html a
+> somePage :: Maybe User -> Html
 > somePage u = html $ do
 >     H.head $ do
 >         H.title "Some page."
@@ -144,9 +144,10 @@ monad instead of given as an argument in a realistic application.
 Getting the goods
 =================
 
-Now that we have constructed a value of of the type `Html a`, we need to
-_do something_ with it, right? You can extract your data using the
-`renderHtml` function which has the type signature `Html a → L.ByteString`.
+Now that we have constructed a value of of the type `Html`, we need to _do
+something_ with it, right? You can extract your data using the `renderHtml`
+function which has the type signature `Html → L.ByteString`. This function can
+be found in the `Text.Blaze.Renderer.Utf8` module.
 
 A lazy `ByteString` is basically a list of _byte chunks_. The list of byte
 chunks the `renderHtml` is your HTML page, encoded in UTF-8. Furthermore, all

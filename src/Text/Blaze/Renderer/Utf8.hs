@@ -49,9 +49,10 @@ renderBuilder = go mempty
             `mappend` attrs
             `mappend` B.copyByteString (getUtf8ByteString end)
     go attrs (AddAttribute key value h) =
-        go (attrs `mappend` B.copyByteString (getUtf8ByteString key)
+        go (B.copyByteString (getUtf8ByteString key)
             `mappend` fromChoiceString value
-            `mappend` B.fromChar '"') h
+            `mappend` B.fromChar '"'
+            `mappend` attrs) h
     go _ (Content content)  = fromChoiceString content
     go attrs (Append h1 h2) = go attrs h1 `mappend` go attrs h2
     go _ (Empty _)          = mempty

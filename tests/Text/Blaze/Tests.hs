@@ -20,6 +20,7 @@ import Test.Framework.Providers.HUnit
 import Test.HUnit hiding (Test)
 
 import Text.Blaze.Html5 hiding (map)
+import qualified Text.Blaze.Html5 as H
 import Text.Blaze.Html5.Attributes
 import Text.Blaze.Renderer.Utf8 (renderHtml)
 
@@ -31,6 +32,8 @@ tests = [ testProperty "left identity Monoid law"  monoidLeftIdentity
         , testCase     "escaping case 1"           escaping1
         , testCase     "escaping case 2"           escaping2
         , testProperty "post escaping characters"  postEscapingCharacters
+        , testCase     "template case 1"           template1
+        , testCase     "template case 2"           template2
         ]
 
 -- | The left identity Monoid law.
@@ -70,6 +73,24 @@ postEscapingCharacters str =
     LB.all (`notElem` forbidden) $ renderHtml (string str)
   where
     forbidden = map (fromIntegral . ord) "\"'<>"
+
+-- | Simple template test case
+--
+template1 :: Assertion
+template1 = expected @=? renderHtml template
+  where
+    expected = "<div id=\"foo\"><p>banana</p><span>banana</span></div>"
+    template = div ! id "foo" $ do
+        p "banana"
+        H.span "banana"
+
+-- | Simple template test case
+--
+template2 :: Assertion
+template2 = expected @=? renderHtml template
+  where
+    expected = "<img src=\"foo.png\" alt=\"bar\" />"
+    template = img ! src "foo.png" ! alt "bar"
 
 -- Show instance for the HTML type, so we can debug.
 --

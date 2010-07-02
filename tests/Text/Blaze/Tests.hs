@@ -104,7 +104,7 @@ arbitraryHtml depth = do
     -- Generate an arbitrary child. Do not take a parent when we have no depth
     -- left, obviously.
     arbitraryChild = do
-        child <- oneof $  [arbitraryLeaf, arbitraryString]
+        child <- oneof $  [arbitraryLeaf, arbitraryString, return mempty]
                        ++ [arbitraryParent | depth > 0]
 
         -- Generate some attributes for the child.

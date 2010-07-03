@@ -8,7 +8,6 @@ import Prelude hiding (div, id)
 import qualified Prelude as P
 
 import Criterion.Main
-import Data.Binary.Builder (Builder, toLazyByteString)
 import Data.ByteString.Char8 (ByteString)
 import GHC.Exts (IsString, fromString)
 import qualified Data.ByteString.Lazy as LB

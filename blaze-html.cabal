@@ -25,11 +25,11 @@ License:             BSD3
 License-file:        LICENSE
 
 -- The package author(s).
-Author:              Jasper Van der Jeugt
+Author:              Jasper Van der Jeugt, Simon Meier
 
 -- An email address to which users can send suggestions, bug reports,
 -- and patches.
-Maintainer:          jaspervdj@gmail.com
+Maintainer:          jaspervdj@gmail.com, simon.meier@inf.ethz.ch
 
 -- A copyright notice.
 -- Copyright:           

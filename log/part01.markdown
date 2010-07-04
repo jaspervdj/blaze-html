@@ -801,3 +801,14 @@ Without ByteArray
 
 There's not a lot of difference between these two implementations, so I think
 we're not going to use this `ByteArray` type for now.
+
+Sunday, July 4th, afternoon
+===========================
+
+Simon suggested that I might be measuring a little too much by running the
+entire HTML benchmarking suite, so I implemented a simple benchmark in which
+`"<img>"` is repeated 10000 times and then concatenated. The results however,
+are a little disappointing:
+
+- `ByteArray`: 979.0136 ms (std dev: 58.33426 us)
+- `ByteString`: 977.4315 us (std dev: 14.16593 us)

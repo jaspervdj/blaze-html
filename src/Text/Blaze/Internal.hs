@@ -106,30 +106,26 @@ data HtmlM a
     -- attribute.
     | AddAttribute StaticString ChoiceString (HtmlM a)
     -- | Empty HTML.
-    | Empty a
+    | Empty
 
 -- | Simplification of the 'HtmlM' datatype.
 --
 type Html = HtmlM ()
 
 instance Monoid a => Monoid (HtmlM a) where
-    mempty = Empty mempty
+    mempty = Empty
     {-# INLINE mempty #-}
-    mappend (Empty x) (Empty y) = Empty $ x `mappend` y
-    mappend x         (Empty _) = x
-    mappend (Empty _) x         = x
-    mappend x         y         = Append x y
+    mappend x y = Append x y
     {-# INLINE mappend #-}
-    mconcat = foldr Append mempty
+    mconcat = foldr Append Empty
     {-# INLINE mconcat #-}
 
 instance Monad HtmlM where
-    return = Empty
+    return _ = Empty
     {-# INLINE return #-}
     (>>) = Append
     {-# INLINE (>>) #-}
-    (Empty x) >>= f = f x
-    h1        >>= f = h1 >> f (error "_|_")
+    h1 >>= f = h1 >> f (error "_|_")
     {-# INLINE (>>=) #-}
 
 instance IsString (HtmlM a) where

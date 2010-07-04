@@ -55,7 +55,7 @@ renderBuilder = go mempty
             `mappend` attrs) h
     go _ (Content content)  = fromChoiceString content
     go attrs (Append h1 h2) = go attrs h1 `mappend` go attrs h2
-    go _ (Empty _)          = mempty
+    go _ Empty              = mempty
     {-# NOINLINE go #-}
 {-# INLINE renderBuilder #-}
 

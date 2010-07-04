@@ -810,5 +810,5 @@ entire HTML benchmarking suite, so I implemented a simple benchmark in which
 `"<img>"` is repeated 10000 times and then concatenated. The results however,
 are a little disappointing:
 
-- `ByteArray`: 979.0136 ms (std dev: 58.33426 us)
+- `ByteArray`: 979.0136 us (std dev: 58.33426 us)
 - `ByteString`: 977.4315 us (std dev: 14.16593 us)

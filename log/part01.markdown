@@ -758,3 +758,46 @@ Main trunk
 - `manyAttributes`: 4.841820 ms (std dev: 123.6140 us)
 
 It seems clear that constructor based approach is the way to go for now.
+
+Sunday, July 4th, midday
+========================
+
+Simon suggested we could perhaps further remove some indirection by using a
+data type like
+
+    data ByteArray = ByteArray
+        {-# UNPACK #-} !(Ptr Word8)  -- ^ Start byte
+        {-# UNPACK #-} !Int          -- ^ Length
+
+The difference with a strict 'ByteString' is that we don't need the offset now.
+I implemented the usual functions in the builder:
+
+    makeByteArray :: S.ByteString -> ByteArray
+    writeByteArray :: ByteArray -> Write
+    fromByteArray :: ByteArray -> Builder
+
+I then extended the `StaticString` data type with a `ByteArray`, and switched
+the renderer over to use this new field. Running the benchmarks, I got this:
+
+With ByteArray
+--------------
+
+- `bigTable`: 4.800946 ms (std dev: 78.89088 us)
+- `basic`: 18.06648 us (std dev: 219.1416 ns)
+- `wideTree`: 5.604490 ms (std dev: 112.4927 us)
+- `wideTreeEscaping`: 1.004667 ms (std dev: 19.15476 us)
+- `deepTree`: 1.433062 ms (std dev: 36.73630 us)
+- `manyAttributes`: 4.573180 ms (std dev: 115.7283 us)
+
+Without ByteArray
+-----------------
+
+- `bigTable`: 4.744932 ms (std dev: 105.1492 us)
+- `basic`: 18.34186 us (std dev: 609.9053 ns)
+- `wideTree`: 5.676805 ms (std dev: 131.5237 us)
+- `wideTreeEscaping`: 970.4115 us (std dev: 21.43071 us)
+- `deepTree`: 1.432851 ms (std dev: 79.27203 us)
+- `manyAttributes`: 4.752630 ms (std dev: 195.9370 us)
+
+There's not a lot of difference between these two implementations, so I think
+we're not going to use this `ByteArray` type for now.

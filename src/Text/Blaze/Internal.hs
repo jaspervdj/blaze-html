@@ -69,21 +69,22 @@ instance IsString StaticString where
     fromString s = let t = T.pack s
                    in StaticString s (T.encodeUtf8 t) t
 
-instance Monoid StaticString where
-    mempty = fromString mempty
-    {-# INLINE mempty #-}
-    mappend (StaticString x1 y1 z1) (StaticString x2 y2 z2) =
-        StaticString (mappend x1 x2) (mappend y1 y2) (mappend z1 z2)
-    {-# INLINE mappend #-}
-
 -- | A string denoting input from different string representations.
 --
 data ChoiceString
-    = Static     StaticString  -- ^ Static data.
-    | String     String        -- ^ A Haskell String
-    | Text       Text          -- ^ A Text value
-    | ByteString S.ByteString  -- ^ An encoded bytestring
-    | PreEscaped ChoiceString  -- ^ A pre-escaped string
+    = Static     StaticString                       -- ^ Static data.
+    | String     String                             -- ^ A Haskell String
+    | Text       Text                               -- ^ A Text value
+    | ByteString S.ByteString                       -- ^ An encoded bytestring
+    | PreEscaped ChoiceString                       -- ^ A pre-escaped string
+    | AppendChoiceString ChoiceString ChoiceString  -- ^ Concatenation.
+    | EmptyChoiceString                             -- ^ Empty.
+
+instance Monoid ChoiceString where
+    mempty = EmptyChoiceString
+    {-# INLINE mempty #-}
+    mappend = AppendChoiceString
+    {-# INLINE mappend #-}
 
 instance IsString ChoiceString where
     fromString = String
@@ -105,6 +106,8 @@ data HtmlM a
     -- | Add an attribute to the inner HTML. Key, value, HTML to receive the
     -- attribute.
     | AddAttribute StaticString ChoiceString (HtmlM a)
+    -- | Add a custom attribute to the inner HTML.
+    | AddCustomAttribute ChoiceString ChoiceString (HtmlM a)
     -- | Empty HTML.
     | Empty
 
@@ -171,8 +174,10 @@ attribute key value = Attribute $
 dataAttribute :: Tag             -- ^ Name of the attribute.
               -> AttributeValue  -- ^ Value for the attribute.
               -> Attribute       -- ^ Resulting HTML attribute.
-dataAttribute tag =
-    attribute (Tag $ " data-" `mappend` unTag tag `mappend` "=\"")
+dataAttribute tag value = Attribute $
+    AddCustomAttribute
+        (Static "data-" `mappend` Static (unTag tag) `mappend` "=\"")
+        (unAttributeValue value)
 {-# INLINE dataAttribute #-}
 
 class Attributable h where

@@ -25,6 +25,9 @@ fromChoiceString (PreEscaped x) = case x of
     String s -> B.fromString s
     Text   s -> B.fromText s
     s        -> fromChoiceString s
+fromChoiceString (AppendChoiceString x y) =
+    fromChoiceString x `mappend` fromChoiceString y
+fromChoiceString EmptyChoiceString = mempty
 {-# INLINE fromChoiceString #-}
 
 -- | Render some 'Html' to a 'Builder'.
@@ -50,6 +53,11 @@ renderBuilder = go mempty
             `mappend` B.copyByteString (getUtf8ByteString end)
     go attrs (AddAttribute key value h) =
         go (B.copyByteString (getUtf8ByteString key)
+            `mappend` fromChoiceString value
+            `mappend` B.fromChar '"'
+            `mappend` attrs) h
+    go attrs (AddCustomAttribute key value h) =
+        go (fromChoiceString key
             `mappend` fromChoiceString value
             `mappend` B.fromChar '"'
             `mappend` attrs) h

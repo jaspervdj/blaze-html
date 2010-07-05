@@ -17,12 +17,14 @@ import qualified Text.Blaze.Internal.Builder.Html as B
 --
 fromChoiceString :: ChoiceString  -- ^ String to render
                  -> Builder       -- ^ Resulting builder
-fromChoiceString (Static s)           = B.copyByteString $ getUtf8ByteString s
-fromChoiceString (String s)           = B.fromHtmlEscapedString s
-fromChoiceString (Text s)             = B.fromHtmlEscapedText s
-fromChoiceString (ByteString s)       = B.copyByteString s
-fromChoiceString (PreEscapedString s) = B.fromString s
-fromChoiceString (PreEscapedText s)   = B.fromText s
+fromChoiceString (Static s)     = B.copyByteString $ getUtf8ByteString s
+fromChoiceString (String s)     = B.fromHtmlEscapedString s
+fromChoiceString (Text s)       = B.fromHtmlEscapedText s
+fromChoiceString (ByteString s) = B.copyByteString s
+fromChoiceString (PreEscaped x) = case x of
+    String s -> B.fromString s
+    Text   s -> B.fromText s
+    s        -> fromChoiceString s
 {-# INLINE fromChoiceString #-}
 
 -- | Render some 'Html' to a 'Builder'.

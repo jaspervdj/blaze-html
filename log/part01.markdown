@@ -843,3 +843,6 @@ very small speedup:
 
 - `bigTable`: 5.671190 ms (std dev: 185.8650 us)
 - `bigTable`: 5.422112 ms (std dev: 195.0566 us)
+
+**Edit**: after checking the benchmarks on more machines, it didn't look like an
+improvement, so I rolled back these changes.

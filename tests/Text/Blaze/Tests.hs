@@ -122,6 +122,8 @@ template5 = expected @=? renderHtml template
     expected = "<li>4</li><li>5</li><li>6</li>"
     template = forM_ [4 .. 6] (li . showHtml)
 
+-- | Simple template test case
+--
 template6 :: Assertion
 template6 = expected @=? renderHtml template
   where

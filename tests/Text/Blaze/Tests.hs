@@ -34,6 +34,8 @@ tests = [ testProperty "left identity Monoid law"  monoidLeftIdentity
         , testProperty "post escaping characters"  postEscapingCharacters
         , testCase     "template case 1"           template1
         , testCase     "template case 2"           template2
+        , testCase     "template case 3"           template3
+        , testCase     "template case 4"           template4
         ]
 
 -- | The left identity Monoid law.
@@ -91,6 +93,24 @@ template2 = expected @=? renderHtml template
   where
     expected = "<img src=\"foo.png\" alt=\"bar\" />"
     template = img ! src "foo.png" ! alt "bar"
+
+-- | Simple template test case
+--
+template3 :: Assertion
+template3 = expected @=? renderHtml template
+  where
+    -- Note how we write λ in UTF-8 encoded notation
+    expected = "<span id=\"&amp;\">\206\187</span>"
+    template = H.span ! id "&" $ "λ"
+
+-- | Simple template test case
+--
+template4 :: Assertion
+template4 = expected @=? renderHtml template
+  where
+    -- Three-byte UTF-8
+    expected = "\226\136\128x. x \226\136\136 A"
+    template = "∀x. x ∈ A"
 
 -- Show instance for the HTML type, so we can debug.
 --

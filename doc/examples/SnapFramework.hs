@@ -2,7 +2,7 @@
 -- For more information on snap, you can refer to http://snapframework.com.
 --
 {-# LANGUAGE OverloadedStrings #-}
-module Main where
+module SnapFramework where
 
 import System (getArgs)
 
@@ -26,7 +26,9 @@ welcomePage = html $ do
 -- | Auxiliary function to render a BlazeHtml template to a @Snap ()@ type.
 --
 blazeTemplate :: Html -> Snap ()
-blazeTemplate = writeLBS . renderHtml
+blazeTemplate template = do
+    modifyResponse $ addHeader "Content-Type" "text/html; charset=UTF-8"
+    writeLBS $ renderHtml template
 
 -- | Always return the welcome page.
 --

@@ -15,15 +15,16 @@ import qualified Data.ByteString.Char8 as SBC
 import Text.Blaze.Renderer.Utf8 (renderHtml)
 import BenchmarkServer hiding (main)
 import Utf8Html hiding (main)
+import SnapFramework (blazeTemplate)
 
 rootHandler :: Snap ()
-rootHandler = writeLBS $ renderHtml root
+rootHandler = blazeTemplate root
 
 benchmarkHandler :: Snap ()
 benchmarkHandler = do
      b <- fromMaybe "" <$> getParam "b"
      case M.lookup (map toLower $ SBC.unpack b) benchmarkMap of
-         Just (HtmlBenchmark _ f x _) -> writeLBS $ renderHtml $ f x
+         Just (HtmlBenchmark _ f x _) -> blazeTemplate $ f x
          Nothing                      -> notFound
 
 notFound :: Snap ()

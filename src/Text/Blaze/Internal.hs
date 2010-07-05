@@ -79,11 +79,12 @@ instance Monoid StaticString where
 -- | A string denoting input from different string representations.
 --
 data ChoiceString
-    = Static         StaticString  -- ^ Static data.
-    | String         String        -- ^ A Haskell String
-    | Text           Text          -- ^ A Text value
-    | ByteString     S.ByteString  -- ^ An encoded bytestring
-    | PreEscaped     ChoiceString  -- ^ Pre-escaped string
+    = Static           StaticString  -- ^ Static data.
+    | String           String        -- ^ A Haskell String
+    | Text             Text          -- ^ A Text value
+    | ByteString       S.ByteString  -- ^ An encoded bytestring
+    | PreEscapedString String        -- ^ A pre-escaped string
+    | PreEscapedText   Text          -- ^ A pre-escaped text value
 
 instance IsString ChoiceString where
     fromString = String
@@ -217,7 +218,7 @@ text = Content . Text
 --
 preEscapedText :: Text  -- ^ Text to insert.
                -> Html  -- Resulting HTML fragment.
-preEscapedText = Content . PreEscaped . Text
+preEscapedText = Content . PreEscapedText
 {-# INLINE preEscapedText #-}
 
 -- | Create an HTML snippet from a 'String'.
@@ -231,7 +232,7 @@ string = Content . String
 --
 preEscapedString :: String  -- ^ String to insert.
                  -> Html    -- ^ Resulting HTML fragment.
-preEscapedString = Content . PreEscaped . String
+preEscapedString = Content . PreEscapedString
 {-# INLINE preEscapedString #-}
 
 -- | Create an HTML snippet from a datatype that instantiates 'Show'.
@@ -286,7 +287,7 @@ textValue = AttributeValue . Text
 --
 preEscapedTextValue :: Text            -- ^ Text to insert.
                     -> AttributeValue  -- Resulting HTML fragment.
-preEscapedTextValue = AttributeValue . PreEscaped . Text
+preEscapedTextValue = AttributeValue . PreEscapedText
 {-# INLINE preEscapedTextValue #-}
 
 -- | Create an attribute value from a 'String'.
@@ -298,5 +299,5 @@ stringValue = AttributeValue . String
 -- | Create an attribute value from a 'String' without escaping.
 --
 preEscapedStringValue :: String -> AttributeValue
-preEscapedStringValue = AttributeValue . PreEscaped . String
+preEscapedStringValue = AttributeValue . PreEscapedString
 {-# INLINE preEscapedStringValue #-}

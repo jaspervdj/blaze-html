@@ -812,3 +812,34 @@ are a little disappointing:
 
 - `ByteArray`: 979.0136 us (std dev: 58.33426 us)
 - `ByteString`: 977.4315 us (std dev: 14.16593 us)
+
+Monday, July 5th, midday
+========================
+
+So, apart from a little bit of work on the test cases I took Simon's suggestion
+to remove as much indirection as possible. As a first step, it seemed good to
+remove the indirection needed for pre-escaped strings. So our 'ChoiceString'
+data type was changed from:
+
+    data ChoiceString
+        = Static         StaticString  -- ^ Static data.
+        | String         String        -- ^ A Haskell String
+        | Text           Text          -- ^ A Text value
+        | ByteString     S.ByteString  -- ^ An encoded bytestring
+        | PreEscaped     ChoiceString  -- ^ Pre-escaped string
+
+to:
+
+    data ChoiceString
+        = Static           StaticString  -- ^ Static data.
+        | String           String        -- ^ A Haskell String
+        | Text             Text          -- ^ A Text value
+        | ByteString       S.ByteString  -- ^ An encoded bytestring
+        | PreEscapedString String        -- ^ A pre-escaped string
+        | PreEscapedText   Text          -- ^ A pre-escaped text value
+
+The benefit is that all values are now only one level deep. It resulted in a
+very small speedup:
+
+- `bigTable`: 5.671190 ms (std dev: 185.8650 us)
+- `bigTable`: 5.422112 ms (std dev: 195.0566 us)

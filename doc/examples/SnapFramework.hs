@@ -4,7 +4,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Main where
 
-import System
+import System (getArgs)
+
 import Snap.Http.Server
 import Snap.Types
 

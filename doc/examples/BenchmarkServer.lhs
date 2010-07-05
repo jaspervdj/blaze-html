@@ -16,7 +16,7 @@ Will give you a page with some information and a benchmark listing As always in
 a literate Haskell file, feel free to skip the imports.
 
 > {-# LANGUAGE OverloadedStrings #-}
-> module Main where
+> module BenchmarkServer where
 
 > import Prelude hiding (putStrLn)
 
@@ -78,6 +78,13 @@ describing this benchmark.
 >     p $ description
 >     p $ "URL: " >> code ("/" >> string name)
 >     p $ a ! href (stringValue name) $ "Go to benchmark."
+
+The auxiliary function builds the lookup table of benchmarks. Note that we store
+the key as lowercase, so our URL's we be case-independent.
+
+> benchmarkMap :: Map String HtmlBenchmark
+> benchmarkMap = let t b@(HtmlBenchmark n _ _ _) = (map toLower n, b)
+>                in M.fromList $ map t benchmarks
 
 This is the main function that runs the server. It takes one command line
 argument: the port it should listen on.
@@ -150,13 +157,6 @@ If our earlier pattern match failed (which really should not happen) we send a
 After this, we can safely close the connection.
 
 >         sClose s
-
-Now, some auxiliary functions follow. The first one is the function that build
-the lookup table of benchmarks. Note that we store the key as lowercase, so our
-URL's we be case-independent.
-
->     benchmarkMap = let t b@(HtmlBenchmark n _ _ _) = (map toLower n, b)
->                    in M.fromList $ map t benchmarks
 
 Now, we have two functions which send a response header back to the browser,
 nothing special going on here.

@@ -44,7 +44,6 @@ module Text.Blaze.Internal
     , (!)
     ) where
 
-import Control.Monad.Writer
 import Data.Monoid (Monoid, mappend, mempty, mconcat)
 
 import Data.ByteString.Char8 (ByteString)

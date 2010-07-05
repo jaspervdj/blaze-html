@@ -54,7 +54,6 @@ writeHtmlVariant htmlVariant = do
                                 : "docType"
                                 : (map (sanitize . fst) sortedTags)
         , LINE "import Prelude ((>>))"
-        , LINE "import Data.Monoid (mappend)"
         , LINE ""
         , LINE "import Text.Blaze"
         , LINE "import Text.Blaze.Internal"
@@ -75,8 +74,6 @@ writeHtmlVariant htmlVariant = do
         , LINE "--"
         , exportList attributeModuleName $ map sanitize sortedAttributes
         , LINE "import Prelude ()"
-        , LINE ""
-        , LINE "import Data.Text (Text)"
         , LINE ""
         , LINE "import Text.Blaze.Internal (Attribute, AttributeValue, attribute)"
         , LINE ""

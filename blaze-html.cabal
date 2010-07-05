@@ -71,8 +71,7 @@ Library
                      monads-fd == 0.1.*
   
   -- Modules not exported by this package.
-  Other-modules:     Data.Binary.Builder
-                     Text.Blaze.Internal
+  Other-modules:     Text.Blaze.Internal
                      Text.Blaze.Internal.Builder.Core
                      Text.Blaze.Internal.Builder.Utf8
                      Text.Blaze.Internal.Builder.Html

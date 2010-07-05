@@ -5,7 +5,7 @@ module Text.Blaze.Tests
 
 import Prelude hiding (div, id)
 import Data.Monoid (mconcat, mempty, mappend)
-import Control.Monad (replicateM)
+import Control.Monad (replicateM, forM_, sequence_)
 import Control.Applicative ((<$>))
 import Data.Word (Word8)
 import Data.Char (ord)
@@ -36,6 +36,8 @@ tests = [ testProperty "left identity Monoid law"  monoidLeftIdentity
         , testCase     "template case 2"           template2
         , testCase     "template case 3"           template3
         , testCase     "template case 4"           template4
+        , testCase     "template case 5"           template5
+        , testCase     "template case 6"           template6
         ]
 
 -- | The left identity Monoid law.
@@ -111,6 +113,20 @@ template4 = expected @=? renderHtml template
     -- Three-byte UTF-8
     expected = "\226\136\128x. x \226\136\136 A"
     template = "∀x. x ∈ A"
+
+-- | Simple template test case
+--
+template5 :: Assertion
+template5 = expected @=? renderHtml template
+  where
+    expected = "<li>4</li><li>5</li><li>6</li>"
+    template = forM_ [4 .. 6] (li . showHtml)
+
+template6 :: Assertion
+template6 = expected @=? renderHtml template
+  where
+    expected = "<br /><img /><area />"
+    template = sequence_ [br, img, area]
 
 -- Show instance for the HTML type, so we can debug.
 --

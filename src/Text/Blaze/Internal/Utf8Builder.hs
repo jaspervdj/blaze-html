@@ -201,7 +201,7 @@ encodeCharUtf8 :: (Word8 -> a)                             -- ^ 1-byte UTF-8.
                -> Char                                     -- ^ Input 'Char'.
                -> a                                        -- ^ Result.
 encodeCharUtf8 f1 f2 f3 f4 c = case ord c of
-    x | x <= 0xFF -> f1 $ fromIntegral x
+    x | x <= 0x7F -> f1 $ fromIntegral x
       | x <= 0x07FF ->
            let x1 = fromIntegral $ (x `shiftR` 6) + 0xC0
                x2 = fromIntegral $ (x .&. 0x3F)   + 0x80

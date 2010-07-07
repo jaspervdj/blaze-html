@@ -39,6 +39,7 @@ tests = [ testProperty "left identity Monoid law"  monoidLeftIdentity
         , testCase     "template case 5"           template5
         , testCase     "template case 6"           template6
         , testCase     "template case 7"           template7
+        , testProperty "valid UTF-8"               isValidUtf8
         ]
 
 -- | The left identity Monoid law.
@@ -138,6 +139,32 @@ template7 = expected @=? renderHtml template
   where
     expected = "$6, \226\130\172\&7.01, \194\163\&75"
     template = "$6, €7.01, £75"
+
+-- | Check if the produced bytes are valid UTF-8
+--
+isValidUtf8 :: Html -> Bool
+isValidUtf8 = isValidUtf8' . LB.unpack . renderHtml
+  where
+    isIn x y z = (x <= z) && (z <= y)
+    isValidUtf8' :: [Word8] -> Bool
+    isValidUtf8' [] = True
+    isValidUtf8' (x:t)
+        -- One byte
+        | isIn 0x00 0x7f x = isValidUtf8' t
+        -- Two bytes
+        | isIn 0xc0 0xdf x = case t of
+            (y:t) -> isIn 0x80 0xbf y && isValidUtf8' t
+            _     -> False
+        -- Three bytes
+        | isIn 0xe0 0xef x = case t of
+            (y:z:t) -> all (isIn 0x80 0xbf) [y, z] && isValidUtf8' t
+            _       -> False
+        -- Four bytes
+        | isIn 0xf0 0xf7 x = case t of
+            (y:z:u:t) -> all (isIn 0x80 0xbf) [y, z, u] && isValidUtf8' t 
+            _         -> False
+        | otherwise = False
+
 
 -- Show instance for the HTML type, so we can debug.
 --

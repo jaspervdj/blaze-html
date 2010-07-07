@@ -4,8 +4,11 @@ module Text.Blaze.Renderer.Utf8
     ) where
 
 import Data.Monoid (mappend, mempty)
+import Data.List (isInfixOf)
 
 import qualified Data.ByteString.Lazy as L
+import qualified Data.Text as T (isInfixOf)
+import qualified Data.ByteString as S (isInfixOf)
 
 import Text.Blaze.Internal
 import Text.Blaze.Internal.Builder.Core (Builder)
@@ -25,6 +28,12 @@ fromChoiceString (PreEscaped x) = case x of
     String s -> B.fromString s
     Text   s -> B.fromText s
     s        -> fromChoiceString s
+fromChoiceString (External x) = case x of
+    -- Check that the sequence "</" is *not* in the external data.
+    String s     -> if "</" `isInfixOf` s then mempty else B.fromString s
+    Text   s     -> if "</" `T.isInfixOf` s then mempty else B.fromText s
+    ByteString s -> if "</" `S.isInfixOf` s then mempty else B.copyByteString s
+    s            -> fromChoiceString s
 fromChoiceString (AppendChoiceString x y) =
     fromChoiceString x `mappend` fromChoiceString y
 fromChoiceString EmptyChoiceString = mempty

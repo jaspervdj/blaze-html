@@ -71,13 +71,22 @@ instance IsString StaticString where
 -- | A string denoting input from different string representations.
 --
 data ChoiceString
-    = Static     StaticString                       -- ^ Static data.
-    | String     String                             -- ^ A Haskell String
-    | Text       Text                               -- ^ A Text value
-    | ByteString S.ByteString                       -- ^ An encoded bytestring
-    | PreEscaped ChoiceString                       -- ^ A pre-escaped string
-    | AppendChoiceString ChoiceString ChoiceString  -- ^ Concatenation.
-    | EmptyChoiceString                             -- ^ Empty.
+    -- | Static data
+    = Static     StaticString
+    -- | A Haskell String
+    | String     String
+    -- | A Text value
+    | Text       Text
+    -- | An encoded bytestring
+    | ByteString S.ByteString
+    -- | A pre-escaped string
+    | PreEscaped ChoiceString
+    -- | External data in style/script tags, should be checked for validity
+    | External   ChoiceString
+    -- | Concatenation
+    | AppendChoiceString ChoiceString ChoiceString
+    -- | Empty string
+    | EmptyChoiceString
 
 instance Monoid ChoiceString where
     mempty = EmptyChoiceString

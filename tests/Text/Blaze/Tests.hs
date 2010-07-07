@@ -38,6 +38,7 @@ tests = [ testProperty "left identity Monoid law"  monoidLeftIdentity
         , testCase     "template case 4"           template4
         , testCase     "template case 5"           template5
         , testCase     "template case 6"           template6
+        , testCase     "template case 7"           template7
         ]
 
 -- | The left identity Monoid law.
@@ -129,6 +130,14 @@ template6 = expected @=? renderHtml template
   where
     expected = "<br /><img /><area />"
     template = sequence_ [br, img, area]
+
+-- | Simple template test case
+--
+template7 :: Assertion
+template7 = expected @=? renderHtml template
+  where
+    expected = "$6, \226\130\172\&7.01, \194\163\&75"
+    template = "$6, €7.01, £75"
 
 -- Show instance for the HTML type, so we can debug.
 --

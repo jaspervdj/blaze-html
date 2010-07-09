@@ -28,7 +28,8 @@ data HtmlVariant = HtmlVariant
 codeLine :: String -> Int -> String -> String
 codeLine filename lineNo line
     | "--" `isPrefixOf` line = line
-    | otherwise = line ++ (replicate (79 - length line) ' ') ++ " -- " ++ filename ++ ":" ++ show lineNo
+    | otherwise = line ++ (replicate (79 - length line) ' ')
+                       ++ " -- " ++ filename ++ ":" ++ show lineNo
 
 -- | Write an HTML variant.
 --
@@ -53,7 +54,7 @@ writeHtmlVariant htmlVariant = do
                                 : "html"
                                 : "docType"
                                 : (map (sanitize . fst) sortedTags)
-        , LINE "import Prelude ((>>))"
+        , LINE "import Prelude ((>>), (.))"
         , LINE ""
         , LINE "import Text.Blaze"
         , LINE "import Text.Blaze.Internal"
@@ -180,11 +181,13 @@ makeParent tag = unlines
     , LINE "--"
     , LINE $ function        ++ " :: Html  -- ^ Inner HTML."
     , LINE $ spaces function ++ " -> Html  -- ^ Resulting HTML."
-    , LINE $ function ++ " = Parent \"<" ++ tag ++ "\" \"</" ++ tag ++ ">\""
+    , LINE $ function ++ " = Parent \"<" ++ tag
+                      ++ "\" \"</" ++ tag ++ ">\"" ++ modifier
     , LINE $ "{-# INLINE " ++ function ++ " #-}"
     ]
   where
     function = sanitize tag
+    modifier = if tag `elem` ["style", "script"] then " . external" else ""
 
 -- | Generate a function for an HTML tag that must be a leaf.
 --

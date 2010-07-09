@@ -42,6 +42,9 @@ module Text.Blaze.Internal
 
       -- * Setting attributes
     , (!)
+
+      -- * Modifying HTML elements
+    , external
     ) where
 
 import Data.Monoid (Monoid, mappend, mempty, mconcat)
@@ -188,37 +191,6 @@ dataAttribute tag value = Attribute $
         (unAttributeValue value)
 {-# INLINE dataAttribute #-}
 
-class Attributable h where
-    -- | Apply an attribute to an element.
-    --
-    -- Example:
-    --
-    -- > img ! src "foo.png"
-    --
-    -- Result:
-    --
-    -- > <img src="foo.png" />
-    --
-    -- This can be used on nested elements as well.
-    --
-    -- Example:
-    --
-    -- > p ! style "float: right" $ "Hello!"
-    --
-    -- Result:
-    --
-    -- > <p style="float: right">Hello!</p>
-    --
-    (!) :: h -> Attribute -> h
-
-instance Attributable (HtmlM a) where
-    h ! (Attribute f) = f h
-    {-# INLINE (!) #-}
-
-instance Attributable (HtmlM a -> HtmlM b) where
-    h ! f = (! f) . h
-    {-# INLINE (!) #-}
-
 -- | Render text. Functions like these can be used to supply content in HTML.
 --
 text :: Text  -- ^ Text to render.
@@ -313,3 +285,52 @@ stringValue = AttributeValue . String
 preEscapedStringValue :: String -> AttributeValue
 preEscapedStringValue = AttributeValue . PreEscaped . String
 {-# INLINE preEscapedStringValue #-}
+
+class Attributable h where
+    -- | Apply an attribute to an element.
+    --
+    -- Example:
+    --
+    -- > img ! src "foo.png"
+    --
+    -- Result:
+    --
+    -- > <img src="foo.png" />
+    --
+    -- This can be used on nested elements as well.
+    --
+    -- Example:
+    --
+    -- > p ! style "float: right" $ "Hello!"
+    --
+    -- Result:
+    --
+    -- > <p style="float: right">Hello!</p>
+    --
+    (!) :: h -> Attribute -> h
+
+instance Attributable (HtmlM a) where
+    h ! (Attribute f) = f h
+    {-# INLINE (!) #-}
+
+instance Attributable (HtmlM a -> HtmlM b) where
+    h ! f = (! f) . h
+    {-# INLINE (!) #-}
+
+-- | Mark HTML as external data. External data can be:
+--
+-- * CSS data in a @<style>@ tag;
+--
+-- * Script data in a @<script>@ tag.
+--
+-- This function is applied automatically when using the @style@ or @script@
+-- combinators.
+--
+external :: HtmlM a -> HtmlM a
+external (Content x) = Content $ External x
+external (Append x y) = Append (external x) (external y)
+external (Parent x y z) = Parent x y $ external z
+external (AddAttribute x y z) = AddAttribute x y $ external z
+external (AddCustomAttribute x y z) = AddCustomAttribute x y $ external z
+external x = x
+{-# INLINE external #-}

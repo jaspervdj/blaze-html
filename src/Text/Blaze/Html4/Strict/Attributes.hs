@@ -2,107 +2,107 @@
 -- edit it directly. Instead, edit the files who generated this code,
 -- you can find them in the @util/@ directory.
 
-{-# LANGUAGE OverloadedStrings #-}                                              -- util/GenerateHtmlVariant.hs:71
+{-# LANGUAGE OverloadedStrings #-}                                              -- util/GenerateHtmlVariant.hs:72
 -- | This module exports combinators that provide you with the
 -- ability to set attributes on HTML elements.
 --
-module Text.Blaze.Html4.Strict.Attributes                                       -- util/GenerateHtmlVariant.hs:120
-    ( abbr                                                                      -- util/GenerateHtmlVariant.hs:121
-    , accept                                                                    -- util/GenerateHtmlVariant.hs:123
-    , accesskey                                                                 -- util/GenerateHtmlVariant.hs:123
-    , action                                                                    -- util/GenerateHtmlVariant.hs:123
-    , align                                                                     -- util/GenerateHtmlVariant.hs:123
-    , alt                                                                       -- util/GenerateHtmlVariant.hs:123
-    , archive                                                                   -- util/GenerateHtmlVariant.hs:123
-    , axis                                                                      -- util/GenerateHtmlVariant.hs:123
-    , border                                                                    -- util/GenerateHtmlVariant.hs:123
-    , cellpadding                                                               -- util/GenerateHtmlVariant.hs:123
-    , cellspacing                                                               -- util/GenerateHtmlVariant.hs:123
-    , char                                                                      -- util/GenerateHtmlVariant.hs:123
-    , charoff                                                                   -- util/GenerateHtmlVariant.hs:123
-    , charset                                                                   -- util/GenerateHtmlVariant.hs:123
-    , checked                                                                   -- util/GenerateHtmlVariant.hs:123
-    , cite                                                                      -- util/GenerateHtmlVariant.hs:123
-    , class_                                                                    -- util/GenerateHtmlVariant.hs:123
-    , classid                                                                   -- util/GenerateHtmlVariant.hs:123
-    , codebase                                                                  -- util/GenerateHtmlVariant.hs:123
-    , codetype                                                                  -- util/GenerateHtmlVariant.hs:123
-    , cols                                                                      -- util/GenerateHtmlVariant.hs:123
-    , colspan                                                                   -- util/GenerateHtmlVariant.hs:123
-    , content                                                                   -- util/GenerateHtmlVariant.hs:123
-    , coords                                                                    -- util/GenerateHtmlVariant.hs:123
-    , data_                                                                     -- util/GenerateHtmlVariant.hs:123
-    , datetime                                                                  -- util/GenerateHtmlVariant.hs:123
-    , declare                                                                   -- util/GenerateHtmlVariant.hs:123
-    , defer                                                                     -- util/GenerateHtmlVariant.hs:123
-    , dir                                                                       -- util/GenerateHtmlVariant.hs:123
-    , disabled                                                                  -- util/GenerateHtmlVariant.hs:123
-    , for                                                                       -- util/GenerateHtmlVariant.hs:123
-    , frame                                                                     -- util/GenerateHtmlVariant.hs:123
-    , headers                                                                   -- util/GenerateHtmlVariant.hs:123
-    , height                                                                    -- util/GenerateHtmlVariant.hs:123
-    , href                                                                      -- util/GenerateHtmlVariant.hs:123
-    , hreflang                                                                  -- util/GenerateHtmlVariant.hs:123
-    , http_equiv                                                                -- util/GenerateHtmlVariant.hs:123
-    , id                                                                        -- util/GenerateHtmlVariant.hs:123
-    , label                                                                     -- util/GenerateHtmlVariant.hs:123
-    , lang                                                                      -- util/GenerateHtmlVariant.hs:123
-    , maxlength                                                                 -- util/GenerateHtmlVariant.hs:123
-    , media                                                                     -- util/GenerateHtmlVariant.hs:123
-    , method                                                                    -- util/GenerateHtmlVariant.hs:123
-    , multiple                                                                  -- util/GenerateHtmlVariant.hs:123
-    , name                                                                      -- util/GenerateHtmlVariant.hs:123
-    , nohref                                                                    -- util/GenerateHtmlVariant.hs:123
-    , onabort                                                                   -- util/GenerateHtmlVariant.hs:123
-    , onblur                                                                    -- util/GenerateHtmlVariant.hs:123
-    , onchange                                                                  -- util/GenerateHtmlVariant.hs:123
-    , onclick                                                                   -- util/GenerateHtmlVariant.hs:123
-    , ondblclick                                                                -- util/GenerateHtmlVariant.hs:123
-    , onfocus                                                                   -- util/GenerateHtmlVariant.hs:123
-    , onkeydown                                                                 -- util/GenerateHtmlVariant.hs:123
-    , onkeypress                                                                -- util/GenerateHtmlVariant.hs:123
-    , onkeyup                                                                   -- util/GenerateHtmlVariant.hs:123
-    , onload                                                                    -- util/GenerateHtmlVariant.hs:123
-    , onmousedown                                                               -- util/GenerateHtmlVariant.hs:123
-    , onmousemove                                                               -- util/GenerateHtmlVariant.hs:123
-    , onmouseout                                                                -- util/GenerateHtmlVariant.hs:123
-    , onmouseover                                                               -- util/GenerateHtmlVariant.hs:123
-    , onmouseup                                                                 -- util/GenerateHtmlVariant.hs:123
-    , onreset                                                                   -- util/GenerateHtmlVariant.hs:123
-    , onselect                                                                  -- util/GenerateHtmlVariant.hs:123
-    , onsubmit                                                                  -- util/GenerateHtmlVariant.hs:123
-    , onunload                                                                  -- util/GenerateHtmlVariant.hs:123
-    , profile                                                                   -- util/GenerateHtmlVariant.hs:123
-    , readonly                                                                  -- util/GenerateHtmlVariant.hs:123
-    , rel                                                                       -- util/GenerateHtmlVariant.hs:123
-    , rev                                                                       -- util/GenerateHtmlVariant.hs:123
-    , rows                                                                      -- util/GenerateHtmlVariant.hs:123
-    , rowspan                                                                   -- util/GenerateHtmlVariant.hs:123
-    , rules                                                                     -- util/GenerateHtmlVariant.hs:123
-    , scheme                                                                    -- util/GenerateHtmlVariant.hs:123
-    , scope                                                                     -- util/GenerateHtmlVariant.hs:123
-    , selected                                                                  -- util/GenerateHtmlVariant.hs:123
-    , shape                                                                     -- util/GenerateHtmlVariant.hs:123
-    , size                                                                      -- util/GenerateHtmlVariant.hs:123
-    , span                                                                      -- util/GenerateHtmlVariant.hs:123
-    , src                                                                       -- util/GenerateHtmlVariant.hs:123
-    , standby                                                                   -- util/GenerateHtmlVariant.hs:123
-    , style                                                                     -- util/GenerateHtmlVariant.hs:123
-    , summary                                                                   -- util/GenerateHtmlVariant.hs:123
-    , tabindex                                                                  -- util/GenerateHtmlVariant.hs:123
-    , title                                                                     -- util/GenerateHtmlVariant.hs:123
-    , type_                                                                     -- util/GenerateHtmlVariant.hs:123
-    , usemap                                                                    -- util/GenerateHtmlVariant.hs:123
-    , valign                                                                    -- util/GenerateHtmlVariant.hs:123
-    , value                                                                     -- util/GenerateHtmlVariant.hs:123
-    , valuetype                                                                 -- util/GenerateHtmlVariant.hs:123
-    , width                                                                     -- util/GenerateHtmlVariant.hs:123
-    ) where                                                                     -- util/GenerateHtmlVariant.hs:124
+module Text.Blaze.Html4.Strict.Attributes                                       -- util/GenerateHtmlVariant.hs:121
+    ( abbr                                                                      -- util/GenerateHtmlVariant.hs:122
+    , accept                                                                    -- util/GenerateHtmlVariant.hs:124
+    , accesskey                                                                 -- util/GenerateHtmlVariant.hs:124
+    , action                                                                    -- util/GenerateHtmlVariant.hs:124
+    , align                                                                     -- util/GenerateHtmlVariant.hs:124
+    , alt                                                                       -- util/GenerateHtmlVariant.hs:124
+    , archive                                                                   -- util/GenerateHtmlVariant.hs:124
+    , axis                                                                      -- util/GenerateHtmlVariant.hs:124
+    , border                                                                    -- util/GenerateHtmlVariant.hs:124
+    , cellpadding                                                               -- util/GenerateHtmlVariant.hs:124
+    , cellspacing                                                               -- util/GenerateHtmlVariant.hs:124
+    , char                                                                      -- util/GenerateHtmlVariant.hs:124
+    , charoff                                                                   -- util/GenerateHtmlVariant.hs:124
+    , charset                                                                   -- util/GenerateHtmlVariant.hs:124
+    , checked                                                                   -- util/GenerateHtmlVariant.hs:124
+    , cite                                                                      -- util/GenerateHtmlVariant.hs:124
+    , class_                                                                    -- util/GenerateHtmlVariant.hs:124
+    , classid                                                                   -- util/GenerateHtmlVariant.hs:124
+    , codebase                                                                  -- util/GenerateHtmlVariant.hs:124
+    , codetype                                                                  -- util/GenerateHtmlVariant.hs:124
+    , cols                                                                      -- util/GenerateHtmlVariant.hs:124
+    , colspan                                                                   -- util/GenerateHtmlVariant.hs:124
+    , content                                                                   -- util/GenerateHtmlVariant.hs:124
+    , coords                                                                    -- util/GenerateHtmlVariant.hs:124
+    , data_                                                                     -- util/GenerateHtmlVariant.hs:124
+    , datetime                                                                  -- util/GenerateHtmlVariant.hs:124
+    , declare                                                                   -- util/GenerateHtmlVariant.hs:124
+    , defer                                                                     -- util/GenerateHtmlVariant.hs:124
+    , dir                                                                       -- util/GenerateHtmlVariant.hs:124
+    , disabled                                                                  -- util/GenerateHtmlVariant.hs:124
+    , for                                                                       -- util/GenerateHtmlVariant.hs:124
+    , frame                                                                     -- util/GenerateHtmlVariant.hs:124
+    , headers                                                                   -- util/GenerateHtmlVariant.hs:124
+    , height                                                                    -- util/GenerateHtmlVariant.hs:124
+    , href                                                                      -- util/GenerateHtmlVariant.hs:124
+    , hreflang                                                                  -- util/GenerateHtmlVariant.hs:124
+    , http_equiv                                                                -- util/GenerateHtmlVariant.hs:124
+    , id                                                                        -- util/GenerateHtmlVariant.hs:124
+    , label                                                                     -- util/GenerateHtmlVariant.hs:124
+    , lang                                                                      -- util/GenerateHtmlVariant.hs:124
+    , maxlength                                                                 -- util/GenerateHtmlVariant.hs:124
+    , media                                                                     -- util/GenerateHtmlVariant.hs:124
+    , method                                                                    -- util/GenerateHtmlVariant.hs:124
+    , multiple                                                                  -- util/GenerateHtmlVariant.hs:124
+    , name                                                                      -- util/GenerateHtmlVariant.hs:124
+    , nohref                                                                    -- util/GenerateHtmlVariant.hs:124
+    , onabort                                                                   -- util/GenerateHtmlVariant.hs:124
+    , onblur                                                                    -- util/GenerateHtmlVariant.hs:124
+    , onchange                                                                  -- util/GenerateHtmlVariant.hs:124
+    , onclick                                                                   -- util/GenerateHtmlVariant.hs:124
+    , ondblclick                                                                -- util/GenerateHtmlVariant.hs:124
+    , onfocus                                                                   -- util/GenerateHtmlVariant.hs:124
+    , onkeydown                                                                 -- util/GenerateHtmlVariant.hs:124
+    , onkeypress                                                                -- util/GenerateHtmlVariant.hs:124
+    , onkeyup                                                                   -- util/GenerateHtmlVariant.hs:124
+    , onload                                                                    -- util/GenerateHtmlVariant.hs:124
+    , onmousedown                                                               -- util/GenerateHtmlVariant.hs:124
+    , onmousemove                                                               -- util/GenerateHtmlVariant.hs:124
+    , onmouseout                                                                -- util/GenerateHtmlVariant.hs:124
+    , onmouseover                                                               -- util/GenerateHtmlVariant.hs:124
+    , onmouseup                                                                 -- util/GenerateHtmlVariant.hs:124
+    , onreset                                                                   -- util/GenerateHtmlVariant.hs:124
+    , onselect                                                                  -- util/GenerateHtmlVariant.hs:124
+    , onsubmit                                                                  -- util/GenerateHtmlVariant.hs:124
+    , onunload                                                                  -- util/GenerateHtmlVariant.hs:124
+    , profile                                                                   -- util/GenerateHtmlVariant.hs:124
+    , readonly                                                                  -- util/GenerateHtmlVariant.hs:124
+    , rel                                                                       -- util/GenerateHtmlVariant.hs:124
+    , rev                                                                       -- util/GenerateHtmlVariant.hs:124
+    , rows                                                                      -- util/GenerateHtmlVariant.hs:124
+    , rowspan                                                                   -- util/GenerateHtmlVariant.hs:124
+    , rules                                                                     -- util/GenerateHtmlVariant.hs:124
+    , scheme                                                                    -- util/GenerateHtmlVariant.hs:124
+    , scope                                                                     -- util/GenerateHtmlVariant.hs:124
+    , selected                                                                  -- util/GenerateHtmlVariant.hs:124
+    , shape                                                                     -- util/GenerateHtmlVariant.hs:124
+    , size                                                                      -- util/GenerateHtmlVariant.hs:124
+    , span                                                                      -- util/GenerateHtmlVariant.hs:124
+    , src                                                                       -- util/GenerateHtmlVariant.hs:124
+    , standby                                                                   -- util/GenerateHtmlVariant.hs:124
+    , style                                                                     -- util/GenerateHtmlVariant.hs:124
+    , summary                                                                   -- util/GenerateHtmlVariant.hs:124
+    , tabindex                                                                  -- util/GenerateHtmlVariant.hs:124
+    , title                                                                     -- util/GenerateHtmlVariant.hs:124
+    , type_                                                                     -- util/GenerateHtmlVariant.hs:124
+    , usemap                                                                    -- util/GenerateHtmlVariant.hs:124
+    , valign                                                                    -- util/GenerateHtmlVariant.hs:124
+    , value                                                                     -- util/GenerateHtmlVariant.hs:124
+    , valuetype                                                                 -- util/GenerateHtmlVariant.hs:124
+    , width                                                                     -- util/GenerateHtmlVariant.hs:124
+    ) where                                                                     -- util/GenerateHtmlVariant.hs:125
 
-import Prelude ()                                                               -- util/GenerateHtmlVariant.hs:76
-                                                                                -- util/GenerateHtmlVariant.hs:77
-import Text.Blaze.Internal (Attribute, AttributeValue, attribute)               -- util/GenerateHtmlVariant.hs:78
-                                                                                -- util/GenerateHtmlVariant.hs:79
+import Prelude ()                                                               -- util/GenerateHtmlVariant.hs:77
+                                                                                -- util/GenerateHtmlVariant.hs:78
+import Text.Blaze.Internal (Attribute, AttributeValue, attribute)               -- util/GenerateHtmlVariant.hs:79
+                                                                                -- util/GenerateHtmlVariant.hs:80
 -- | Combinator for the @abbr@ attribute.
 --
 -- Example:
@@ -113,10 +113,10 @@ import Text.Blaze.Internal (Attribute, AttributeValue, attribute)               
 --
 -- > <div abbr="bar">Hello.</div>
 --
-abbr :: AttributeValue  -- ^ Attribute value.                                   -- util/GenerateHtmlVariant.hs:245
-     -> Attribute       -- ^ Resulting attribute.                               -- util/GenerateHtmlVariant.hs:246
-abbr = attribute " abbr=\""                                                     -- util/GenerateHtmlVariant.hs:247
-{-# INLINE abbr #-}                                                             -- util/GenerateHtmlVariant.hs:248
+abbr :: AttributeValue  -- ^ Attribute value.                                   -- util/GenerateHtmlVariant.hs:248
+     -> Attribute       -- ^ Resulting attribute.                               -- util/GenerateHtmlVariant.hs:249
+abbr = attribute " abbr=\""                                                     -- util/GenerateHtmlVariant.hs:250
+{-# INLINE abbr #-}                                                             -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @accept@ attribute.
 --
@@ -128,10 +128,10 @@ abbr = attribute " abbr=\""                                                     
 --
 -- > <div accept="bar">Hello.</div>
 --
-accept :: AttributeValue  -- ^ Attribute value.                                 -- util/GenerateHtmlVariant.hs:245
-       -> Attribute       -- ^ Resulting attribute.                             -- util/GenerateHtmlVariant.hs:246
-accept = attribute " accept=\""                                                 -- util/GenerateHtmlVariant.hs:247
-{-# INLINE accept #-}                                                           -- util/GenerateHtmlVariant.hs:248
+accept :: AttributeValue  -- ^ Attribute value.                                 -- util/GenerateHtmlVariant.hs:248
+       -> Attribute       -- ^ Resulting attribute.                             -- util/GenerateHtmlVariant.hs:249
+accept = attribute " accept=\""                                                 -- util/GenerateHtmlVariant.hs:250
+{-# INLINE accept #-}                                                           -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @accesskey@ attribute.
 --
@@ -143,10 +143,10 @@ accept = attribute " accept=\""                                                 
 --
 -- > <div accesskey="bar">Hello.</div>
 --
-accesskey :: AttributeValue  -- ^ Attribute value.                              -- util/GenerateHtmlVariant.hs:245
-          -> Attribute       -- ^ Resulting attribute.                          -- util/GenerateHtmlVariant.hs:246
-accesskey = attribute " accesskey=\""                                           -- util/GenerateHtmlVariant.hs:247
-{-# INLINE accesskey #-}                                                        -- util/GenerateHtmlVariant.hs:248
+accesskey :: AttributeValue  -- ^ Attribute value.                              -- util/GenerateHtmlVariant.hs:248
+          -> Attribute       -- ^ Resulting attribute.                          -- util/GenerateHtmlVariant.hs:249
+accesskey = attribute " accesskey=\""                                           -- util/GenerateHtmlVariant.hs:250
+{-# INLINE accesskey #-}                                                        -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @action@ attribute.
 --
@@ -158,10 +158,10 @@ accesskey = attribute " accesskey=\""                                           
 --
 -- > <div action="bar">Hello.</div>
 --
-action :: AttributeValue  -- ^ Attribute value.                                 -- util/GenerateHtmlVariant.hs:245
-       -> Attribute       -- ^ Resulting attribute.                             -- util/GenerateHtmlVariant.hs:246
-action = attribute " action=\""                                                 -- util/GenerateHtmlVariant.hs:247
-{-# INLINE action #-}                                                           -- util/GenerateHtmlVariant.hs:248
+action :: AttributeValue  -- ^ Attribute value.                                 -- util/GenerateHtmlVariant.hs:248
+       -> Attribute       -- ^ Resulting attribute.                             -- util/GenerateHtmlVariant.hs:249
+action = attribute " action=\""                                                 -- util/GenerateHtmlVariant.hs:250
+{-# INLINE action #-}                                                           -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @align@ attribute.
 --
@@ -173,10 +173,10 @@ action = attribute " action=\""                                                 
 --
 -- > <div align="bar">Hello.</div>
 --
-align :: AttributeValue  -- ^ Attribute value.                                  -- util/GenerateHtmlVariant.hs:245
-      -> Attribute       -- ^ Resulting attribute.                              -- util/GenerateHtmlVariant.hs:246
-align = attribute " align=\""                                                   -- util/GenerateHtmlVariant.hs:247
-{-# INLINE align #-}                                                            -- util/GenerateHtmlVariant.hs:248
+align :: AttributeValue  -- ^ Attribute value.                                  -- util/GenerateHtmlVariant.hs:248
+      -> Attribute       -- ^ Resulting attribute.                              -- util/GenerateHtmlVariant.hs:249
+align = attribute " align=\""                                                   -- util/GenerateHtmlVariant.hs:250
+{-# INLINE align #-}                                                            -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @alt@ attribute.
 --
@@ -188,10 +188,10 @@ align = attribute " align=\""                                                   
 --
 -- > <div alt="bar">Hello.</div>
 --
-alt :: AttributeValue  -- ^ Attribute value.                                    -- util/GenerateHtmlVariant.hs:245
-    -> Attribute       -- ^ Resulting attribute.                                -- util/GenerateHtmlVariant.hs:246
-alt = attribute " alt=\""                                                       -- util/GenerateHtmlVariant.hs:247
-{-# INLINE alt #-}                                                              -- util/GenerateHtmlVariant.hs:248
+alt :: AttributeValue  -- ^ Attribute value.                                    -- util/GenerateHtmlVariant.hs:248
+    -> Attribute       -- ^ Resulting attribute.                                -- util/GenerateHtmlVariant.hs:249
+alt = attribute " alt=\""                                                       -- util/GenerateHtmlVariant.hs:250
+{-# INLINE alt #-}                                                              -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @archive@ attribute.
 --
@@ -203,10 +203,10 @@ alt = attribute " alt=\""                                                       
 --
 -- > <div archive="bar">Hello.</div>
 --
-archive :: AttributeValue  -- ^ Attribute value.                                -- util/GenerateHtmlVariant.hs:245
-        -> Attribute       -- ^ Resulting attribute.                            -- util/GenerateHtmlVariant.hs:246
-archive = attribute " archive=\""                                               -- util/GenerateHtmlVariant.hs:247
-{-# INLINE archive #-}                                                          -- util/GenerateHtmlVariant.hs:248
+archive :: AttributeValue  -- ^ Attribute value.                                -- util/GenerateHtmlVariant.hs:248
+        -> Attribute       -- ^ Resulting attribute.                            -- util/GenerateHtmlVariant.hs:249
+archive = attribute " archive=\""                                               -- util/GenerateHtmlVariant.hs:250
+{-# INLINE archive #-}                                                          -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @axis@ attribute.
 --
@@ -218,10 +218,10 @@ archive = attribute " archive=\""                                               
 --
 -- > <div axis="bar">Hello.</div>
 --
-axis :: AttributeValue  -- ^ Attribute value.                                   -- util/GenerateHtmlVariant.hs:245
-     -> Attribute       -- ^ Resulting attribute.                               -- util/GenerateHtmlVariant.hs:246
-axis = attribute " axis=\""                                                     -- util/GenerateHtmlVariant.hs:247
-{-# INLINE axis #-}                                                             -- util/GenerateHtmlVariant.hs:248
+axis :: AttributeValue  -- ^ Attribute value.                                   -- util/GenerateHtmlVariant.hs:248
+     -> Attribute       -- ^ Resulting attribute.                               -- util/GenerateHtmlVariant.hs:249
+axis = attribute " axis=\""                                                     -- util/GenerateHtmlVariant.hs:250
+{-# INLINE axis #-}                                                             -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @border@ attribute.
 --
@@ -233,10 +233,10 @@ axis = attribute " axis=\""                                                     
 --
 -- > <div border="bar">Hello.</div>
 --
-border :: AttributeValue  -- ^ Attribute value.                                 -- util/GenerateHtmlVariant.hs:245
-       -> Attribute       -- ^ Resulting attribute.                             -- util/GenerateHtmlVariant.hs:246
-border = attribute " border=\""                                                 -- util/GenerateHtmlVariant.hs:247
-{-# INLINE border #-}                                                           -- util/GenerateHtmlVariant.hs:248
+border :: AttributeValue  -- ^ Attribute value.                                 -- util/GenerateHtmlVariant.hs:248
+       -> Attribute       -- ^ Resulting attribute.                             -- util/GenerateHtmlVariant.hs:249
+border = attribute " border=\""                                                 -- util/GenerateHtmlVariant.hs:250
+{-# INLINE border #-}                                                           -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @cellpadding@ attribute.
 --
@@ -248,10 +248,10 @@ border = attribute " border=\""                                                 
 --
 -- > <div cellpadding="bar">Hello.</div>
 --
-cellpadding :: AttributeValue  -- ^ Attribute value.                            -- util/GenerateHtmlVariant.hs:245
-            -> Attribute       -- ^ Resulting attribute.                        -- util/GenerateHtmlVariant.hs:246
-cellpadding = attribute " cellpadding=\""                                       -- util/GenerateHtmlVariant.hs:247
-{-# INLINE cellpadding #-}                                                      -- util/GenerateHtmlVariant.hs:248
+cellpadding :: AttributeValue  -- ^ Attribute value.                            -- util/GenerateHtmlVariant.hs:248
+            -> Attribute       -- ^ Resulting attribute.                        -- util/GenerateHtmlVariant.hs:249
+cellpadding = attribute " cellpadding=\""                                       -- util/GenerateHtmlVariant.hs:250
+{-# INLINE cellpadding #-}                                                      -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @cellspacing@ attribute.
 --
@@ -263,10 +263,10 @@ cellpadding = attribute " cellpadding=\""                                       
 --
 -- > <div cellspacing="bar">Hello.</div>
 --
-cellspacing :: AttributeValue  -- ^ Attribute value.                            -- util/GenerateHtmlVariant.hs:245
-            -> Attribute       -- ^ Resulting attribute.                        -- util/GenerateHtmlVariant.hs:246
-cellspacing = attribute " cellspacing=\""                                       -- util/GenerateHtmlVariant.hs:247
-{-# INLINE cellspacing #-}                                                      -- util/GenerateHtmlVariant.hs:248
+cellspacing :: AttributeValue  -- ^ Attribute value.                            -- util/GenerateHtmlVariant.hs:248
+            -> Attribute       -- ^ Resulting attribute.                        -- util/GenerateHtmlVariant.hs:249
+cellspacing = attribute " cellspacing=\""                                       -- util/GenerateHtmlVariant.hs:250
+{-# INLINE cellspacing #-}                                                      -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @char@ attribute.
 --
@@ -278,10 +278,10 @@ cellspacing = attribute " cellspacing=\""                                       
 --
 -- > <div char="bar">Hello.</div>
 --
-char :: AttributeValue  -- ^ Attribute value.                                   -- util/GenerateHtmlVariant.hs:245
-     -> Attribute       -- ^ Resulting attribute.                               -- util/GenerateHtmlVariant.hs:246
-char = attribute " char=\""                                                     -- util/GenerateHtmlVariant.hs:247
-{-# INLINE char #-}                                                             -- util/GenerateHtmlVariant.hs:248
+char :: AttributeValue  -- ^ Attribute value.                                   -- util/GenerateHtmlVariant.hs:248
+     -> Attribute       -- ^ Resulting attribute.                               -- util/GenerateHtmlVariant.hs:249
+char = attribute " char=\""                                                     -- util/GenerateHtmlVariant.hs:250
+{-# INLINE char #-}                                                             -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @charoff@ attribute.
 --
@@ -293,10 +293,10 @@ char = attribute " char=\""                                                     
 --
 -- > <div charoff="bar">Hello.</div>
 --
-charoff :: AttributeValue  -- ^ Attribute value.                                -- util/GenerateHtmlVariant.hs:245
-        -> Attribute       -- ^ Resulting attribute.                            -- util/GenerateHtmlVariant.hs:246
-charoff = attribute " charoff=\""                                               -- util/GenerateHtmlVariant.hs:247
-{-# INLINE charoff #-}                                                          -- util/GenerateHtmlVariant.hs:248
+charoff :: AttributeValue  -- ^ Attribute value.                                -- util/GenerateHtmlVariant.hs:248
+        -> Attribute       -- ^ Resulting attribute.                            -- util/GenerateHtmlVariant.hs:249
+charoff = attribute " charoff=\""                                               -- util/GenerateHtmlVariant.hs:250
+{-# INLINE charoff #-}                                                          -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @charset@ attribute.
 --
@@ -308,10 +308,10 @@ charoff = attribute " charoff=\""                                               
 --
 -- > <div charset="bar">Hello.</div>
 --
-charset :: AttributeValue  -- ^ Attribute value.                                -- util/GenerateHtmlVariant.hs:245
-        -> Attribute       -- ^ Resulting attribute.                            -- util/GenerateHtmlVariant.hs:246
-charset = attribute " charset=\""                                               -- util/GenerateHtmlVariant.hs:247
-{-# INLINE charset #-}                                                          -- util/GenerateHtmlVariant.hs:248
+charset :: AttributeValue  -- ^ Attribute value.                                -- util/GenerateHtmlVariant.hs:248
+        -> Attribute       -- ^ Resulting attribute.                            -- util/GenerateHtmlVariant.hs:249
+charset = attribute " charset=\""                                               -- util/GenerateHtmlVariant.hs:250
+{-# INLINE charset #-}                                                          -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @checked@ attribute.
 --
@@ -323,10 +323,10 @@ charset = attribute " charset=\""                                               
 --
 -- > <div checked="bar">Hello.</div>
 --
-checked :: AttributeValue  -- ^ Attribute value.                                -- util/GenerateHtmlVariant.hs:245
-        -> Attribute       -- ^ Resulting attribute.                            -- util/GenerateHtmlVariant.hs:246
-checked = attribute " checked=\""                                               -- util/GenerateHtmlVariant.hs:247
-{-# INLINE checked #-}                                                          -- util/GenerateHtmlVariant.hs:248
+checked :: AttributeValue  -- ^ Attribute value.                                -- util/GenerateHtmlVariant.hs:248
+        -> Attribute       -- ^ Resulting attribute.                            -- util/GenerateHtmlVariant.hs:249
+checked = attribute " checked=\""                                               -- util/GenerateHtmlVariant.hs:250
+{-# INLINE checked #-}                                                          -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @cite@ attribute.
 --
@@ -338,10 +338,10 @@ checked = attribute " checked=\""                                               
 --
 -- > <div cite="bar">Hello.</div>
 --
-cite :: AttributeValue  -- ^ Attribute value.                                   -- util/GenerateHtmlVariant.hs:245
-     -> Attribute       -- ^ Resulting attribute.                               -- util/GenerateHtmlVariant.hs:246
-cite = attribute " cite=\""                                                     -- util/GenerateHtmlVariant.hs:247
-{-# INLINE cite #-}                                                             -- util/GenerateHtmlVariant.hs:248
+cite :: AttributeValue  -- ^ Attribute value.                                   -- util/GenerateHtmlVariant.hs:248
+     -> Attribute       -- ^ Resulting attribute.                               -- util/GenerateHtmlVariant.hs:249
+cite = attribute " cite=\""                                                     -- util/GenerateHtmlVariant.hs:250
+{-# INLINE cite #-}                                                             -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @class@ attribute.
 --
@@ -353,10 +353,10 @@ cite = attribute " cite=\""                                                     
 --
 -- > <div class="bar">Hello.</div>
 --
-class_ :: AttributeValue  -- ^ Attribute value.                                 -- util/GenerateHtmlVariant.hs:245
-       -> Attribute       -- ^ Resulting attribute.                             -- util/GenerateHtmlVariant.hs:246
-class_ = attribute " class=\""                                                  -- util/GenerateHtmlVariant.hs:247
-{-# INLINE class_ #-}                                                           -- util/GenerateHtmlVariant.hs:248
+class_ :: AttributeValue  -- ^ Attribute value.                                 -- util/GenerateHtmlVariant.hs:248
+       -> Attribute       -- ^ Resulting attribute.                             -- util/GenerateHtmlVariant.hs:249
+class_ = attribute " class=\""                                                  -- util/GenerateHtmlVariant.hs:250
+{-# INLINE class_ #-}                                                           -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @classid@ attribute.
 --
@@ -368,10 +368,10 @@ class_ = attribute " class=\""                                                  
 --
 -- > <div classid="bar">Hello.</div>
 --
-classid :: AttributeValue  -- ^ Attribute value.                                -- util/GenerateHtmlVariant.hs:245
-        -> Attribute       -- ^ Resulting attribute.                            -- util/GenerateHtmlVariant.hs:246
-classid = attribute " classid=\""                                               -- util/GenerateHtmlVariant.hs:247
-{-# INLINE classid #-}                                                          -- util/GenerateHtmlVariant.hs:248
+classid :: AttributeValue  -- ^ Attribute value.                                -- util/GenerateHtmlVariant.hs:248
+        -> Attribute       -- ^ Resulting attribute.                            -- util/GenerateHtmlVariant.hs:249
+classid = attribute " classid=\""                                               -- util/GenerateHtmlVariant.hs:250
+{-# INLINE classid #-}                                                          -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @codebase@ attribute.
 --
@@ -383,10 +383,10 @@ classid = attribute " classid=\""                                               
 --
 -- > <div codebase="bar">Hello.</div>
 --
-codebase :: AttributeValue  -- ^ Attribute value.                               -- util/GenerateHtmlVariant.hs:245
-         -> Attribute       -- ^ Resulting attribute.                           -- util/GenerateHtmlVariant.hs:246
-codebase = attribute " codebase=\""                                             -- util/GenerateHtmlVariant.hs:247
-{-# INLINE codebase #-}                                                         -- util/GenerateHtmlVariant.hs:248
+codebase :: AttributeValue  -- ^ Attribute value.                               -- util/GenerateHtmlVariant.hs:248
+         -> Attribute       -- ^ Resulting attribute.                           -- util/GenerateHtmlVariant.hs:249
+codebase = attribute " codebase=\""                                             -- util/GenerateHtmlVariant.hs:250
+{-# INLINE codebase #-}                                                         -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @codetype@ attribute.
 --
@@ -398,10 +398,10 @@ codebase = attribute " codebase=\""                                             
 --
 -- > <div codetype="bar">Hello.</div>
 --
-codetype :: AttributeValue  -- ^ Attribute value.                               -- util/GenerateHtmlVariant.hs:245
-         -> Attribute       -- ^ Resulting attribute.                           -- util/GenerateHtmlVariant.hs:246
-codetype = attribute " codetype=\""                                             -- util/GenerateHtmlVariant.hs:247
-{-# INLINE codetype #-}                                                         -- util/GenerateHtmlVariant.hs:248
+codetype :: AttributeValue  -- ^ Attribute value.                               -- util/GenerateHtmlVariant.hs:248
+         -> Attribute       -- ^ Resulting attribute.                           -- util/GenerateHtmlVariant.hs:249
+codetype = attribute " codetype=\""                                             -- util/GenerateHtmlVariant.hs:250
+{-# INLINE codetype #-}                                                         -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @cols@ attribute.
 --
@@ -413,10 +413,10 @@ codetype = attribute " codetype=\""                                             
 --
 -- > <div cols="bar">Hello.</div>
 --
-cols :: AttributeValue  -- ^ Attribute value.                                   -- util/GenerateHtmlVariant.hs:245
-     -> Attribute       -- ^ Resulting attribute.                               -- util/GenerateHtmlVariant.hs:246
-cols = attribute " cols=\""                                                     -- util/GenerateHtmlVariant.hs:247
-{-# INLINE cols #-}                                                             -- util/GenerateHtmlVariant.hs:248
+cols :: AttributeValue  -- ^ Attribute value.                                   -- util/GenerateHtmlVariant.hs:248
+     -> Attribute       -- ^ Resulting attribute.                               -- util/GenerateHtmlVariant.hs:249
+cols = attribute " cols=\""                                                     -- util/GenerateHtmlVariant.hs:250
+{-# INLINE cols #-}                                                             -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @colspan@ attribute.
 --
@@ -428,10 +428,10 @@ cols = attribute " cols=\""                                                     
 --
 -- > <div colspan="bar">Hello.</div>
 --
-colspan :: AttributeValue  -- ^ Attribute value.                                -- util/GenerateHtmlVariant.hs:245
-        -> Attribute       -- ^ Resulting attribute.                            -- util/GenerateHtmlVariant.hs:246
-colspan = attribute " colspan=\""                                               -- util/GenerateHtmlVariant.hs:247
-{-# INLINE colspan #-}                                                          -- util/GenerateHtmlVariant.hs:248
+colspan :: AttributeValue  -- ^ Attribute value.                                -- util/GenerateHtmlVariant.hs:248
+        -> Attribute       -- ^ Resulting attribute.                            -- util/GenerateHtmlVariant.hs:249
+colspan = attribute " colspan=\""                                               -- util/GenerateHtmlVariant.hs:250
+{-# INLINE colspan #-}                                                          -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @content@ attribute.
 --
@@ -443,10 +443,10 @@ colspan = attribute " colspan=\""                                               
 --
 -- > <div content="bar">Hello.</div>
 --
-content :: AttributeValue  -- ^ Attribute value.                                -- util/GenerateHtmlVariant.hs:245
-        -> Attribute       -- ^ Resulting attribute.                            -- util/GenerateHtmlVariant.hs:246
-content = attribute " content=\""                                               -- util/GenerateHtmlVariant.hs:247
-{-# INLINE content #-}                                                          -- util/GenerateHtmlVariant.hs:248
+content :: AttributeValue  -- ^ Attribute value.                                -- util/GenerateHtmlVariant.hs:248
+        -> Attribute       -- ^ Resulting attribute.                            -- util/GenerateHtmlVariant.hs:249
+content = attribute " content=\""                                               -- util/GenerateHtmlVariant.hs:250
+{-# INLINE content #-}                                                          -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @coords@ attribute.
 --
@@ -458,10 +458,10 @@ content = attribute " content=\""                                               
 --
 -- > <div coords="bar">Hello.</div>
 --
-coords :: AttributeValue  -- ^ Attribute value.                                 -- util/GenerateHtmlVariant.hs:245
-       -> Attribute       -- ^ Resulting attribute.                             -- util/GenerateHtmlVariant.hs:246
-coords = attribute " coords=\""                                                 -- util/GenerateHtmlVariant.hs:247
-{-# INLINE coords #-}                                                           -- util/GenerateHtmlVariant.hs:248
+coords :: AttributeValue  -- ^ Attribute value.                                 -- util/GenerateHtmlVariant.hs:248
+       -> Attribute       -- ^ Resulting attribute.                             -- util/GenerateHtmlVariant.hs:249
+coords = attribute " coords=\""                                                 -- util/GenerateHtmlVariant.hs:250
+{-# INLINE coords #-}                                                           -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @data@ attribute.
 --
@@ -473,10 +473,10 @@ coords = attribute " coords=\""                                                 
 --
 -- > <div data="bar">Hello.</div>
 --
-data_ :: AttributeValue  -- ^ Attribute value.                                  -- util/GenerateHtmlVariant.hs:245
-      -> Attribute       -- ^ Resulting attribute.                              -- util/GenerateHtmlVariant.hs:246
-data_ = attribute " data=\""                                                    -- util/GenerateHtmlVariant.hs:247
-{-# INLINE data_ #-}                                                            -- util/GenerateHtmlVariant.hs:248
+data_ :: AttributeValue  -- ^ Attribute value.                                  -- util/GenerateHtmlVariant.hs:248
+      -> Attribute       -- ^ Resulting attribute.                              -- util/GenerateHtmlVariant.hs:249
+data_ = attribute " data=\""                                                    -- util/GenerateHtmlVariant.hs:250
+{-# INLINE data_ #-}                                                            -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @datetime@ attribute.
 --
@@ -488,10 +488,10 @@ data_ = attribute " data=\""                                                    
 --
 -- > <div datetime="bar">Hello.</div>
 --
-datetime :: AttributeValue  -- ^ Attribute value.                               -- util/GenerateHtmlVariant.hs:245
-         -> Attribute       -- ^ Resulting attribute.                           -- util/GenerateHtmlVariant.hs:246
-datetime = attribute " datetime=\""                                             -- util/GenerateHtmlVariant.hs:247
-{-# INLINE datetime #-}                                                         -- util/GenerateHtmlVariant.hs:248
+datetime :: AttributeValue  -- ^ Attribute value.                               -- util/GenerateHtmlVariant.hs:248
+         -> Attribute       -- ^ Resulting attribute.                           -- util/GenerateHtmlVariant.hs:249
+datetime = attribute " datetime=\""                                             -- util/GenerateHtmlVariant.hs:250
+{-# INLINE datetime #-}                                                         -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @declare@ attribute.
 --
@@ -503,10 +503,10 @@ datetime = attribute " datetime=\""                                             
 --
 -- > <div declare="bar">Hello.</div>
 --
-declare :: AttributeValue  -- ^ Attribute value.                                -- util/GenerateHtmlVariant.hs:245
-        -> Attribute       -- ^ Resulting attribute.                            -- util/GenerateHtmlVariant.hs:246
-declare = attribute " declare=\""                                               -- util/GenerateHtmlVariant.hs:247
-{-# INLINE declare #-}                                                          -- util/GenerateHtmlVariant.hs:248
+declare :: AttributeValue  -- ^ Attribute value.                                -- util/GenerateHtmlVariant.hs:248
+        -> Attribute       -- ^ Resulting attribute.                            -- util/GenerateHtmlVariant.hs:249
+declare = attribute " declare=\""                                               -- util/GenerateHtmlVariant.hs:250
+{-# INLINE declare #-}                                                          -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @defer@ attribute.
 --
@@ -518,10 +518,10 @@ declare = attribute " declare=\""                                               
 --
 -- > <div defer="bar">Hello.</div>
 --
-defer :: AttributeValue  -- ^ Attribute value.                                  -- util/GenerateHtmlVariant.hs:245
-      -> Attribute       -- ^ Resulting attribute.                              -- util/GenerateHtmlVariant.hs:246
-defer = attribute " defer=\""                                                   -- util/GenerateHtmlVariant.hs:247
-{-# INLINE defer #-}                                                            -- util/GenerateHtmlVariant.hs:248
+defer :: AttributeValue  -- ^ Attribute value.                                  -- util/GenerateHtmlVariant.hs:248
+      -> Attribute       -- ^ Resulting attribute.                              -- util/GenerateHtmlVariant.hs:249
+defer = attribute " defer=\""                                                   -- util/GenerateHtmlVariant.hs:250
+{-# INLINE defer #-}                                                            -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @dir@ attribute.
 --
@@ -533,10 +533,10 @@ defer = attribute " defer=\""                                                   
 --
 -- > <div dir="bar">Hello.</div>
 --
-dir :: AttributeValue  -- ^ Attribute value.                                    -- util/GenerateHtmlVariant.hs:245
-    -> Attribute       -- ^ Resulting attribute.                                -- util/GenerateHtmlVariant.hs:246
-dir = attribute " dir=\""                                                       -- util/GenerateHtmlVariant.hs:247
-{-# INLINE dir #-}                                                              -- util/GenerateHtmlVariant.hs:248
+dir :: AttributeValue  -- ^ Attribute value.                                    -- util/GenerateHtmlVariant.hs:248
+    -> Attribute       -- ^ Resulting attribute.                                -- util/GenerateHtmlVariant.hs:249
+dir = attribute " dir=\""                                                       -- util/GenerateHtmlVariant.hs:250
+{-# INLINE dir #-}                                                              -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @disabled@ attribute.
 --
@@ -548,10 +548,10 @@ dir = attribute " dir=\""                                                       
 --
 -- > <div disabled="bar">Hello.</div>
 --
-disabled :: AttributeValue  -- ^ Attribute value.                               -- util/GenerateHtmlVariant.hs:245
-         -> Attribute       -- ^ Resulting attribute.                           -- util/GenerateHtmlVariant.hs:246
-disabled = attribute " disabled=\""                                             -- util/GenerateHtmlVariant.hs:247
-{-# INLINE disabled #-}                                                         -- util/GenerateHtmlVariant.hs:248
+disabled :: AttributeValue  -- ^ Attribute value.                               -- util/GenerateHtmlVariant.hs:248
+         -> Attribute       -- ^ Resulting attribute.                           -- util/GenerateHtmlVariant.hs:249
+disabled = attribute " disabled=\""                                             -- util/GenerateHtmlVariant.hs:250
+{-# INLINE disabled #-}                                                         -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @for@ attribute.
 --
@@ -563,10 +563,10 @@ disabled = attribute " disabled=\""                                             
 --
 -- > <div for="bar">Hello.</div>
 --
-for :: AttributeValue  -- ^ Attribute value.                                    -- util/GenerateHtmlVariant.hs:245
-    -> Attribute       -- ^ Resulting attribute.                                -- util/GenerateHtmlVariant.hs:246
-for = attribute " for=\""                                                       -- util/GenerateHtmlVariant.hs:247
-{-# INLINE for #-}                                                              -- util/GenerateHtmlVariant.hs:248
+for :: AttributeValue  -- ^ Attribute value.                                    -- util/GenerateHtmlVariant.hs:248
+    -> Attribute       -- ^ Resulting attribute.                                -- util/GenerateHtmlVariant.hs:249
+for = attribute " for=\""                                                       -- util/GenerateHtmlVariant.hs:250
+{-# INLINE for #-}                                                              -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @frame@ attribute.
 --
@@ -578,10 +578,10 @@ for = attribute " for=\""                                                       
 --
 -- > <div frame="bar">Hello.</div>
 --
-frame :: AttributeValue  -- ^ Attribute value.                                  -- util/GenerateHtmlVariant.hs:245
-      -> Attribute       -- ^ Resulting attribute.                              -- util/GenerateHtmlVariant.hs:246
-frame = attribute " frame=\""                                                   -- util/GenerateHtmlVariant.hs:247
-{-# INLINE frame #-}                                                            -- util/GenerateHtmlVariant.hs:248
+frame :: AttributeValue  -- ^ Attribute value.                                  -- util/GenerateHtmlVariant.hs:248
+      -> Attribute       -- ^ Resulting attribute.                              -- util/GenerateHtmlVariant.hs:249
+frame = attribute " frame=\""                                                   -- util/GenerateHtmlVariant.hs:250
+{-# INLINE frame #-}                                                            -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @headers@ attribute.
 --
@@ -593,10 +593,10 @@ frame = attribute " frame=\""                                                   
 --
 -- > <div headers="bar">Hello.</div>
 --
-headers :: AttributeValue  -- ^ Attribute value.                                -- util/GenerateHtmlVariant.hs:245
-        -> Attribute       -- ^ Resulting attribute.                            -- util/GenerateHtmlVariant.hs:246
-headers = attribute " headers=\""                                               -- util/GenerateHtmlVariant.hs:247
-{-# INLINE headers #-}                                                          -- util/GenerateHtmlVariant.hs:248
+headers :: AttributeValue  -- ^ Attribute value.                                -- util/GenerateHtmlVariant.hs:248
+        -> Attribute       -- ^ Resulting attribute.                            -- util/GenerateHtmlVariant.hs:249
+headers = attribute " headers=\""                                               -- util/GenerateHtmlVariant.hs:250
+{-# INLINE headers #-}                                                          -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @height@ attribute.
 --
@@ -608,10 +608,10 @@ headers = attribute " headers=\""                                               
 --
 -- > <div height="bar">Hello.</div>
 --
-height :: AttributeValue  -- ^ Attribute value.                                 -- util/GenerateHtmlVariant.hs:245
-       -> Attribute       -- ^ Resulting attribute.                             -- util/GenerateHtmlVariant.hs:246
-height = attribute " height=\""                                                 -- util/GenerateHtmlVariant.hs:247
-{-# INLINE height #-}                                                           -- util/GenerateHtmlVariant.hs:248
+height :: AttributeValue  -- ^ Attribute value.                                 -- util/GenerateHtmlVariant.hs:248
+       -> Attribute       -- ^ Resulting attribute.                             -- util/GenerateHtmlVariant.hs:249
+height = attribute " height=\""                                                 -- util/GenerateHtmlVariant.hs:250
+{-# INLINE height #-}                                                           -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @href@ attribute.
 --
@@ -623,10 +623,10 @@ height = attribute " height=\""                                                 
 --
 -- > <div href="bar">Hello.</div>
 --
-href :: AttributeValue  -- ^ Attribute value.                                   -- util/GenerateHtmlVariant.hs:245
-     -> Attribute       -- ^ Resulting attribute.                               -- util/GenerateHtmlVariant.hs:246
-href = attribute " href=\""                                                     -- util/GenerateHtmlVariant.hs:247
-{-# INLINE href #-}                                                             -- util/GenerateHtmlVariant.hs:248
+href :: AttributeValue  -- ^ Attribute value.                                   -- util/GenerateHtmlVariant.hs:248
+     -> Attribute       -- ^ Resulting attribute.                               -- util/GenerateHtmlVariant.hs:249
+href = attribute " href=\""                                                     -- util/GenerateHtmlVariant.hs:250
+{-# INLINE href #-}                                                             -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @hreflang@ attribute.
 --
@@ -638,10 +638,10 @@ href = attribute " href=\""                                                     
 --
 -- > <div hreflang="bar">Hello.</div>
 --
-hreflang :: AttributeValue  -- ^ Attribute value.                               -- util/GenerateHtmlVariant.hs:245
-         -> Attribute       -- ^ Resulting attribute.                           -- util/GenerateHtmlVariant.hs:246
-hreflang = attribute " hreflang=\""                                             -- util/GenerateHtmlVariant.hs:247
-{-# INLINE hreflang #-}                                                         -- util/GenerateHtmlVariant.hs:248
+hreflang :: AttributeValue  -- ^ Attribute value.                               -- util/GenerateHtmlVariant.hs:248
+         -> Attribute       -- ^ Resulting attribute.                           -- util/GenerateHtmlVariant.hs:249
+hreflang = attribute " hreflang=\""                                             -- util/GenerateHtmlVariant.hs:250
+{-# INLINE hreflang #-}                                                         -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @http-equiv@ attribute.
 --
@@ -653,10 +653,10 @@ hreflang = attribute " hreflang=\""                                             
 --
 -- > <div http-equiv="bar">Hello.</div>
 --
-http_equiv :: AttributeValue  -- ^ Attribute value.                             -- util/GenerateHtmlVariant.hs:245
-           -> Attribute       -- ^ Resulting attribute.                         -- util/GenerateHtmlVariant.hs:246
-http_equiv = attribute " http-equiv=\""                                         -- util/GenerateHtmlVariant.hs:247
-{-# INLINE http_equiv #-}                                                       -- util/GenerateHtmlVariant.hs:248
+http_equiv :: AttributeValue  -- ^ Attribute value.                             -- util/GenerateHtmlVariant.hs:248
+           -> Attribute       -- ^ Resulting attribute.                         -- util/GenerateHtmlVariant.hs:249
+http_equiv = attribute " http-equiv=\""                                         -- util/GenerateHtmlVariant.hs:250
+{-# INLINE http_equiv #-}                                                       -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @id@ attribute.
 --
@@ -668,10 +668,10 @@ http_equiv = attribute " http-equiv=\""                                         
 --
 -- > <div id="bar">Hello.</div>
 --
-id :: AttributeValue  -- ^ Attribute value.                                     -- util/GenerateHtmlVariant.hs:245
-   -> Attribute       -- ^ Resulting attribute.                                 -- util/GenerateHtmlVariant.hs:246
-id = attribute " id=\""                                                         -- util/GenerateHtmlVariant.hs:247
-{-# INLINE id #-}                                                               -- util/GenerateHtmlVariant.hs:248
+id :: AttributeValue  -- ^ Attribute value.                                     -- util/GenerateHtmlVariant.hs:248
+   -> Attribute       -- ^ Resulting attribute.                                 -- util/GenerateHtmlVariant.hs:249
+id = attribute " id=\""                                                         -- util/GenerateHtmlVariant.hs:250
+{-# INLINE id #-}                                                               -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @label@ attribute.
 --
@@ -683,10 +683,10 @@ id = attribute " id=\""                                                         
 --
 -- > <div label="bar">Hello.</div>
 --
-label :: AttributeValue  -- ^ Attribute value.                                  -- util/GenerateHtmlVariant.hs:245
-      -> Attribute       -- ^ Resulting attribute.                              -- util/GenerateHtmlVariant.hs:246
-label = attribute " label=\""                                                   -- util/GenerateHtmlVariant.hs:247
-{-# INLINE label #-}                                                            -- util/GenerateHtmlVariant.hs:248
+label :: AttributeValue  -- ^ Attribute value.                                  -- util/GenerateHtmlVariant.hs:248
+      -> Attribute       -- ^ Resulting attribute.                              -- util/GenerateHtmlVariant.hs:249
+label = attribute " label=\""                                                   -- util/GenerateHtmlVariant.hs:250
+{-# INLINE label #-}                                                            -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @lang@ attribute.
 --
@@ -698,10 +698,10 @@ label = attribute " label=\""                                                   
 --
 -- > <div lang="bar">Hello.</div>
 --
-lang :: AttributeValue  -- ^ Attribute value.                                   -- util/GenerateHtmlVariant.hs:245
-     -> Attribute       -- ^ Resulting attribute.                               -- util/GenerateHtmlVariant.hs:246
-lang = attribute " lang=\""                                                     -- util/GenerateHtmlVariant.hs:247
-{-# INLINE lang #-}                                                             -- util/GenerateHtmlVariant.hs:248
+lang :: AttributeValue  -- ^ Attribute value.                                   -- util/GenerateHtmlVariant.hs:248
+     -> Attribute       -- ^ Resulting attribute.                               -- util/GenerateHtmlVariant.hs:249
+lang = attribute " lang=\""                                                     -- util/GenerateHtmlVariant.hs:250
+{-# INLINE lang #-}                                                             -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @maxlength@ attribute.
 --
@@ -713,10 +713,10 @@ lang = attribute " lang=\""                                                     
 --
 -- > <div maxlength="bar">Hello.</div>
 --
-maxlength :: AttributeValue  -- ^ Attribute value.                              -- util/GenerateHtmlVariant.hs:245
-          -> Attribute       -- ^ Resulting attribute.                          -- util/GenerateHtmlVariant.hs:246
-maxlength = attribute " maxlength=\""                                           -- util/GenerateHtmlVariant.hs:247
-{-# INLINE maxlength #-}                                                        -- util/GenerateHtmlVariant.hs:248
+maxlength :: AttributeValue  -- ^ Attribute value.                              -- util/GenerateHtmlVariant.hs:248
+          -> Attribute       -- ^ Resulting attribute.                          -- util/GenerateHtmlVariant.hs:249
+maxlength = attribute " maxlength=\""                                           -- util/GenerateHtmlVariant.hs:250
+{-# INLINE maxlength #-}                                                        -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @media@ attribute.
 --
@@ -728,10 +728,10 @@ maxlength = attribute " maxlength=\""                                           
 --
 -- > <div media="bar">Hello.</div>
 --
-media :: AttributeValue  -- ^ Attribute value.                                  -- util/GenerateHtmlVariant.hs:245
-      -> Attribute       -- ^ Resulting attribute.                              -- util/GenerateHtmlVariant.hs:246
-media = attribute " media=\""                                                   -- util/GenerateHtmlVariant.hs:247
-{-# INLINE media #-}                                                            -- util/GenerateHtmlVariant.hs:248
+media :: AttributeValue  -- ^ Attribute value.                                  -- util/GenerateHtmlVariant.hs:248
+      -> Attribute       -- ^ Resulting attribute.                              -- util/GenerateHtmlVariant.hs:249
+media = attribute " media=\""                                                   -- util/GenerateHtmlVariant.hs:250
+{-# INLINE media #-}                                                            -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @method@ attribute.
 --
@@ -743,10 +743,10 @@ media = attribute " media=\""                                                   
 --
 -- > <div method="bar">Hello.</div>
 --
-method :: AttributeValue  -- ^ Attribute value.                                 -- util/GenerateHtmlVariant.hs:245
-       -> Attribute       -- ^ Resulting attribute.                             -- util/GenerateHtmlVariant.hs:246
-method = attribute " method=\""                                                 -- util/GenerateHtmlVariant.hs:247
-{-# INLINE method #-}                                                           -- util/GenerateHtmlVariant.hs:248
+method :: AttributeValue  -- ^ Attribute value.                                 -- util/GenerateHtmlVariant.hs:248
+       -> Attribute       -- ^ Resulting attribute.                             -- util/GenerateHtmlVariant.hs:249
+method = attribute " method=\""                                                 -- util/GenerateHtmlVariant.hs:250
+{-# INLINE method #-}                                                           -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @multiple@ attribute.
 --
@@ -758,10 +758,10 @@ method = attribute " method=\""                                                 
 --
 -- > <div multiple="bar">Hello.</div>
 --
-multiple :: AttributeValue  -- ^ Attribute value.                               -- util/GenerateHtmlVariant.hs:245
-         -> Attribute       -- ^ Resulting attribute.                           -- util/GenerateHtmlVariant.hs:246
-multiple = attribute " multiple=\""                                             -- util/GenerateHtmlVariant.hs:247
-{-# INLINE multiple #-}                                                         -- util/GenerateHtmlVariant.hs:248
+multiple :: AttributeValue  -- ^ Attribute value.                               -- util/GenerateHtmlVariant.hs:248
+         -> Attribute       -- ^ Resulting attribute.                           -- util/GenerateHtmlVariant.hs:249
+multiple = attribute " multiple=\""                                             -- util/GenerateHtmlVariant.hs:250
+{-# INLINE multiple #-}                                                         -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @name@ attribute.
 --
@@ -773,10 +773,10 @@ multiple = attribute " multiple=\""                                             
 --
 -- > <div name="bar">Hello.</div>
 --
-name :: AttributeValue  -- ^ Attribute value.                                   -- util/GenerateHtmlVariant.hs:245
-     -> Attribute       -- ^ Resulting attribute.                               -- util/GenerateHtmlVariant.hs:246
-name = attribute " name=\""                                                     -- util/GenerateHtmlVariant.hs:247
-{-# INLINE name #-}                                                             -- util/GenerateHtmlVariant.hs:248
+name :: AttributeValue  -- ^ Attribute value.                                   -- util/GenerateHtmlVariant.hs:248
+     -> Attribute       -- ^ Resulting attribute.                               -- util/GenerateHtmlVariant.hs:249
+name = attribute " name=\""                                                     -- util/GenerateHtmlVariant.hs:250
+{-# INLINE name #-}                                                             -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @nohref@ attribute.
 --
@@ -788,10 +788,10 @@ name = attribute " name=\""                                                     
 --
 -- > <div nohref="bar">Hello.</div>
 --
-nohref :: AttributeValue  -- ^ Attribute value.                                 -- util/GenerateHtmlVariant.hs:245
-       -> Attribute       -- ^ Resulting attribute.                             -- util/GenerateHtmlVariant.hs:246
-nohref = attribute " nohref=\""                                                 -- util/GenerateHtmlVariant.hs:247
-{-# INLINE nohref #-}                                                           -- util/GenerateHtmlVariant.hs:248
+nohref :: AttributeValue  -- ^ Attribute value.                                 -- util/GenerateHtmlVariant.hs:248
+       -> Attribute       -- ^ Resulting attribute.                             -- util/GenerateHtmlVariant.hs:249
+nohref = attribute " nohref=\""                                                 -- util/GenerateHtmlVariant.hs:250
+{-# INLINE nohref #-}                                                           -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @onabort@ attribute.
 --
@@ -803,10 +803,10 @@ nohref = attribute " nohref=\""                                                 
 --
 -- > <div onabort="bar">Hello.</div>
 --
-onabort :: AttributeValue  -- ^ Attribute value.                                -- util/GenerateHtmlVariant.hs:245
-        -> Attribute       -- ^ Resulting attribute.                            -- util/GenerateHtmlVariant.hs:246
-onabort = attribute " onabort=\""                                               -- util/GenerateHtmlVariant.hs:247
-{-# INLINE onabort #-}                                                          -- util/GenerateHtmlVariant.hs:248
+onabort :: AttributeValue  -- ^ Attribute value.                                -- util/GenerateHtmlVariant.hs:248
+        -> Attribute       -- ^ Resulting attribute.                            -- util/GenerateHtmlVariant.hs:249
+onabort = attribute " onabort=\""                                               -- util/GenerateHtmlVariant.hs:250
+{-# INLINE onabort #-}                                                          -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @onblur@ attribute.
 --
@@ -818,10 +818,10 @@ onabort = attribute " onabort=\""                                               
 --
 -- > <div onblur="bar">Hello.</div>
 --
-onblur :: AttributeValue  -- ^ Attribute value.                                 -- util/GenerateHtmlVariant.hs:245
-       -> Attribute       -- ^ Resulting attribute.                             -- util/GenerateHtmlVariant.hs:246
-onblur = attribute " onblur=\""                                                 -- util/GenerateHtmlVariant.hs:247
-{-# INLINE onblur #-}                                                           -- util/GenerateHtmlVariant.hs:248
+onblur :: AttributeValue  -- ^ Attribute value.                                 -- util/GenerateHtmlVariant.hs:248
+       -> Attribute       -- ^ Resulting attribute.                             -- util/GenerateHtmlVariant.hs:249
+onblur = attribute " onblur=\""                                                 -- util/GenerateHtmlVariant.hs:250
+{-# INLINE onblur #-}                                                           -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @onchange@ attribute.
 --
@@ -833,10 +833,10 @@ onblur = attribute " onblur=\""                                                 
 --
 -- > <div onchange="bar">Hello.</div>
 --
-onchange :: AttributeValue  -- ^ Attribute value.                               -- util/GenerateHtmlVariant.hs:245
-         -> Attribute       -- ^ Resulting attribute.                           -- util/GenerateHtmlVariant.hs:246
-onchange = attribute " onchange=\""                                             -- util/GenerateHtmlVariant.hs:247
-{-# INLINE onchange #-}                                                         -- util/GenerateHtmlVariant.hs:248
+onchange :: AttributeValue  -- ^ Attribute value.                               -- util/GenerateHtmlVariant.hs:248
+         -> Attribute       -- ^ Resulting attribute.                           -- util/GenerateHtmlVariant.hs:249
+onchange = attribute " onchange=\""                                             -- util/GenerateHtmlVariant.hs:250
+{-# INLINE onchange #-}                                                         -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @onclick@ attribute.
 --
@@ -848,10 +848,10 @@ onchange = attribute " onchange=\""                                             
 --
 -- > <div onclick="bar">Hello.</div>
 --
-onclick :: AttributeValue  -- ^ Attribute value.                                -- util/GenerateHtmlVariant.hs:245
-        -> Attribute       -- ^ Resulting attribute.                            -- util/GenerateHtmlVariant.hs:246
-onclick = attribute " onclick=\""                                               -- util/GenerateHtmlVariant.hs:247
-{-# INLINE onclick #-}                                                          -- util/GenerateHtmlVariant.hs:248
+onclick :: AttributeValue  -- ^ Attribute value.                                -- util/GenerateHtmlVariant.hs:248
+        -> Attribute       -- ^ Resulting attribute.                            -- util/GenerateHtmlVariant.hs:249
+onclick = attribute " onclick=\""                                               -- util/GenerateHtmlVariant.hs:250
+{-# INLINE onclick #-}                                                          -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @ondblclick@ attribute.
 --
@@ -863,10 +863,10 @@ onclick = attribute " onclick=\""                                               
 --
 -- > <div ondblclick="bar">Hello.</div>
 --
-ondblclick :: AttributeValue  -- ^ Attribute value.                             -- util/GenerateHtmlVariant.hs:245
-           -> Attribute       -- ^ Resulting attribute.                         -- util/GenerateHtmlVariant.hs:246
-ondblclick = attribute " ondblclick=\""                                         -- util/GenerateHtmlVariant.hs:247
-{-# INLINE ondblclick #-}                                                       -- util/GenerateHtmlVariant.hs:248
+ondblclick :: AttributeValue  -- ^ Attribute value.                             -- util/GenerateHtmlVariant.hs:248
+           -> Attribute       -- ^ Resulting attribute.                         -- util/GenerateHtmlVariant.hs:249
+ondblclick = attribute " ondblclick=\""                                         -- util/GenerateHtmlVariant.hs:250
+{-# INLINE ondblclick #-}                                                       -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @onfocus@ attribute.
 --
@@ -878,10 +878,10 @@ ondblclick = attribute " ondblclick=\""                                         
 --
 -- > <div onfocus="bar">Hello.</div>
 --
-onfocus :: AttributeValue  -- ^ Attribute value.                                -- util/GenerateHtmlVariant.hs:245
-        -> Attribute       -- ^ Resulting attribute.                            -- util/GenerateHtmlVariant.hs:246
-onfocus = attribute " onfocus=\""                                               -- util/GenerateHtmlVariant.hs:247
-{-# INLINE onfocus #-}                                                          -- util/GenerateHtmlVariant.hs:248
+onfocus :: AttributeValue  -- ^ Attribute value.                                -- util/GenerateHtmlVariant.hs:248
+        -> Attribute       -- ^ Resulting attribute.                            -- util/GenerateHtmlVariant.hs:249
+onfocus = attribute " onfocus=\""                                               -- util/GenerateHtmlVariant.hs:250
+{-# INLINE onfocus #-}                                                          -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @onkeydown@ attribute.
 --
@@ -893,10 +893,10 @@ onfocus = attribute " onfocus=\""                                               
 --
 -- > <div onkeydown="bar">Hello.</div>
 --
-onkeydown :: AttributeValue  -- ^ Attribute value.                              -- util/GenerateHtmlVariant.hs:245
-          -> Attribute       -- ^ Resulting attribute.                          -- util/GenerateHtmlVariant.hs:246
-onkeydown = attribute " onkeydown=\""                                           -- util/GenerateHtmlVariant.hs:247
-{-# INLINE onkeydown #-}                                                        -- util/GenerateHtmlVariant.hs:248
+onkeydown :: AttributeValue  -- ^ Attribute value.                              -- util/GenerateHtmlVariant.hs:248
+          -> Attribute       -- ^ Resulting attribute.                          -- util/GenerateHtmlVariant.hs:249
+onkeydown = attribute " onkeydown=\""                                           -- util/GenerateHtmlVariant.hs:250
+{-# INLINE onkeydown #-}                                                        -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @onkeypress@ attribute.
 --
@@ -908,10 +908,10 @@ onkeydown = attribute " onkeydown=\""                                           
 --
 -- > <div onkeypress="bar">Hello.</div>
 --
-onkeypress :: AttributeValue  -- ^ Attribute value.                             -- util/GenerateHtmlVariant.hs:245
-           -> Attribute       -- ^ Resulting attribute.                         -- util/GenerateHtmlVariant.hs:246
-onkeypress = attribute " onkeypress=\""                                         -- util/GenerateHtmlVariant.hs:247
-{-# INLINE onkeypress #-}                                                       -- util/GenerateHtmlVariant.hs:248
+onkeypress :: AttributeValue  -- ^ Attribute value.                             -- util/GenerateHtmlVariant.hs:248
+           -> Attribute       -- ^ Resulting attribute.                         -- util/GenerateHtmlVariant.hs:249
+onkeypress = attribute " onkeypress=\""                                         -- util/GenerateHtmlVariant.hs:250
+{-# INLINE onkeypress #-}                                                       -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @onkeyup@ attribute.
 --
@@ -923,10 +923,10 @@ onkeypress = attribute " onkeypress=\""                                         
 --
 -- > <div onkeyup="bar">Hello.</div>
 --
-onkeyup :: AttributeValue  -- ^ Attribute value.                                -- util/GenerateHtmlVariant.hs:245
-        -> Attribute       -- ^ Resulting attribute.                            -- util/GenerateHtmlVariant.hs:246
-onkeyup = attribute " onkeyup=\""                                               -- util/GenerateHtmlVariant.hs:247
-{-# INLINE onkeyup #-}                                                          -- util/GenerateHtmlVariant.hs:248
+onkeyup :: AttributeValue  -- ^ Attribute value.                                -- util/GenerateHtmlVariant.hs:248
+        -> Attribute       -- ^ Resulting attribute.                            -- util/GenerateHtmlVariant.hs:249
+onkeyup = attribute " onkeyup=\""                                               -- util/GenerateHtmlVariant.hs:250
+{-# INLINE onkeyup #-}                                                          -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @onload@ attribute.
 --
@@ -938,10 +938,10 @@ onkeyup = attribute " onkeyup=\""                                               
 --
 -- > <div onload="bar">Hello.</div>
 --
-onload :: AttributeValue  -- ^ Attribute value.                                 -- util/GenerateHtmlVariant.hs:245
-       -> Attribute       -- ^ Resulting attribute.                             -- util/GenerateHtmlVariant.hs:246
-onload = attribute " onload=\""                                                 -- util/GenerateHtmlVariant.hs:247
-{-# INLINE onload #-}                                                           -- util/GenerateHtmlVariant.hs:248
+onload :: AttributeValue  -- ^ Attribute value.                                 -- util/GenerateHtmlVariant.hs:248
+       -> Attribute       -- ^ Resulting attribute.                             -- util/GenerateHtmlVariant.hs:249
+onload = attribute " onload=\""                                                 -- util/GenerateHtmlVariant.hs:250
+{-# INLINE onload #-}                                                           -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @onmousedown@ attribute.
 --
@@ -953,10 +953,10 @@ onload = attribute " onload=\""                                                 
 --
 -- > <div onmousedown="bar">Hello.</div>
 --
-onmousedown :: AttributeValue  -- ^ Attribute value.                            -- util/GenerateHtmlVariant.hs:245
-            -> Attribute       -- ^ Resulting attribute.                        -- util/GenerateHtmlVariant.hs:246
-onmousedown = attribute " onmousedown=\""                                       -- util/GenerateHtmlVariant.hs:247
-{-# INLINE onmousedown #-}                                                      -- util/GenerateHtmlVariant.hs:248
+onmousedown :: AttributeValue  -- ^ Attribute value.                            -- util/GenerateHtmlVariant.hs:248
+            -> Attribute       -- ^ Resulting attribute.                        -- util/GenerateHtmlVariant.hs:249
+onmousedown = attribute " onmousedown=\""                                       -- util/GenerateHtmlVariant.hs:250
+{-# INLINE onmousedown #-}                                                      -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @onmousemove@ attribute.
 --
@@ -968,10 +968,10 @@ onmousedown = attribute " onmousedown=\""                                       
 --
 -- > <div onmousemove="bar">Hello.</div>
 --
-onmousemove :: AttributeValue  -- ^ Attribute value.                            -- util/GenerateHtmlVariant.hs:245
-            -> Attribute       -- ^ Resulting attribute.                        -- util/GenerateHtmlVariant.hs:246
-onmousemove = attribute " onmousemove=\""                                       -- util/GenerateHtmlVariant.hs:247
-{-# INLINE onmousemove #-}                                                      -- util/GenerateHtmlVariant.hs:248
+onmousemove :: AttributeValue  -- ^ Attribute value.                            -- util/GenerateHtmlVariant.hs:248
+            -> Attribute       -- ^ Resulting attribute.                        -- util/GenerateHtmlVariant.hs:249
+onmousemove = attribute " onmousemove=\""                                       -- util/GenerateHtmlVariant.hs:250
+{-# INLINE onmousemove #-}                                                      -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @onmouseout@ attribute.
 --
@@ -983,10 +983,10 @@ onmousemove = attribute " onmousemove=\""                                       
 --
 -- > <div onmouseout="bar">Hello.</div>
 --
-onmouseout :: AttributeValue  -- ^ Attribute value.                             -- util/GenerateHtmlVariant.hs:245
-           -> Attribute       -- ^ Resulting attribute.                         -- util/GenerateHtmlVariant.hs:246
-onmouseout = attribute " onmouseout=\""                                         -- util/GenerateHtmlVariant.hs:247
-{-# INLINE onmouseout #-}                                                       -- util/GenerateHtmlVariant.hs:248
+onmouseout :: AttributeValue  -- ^ Attribute value.                             -- util/GenerateHtmlVariant.hs:248
+           -> Attribute       -- ^ Resulting attribute.                         -- util/GenerateHtmlVariant.hs:249
+onmouseout = attribute " onmouseout=\""                                         -- util/GenerateHtmlVariant.hs:250
+{-# INLINE onmouseout #-}                                                       -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @onmouseover@ attribute.
 --
@@ -998,10 +998,10 @@ onmouseout = attribute " onmouseout=\""                                         
 --
 -- > <div onmouseover="bar">Hello.</div>
 --
-onmouseover :: AttributeValue  -- ^ Attribute value.                            -- util/GenerateHtmlVariant.hs:245
-            -> Attribute       -- ^ Resulting attribute.                        -- util/GenerateHtmlVariant.hs:246
-onmouseover = attribute " onmouseover=\""                                       -- util/GenerateHtmlVariant.hs:247
-{-# INLINE onmouseover #-}                                                      -- util/GenerateHtmlVariant.hs:248
+onmouseover :: AttributeValue  -- ^ Attribute value.                            -- util/GenerateHtmlVariant.hs:248
+            -> Attribute       -- ^ Resulting attribute.                        -- util/GenerateHtmlVariant.hs:249
+onmouseover = attribute " onmouseover=\""                                       -- util/GenerateHtmlVariant.hs:250
+{-# INLINE onmouseover #-}                                                      -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @onmouseup@ attribute.
 --
@@ -1013,10 +1013,10 @@ onmouseover = attribute " onmouseover=\""                                       
 --
 -- > <div onmouseup="bar">Hello.</div>
 --
-onmouseup :: AttributeValue  -- ^ Attribute value.                              -- util/GenerateHtmlVariant.hs:245
-          -> Attribute       -- ^ Resulting attribute.                          -- util/GenerateHtmlVariant.hs:246
-onmouseup = attribute " onmouseup=\""                                           -- util/GenerateHtmlVariant.hs:247
-{-# INLINE onmouseup #-}                                                        -- util/GenerateHtmlVariant.hs:248
+onmouseup :: AttributeValue  -- ^ Attribute value.                              -- util/GenerateHtmlVariant.hs:248
+          -> Attribute       -- ^ Resulting attribute.                          -- util/GenerateHtmlVariant.hs:249
+onmouseup = attribute " onmouseup=\""                                           -- util/GenerateHtmlVariant.hs:250
+{-# INLINE onmouseup #-}                                                        -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @onreset@ attribute.
 --
@@ -1028,10 +1028,10 @@ onmouseup = attribute " onmouseup=\""                                           
 --
 -- > <div onreset="bar">Hello.</div>
 --
-onreset :: AttributeValue  -- ^ Attribute value.                                -- util/GenerateHtmlVariant.hs:245
-        -> Attribute       -- ^ Resulting attribute.                            -- util/GenerateHtmlVariant.hs:246
-onreset = attribute " onreset=\""                                               -- util/GenerateHtmlVariant.hs:247
-{-# INLINE onreset #-}                                                          -- util/GenerateHtmlVariant.hs:248
+onreset :: AttributeValue  -- ^ Attribute value.                                -- util/GenerateHtmlVariant.hs:248
+        -> Attribute       -- ^ Resulting attribute.                            -- util/GenerateHtmlVariant.hs:249
+onreset = attribute " onreset=\""                                               -- util/GenerateHtmlVariant.hs:250
+{-# INLINE onreset #-}                                                          -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @onselect@ attribute.
 --
@@ -1043,10 +1043,10 @@ onreset = attribute " onreset=\""                                               
 --
 -- > <div onselect="bar">Hello.</div>
 --
-onselect :: AttributeValue  -- ^ Attribute value.                               -- util/GenerateHtmlVariant.hs:245
-         -> Attribute       -- ^ Resulting attribute.                           -- util/GenerateHtmlVariant.hs:246
-onselect = attribute " onselect=\""                                             -- util/GenerateHtmlVariant.hs:247
-{-# INLINE onselect #-}                                                         -- util/GenerateHtmlVariant.hs:248
+onselect :: AttributeValue  -- ^ Attribute value.                               -- util/GenerateHtmlVariant.hs:248
+         -> Attribute       -- ^ Resulting attribute.                           -- util/GenerateHtmlVariant.hs:249
+onselect = attribute " onselect=\""                                             -- util/GenerateHtmlVariant.hs:250
+{-# INLINE onselect #-}                                                         -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @onsubmit@ attribute.
 --
@@ -1058,10 +1058,10 @@ onselect = attribute " onselect=\""                                             
 --
 -- > <div onsubmit="bar">Hello.</div>
 --
-onsubmit :: AttributeValue  -- ^ Attribute value.                               -- util/GenerateHtmlVariant.hs:245
-         -> Attribute       -- ^ Resulting attribute.                           -- util/GenerateHtmlVariant.hs:246
-onsubmit = attribute " onsubmit=\""                                             -- util/GenerateHtmlVariant.hs:247
-{-# INLINE onsubmit #-}                                                         -- util/GenerateHtmlVariant.hs:248
+onsubmit :: AttributeValue  -- ^ Attribute value.                               -- util/GenerateHtmlVariant.hs:248
+         -> Attribute       -- ^ Resulting attribute.                           -- util/GenerateHtmlVariant.hs:249
+onsubmit = attribute " onsubmit=\""                                             -- util/GenerateHtmlVariant.hs:250
+{-# INLINE onsubmit #-}                                                         -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @onunload@ attribute.
 --
@@ -1073,10 +1073,10 @@ onsubmit = attribute " onsubmit=\""                                             
 --
 -- > <div onunload="bar">Hello.</div>
 --
-onunload :: AttributeValue  -- ^ Attribute value.                               -- util/GenerateHtmlVariant.hs:245
-         -> Attribute       -- ^ Resulting attribute.                           -- util/GenerateHtmlVariant.hs:246
-onunload = attribute " onunload=\""                                             -- util/GenerateHtmlVariant.hs:247
-{-# INLINE onunload #-}                                                         -- util/GenerateHtmlVariant.hs:248
+onunload :: AttributeValue  -- ^ Attribute value.                               -- util/GenerateHtmlVariant.hs:248
+         -> Attribute       -- ^ Resulting attribute.                           -- util/GenerateHtmlVariant.hs:249
+onunload = attribute " onunload=\""                                             -- util/GenerateHtmlVariant.hs:250
+{-# INLINE onunload #-}                                                         -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @profile@ attribute.
 --
@@ -1088,10 +1088,10 @@ onunload = attribute " onunload=\""                                             
 --
 -- > <div profile="bar">Hello.</div>
 --
-profile :: AttributeValue  -- ^ Attribute value.                                -- util/GenerateHtmlVariant.hs:245
-        -> Attribute       -- ^ Resulting attribute.                            -- util/GenerateHtmlVariant.hs:246
-profile = attribute " profile=\""                                               -- util/GenerateHtmlVariant.hs:247
-{-# INLINE profile #-}                                                          -- util/GenerateHtmlVariant.hs:248
+profile :: AttributeValue  -- ^ Attribute value.                                -- util/GenerateHtmlVariant.hs:248
+        -> Attribute       -- ^ Resulting attribute.                            -- util/GenerateHtmlVariant.hs:249
+profile = attribute " profile=\""                                               -- util/GenerateHtmlVariant.hs:250
+{-# INLINE profile #-}                                                          -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @readonly@ attribute.
 --
@@ -1103,10 +1103,10 @@ profile = attribute " profile=\""                                               
 --
 -- > <div readonly="bar">Hello.</div>
 --
-readonly :: AttributeValue  -- ^ Attribute value.                               -- util/GenerateHtmlVariant.hs:245
-         -> Attribute       -- ^ Resulting attribute.                           -- util/GenerateHtmlVariant.hs:246
-readonly = attribute " readonly=\""                                             -- util/GenerateHtmlVariant.hs:247
-{-# INLINE readonly #-}                                                         -- util/GenerateHtmlVariant.hs:248
+readonly :: AttributeValue  -- ^ Attribute value.                               -- util/GenerateHtmlVariant.hs:248
+         -> Attribute       -- ^ Resulting attribute.                           -- util/GenerateHtmlVariant.hs:249
+readonly = attribute " readonly=\""                                             -- util/GenerateHtmlVariant.hs:250
+{-# INLINE readonly #-}                                                         -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @rel@ attribute.
 --
@@ -1118,10 +1118,10 @@ readonly = attribute " readonly=\""                                             
 --
 -- > <div rel="bar">Hello.</div>
 --
-rel :: AttributeValue  -- ^ Attribute value.                                    -- util/GenerateHtmlVariant.hs:245
-    -> Attribute       -- ^ Resulting attribute.                                -- util/GenerateHtmlVariant.hs:246
-rel = attribute " rel=\""                                                       -- util/GenerateHtmlVariant.hs:247
-{-# INLINE rel #-}                                                              -- util/GenerateHtmlVariant.hs:248
+rel :: AttributeValue  -- ^ Attribute value.                                    -- util/GenerateHtmlVariant.hs:248
+    -> Attribute       -- ^ Resulting attribute.                                -- util/GenerateHtmlVariant.hs:249
+rel = attribute " rel=\""                                                       -- util/GenerateHtmlVariant.hs:250
+{-# INLINE rel #-}                                                              -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @rev@ attribute.
 --
@@ -1133,10 +1133,10 @@ rel = attribute " rel=\""                                                       
 --
 -- > <div rev="bar">Hello.</div>
 --
-rev :: AttributeValue  -- ^ Attribute value.                                    -- util/GenerateHtmlVariant.hs:245
-    -> Attribute       -- ^ Resulting attribute.                                -- util/GenerateHtmlVariant.hs:246
-rev = attribute " rev=\""                                                       -- util/GenerateHtmlVariant.hs:247
-{-# INLINE rev #-}                                                              -- util/GenerateHtmlVariant.hs:248
+rev :: AttributeValue  -- ^ Attribute value.                                    -- util/GenerateHtmlVariant.hs:248
+    -> Attribute       -- ^ Resulting attribute.                                -- util/GenerateHtmlVariant.hs:249
+rev = attribute " rev=\""                                                       -- util/GenerateHtmlVariant.hs:250
+{-# INLINE rev #-}                                                              -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @rows@ attribute.
 --
@@ -1148,10 +1148,10 @@ rev = attribute " rev=\""                                                       
 --
 -- > <div rows="bar">Hello.</div>
 --
-rows :: AttributeValue  -- ^ Attribute value.                                   -- util/GenerateHtmlVariant.hs:245
-     -> Attribute       -- ^ Resulting attribute.                               -- util/GenerateHtmlVariant.hs:246
-rows = attribute " rows=\""                                                     -- util/GenerateHtmlVariant.hs:247
-{-# INLINE rows #-}                                                             -- util/GenerateHtmlVariant.hs:248
+rows :: AttributeValue  -- ^ Attribute value.                                   -- util/GenerateHtmlVariant.hs:248
+     -> Attribute       -- ^ Resulting attribute.                               -- util/GenerateHtmlVariant.hs:249
+rows = attribute " rows=\""                                                     -- util/GenerateHtmlVariant.hs:250
+{-# INLINE rows #-}                                                             -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @rowspan@ attribute.
 --
@@ -1163,10 +1163,10 @@ rows = attribute " rows=\""                                                     
 --
 -- > <div rowspan="bar">Hello.</div>
 --
-rowspan :: AttributeValue  -- ^ Attribute value.                                -- util/GenerateHtmlVariant.hs:245
-        -> Attribute       -- ^ Resulting attribute.                            -- util/GenerateHtmlVariant.hs:246
-rowspan = attribute " rowspan=\""                                               -- util/GenerateHtmlVariant.hs:247
-{-# INLINE rowspan #-}                                                          -- util/GenerateHtmlVariant.hs:248
+rowspan :: AttributeValue  -- ^ Attribute value.                                -- util/GenerateHtmlVariant.hs:248
+        -> Attribute       -- ^ Resulting attribute.                            -- util/GenerateHtmlVariant.hs:249
+rowspan = attribute " rowspan=\""                                               -- util/GenerateHtmlVariant.hs:250
+{-# INLINE rowspan #-}                                                          -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @rules@ attribute.
 --
@@ -1178,10 +1178,10 @@ rowspan = attribute " rowspan=\""                                               
 --
 -- > <div rules="bar">Hello.</div>
 --
-rules :: AttributeValue  -- ^ Attribute value.                                  -- util/GenerateHtmlVariant.hs:245
-      -> Attribute       -- ^ Resulting attribute.                              -- util/GenerateHtmlVariant.hs:246
-rules = attribute " rules=\""                                                   -- util/GenerateHtmlVariant.hs:247
-{-# INLINE rules #-}                                                            -- util/GenerateHtmlVariant.hs:248
+rules :: AttributeValue  -- ^ Attribute value.                                  -- util/GenerateHtmlVariant.hs:248
+      -> Attribute       -- ^ Resulting attribute.                              -- util/GenerateHtmlVariant.hs:249
+rules = attribute " rules=\""                                                   -- util/GenerateHtmlVariant.hs:250
+{-# INLINE rules #-}                                                            -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @scheme@ attribute.
 --
@@ -1193,10 +1193,10 @@ rules = attribute " rules=\""                                                   
 --
 -- > <div scheme="bar">Hello.</div>
 --
-scheme :: AttributeValue  -- ^ Attribute value.                                 -- util/GenerateHtmlVariant.hs:245
-       -> Attribute       -- ^ Resulting attribute.                             -- util/GenerateHtmlVariant.hs:246
-scheme = attribute " scheme=\""                                                 -- util/GenerateHtmlVariant.hs:247
-{-# INLINE scheme #-}                                                           -- util/GenerateHtmlVariant.hs:248
+scheme :: AttributeValue  -- ^ Attribute value.                                 -- util/GenerateHtmlVariant.hs:248
+       -> Attribute       -- ^ Resulting attribute.                             -- util/GenerateHtmlVariant.hs:249
+scheme = attribute " scheme=\""                                                 -- util/GenerateHtmlVariant.hs:250
+{-# INLINE scheme #-}                                                           -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @scope@ attribute.
 --
@@ -1208,10 +1208,10 @@ scheme = attribute " scheme=\""                                                 
 --
 -- > <div scope="bar">Hello.</div>
 --
-scope :: AttributeValue  -- ^ Attribute value.                                  -- util/GenerateHtmlVariant.hs:245
-      -> Attribute       -- ^ Resulting attribute.                              -- util/GenerateHtmlVariant.hs:246
-scope = attribute " scope=\""                                                   -- util/GenerateHtmlVariant.hs:247
-{-# INLINE scope #-}                                                            -- util/GenerateHtmlVariant.hs:248
+scope :: AttributeValue  -- ^ Attribute value.                                  -- util/GenerateHtmlVariant.hs:248
+      -> Attribute       -- ^ Resulting attribute.                              -- util/GenerateHtmlVariant.hs:249
+scope = attribute " scope=\""                                                   -- util/GenerateHtmlVariant.hs:250
+{-# INLINE scope #-}                                                            -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @selected@ attribute.
 --
@@ -1223,10 +1223,10 @@ scope = attribute " scope=\""                                                   
 --
 -- > <div selected="bar">Hello.</div>
 --
-selected :: AttributeValue  -- ^ Attribute value.                               -- util/GenerateHtmlVariant.hs:245
-         -> Attribute       -- ^ Resulting attribute.                           -- util/GenerateHtmlVariant.hs:246
-selected = attribute " selected=\""                                             -- util/GenerateHtmlVariant.hs:247
-{-# INLINE selected #-}                                                         -- util/GenerateHtmlVariant.hs:248
+selected :: AttributeValue  -- ^ Attribute value.                               -- util/GenerateHtmlVariant.hs:248
+         -> Attribute       -- ^ Resulting attribute.                           -- util/GenerateHtmlVariant.hs:249
+selected = attribute " selected=\""                                             -- util/GenerateHtmlVariant.hs:250
+{-# INLINE selected #-}                                                         -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @shape@ attribute.
 --
@@ -1238,10 +1238,10 @@ selected = attribute " selected=\""                                             
 --
 -- > <div shape="bar">Hello.</div>
 --
-shape :: AttributeValue  -- ^ Attribute value.                                  -- util/GenerateHtmlVariant.hs:245
-      -> Attribute       -- ^ Resulting attribute.                              -- util/GenerateHtmlVariant.hs:246
-shape = attribute " shape=\""                                                   -- util/GenerateHtmlVariant.hs:247
-{-# INLINE shape #-}                                                            -- util/GenerateHtmlVariant.hs:248
+shape :: AttributeValue  -- ^ Attribute value.                                  -- util/GenerateHtmlVariant.hs:248
+      -> Attribute       -- ^ Resulting attribute.                              -- util/GenerateHtmlVariant.hs:249
+shape = attribute " shape=\""                                                   -- util/GenerateHtmlVariant.hs:250
+{-# INLINE shape #-}                                                            -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @size@ attribute.
 --
@@ -1253,10 +1253,10 @@ shape = attribute " shape=\""                                                   
 --
 -- > <div size="bar">Hello.</div>
 --
-size :: AttributeValue  -- ^ Attribute value.                                   -- util/GenerateHtmlVariant.hs:245
-     -> Attribute       -- ^ Resulting attribute.                               -- util/GenerateHtmlVariant.hs:246
-size = attribute " size=\""                                                     -- util/GenerateHtmlVariant.hs:247
-{-# INLINE size #-}                                                             -- util/GenerateHtmlVariant.hs:248
+size :: AttributeValue  -- ^ Attribute value.                                   -- util/GenerateHtmlVariant.hs:248
+     -> Attribute       -- ^ Resulting attribute.                               -- util/GenerateHtmlVariant.hs:249
+size = attribute " size=\""                                                     -- util/GenerateHtmlVariant.hs:250
+{-# INLINE size #-}                                                             -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @span@ attribute.
 --
@@ -1268,10 +1268,10 @@ size = attribute " size=\""                                                     
 --
 -- > <div span="bar">Hello.</div>
 --
-span :: AttributeValue  -- ^ Attribute value.                                   -- util/GenerateHtmlVariant.hs:245
-     -> Attribute       -- ^ Resulting attribute.                               -- util/GenerateHtmlVariant.hs:246
-span = attribute " span=\""                                                     -- util/GenerateHtmlVariant.hs:247
-{-# INLINE span #-}                                                             -- util/GenerateHtmlVariant.hs:248
+span :: AttributeValue  -- ^ Attribute value.                                   -- util/GenerateHtmlVariant.hs:248
+     -> Attribute       -- ^ Resulting attribute.                               -- util/GenerateHtmlVariant.hs:249
+span = attribute " span=\""                                                     -- util/GenerateHtmlVariant.hs:250
+{-# INLINE span #-}                                                             -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @src@ attribute.
 --
@@ -1283,10 +1283,10 @@ span = attribute " span=\""                                                     
 --
 -- > <div src="bar">Hello.</div>
 --
-src :: AttributeValue  -- ^ Attribute value.                                    -- util/GenerateHtmlVariant.hs:245
-    -> Attribute       -- ^ Resulting attribute.                                -- util/GenerateHtmlVariant.hs:246
-src = attribute " src=\""                                                       -- util/GenerateHtmlVariant.hs:247
-{-# INLINE src #-}                                                              -- util/GenerateHtmlVariant.hs:248
+src :: AttributeValue  -- ^ Attribute value.                                    -- util/GenerateHtmlVariant.hs:248
+    -> Attribute       -- ^ Resulting attribute.                                -- util/GenerateHtmlVariant.hs:249
+src = attribute " src=\""                                                       -- util/GenerateHtmlVariant.hs:250
+{-# INLINE src #-}                                                              -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @standby@ attribute.
 --
@@ -1298,10 +1298,10 @@ src = attribute " src=\""                                                       
 --
 -- > <div standby="bar">Hello.</div>
 --
-standby :: AttributeValue  -- ^ Attribute value.                                -- util/GenerateHtmlVariant.hs:245
-        -> Attribute       -- ^ Resulting attribute.                            -- util/GenerateHtmlVariant.hs:246
-standby = attribute " standby=\""                                               -- util/GenerateHtmlVariant.hs:247
-{-# INLINE standby #-}                                                          -- util/GenerateHtmlVariant.hs:248
+standby :: AttributeValue  -- ^ Attribute value.                                -- util/GenerateHtmlVariant.hs:248
+        -> Attribute       -- ^ Resulting attribute.                            -- util/GenerateHtmlVariant.hs:249
+standby = attribute " standby=\""                                               -- util/GenerateHtmlVariant.hs:250
+{-# INLINE standby #-}                                                          -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @style@ attribute.
 --
@@ -1313,10 +1313,10 @@ standby = attribute " standby=\""                                               
 --
 -- > <div style="bar">Hello.</div>
 --
-style :: AttributeValue  -- ^ Attribute value.                                  -- util/GenerateHtmlVariant.hs:245
-      -> Attribute       -- ^ Resulting attribute.                              -- util/GenerateHtmlVariant.hs:246
-style = attribute " style=\""                                                   -- util/GenerateHtmlVariant.hs:247
-{-# INLINE style #-}                                                            -- util/GenerateHtmlVariant.hs:248
+style :: AttributeValue  -- ^ Attribute value.                                  -- util/GenerateHtmlVariant.hs:248
+      -> Attribute       -- ^ Resulting attribute.                              -- util/GenerateHtmlVariant.hs:249
+style = attribute " style=\""                                                   -- util/GenerateHtmlVariant.hs:250
+{-# INLINE style #-}                                                            -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @summary@ attribute.
 --
@@ -1328,10 +1328,10 @@ style = attribute " style=\""                                                   
 --
 -- > <div summary="bar">Hello.</div>
 --
-summary :: AttributeValue  -- ^ Attribute value.                                -- util/GenerateHtmlVariant.hs:245
-        -> Attribute       -- ^ Resulting attribute.                            -- util/GenerateHtmlVariant.hs:246
-summary = attribute " summary=\""                                               -- util/GenerateHtmlVariant.hs:247
-{-# INLINE summary #-}                                                          -- util/GenerateHtmlVariant.hs:248
+summary :: AttributeValue  -- ^ Attribute value.                                -- util/GenerateHtmlVariant.hs:248
+        -> Attribute       -- ^ Resulting attribute.                            -- util/GenerateHtmlVariant.hs:249
+summary = attribute " summary=\""                                               -- util/GenerateHtmlVariant.hs:250
+{-# INLINE summary #-}                                                          -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @tabindex@ attribute.
 --
@@ -1343,10 +1343,10 @@ summary = attribute " summary=\""                                               
 --
 -- > <div tabindex="bar">Hello.</div>
 --
-tabindex :: AttributeValue  -- ^ Attribute value.                               -- util/GenerateHtmlVariant.hs:245
-         -> Attribute       -- ^ Resulting attribute.                           -- util/GenerateHtmlVariant.hs:246
-tabindex = attribute " tabindex=\""                                             -- util/GenerateHtmlVariant.hs:247
-{-# INLINE tabindex #-}                                                         -- util/GenerateHtmlVariant.hs:248
+tabindex :: AttributeValue  -- ^ Attribute value.                               -- util/GenerateHtmlVariant.hs:248
+         -> Attribute       -- ^ Resulting attribute.                           -- util/GenerateHtmlVariant.hs:249
+tabindex = attribute " tabindex=\""                                             -- util/GenerateHtmlVariant.hs:250
+{-# INLINE tabindex #-}                                                         -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @title@ attribute.
 --
@@ -1358,10 +1358,10 @@ tabindex = attribute " tabindex=\""                                             
 --
 -- > <div title="bar">Hello.</div>
 --
-title :: AttributeValue  -- ^ Attribute value.                                  -- util/GenerateHtmlVariant.hs:245
-      -> Attribute       -- ^ Resulting attribute.                              -- util/GenerateHtmlVariant.hs:246
-title = attribute " title=\""                                                   -- util/GenerateHtmlVariant.hs:247
-{-# INLINE title #-}                                                            -- util/GenerateHtmlVariant.hs:248
+title :: AttributeValue  -- ^ Attribute value.                                  -- util/GenerateHtmlVariant.hs:248
+      -> Attribute       -- ^ Resulting attribute.                              -- util/GenerateHtmlVariant.hs:249
+title = attribute " title=\""                                                   -- util/GenerateHtmlVariant.hs:250
+{-# INLINE title #-}                                                            -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @type@ attribute.
 --
@@ -1373,10 +1373,10 @@ title = attribute " title=\""                                                   
 --
 -- > <div type="bar">Hello.</div>
 --
-type_ :: AttributeValue  -- ^ Attribute value.                                  -- util/GenerateHtmlVariant.hs:245
-      -> Attribute       -- ^ Resulting attribute.                              -- util/GenerateHtmlVariant.hs:246
-type_ = attribute " type=\""                                                    -- util/GenerateHtmlVariant.hs:247
-{-# INLINE type_ #-}                                                            -- util/GenerateHtmlVariant.hs:248
+type_ :: AttributeValue  -- ^ Attribute value.                                  -- util/GenerateHtmlVariant.hs:248
+      -> Attribute       -- ^ Resulting attribute.                              -- util/GenerateHtmlVariant.hs:249
+type_ = attribute " type=\""                                                    -- util/GenerateHtmlVariant.hs:250
+{-# INLINE type_ #-}                                                            -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @usemap@ attribute.
 --
@@ -1388,10 +1388,10 @@ type_ = attribute " type=\""                                                    
 --
 -- > <div usemap="bar">Hello.</div>
 --
-usemap :: AttributeValue  -- ^ Attribute value.                                 -- util/GenerateHtmlVariant.hs:245
-       -> Attribute       -- ^ Resulting attribute.                             -- util/GenerateHtmlVariant.hs:246
-usemap = attribute " usemap=\""                                                 -- util/GenerateHtmlVariant.hs:247
-{-# INLINE usemap #-}                                                           -- util/GenerateHtmlVariant.hs:248
+usemap :: AttributeValue  -- ^ Attribute value.                                 -- util/GenerateHtmlVariant.hs:248
+       -> Attribute       -- ^ Resulting attribute.                             -- util/GenerateHtmlVariant.hs:249
+usemap = attribute " usemap=\""                                                 -- util/GenerateHtmlVariant.hs:250
+{-# INLINE usemap #-}                                                           -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @valign@ attribute.
 --
@@ -1403,10 +1403,10 @@ usemap = attribute " usemap=\""                                                 
 --
 -- > <div valign="bar">Hello.</div>
 --
-valign :: AttributeValue  -- ^ Attribute value.                                 -- util/GenerateHtmlVariant.hs:245
-       -> Attribute       -- ^ Resulting attribute.                             -- util/GenerateHtmlVariant.hs:246
-valign = attribute " valign=\""                                                 -- util/GenerateHtmlVariant.hs:247
-{-# INLINE valign #-}                                                           -- util/GenerateHtmlVariant.hs:248
+valign :: AttributeValue  -- ^ Attribute value.                                 -- util/GenerateHtmlVariant.hs:248
+       -> Attribute       -- ^ Resulting attribute.                             -- util/GenerateHtmlVariant.hs:249
+valign = attribute " valign=\""                                                 -- util/GenerateHtmlVariant.hs:250
+{-# INLINE valign #-}                                                           -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @value@ attribute.
 --
@@ -1418,10 +1418,10 @@ valign = attribute " valign=\""                                                 
 --
 -- > <div value="bar">Hello.</div>
 --
-value :: AttributeValue  -- ^ Attribute value.                                  -- util/GenerateHtmlVariant.hs:245
-      -> Attribute       -- ^ Resulting attribute.                              -- util/GenerateHtmlVariant.hs:246
-value = attribute " value=\""                                                   -- util/GenerateHtmlVariant.hs:247
-{-# INLINE value #-}                                                            -- util/GenerateHtmlVariant.hs:248
+value :: AttributeValue  -- ^ Attribute value.                                  -- util/GenerateHtmlVariant.hs:248
+      -> Attribute       -- ^ Resulting attribute.                              -- util/GenerateHtmlVariant.hs:249
+value = attribute " value=\""                                                   -- util/GenerateHtmlVariant.hs:250
+{-# INLINE value #-}                                                            -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @valuetype@ attribute.
 --
@@ -1433,10 +1433,10 @@ value = attribute " value=\""                                                   
 --
 -- > <div valuetype="bar">Hello.</div>
 --
-valuetype :: AttributeValue  -- ^ Attribute value.                              -- util/GenerateHtmlVariant.hs:245
-          -> Attribute       -- ^ Resulting attribute.                          -- util/GenerateHtmlVariant.hs:246
-valuetype = attribute " valuetype=\""                                           -- util/GenerateHtmlVariant.hs:247
-{-# INLINE valuetype #-}                                                        -- util/GenerateHtmlVariant.hs:248
+valuetype :: AttributeValue  -- ^ Attribute value.                              -- util/GenerateHtmlVariant.hs:248
+          -> Attribute       -- ^ Resulting attribute.                          -- util/GenerateHtmlVariant.hs:249
+valuetype = attribute " valuetype=\""                                           -- util/GenerateHtmlVariant.hs:250
+{-# INLINE valuetype #-}                                                        -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @width@ attribute.
 --
@@ -1448,7 +1448,7 @@ valuetype = attribute " valuetype=\""                                           
 --
 -- > <div width="bar">Hello.</div>
 --
-width :: AttributeValue  -- ^ Attribute value.                                  -- util/GenerateHtmlVariant.hs:245
-      -> Attribute       -- ^ Resulting attribute.                              -- util/GenerateHtmlVariant.hs:246
-width = attribute " width=\""                                                   -- util/GenerateHtmlVariant.hs:247
-{-# INLINE width #-}                                                            -- util/GenerateHtmlVariant.hs:248
+width :: AttributeValue  -- ^ Attribute value.                                  -- util/GenerateHtmlVariant.hs:248
+      -> Attribute       -- ^ Resulting attribute.                              -- util/GenerateHtmlVariant.hs:249
+width = attribute " width=\""                                                   -- util/GenerateHtmlVariant.hs:250
+{-# INLINE width #-}                                                            -- util/GenerateHtmlVariant.hs:251

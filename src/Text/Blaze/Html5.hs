@@ -2,123 +2,123 @@
 -- edit it directly. Instead, edit the files who generated this code,
 -- you can find them in the @util/@ directory.
 
-{-# LANGUAGE OverloadedStrings #-}                                              -- util/GenerateHtmlVariant.hs:49
+{-# LANGUAGE OverloadedStrings #-}                                              -- util/GenerateHtmlVariant.hs:50
 -- | This module exports HTML combinators used to create documents.
 --
-module Text.Blaze.Html5                                                         -- util/GenerateHtmlVariant.hs:120
-    ( module Text.Blaze                                                         -- util/GenerateHtmlVariant.hs:121
-    , html                                                                      -- util/GenerateHtmlVariant.hs:123
-    , docType                                                                   -- util/GenerateHtmlVariant.hs:123
-    , a                                                                         -- util/GenerateHtmlVariant.hs:123
-    , abbr                                                                      -- util/GenerateHtmlVariant.hs:123
-    , address                                                                   -- util/GenerateHtmlVariant.hs:123
-    , area                                                                      -- util/GenerateHtmlVariant.hs:123
-    , article                                                                   -- util/GenerateHtmlVariant.hs:123
-    , aside                                                                     -- util/GenerateHtmlVariant.hs:123
-    , audio                                                                     -- util/GenerateHtmlVariant.hs:123
-    , b                                                                         -- util/GenerateHtmlVariant.hs:123
-    , base                                                                      -- util/GenerateHtmlVariant.hs:123
-    , bdo                                                                       -- util/GenerateHtmlVariant.hs:123
-    , blockquote                                                                -- util/GenerateHtmlVariant.hs:123
-    , body                                                                      -- util/GenerateHtmlVariant.hs:123
-    , br                                                                        -- util/GenerateHtmlVariant.hs:123
-    , button                                                                    -- util/GenerateHtmlVariant.hs:123
-    , canvas                                                                    -- util/GenerateHtmlVariant.hs:123
-    , caption                                                                   -- util/GenerateHtmlVariant.hs:123
-    , cite                                                                      -- util/GenerateHtmlVariant.hs:123
-    , code                                                                      -- util/GenerateHtmlVariant.hs:123
-    , col                                                                       -- util/GenerateHtmlVariant.hs:123
-    , colgroup                                                                  -- util/GenerateHtmlVariant.hs:123
-    , command                                                                   -- util/GenerateHtmlVariant.hs:123
-    , datalist                                                                  -- util/GenerateHtmlVariant.hs:123
-    , dd                                                                        -- util/GenerateHtmlVariant.hs:123
-    , del                                                                       -- util/GenerateHtmlVariant.hs:123
-    , details                                                                   -- util/GenerateHtmlVariant.hs:123
-    , dfn                                                                       -- util/GenerateHtmlVariant.hs:123
-    , div                                                                       -- util/GenerateHtmlVariant.hs:123
-    , dl                                                                        -- util/GenerateHtmlVariant.hs:123
-    , dt                                                                        -- util/GenerateHtmlVariant.hs:123
-    , em                                                                        -- util/GenerateHtmlVariant.hs:123
-    , embed                                                                     -- util/GenerateHtmlVariant.hs:123
-    , fieldset                                                                  -- util/GenerateHtmlVariant.hs:123
-    , figcaption                                                                -- util/GenerateHtmlVariant.hs:123
-    , figure                                                                    -- util/GenerateHtmlVariant.hs:123
-    , footer                                                                    -- util/GenerateHtmlVariant.hs:123
-    , form                                                                      -- util/GenerateHtmlVariant.hs:123
-    , h1                                                                        -- util/GenerateHtmlVariant.hs:123
-    , h2                                                                        -- util/GenerateHtmlVariant.hs:123
-    , h3                                                                        -- util/GenerateHtmlVariant.hs:123
-    , h4                                                                        -- util/GenerateHtmlVariant.hs:123
-    , h5                                                                        -- util/GenerateHtmlVariant.hs:123
-    , h6                                                                        -- util/GenerateHtmlVariant.hs:123
-    , head                                                                      -- util/GenerateHtmlVariant.hs:123
-    , header                                                                    -- util/GenerateHtmlVariant.hs:123
-    , hgroup                                                                    -- util/GenerateHtmlVariant.hs:123
-    , hr                                                                        -- util/GenerateHtmlVariant.hs:123
-    , htmlNoDocType                                                             -- util/GenerateHtmlVariant.hs:123
-    , i                                                                         -- util/GenerateHtmlVariant.hs:123
-    , iframe                                                                    -- util/GenerateHtmlVariant.hs:123
-    , img                                                                       -- util/GenerateHtmlVariant.hs:123
-    , input                                                                     -- util/GenerateHtmlVariant.hs:123
-    , ins                                                                       -- util/GenerateHtmlVariant.hs:123
-    , kbd                                                                       -- util/GenerateHtmlVariant.hs:123
-    , keygen                                                                    -- util/GenerateHtmlVariant.hs:123
-    , label                                                                     -- util/GenerateHtmlVariant.hs:123
-    , legend                                                                    -- util/GenerateHtmlVariant.hs:123
-    , li                                                                        -- util/GenerateHtmlVariant.hs:123
-    , link                                                                      -- util/GenerateHtmlVariant.hs:123
-    , map                                                                       -- util/GenerateHtmlVariant.hs:123
-    , mark                                                                      -- util/GenerateHtmlVariant.hs:123
-    , menu                                                                      -- util/GenerateHtmlVariant.hs:123
-    , meta                                                                      -- util/GenerateHtmlVariant.hs:123
-    , meter                                                                     -- util/GenerateHtmlVariant.hs:123
-    , nav                                                                       -- util/GenerateHtmlVariant.hs:123
-    , noscript                                                                  -- util/GenerateHtmlVariant.hs:123
-    , object                                                                    -- util/GenerateHtmlVariant.hs:123
-    , ol                                                                        -- util/GenerateHtmlVariant.hs:123
-    , optgroup                                                                  -- util/GenerateHtmlVariant.hs:123
-    , option                                                                    -- util/GenerateHtmlVariant.hs:123
-    , output                                                                    -- util/GenerateHtmlVariant.hs:123
-    , p                                                                         -- util/GenerateHtmlVariant.hs:123
-    , param                                                                     -- util/GenerateHtmlVariant.hs:123
-    , pre                                                                       -- util/GenerateHtmlVariant.hs:123
-    , progress                                                                  -- util/GenerateHtmlVariant.hs:123
-    , q                                                                         -- util/GenerateHtmlVariant.hs:123
-    , rp                                                                        -- util/GenerateHtmlVariant.hs:123
-    , rt                                                                        -- util/GenerateHtmlVariant.hs:123
-    , ruby                                                                      -- util/GenerateHtmlVariant.hs:123
-    , samp                                                                      -- util/GenerateHtmlVariant.hs:123
-    , script                                                                    -- util/GenerateHtmlVariant.hs:123
-    , section                                                                   -- util/GenerateHtmlVariant.hs:123
-    , select                                                                    -- util/GenerateHtmlVariant.hs:123
-    , small                                                                     -- util/GenerateHtmlVariant.hs:123
-    , source                                                                    -- util/GenerateHtmlVariant.hs:123
-    , span                                                                      -- util/GenerateHtmlVariant.hs:123
-    , strong                                                                    -- util/GenerateHtmlVariant.hs:123
-    , style                                                                     -- util/GenerateHtmlVariant.hs:123
-    , sub                                                                       -- util/GenerateHtmlVariant.hs:123
-    , summary                                                                   -- util/GenerateHtmlVariant.hs:123
-    , sup                                                                       -- util/GenerateHtmlVariant.hs:123
-    , table                                                                     -- util/GenerateHtmlVariant.hs:123
-    , tbody                                                                     -- util/GenerateHtmlVariant.hs:123
-    , td                                                                        -- util/GenerateHtmlVariant.hs:123
-    , textarea                                                                  -- util/GenerateHtmlVariant.hs:123
-    , tfoot                                                                     -- util/GenerateHtmlVariant.hs:123
-    , th                                                                        -- util/GenerateHtmlVariant.hs:123
-    , thead                                                                     -- util/GenerateHtmlVariant.hs:123
-    , time                                                                      -- util/GenerateHtmlVariant.hs:123
-    , title                                                                     -- util/GenerateHtmlVariant.hs:123
-    , tr                                                                        -- util/GenerateHtmlVariant.hs:123
-    , ul                                                                        -- util/GenerateHtmlVariant.hs:123
-    , var                                                                       -- util/GenerateHtmlVariant.hs:123
-    , video                                                                     -- util/GenerateHtmlVariant.hs:123
-    ) where                                                                     -- util/GenerateHtmlVariant.hs:124
+module Text.Blaze.Html5                                                         -- util/GenerateHtmlVariant.hs:121
+    ( module Text.Blaze                                                         -- util/GenerateHtmlVariant.hs:122
+    , html                                                                      -- util/GenerateHtmlVariant.hs:124
+    , docType                                                                   -- util/GenerateHtmlVariant.hs:124
+    , a                                                                         -- util/GenerateHtmlVariant.hs:124
+    , abbr                                                                      -- util/GenerateHtmlVariant.hs:124
+    , address                                                                   -- util/GenerateHtmlVariant.hs:124
+    , area                                                                      -- util/GenerateHtmlVariant.hs:124
+    , article                                                                   -- util/GenerateHtmlVariant.hs:124
+    , aside                                                                     -- util/GenerateHtmlVariant.hs:124
+    , audio                                                                     -- util/GenerateHtmlVariant.hs:124
+    , b                                                                         -- util/GenerateHtmlVariant.hs:124
+    , base                                                                      -- util/GenerateHtmlVariant.hs:124
+    , bdo                                                                       -- util/GenerateHtmlVariant.hs:124
+    , blockquote                                                                -- util/GenerateHtmlVariant.hs:124
+    , body                                                                      -- util/GenerateHtmlVariant.hs:124
+    , br                                                                        -- util/GenerateHtmlVariant.hs:124
+    , button                                                                    -- util/GenerateHtmlVariant.hs:124
+    , canvas                                                                    -- util/GenerateHtmlVariant.hs:124
+    , caption                                                                   -- util/GenerateHtmlVariant.hs:124
+    , cite                                                                      -- util/GenerateHtmlVariant.hs:124
+    , code                                                                      -- util/GenerateHtmlVariant.hs:124
+    , col                                                                       -- util/GenerateHtmlVariant.hs:124
+    , colgroup                                                                  -- util/GenerateHtmlVariant.hs:124
+    , command                                                                   -- util/GenerateHtmlVariant.hs:124
+    , datalist                                                                  -- util/GenerateHtmlVariant.hs:124
+    , dd                                                                        -- util/GenerateHtmlVariant.hs:124
+    , del                                                                       -- util/GenerateHtmlVariant.hs:124
+    , details                                                                   -- util/GenerateHtmlVariant.hs:124
+    , dfn                                                                       -- util/GenerateHtmlVariant.hs:124
+    , div                                                                       -- util/GenerateHtmlVariant.hs:124
+    , dl                                                                        -- util/GenerateHtmlVariant.hs:124
+    , dt                                                                        -- util/GenerateHtmlVariant.hs:124
+    , em                                                                        -- util/GenerateHtmlVariant.hs:124
+    , embed                                                                     -- util/GenerateHtmlVariant.hs:124
+    , fieldset                                                                  -- util/GenerateHtmlVariant.hs:124
+    , figcaption                                                                -- util/GenerateHtmlVariant.hs:124
+    , figure                                                                    -- util/GenerateHtmlVariant.hs:124
+    , footer                                                                    -- util/GenerateHtmlVariant.hs:124
+    , form                                                                      -- util/GenerateHtmlVariant.hs:124
+    , h1                                                                        -- util/GenerateHtmlVariant.hs:124
+    , h2                                                                        -- util/GenerateHtmlVariant.hs:124
+    , h3                                                                        -- util/GenerateHtmlVariant.hs:124
+    , h4                                                                        -- util/GenerateHtmlVariant.hs:124
+    , h5                                                                        -- util/GenerateHtmlVariant.hs:124
+    , h6                                                                        -- util/GenerateHtmlVariant.hs:124
+    , head                                                                      -- util/GenerateHtmlVariant.hs:124
+    , header                                                                    -- util/GenerateHtmlVariant.hs:124
+    , hgroup                                                                    -- util/GenerateHtmlVariant.hs:124
+    , hr                                                                        -- util/GenerateHtmlVariant.hs:124
+    , htmlNoDocType                                                             -- util/GenerateHtmlVariant.hs:124
+    , i                                                                         -- util/GenerateHtmlVariant.hs:124
+    , iframe                                                                    -- util/GenerateHtmlVariant.hs:124
+    , img                                                                       -- util/GenerateHtmlVariant.hs:124
+    , input                                                                     -- util/GenerateHtmlVariant.hs:124
+    , ins                                                                       -- util/GenerateHtmlVariant.hs:124
+    , kbd                                                                       -- util/GenerateHtmlVariant.hs:124
+    , keygen                                                                    -- util/GenerateHtmlVariant.hs:124
+    , label                                                                     -- util/GenerateHtmlVariant.hs:124
+    , legend                                                                    -- util/GenerateHtmlVariant.hs:124
+    , li                                                                        -- util/GenerateHtmlVariant.hs:124
+    , link                                                                      -- util/GenerateHtmlVariant.hs:124
+    , map                                                                       -- util/GenerateHtmlVariant.hs:124
+    , mark                                                                      -- util/GenerateHtmlVariant.hs:124
+    , menu                                                                      -- util/GenerateHtmlVariant.hs:124
+    , meta                                                                      -- util/GenerateHtmlVariant.hs:124
+    , meter                                                                     -- util/GenerateHtmlVariant.hs:124
+    , nav                                                                       -- util/GenerateHtmlVariant.hs:124
+    , noscript                                                                  -- util/GenerateHtmlVariant.hs:124
+    , object                                                                    -- util/GenerateHtmlVariant.hs:124
+    , ol                                                                        -- util/GenerateHtmlVariant.hs:124
+    , optgroup                                                                  -- util/GenerateHtmlVariant.hs:124
+    , option                                                                    -- util/GenerateHtmlVariant.hs:124
+    , output                                                                    -- util/GenerateHtmlVariant.hs:124
+    , p                                                                         -- util/GenerateHtmlVariant.hs:124
+    , param                                                                     -- util/GenerateHtmlVariant.hs:124
+    , pre                                                                       -- util/GenerateHtmlVariant.hs:124
+    , progress                                                                  -- util/GenerateHtmlVariant.hs:124
+    , q                                                                         -- util/GenerateHtmlVariant.hs:124
+    , rp                                                                        -- util/GenerateHtmlVariant.hs:124
+    , rt                                                                        -- util/GenerateHtmlVariant.hs:124
+    , ruby                                                                      -- util/GenerateHtmlVariant.hs:124
+    , samp                                                                      -- util/GenerateHtmlVariant.hs:124
+    , script                                                                    -- util/GenerateHtmlVariant.hs:124
+    , section                                                                   -- util/GenerateHtmlVariant.hs:124
+    , select                                                                    -- util/GenerateHtmlVariant.hs:124
+    , small                                                                     -- util/GenerateHtmlVariant.hs:124
+    , source                                                                    -- util/GenerateHtmlVariant.hs:124
+    , span                                                                      -- util/GenerateHtmlVariant.hs:124
+    , strong                                                                    -- util/GenerateHtmlVariant.hs:124
+    , style                                                                     -- util/GenerateHtmlVariant.hs:124
+    , sub                                                                       -- util/GenerateHtmlVariant.hs:124
+    , summary                                                                   -- util/GenerateHtmlVariant.hs:124
+    , sup                                                                       -- util/GenerateHtmlVariant.hs:124
+    , table                                                                     -- util/GenerateHtmlVariant.hs:124
+    , tbody                                                                     -- util/GenerateHtmlVariant.hs:124
+    , td                                                                        -- util/GenerateHtmlVariant.hs:124
+    , textarea                                                                  -- util/GenerateHtmlVariant.hs:124
+    , tfoot                                                                     -- util/GenerateHtmlVariant.hs:124
+    , th                                                                        -- util/GenerateHtmlVariant.hs:124
+    , thead                                                                     -- util/GenerateHtmlVariant.hs:124
+    , time                                                                      -- util/GenerateHtmlVariant.hs:124
+    , title                                                                     -- util/GenerateHtmlVariant.hs:124
+    , tr                                                                        -- util/GenerateHtmlVariant.hs:124
+    , ul                                                                        -- util/GenerateHtmlVariant.hs:124
+    , var                                                                       -- util/GenerateHtmlVariant.hs:124
+    , video                                                                     -- util/GenerateHtmlVariant.hs:124
+    ) where                                                                     -- util/GenerateHtmlVariant.hs:125
 
-import Prelude ((>>))                                                           -- util/GenerateHtmlVariant.hs:56
-                                                                                -- util/GenerateHtmlVariant.hs:57
-import Text.Blaze                                                               -- util/GenerateHtmlVariant.hs:58
-import Text.Blaze.Internal                                                      -- util/GenerateHtmlVariant.hs:59
-                                                                                -- util/GenerateHtmlVariant.hs:60
+import Prelude ((>>), (.))                                                      -- util/GenerateHtmlVariant.hs:57
+                                                                                -- util/GenerateHtmlVariant.hs:58
+import Text.Blaze                                                               -- util/GenerateHtmlVariant.hs:59
+import Text.Blaze.Internal                                                      -- util/GenerateHtmlVariant.hs:60
+                                                                                -- util/GenerateHtmlVariant.hs:61
 -- | Combinator for the @\<html>@ element. This combinator will also
 -- insert the correct doctype.
 --
@@ -131,10 +131,10 @@ import Text.Blaze.Internal                                                      
 -- > <!DOCTYPE HTML>
 -- > <html><span>foo</span></html>
 --
-html :: Html  -- ^ Inner HTML.                                                  -- util/GenerateHtmlVariant.hs:161
-     -> Html  -- ^ Resulting HTML.                                              -- util/GenerateHtmlVariant.hs:162
-html inner = docType >> htmlNoDocType inner                                     -- util/GenerateHtmlVariant.hs:163
-{-# INLINE html #-}                                                             -- util/GenerateHtmlVariant.hs:164
+html :: Html  -- ^ Inner HTML.                                                  -- util/GenerateHtmlVariant.hs:162
+     -> Html  -- ^ Resulting HTML.                                              -- util/GenerateHtmlVariant.hs:163
+html inner = docType >> htmlNoDocType inner                                     -- util/GenerateHtmlVariant.hs:164
+{-# INLINE html #-}                                                             -- util/GenerateHtmlVariant.hs:165
 
 -- | Combinator for the document type. This should be placed at the top
 -- of every HTML page.
@@ -147,9 +147,9 @@ html inner = docType >> htmlNoDocType inner                                     
 --
 -- > <!DOCTYPE HTML>
 --
-docType :: Html  -- ^ The document type HTML.                                   -- util/GenerateHtmlVariant.hs:140
-docType = preEscapedText "<!DOCTYPE HTML>\n"                                    -- util/GenerateHtmlVariant.hs:141
-{-# INLINE docType #-}                                                          -- util/GenerateHtmlVariant.hs:142
+docType :: Html  -- ^ The document type HTML.                                   -- util/GenerateHtmlVariant.hs:141
+docType = preEscapedText "<!DOCTYPE HTML>\n"                                    -- util/GenerateHtmlVariant.hs:142
+{-# INLINE docType #-}                                                          -- util/GenerateHtmlVariant.hs:143
 
 -- | Combinator for the @\<a>@ element.
 --
@@ -161,10 +161,10 @@ docType = preEscapedText "<!DOCTYPE HTML>\n"                                    
 --
 -- > <a><span>foo</span></a>
 --
-a :: Html  -- ^ Inner HTML.                                                     -- util/GenerateHtmlVariant.hs:181
-  -> Html  -- ^ Resulting HTML.                                                 -- util/GenerateHtmlVariant.hs:182
-a = Parent "<a" "</a>"                                                          -- util/GenerateHtmlVariant.hs:183
-{-# INLINE a #-}                                                                -- util/GenerateHtmlVariant.hs:184
+a :: Html  -- ^ Inner HTML.                                                     -- util/GenerateHtmlVariant.hs:182
+  -> Html  -- ^ Resulting HTML.                                                 -- util/GenerateHtmlVariant.hs:183
+a = Parent "<a" "</a>"                                                          -- util/GenerateHtmlVariant.hs:184
+{-# INLINE a #-}                                                                -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<abbr>@ element.
 --
@@ -176,10 +176,10 @@ a = Parent "<a" "</a>"                                                          
 --
 -- > <abbr><span>foo</span></abbr>
 --
-abbr :: Html  -- ^ Inner HTML.                                                  -- util/GenerateHtmlVariant.hs:181
-     -> Html  -- ^ Resulting HTML.                                              -- util/GenerateHtmlVariant.hs:182
-abbr = Parent "<abbr" "</abbr>"                                                 -- util/GenerateHtmlVariant.hs:183
-{-# INLINE abbr #-}                                                             -- util/GenerateHtmlVariant.hs:184
+abbr :: Html  -- ^ Inner HTML.                                                  -- util/GenerateHtmlVariant.hs:182
+     -> Html  -- ^ Resulting HTML.                                              -- util/GenerateHtmlVariant.hs:183
+abbr = Parent "<abbr" "</abbr>"                                                 -- util/GenerateHtmlVariant.hs:184
+{-# INLINE abbr #-}                                                             -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<address>@ element.
 --
@@ -191,10 +191,10 @@ abbr = Parent "<abbr" "</abbr>"                                                 
 --
 -- > <address><span>foo</span></address>
 --
-address :: Html  -- ^ Inner HTML.                                               -- util/GenerateHtmlVariant.hs:181
-        -> Html  -- ^ Resulting HTML.                                           -- util/GenerateHtmlVariant.hs:182
-address = Parent "<address" "</address>"                                        -- util/GenerateHtmlVariant.hs:183
-{-# INLINE address #-}                                                          -- util/GenerateHtmlVariant.hs:184
+address :: Html  -- ^ Inner HTML.                                               -- util/GenerateHtmlVariant.hs:182
+        -> Html  -- ^ Resulting HTML.                                           -- util/GenerateHtmlVariant.hs:183
+address = Parent "<address" "</address>"                                        -- util/GenerateHtmlVariant.hs:184
+{-# INLINE address #-}                                                          -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<area />@ element.
 --
@@ -206,9 +206,9 @@ address = Parent "<address" "</address>"                                        
 --
 -- > <area />
 --
-area :: Html  -- ^ Resulting HTML.                                              -- util/GenerateHtmlVariant.hs:203
-area = Leaf "<area" " />"                                                       -- util/GenerateHtmlVariant.hs:204
-{-# INLINE area #-}                                                             -- util/GenerateHtmlVariant.hs:205
+area :: Html  -- ^ Resulting HTML.                                              -- util/GenerateHtmlVariant.hs:206
+area = Leaf "<area" " />"                                                       -- util/GenerateHtmlVariant.hs:207
+{-# INLINE area #-}                                                             -- util/GenerateHtmlVariant.hs:208
 
 -- | Combinator for the @\<article>@ element.
 --
@@ -220,10 +220,10 @@ area = Leaf "<area" " />"                                                       
 --
 -- > <article><span>foo</span></article>
 --
-article :: Html  -- ^ Inner HTML.                                               -- util/GenerateHtmlVariant.hs:181
-        -> Html  -- ^ Resulting HTML.                                           -- util/GenerateHtmlVariant.hs:182
-article = Parent "<article" "</article>"                                        -- util/GenerateHtmlVariant.hs:183
-{-# INLINE article #-}                                                          -- util/GenerateHtmlVariant.hs:184
+article :: Html  -- ^ Inner HTML.                                               -- util/GenerateHtmlVariant.hs:182
+        -> Html  -- ^ Resulting HTML.                                           -- util/GenerateHtmlVariant.hs:183
+article = Parent "<article" "</article>"                                        -- util/GenerateHtmlVariant.hs:184
+{-# INLINE article #-}                                                          -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<aside>@ element.
 --
@@ -235,10 +235,10 @@ article = Parent "<article" "</article>"                                        
 --
 -- > <aside><span>foo</span></aside>
 --
-aside :: Html  -- ^ Inner HTML.                                                 -- util/GenerateHtmlVariant.hs:181
-      -> Html  -- ^ Resulting HTML.                                             -- util/GenerateHtmlVariant.hs:182
-aside = Parent "<aside" "</aside>"                                              -- util/GenerateHtmlVariant.hs:183
-{-# INLINE aside #-}                                                            -- util/GenerateHtmlVariant.hs:184
+aside :: Html  -- ^ Inner HTML.                                                 -- util/GenerateHtmlVariant.hs:182
+      -> Html  -- ^ Resulting HTML.                                             -- util/GenerateHtmlVariant.hs:183
+aside = Parent "<aside" "</aside>"                                              -- util/GenerateHtmlVariant.hs:184
+{-# INLINE aside #-}                                                            -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<audio>@ element.
 --
@@ -250,10 +250,10 @@ aside = Parent "<aside" "</aside>"                                              
 --
 -- > <audio><span>foo</span></audio>
 --
-audio :: Html  -- ^ Inner HTML.                                                 -- util/GenerateHtmlVariant.hs:181
-      -> Html  -- ^ Resulting HTML.                                             -- util/GenerateHtmlVariant.hs:182
-audio = Parent "<audio" "</audio>"                                              -- util/GenerateHtmlVariant.hs:183
-{-# INLINE audio #-}                                                            -- util/GenerateHtmlVariant.hs:184
+audio :: Html  -- ^ Inner HTML.                                                 -- util/GenerateHtmlVariant.hs:182
+      -> Html  -- ^ Resulting HTML.                                             -- util/GenerateHtmlVariant.hs:183
+audio = Parent "<audio" "</audio>"                                              -- util/GenerateHtmlVariant.hs:184
+{-# INLINE audio #-}                                                            -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<b>@ element.
 --
@@ -265,10 +265,10 @@ audio = Parent "<audio" "</audio>"                                              
 --
 -- > <b><span>foo</span></b>
 --
-b :: Html  -- ^ Inner HTML.                                                     -- util/GenerateHtmlVariant.hs:181
-  -> Html  -- ^ Resulting HTML.                                                 -- util/GenerateHtmlVariant.hs:182
-b = Parent "<b" "</b>"                                                          -- util/GenerateHtmlVariant.hs:183
-{-# INLINE b #-}                                                                -- util/GenerateHtmlVariant.hs:184
+b :: Html  -- ^ Inner HTML.                                                     -- util/GenerateHtmlVariant.hs:182
+  -> Html  -- ^ Resulting HTML.                                                 -- util/GenerateHtmlVariant.hs:183
+b = Parent "<b" "</b>"                                                          -- util/GenerateHtmlVariant.hs:184
+{-# INLINE b #-}                                                                -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<base>@ element.
 --
@@ -280,10 +280,10 @@ b = Parent "<b" "</b>"                                                          
 --
 -- > <base><span>foo</span></base>
 --
-base :: Html  -- ^ Inner HTML.                                                  -- util/GenerateHtmlVariant.hs:181
-     -> Html  -- ^ Resulting HTML.                                              -- util/GenerateHtmlVariant.hs:182
-base = Parent "<base" "</base>"                                                 -- util/GenerateHtmlVariant.hs:183
-{-# INLINE base #-}                                                             -- util/GenerateHtmlVariant.hs:184
+base :: Html  -- ^ Inner HTML.                                                  -- util/GenerateHtmlVariant.hs:182
+     -> Html  -- ^ Resulting HTML.                                              -- util/GenerateHtmlVariant.hs:183
+base = Parent "<base" "</base>"                                                 -- util/GenerateHtmlVariant.hs:184
+{-# INLINE base #-}                                                             -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<bdo>@ element.
 --
@@ -295,10 +295,10 @@ base = Parent "<base" "</base>"                                                 
 --
 -- > <bdo><span>foo</span></bdo>
 --
-bdo :: Html  -- ^ Inner HTML.                                                   -- util/GenerateHtmlVariant.hs:181
-    -> Html  -- ^ Resulting HTML.                                               -- util/GenerateHtmlVariant.hs:182
-bdo = Parent "<bdo" "</bdo>"                                                    -- util/GenerateHtmlVariant.hs:183
-{-# INLINE bdo #-}                                                              -- util/GenerateHtmlVariant.hs:184
+bdo :: Html  -- ^ Inner HTML.                                                   -- util/GenerateHtmlVariant.hs:182
+    -> Html  -- ^ Resulting HTML.                                               -- util/GenerateHtmlVariant.hs:183
+bdo = Parent "<bdo" "</bdo>"                                                    -- util/GenerateHtmlVariant.hs:184
+{-# INLINE bdo #-}                                                              -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<blockquote>@ element.
 --
@@ -310,10 +310,10 @@ bdo = Parent "<bdo" "</bdo>"                                                    
 --
 -- > <blockquote><span>foo</span></blockquote>
 --
-blockquote :: Html  -- ^ Inner HTML.                                            -- util/GenerateHtmlVariant.hs:181
-           -> Html  -- ^ Resulting HTML.                                        -- util/GenerateHtmlVariant.hs:182
-blockquote = Parent "<blockquote" "</blockquote>"                               -- util/GenerateHtmlVariant.hs:183
-{-# INLINE blockquote #-}                                                       -- util/GenerateHtmlVariant.hs:184
+blockquote :: Html  -- ^ Inner HTML.                                            -- util/GenerateHtmlVariant.hs:182
+           -> Html  -- ^ Resulting HTML.                                        -- util/GenerateHtmlVariant.hs:183
+blockquote = Parent "<blockquote" "</blockquote>"                               -- util/GenerateHtmlVariant.hs:184
+{-# INLINE blockquote #-}                                                       -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<body>@ element.
 --
@@ -325,10 +325,10 @@ blockquote = Parent "<blockquote" "</blockquote>"                               
 --
 -- > <body><span>foo</span></body>
 --
-body :: Html  -- ^ Inner HTML.                                                  -- util/GenerateHtmlVariant.hs:181
-     -> Html  -- ^ Resulting HTML.                                              -- util/GenerateHtmlVariant.hs:182
-body = Parent "<body" "</body>"                                                 -- util/GenerateHtmlVariant.hs:183
-{-# INLINE body #-}                                                             -- util/GenerateHtmlVariant.hs:184
+body :: Html  -- ^ Inner HTML.                                                  -- util/GenerateHtmlVariant.hs:182
+     -> Html  -- ^ Resulting HTML.                                              -- util/GenerateHtmlVariant.hs:183
+body = Parent "<body" "</body>"                                                 -- util/GenerateHtmlVariant.hs:184
+{-# INLINE body #-}                                                             -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<br />@ element.
 --
@@ -340,9 +340,9 @@ body = Parent "<body" "</body>"                                                 
 --
 -- > <br />
 --
-br :: Html  -- ^ Resulting HTML.                                                -- util/GenerateHtmlVariant.hs:203
-br = Leaf "<br" " />"                                                           -- util/GenerateHtmlVariant.hs:204
-{-# INLINE br #-}                                                               -- util/GenerateHtmlVariant.hs:205
+br :: Html  -- ^ Resulting HTML.                                                -- util/GenerateHtmlVariant.hs:206
+br = Leaf "<br" " />"                                                           -- util/GenerateHtmlVariant.hs:207
+{-# INLINE br #-}                                                               -- util/GenerateHtmlVariant.hs:208
 
 -- | Combinator for the @\<button>@ element.
 --
@@ -354,10 +354,10 @@ br = Leaf "<br" " />"                                                           
 --
 -- > <button><span>foo</span></button>
 --
-button :: Html  -- ^ Inner HTML.                                                -- util/GenerateHtmlVariant.hs:181
-       -> Html  -- ^ Resulting HTML.                                            -- util/GenerateHtmlVariant.hs:182
-button = Parent "<button" "</button>"                                           -- util/GenerateHtmlVariant.hs:183
-{-# INLINE button #-}                                                           -- util/GenerateHtmlVariant.hs:184
+button :: Html  -- ^ Inner HTML.                                                -- util/GenerateHtmlVariant.hs:182
+       -> Html  -- ^ Resulting HTML.                                            -- util/GenerateHtmlVariant.hs:183
+button = Parent "<button" "</button>"                                           -- util/GenerateHtmlVariant.hs:184
+{-# INLINE button #-}                                                           -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<canvas>@ element.
 --
@@ -369,10 +369,10 @@ button = Parent "<button" "</button>"                                           
 --
 -- > <canvas><span>foo</span></canvas>
 --
-canvas :: Html  -- ^ Inner HTML.                                                -- util/GenerateHtmlVariant.hs:181
-       -> Html  -- ^ Resulting HTML.                                            -- util/GenerateHtmlVariant.hs:182
-canvas = Parent "<canvas" "</canvas>"                                           -- util/GenerateHtmlVariant.hs:183
-{-# INLINE canvas #-}                                                           -- util/GenerateHtmlVariant.hs:184
+canvas :: Html  -- ^ Inner HTML.                                                -- util/GenerateHtmlVariant.hs:182
+       -> Html  -- ^ Resulting HTML.                                            -- util/GenerateHtmlVariant.hs:183
+canvas = Parent "<canvas" "</canvas>"                                           -- util/GenerateHtmlVariant.hs:184
+{-# INLINE canvas #-}                                                           -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<caption>@ element.
 --
@@ -384,10 +384,10 @@ canvas = Parent "<canvas" "</canvas>"                                           
 --
 -- > <caption><span>foo</span></caption>
 --
-caption :: Html  -- ^ Inner HTML.                                               -- util/GenerateHtmlVariant.hs:181
-        -> Html  -- ^ Resulting HTML.                                           -- util/GenerateHtmlVariant.hs:182
-caption = Parent "<caption" "</caption>"                                        -- util/GenerateHtmlVariant.hs:183
-{-# INLINE caption #-}                                                          -- util/GenerateHtmlVariant.hs:184
+caption :: Html  -- ^ Inner HTML.                                               -- util/GenerateHtmlVariant.hs:182
+        -> Html  -- ^ Resulting HTML.                                           -- util/GenerateHtmlVariant.hs:183
+caption = Parent "<caption" "</caption>"                                        -- util/GenerateHtmlVariant.hs:184
+{-# INLINE caption #-}                                                          -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<cite>@ element.
 --
@@ -399,10 +399,10 @@ caption = Parent "<caption" "</caption>"                                        
 --
 -- > <cite><span>foo</span></cite>
 --
-cite :: Html  -- ^ Inner HTML.                                                  -- util/GenerateHtmlVariant.hs:181
-     -> Html  -- ^ Resulting HTML.                                              -- util/GenerateHtmlVariant.hs:182
-cite = Parent "<cite" "</cite>"                                                 -- util/GenerateHtmlVariant.hs:183
-{-# INLINE cite #-}                                                             -- util/GenerateHtmlVariant.hs:184
+cite :: Html  -- ^ Inner HTML.                                                  -- util/GenerateHtmlVariant.hs:182
+     -> Html  -- ^ Resulting HTML.                                              -- util/GenerateHtmlVariant.hs:183
+cite = Parent "<cite" "</cite>"                                                 -- util/GenerateHtmlVariant.hs:184
+{-# INLINE cite #-}                                                             -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<code>@ element.
 --
@@ -414,10 +414,10 @@ cite = Parent "<cite" "</cite>"                                                 
 --
 -- > <code><span>foo</span></code>
 --
-code :: Html  -- ^ Inner HTML.                                                  -- util/GenerateHtmlVariant.hs:181
-     -> Html  -- ^ Resulting HTML.                                              -- util/GenerateHtmlVariant.hs:182
-code = Parent "<code" "</code>"                                                 -- util/GenerateHtmlVariant.hs:183
-{-# INLINE code #-}                                                             -- util/GenerateHtmlVariant.hs:184
+code :: Html  -- ^ Inner HTML.                                                  -- util/GenerateHtmlVariant.hs:182
+     -> Html  -- ^ Resulting HTML.                                              -- util/GenerateHtmlVariant.hs:183
+code = Parent "<code" "</code>"                                                 -- util/GenerateHtmlVariant.hs:184
+{-# INLINE code #-}                                                             -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<col />@ element.
 --
@@ -429,9 +429,9 @@ code = Parent "<code" "</code>"                                                 
 --
 -- > <col />
 --
-col :: Html  -- ^ Resulting HTML.                                               -- util/GenerateHtmlVariant.hs:203
-col = Leaf "<col" " />"                                                         -- util/GenerateHtmlVariant.hs:204
-{-# INLINE col #-}                                                              -- util/GenerateHtmlVariant.hs:205
+col :: Html  -- ^ Resulting HTML.                                               -- util/GenerateHtmlVariant.hs:206
+col = Leaf "<col" " />"                                                         -- util/GenerateHtmlVariant.hs:207
+{-# INLINE col #-}                                                              -- util/GenerateHtmlVariant.hs:208
 
 -- | Combinator for the @\<colgroup>@ element.
 --
@@ -443,10 +443,10 @@ col = Leaf "<col" " />"                                                         
 --
 -- > <colgroup><span>foo</span></colgroup>
 --
-colgroup :: Html  -- ^ Inner HTML.                                              -- util/GenerateHtmlVariant.hs:181
-         -> Html  -- ^ Resulting HTML.                                          -- util/GenerateHtmlVariant.hs:182
-colgroup = Parent "<colgroup" "</colgroup>"                                     -- util/GenerateHtmlVariant.hs:183
-{-# INLINE colgroup #-}                                                         -- util/GenerateHtmlVariant.hs:184
+colgroup :: Html  -- ^ Inner HTML.                                              -- util/GenerateHtmlVariant.hs:182
+         -> Html  -- ^ Resulting HTML.                                          -- util/GenerateHtmlVariant.hs:183
+colgroup = Parent "<colgroup" "</colgroup>"                                     -- util/GenerateHtmlVariant.hs:184
+{-# INLINE colgroup #-}                                                         -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<command>@ element.
 --
@@ -458,10 +458,10 @@ colgroup = Parent "<colgroup" "</colgroup>"                                     
 --
 -- > <command><span>foo</span></command>
 --
-command :: Html  -- ^ Inner HTML.                                               -- util/GenerateHtmlVariant.hs:181
-        -> Html  -- ^ Resulting HTML.                                           -- util/GenerateHtmlVariant.hs:182
-command = Parent "<command" "</command>"                                        -- util/GenerateHtmlVariant.hs:183
-{-# INLINE command #-}                                                          -- util/GenerateHtmlVariant.hs:184
+command :: Html  -- ^ Inner HTML.                                               -- util/GenerateHtmlVariant.hs:182
+        -> Html  -- ^ Resulting HTML.                                           -- util/GenerateHtmlVariant.hs:183
+command = Parent "<command" "</command>"                                        -- util/GenerateHtmlVariant.hs:184
+{-# INLINE command #-}                                                          -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<datalist>@ element.
 --
@@ -473,10 +473,10 @@ command = Parent "<command" "</command>"                                        
 --
 -- > <datalist><span>foo</span></datalist>
 --
-datalist :: Html  -- ^ Inner HTML.                                              -- util/GenerateHtmlVariant.hs:181
-         -> Html  -- ^ Resulting HTML.                                          -- util/GenerateHtmlVariant.hs:182
-datalist = Parent "<datalist" "</datalist>"                                     -- util/GenerateHtmlVariant.hs:183
-{-# INLINE datalist #-}                                                         -- util/GenerateHtmlVariant.hs:184
+datalist :: Html  -- ^ Inner HTML.                                              -- util/GenerateHtmlVariant.hs:182
+         -> Html  -- ^ Resulting HTML.                                          -- util/GenerateHtmlVariant.hs:183
+datalist = Parent "<datalist" "</datalist>"                                     -- util/GenerateHtmlVariant.hs:184
+{-# INLINE datalist #-}                                                         -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<dd>@ element.
 --
@@ -488,10 +488,10 @@ datalist = Parent "<datalist" "</datalist>"                                     
 --
 -- > <dd><span>foo</span></dd>
 --
-dd :: Html  -- ^ Inner HTML.                                                    -- util/GenerateHtmlVariant.hs:181
-   -> Html  -- ^ Resulting HTML.                                                -- util/GenerateHtmlVariant.hs:182
-dd = Parent "<dd" "</dd>"                                                       -- util/GenerateHtmlVariant.hs:183
-{-# INLINE dd #-}                                                               -- util/GenerateHtmlVariant.hs:184
+dd :: Html  -- ^ Inner HTML.                                                    -- util/GenerateHtmlVariant.hs:182
+   -> Html  -- ^ Resulting HTML.                                                -- util/GenerateHtmlVariant.hs:183
+dd = Parent "<dd" "</dd>"                                                       -- util/GenerateHtmlVariant.hs:184
+{-# INLINE dd #-}                                                               -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<del>@ element.
 --
@@ -503,10 +503,10 @@ dd = Parent "<dd" "</dd>"                                                       
 --
 -- > <del><span>foo</span></del>
 --
-del :: Html  -- ^ Inner HTML.                                                   -- util/GenerateHtmlVariant.hs:181
-    -> Html  -- ^ Resulting HTML.                                               -- util/GenerateHtmlVariant.hs:182
-del = Parent "<del" "</del>"                                                    -- util/GenerateHtmlVariant.hs:183
-{-# INLINE del #-}                                                              -- util/GenerateHtmlVariant.hs:184
+del :: Html  -- ^ Inner HTML.                                                   -- util/GenerateHtmlVariant.hs:182
+    -> Html  -- ^ Resulting HTML.                                               -- util/GenerateHtmlVariant.hs:183
+del = Parent "<del" "</del>"                                                    -- util/GenerateHtmlVariant.hs:184
+{-# INLINE del #-}                                                              -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<details>@ element.
 --
@@ -518,10 +518,10 @@ del = Parent "<del" "</del>"                                                    
 --
 -- > <details><span>foo</span></details>
 --
-details :: Html  -- ^ Inner HTML.                                               -- util/GenerateHtmlVariant.hs:181
-        -> Html  -- ^ Resulting HTML.                                           -- util/GenerateHtmlVariant.hs:182
-details = Parent "<details" "</details>"                                        -- util/GenerateHtmlVariant.hs:183
-{-# INLINE details #-}                                                          -- util/GenerateHtmlVariant.hs:184
+details :: Html  -- ^ Inner HTML.                                               -- util/GenerateHtmlVariant.hs:182
+        -> Html  -- ^ Resulting HTML.                                           -- util/GenerateHtmlVariant.hs:183
+details = Parent "<details" "</details>"                                        -- util/GenerateHtmlVariant.hs:184
+{-# INLINE details #-}                                                          -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<dfn>@ element.
 --
@@ -533,10 +533,10 @@ details = Parent "<details" "</details>"                                        
 --
 -- > <dfn><span>foo</span></dfn>
 --
-dfn :: Html  -- ^ Inner HTML.                                                   -- util/GenerateHtmlVariant.hs:181
-    -> Html  -- ^ Resulting HTML.                                               -- util/GenerateHtmlVariant.hs:182
-dfn = Parent "<dfn" "</dfn>"                                                    -- util/GenerateHtmlVariant.hs:183
-{-# INLINE dfn #-}                                                              -- util/GenerateHtmlVariant.hs:184
+dfn :: Html  -- ^ Inner HTML.                                                   -- util/GenerateHtmlVariant.hs:182
+    -> Html  -- ^ Resulting HTML.                                               -- util/GenerateHtmlVariant.hs:183
+dfn = Parent "<dfn" "</dfn>"                                                    -- util/GenerateHtmlVariant.hs:184
+{-# INLINE dfn #-}                                                              -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<div>@ element.
 --
@@ -548,10 +548,10 @@ dfn = Parent "<dfn" "</dfn>"                                                    
 --
 -- > <div><span>foo</span></div>
 --
-div :: Html  -- ^ Inner HTML.                                                   -- util/GenerateHtmlVariant.hs:181
-    -> Html  -- ^ Resulting HTML.                                               -- util/GenerateHtmlVariant.hs:182
-div = Parent "<div" "</div>"                                                    -- util/GenerateHtmlVariant.hs:183
-{-# INLINE div #-}                                                              -- util/GenerateHtmlVariant.hs:184
+div :: Html  -- ^ Inner HTML.                                                   -- util/GenerateHtmlVariant.hs:182
+    -> Html  -- ^ Resulting HTML.                                               -- util/GenerateHtmlVariant.hs:183
+div = Parent "<div" "</div>"                                                    -- util/GenerateHtmlVariant.hs:184
+{-# INLINE div #-}                                                              -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<dl>@ element.
 --
@@ -563,10 +563,10 @@ div = Parent "<div" "</div>"                                                    
 --
 -- > <dl><span>foo</span></dl>
 --
-dl :: Html  -- ^ Inner HTML.                                                    -- util/GenerateHtmlVariant.hs:181
-   -> Html  -- ^ Resulting HTML.                                                -- util/GenerateHtmlVariant.hs:182
-dl = Parent "<dl" "</dl>"                                                       -- util/GenerateHtmlVariant.hs:183
-{-# INLINE dl #-}                                                               -- util/GenerateHtmlVariant.hs:184
+dl :: Html  -- ^ Inner HTML.                                                    -- util/GenerateHtmlVariant.hs:182
+   -> Html  -- ^ Resulting HTML.                                                -- util/GenerateHtmlVariant.hs:183
+dl = Parent "<dl" "</dl>"                                                       -- util/GenerateHtmlVariant.hs:184
+{-# INLINE dl #-}                                                               -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<dt>@ element.
 --
@@ -578,10 +578,10 @@ dl = Parent "<dl" "</dl>"                                                       
 --
 -- > <dt><span>foo</span></dt>
 --
-dt :: Html  -- ^ Inner HTML.                                                    -- util/GenerateHtmlVariant.hs:181
-   -> Html  -- ^ Resulting HTML.                                                -- util/GenerateHtmlVariant.hs:182
-dt = Parent "<dt" "</dt>"                                                       -- util/GenerateHtmlVariant.hs:183
-{-# INLINE dt #-}                                                               -- util/GenerateHtmlVariant.hs:184
+dt :: Html  -- ^ Inner HTML.                                                    -- util/GenerateHtmlVariant.hs:182
+   -> Html  -- ^ Resulting HTML.                                                -- util/GenerateHtmlVariant.hs:183
+dt = Parent "<dt" "</dt>"                                                       -- util/GenerateHtmlVariant.hs:184
+{-# INLINE dt #-}                                                               -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<em>@ element.
 --
@@ -593,10 +593,10 @@ dt = Parent "<dt" "</dt>"                                                       
 --
 -- > <em><span>foo</span></em>
 --
-em :: Html  -- ^ Inner HTML.                                                    -- util/GenerateHtmlVariant.hs:181
-   -> Html  -- ^ Resulting HTML.                                                -- util/GenerateHtmlVariant.hs:182
-em = Parent "<em" "</em>"                                                       -- util/GenerateHtmlVariant.hs:183
-{-# INLINE em #-}                                                               -- util/GenerateHtmlVariant.hs:184
+em :: Html  -- ^ Inner HTML.                                                    -- util/GenerateHtmlVariant.hs:182
+   -> Html  -- ^ Resulting HTML.                                                -- util/GenerateHtmlVariant.hs:183
+em = Parent "<em" "</em>"                                                       -- util/GenerateHtmlVariant.hs:184
+{-# INLINE em #-}                                                               -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<embed />@ element.
 --
@@ -608,9 +608,9 @@ em = Parent "<em" "</em>"                                                       
 --
 -- > <embed />
 --
-embed :: Html  -- ^ Resulting HTML.                                             -- util/GenerateHtmlVariant.hs:203
-embed = Leaf "<embed" " />"                                                     -- util/GenerateHtmlVariant.hs:204
-{-# INLINE embed #-}                                                            -- util/GenerateHtmlVariant.hs:205
+embed :: Html  -- ^ Resulting HTML.                                             -- util/GenerateHtmlVariant.hs:206
+embed = Leaf "<embed" " />"                                                     -- util/GenerateHtmlVariant.hs:207
+{-# INLINE embed #-}                                                            -- util/GenerateHtmlVariant.hs:208
 
 -- | Combinator for the @\<fieldset>@ element.
 --
@@ -622,10 +622,10 @@ embed = Leaf "<embed" " />"                                                     
 --
 -- > <fieldset><span>foo</span></fieldset>
 --
-fieldset :: Html  -- ^ Inner HTML.                                              -- util/GenerateHtmlVariant.hs:181
-         -> Html  -- ^ Resulting HTML.                                          -- util/GenerateHtmlVariant.hs:182
-fieldset = Parent "<fieldset" "</fieldset>"                                     -- util/GenerateHtmlVariant.hs:183
-{-# INLINE fieldset #-}                                                         -- util/GenerateHtmlVariant.hs:184
+fieldset :: Html  -- ^ Inner HTML.                                              -- util/GenerateHtmlVariant.hs:182
+         -> Html  -- ^ Resulting HTML.                                          -- util/GenerateHtmlVariant.hs:183
+fieldset = Parent "<fieldset" "</fieldset>"                                     -- util/GenerateHtmlVariant.hs:184
+{-# INLINE fieldset #-}                                                         -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<figcaption>@ element.
 --
@@ -637,10 +637,10 @@ fieldset = Parent "<fieldset" "</fieldset>"                                     
 --
 -- > <figcaption><span>foo</span></figcaption>
 --
-figcaption :: Html  -- ^ Inner HTML.                                            -- util/GenerateHtmlVariant.hs:181
-           -> Html  -- ^ Resulting HTML.                                        -- util/GenerateHtmlVariant.hs:182
-figcaption = Parent "<figcaption" "</figcaption>"                               -- util/GenerateHtmlVariant.hs:183
-{-# INLINE figcaption #-}                                                       -- util/GenerateHtmlVariant.hs:184
+figcaption :: Html  -- ^ Inner HTML.                                            -- util/GenerateHtmlVariant.hs:182
+           -> Html  -- ^ Resulting HTML.                                        -- util/GenerateHtmlVariant.hs:183
+figcaption = Parent "<figcaption" "</figcaption>"                               -- util/GenerateHtmlVariant.hs:184
+{-# INLINE figcaption #-}                                                       -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<figure>@ element.
 --
@@ -652,10 +652,10 @@ figcaption = Parent "<figcaption" "</figcaption>"                               
 --
 -- > <figure><span>foo</span></figure>
 --
-figure :: Html  -- ^ Inner HTML.                                                -- util/GenerateHtmlVariant.hs:181
-       -> Html  -- ^ Resulting HTML.                                            -- util/GenerateHtmlVariant.hs:182
-figure = Parent "<figure" "</figure>"                                           -- util/GenerateHtmlVariant.hs:183
-{-# INLINE figure #-}                                                           -- util/GenerateHtmlVariant.hs:184
+figure :: Html  -- ^ Inner HTML.                                                -- util/GenerateHtmlVariant.hs:182
+       -> Html  -- ^ Resulting HTML.                                            -- util/GenerateHtmlVariant.hs:183
+figure = Parent "<figure" "</figure>"                                           -- util/GenerateHtmlVariant.hs:184
+{-# INLINE figure #-}                                                           -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<footer>@ element.
 --
@@ -667,10 +667,10 @@ figure = Parent "<figure" "</figure>"                                           
 --
 -- > <footer><span>foo</span></footer>
 --
-footer :: Html  -- ^ Inner HTML.                                                -- util/GenerateHtmlVariant.hs:181
-       -> Html  -- ^ Resulting HTML.                                            -- util/GenerateHtmlVariant.hs:182
-footer = Parent "<footer" "</footer>"                                           -- util/GenerateHtmlVariant.hs:183
-{-# INLINE footer #-}                                                           -- util/GenerateHtmlVariant.hs:184
+footer :: Html  -- ^ Inner HTML.                                                -- util/GenerateHtmlVariant.hs:182
+       -> Html  -- ^ Resulting HTML.                                            -- util/GenerateHtmlVariant.hs:183
+footer = Parent "<footer" "</footer>"                                           -- util/GenerateHtmlVariant.hs:184
+{-# INLINE footer #-}                                                           -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<form>@ element.
 --
@@ -682,10 +682,10 @@ footer = Parent "<footer" "</footer>"                                           
 --
 -- > <form><span>foo</span></form>
 --
-form :: Html  -- ^ Inner HTML.                                                  -- util/GenerateHtmlVariant.hs:181
-     -> Html  -- ^ Resulting HTML.                                              -- util/GenerateHtmlVariant.hs:182
-form = Parent "<form" "</form>"                                                 -- util/GenerateHtmlVariant.hs:183
-{-# INLINE form #-}                                                             -- util/GenerateHtmlVariant.hs:184
+form :: Html  -- ^ Inner HTML.                                                  -- util/GenerateHtmlVariant.hs:182
+     -> Html  -- ^ Resulting HTML.                                              -- util/GenerateHtmlVariant.hs:183
+form = Parent "<form" "</form>"                                                 -- util/GenerateHtmlVariant.hs:184
+{-# INLINE form #-}                                                             -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<h1>@ element.
 --
@@ -697,10 +697,10 @@ form = Parent "<form" "</form>"                                                 
 --
 -- > <h1><span>foo</span></h1>
 --
-h1 :: Html  -- ^ Inner HTML.                                                    -- util/GenerateHtmlVariant.hs:181
-   -> Html  -- ^ Resulting HTML.                                                -- util/GenerateHtmlVariant.hs:182
-h1 = Parent "<h1" "</h1>"                                                       -- util/GenerateHtmlVariant.hs:183
-{-# INLINE h1 #-}                                                               -- util/GenerateHtmlVariant.hs:184
+h1 :: Html  -- ^ Inner HTML.                                                    -- util/GenerateHtmlVariant.hs:182
+   -> Html  -- ^ Resulting HTML.                                                -- util/GenerateHtmlVariant.hs:183
+h1 = Parent "<h1" "</h1>"                                                       -- util/GenerateHtmlVariant.hs:184
+{-# INLINE h1 #-}                                                               -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<h2>@ element.
 --
@@ -712,10 +712,10 @@ h1 = Parent "<h1" "</h1>"                                                       
 --
 -- > <h2><span>foo</span></h2>
 --
-h2 :: Html  -- ^ Inner HTML.                                                    -- util/GenerateHtmlVariant.hs:181
-   -> Html  -- ^ Resulting HTML.                                                -- util/GenerateHtmlVariant.hs:182
-h2 = Parent "<h2" "</h2>"                                                       -- util/GenerateHtmlVariant.hs:183
-{-# INLINE h2 #-}                                                               -- util/GenerateHtmlVariant.hs:184
+h2 :: Html  -- ^ Inner HTML.                                                    -- util/GenerateHtmlVariant.hs:182
+   -> Html  -- ^ Resulting HTML.                                                -- util/GenerateHtmlVariant.hs:183
+h2 = Parent "<h2" "</h2>"                                                       -- util/GenerateHtmlVariant.hs:184
+{-# INLINE h2 #-}                                                               -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<h3>@ element.
 --
@@ -727,10 +727,10 @@ h2 = Parent "<h2" "</h2>"                                                       
 --
 -- > <h3><span>foo</span></h3>
 --
-h3 :: Html  -- ^ Inner HTML.                                                    -- util/GenerateHtmlVariant.hs:181
-   -> Html  -- ^ Resulting HTML.                                                -- util/GenerateHtmlVariant.hs:182
-h3 = Parent "<h3" "</h3>"                                                       -- util/GenerateHtmlVariant.hs:183
-{-# INLINE h3 #-}                                                               -- util/GenerateHtmlVariant.hs:184
+h3 :: Html  -- ^ Inner HTML.                                                    -- util/GenerateHtmlVariant.hs:182
+   -> Html  -- ^ Resulting HTML.                                                -- util/GenerateHtmlVariant.hs:183
+h3 = Parent "<h3" "</h3>"                                                       -- util/GenerateHtmlVariant.hs:184
+{-# INLINE h3 #-}                                                               -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<h4>@ element.
 --
@@ -742,10 +742,10 @@ h3 = Parent "<h3" "</h3>"                                                       
 --
 -- > <h4><span>foo</span></h4>
 --
-h4 :: Html  -- ^ Inner HTML.                                                    -- util/GenerateHtmlVariant.hs:181
-   -> Html  -- ^ Resulting HTML.                                                -- util/GenerateHtmlVariant.hs:182
-h4 = Parent "<h4" "</h4>"                                                       -- util/GenerateHtmlVariant.hs:183
-{-# INLINE h4 #-}                                                               -- util/GenerateHtmlVariant.hs:184
+h4 :: Html  -- ^ Inner HTML.                                                    -- util/GenerateHtmlVariant.hs:182
+   -> Html  -- ^ Resulting HTML.                                                -- util/GenerateHtmlVariant.hs:183
+h4 = Parent "<h4" "</h4>"                                                       -- util/GenerateHtmlVariant.hs:184
+{-# INLINE h4 #-}                                                               -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<h5>@ element.
 --
@@ -757,10 +757,10 @@ h4 = Parent "<h4" "</h4>"                                                       
 --
 -- > <h5><span>foo</span></h5>
 --
-h5 :: Html  -- ^ Inner HTML.                                                    -- util/GenerateHtmlVariant.hs:181
-   -> Html  -- ^ Resulting HTML.                                                -- util/GenerateHtmlVariant.hs:182
-h5 = Parent "<h5" "</h5>"                                                       -- util/GenerateHtmlVariant.hs:183
-{-# INLINE h5 #-}                                                               -- util/GenerateHtmlVariant.hs:184
+h5 :: Html  -- ^ Inner HTML.                                                    -- util/GenerateHtmlVariant.hs:182
+   -> Html  -- ^ Resulting HTML.                                                -- util/GenerateHtmlVariant.hs:183
+h5 = Parent "<h5" "</h5>"                                                       -- util/GenerateHtmlVariant.hs:184
+{-# INLINE h5 #-}                                                               -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<h6>@ element.
 --
@@ -772,10 +772,10 @@ h5 = Parent "<h5" "</h5>"                                                       
 --
 -- > <h6><span>foo</span></h6>
 --
-h6 :: Html  -- ^ Inner HTML.                                                    -- util/GenerateHtmlVariant.hs:181
-   -> Html  -- ^ Resulting HTML.                                                -- util/GenerateHtmlVariant.hs:182
-h6 = Parent "<h6" "</h6>"                                                       -- util/GenerateHtmlVariant.hs:183
-{-# INLINE h6 #-}                                                               -- util/GenerateHtmlVariant.hs:184
+h6 :: Html  -- ^ Inner HTML.                                                    -- util/GenerateHtmlVariant.hs:182
+   -> Html  -- ^ Resulting HTML.                                                -- util/GenerateHtmlVariant.hs:183
+h6 = Parent "<h6" "</h6>"                                                       -- util/GenerateHtmlVariant.hs:184
+{-# INLINE h6 #-}                                                               -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<head>@ element.
 --
@@ -787,10 +787,10 @@ h6 = Parent "<h6" "</h6>"                                                       
 --
 -- > <head><span>foo</span></head>
 --
-head :: Html  -- ^ Inner HTML.                                                  -- util/GenerateHtmlVariant.hs:181
-     -> Html  -- ^ Resulting HTML.                                              -- util/GenerateHtmlVariant.hs:182
-head = Parent "<head" "</head>"                                                 -- util/GenerateHtmlVariant.hs:183
-{-# INLINE head #-}                                                             -- util/GenerateHtmlVariant.hs:184
+head :: Html  -- ^ Inner HTML.                                                  -- util/GenerateHtmlVariant.hs:182
+     -> Html  -- ^ Resulting HTML.                                              -- util/GenerateHtmlVariant.hs:183
+head = Parent "<head" "</head>"                                                 -- util/GenerateHtmlVariant.hs:184
+{-# INLINE head #-}                                                             -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<header>@ element.
 --
@@ -802,10 +802,10 @@ head = Parent "<head" "</head>"                                                 
 --
 -- > <header><span>foo</span></header>
 --
-header :: Html  -- ^ Inner HTML.                                                -- util/GenerateHtmlVariant.hs:181
-       -> Html  -- ^ Resulting HTML.                                            -- util/GenerateHtmlVariant.hs:182
-header = Parent "<header" "</header>"                                           -- util/GenerateHtmlVariant.hs:183
-{-# INLINE header #-}                                                           -- util/GenerateHtmlVariant.hs:184
+header :: Html  -- ^ Inner HTML.                                                -- util/GenerateHtmlVariant.hs:182
+       -> Html  -- ^ Resulting HTML.                                            -- util/GenerateHtmlVariant.hs:183
+header = Parent "<header" "</header>"                                           -- util/GenerateHtmlVariant.hs:184
+{-# INLINE header #-}                                                           -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<hgroup>@ element.
 --
@@ -817,10 +817,10 @@ header = Parent "<header" "</header>"                                           
 --
 -- > <hgroup><span>foo</span></hgroup>
 --
-hgroup :: Html  -- ^ Inner HTML.                                                -- util/GenerateHtmlVariant.hs:181
-       -> Html  -- ^ Resulting HTML.                                            -- util/GenerateHtmlVariant.hs:182
-hgroup = Parent "<hgroup" "</hgroup>"                                           -- util/GenerateHtmlVariant.hs:183
-{-# INLINE hgroup #-}                                                           -- util/GenerateHtmlVariant.hs:184
+hgroup :: Html  -- ^ Inner HTML.                                                -- util/GenerateHtmlVariant.hs:182
+       -> Html  -- ^ Resulting HTML.                                            -- util/GenerateHtmlVariant.hs:183
+hgroup = Parent "<hgroup" "</hgroup>"                                           -- util/GenerateHtmlVariant.hs:184
+{-# INLINE hgroup #-}                                                           -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<hr />@ element.
 --
@@ -832,9 +832,9 @@ hgroup = Parent "<hgroup" "</hgroup>"                                           
 --
 -- > <hr />
 --
-hr :: Html  -- ^ Resulting HTML.                                                -- util/GenerateHtmlVariant.hs:203
-hr = Leaf "<hr" " />"                                                           -- util/GenerateHtmlVariant.hs:204
-{-# INLINE hr #-}                                                               -- util/GenerateHtmlVariant.hs:205
+hr :: Html  -- ^ Resulting HTML.                                                -- util/GenerateHtmlVariant.hs:206
+hr = Leaf "<hr" " />"                                                           -- util/GenerateHtmlVariant.hs:207
+{-# INLINE hr #-}                                                               -- util/GenerateHtmlVariant.hs:208
 
 -- | Combinator for the @\<html>@ element.
 --
@@ -846,10 +846,10 @@ hr = Leaf "<hr" " />"                                                           
 --
 -- > <html><span>foo</span></html>
 --
-htmlNoDocType :: Html  -- ^ Inner HTML.                                         -- util/GenerateHtmlVariant.hs:181
-              -> Html  -- ^ Resulting HTML.                                     -- util/GenerateHtmlVariant.hs:182
-htmlNoDocType = Parent "<html" "</html>"                                        -- util/GenerateHtmlVariant.hs:183
-{-# INLINE htmlNoDocType #-}                                                    -- util/GenerateHtmlVariant.hs:184
+htmlNoDocType :: Html  -- ^ Inner HTML.                                         -- util/GenerateHtmlVariant.hs:182
+              -> Html  -- ^ Resulting HTML.                                     -- util/GenerateHtmlVariant.hs:183
+htmlNoDocType = Parent "<html" "</html>"                                        -- util/GenerateHtmlVariant.hs:184
+{-# INLINE htmlNoDocType #-}                                                    -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<i>@ element.
 --
@@ -861,10 +861,10 @@ htmlNoDocType = Parent "<html" "</html>"                                        
 --
 -- > <i><span>foo</span></i>
 --
-i :: Html  -- ^ Inner HTML.                                                     -- util/GenerateHtmlVariant.hs:181
-  -> Html  -- ^ Resulting HTML.                                                 -- util/GenerateHtmlVariant.hs:182
-i = Parent "<i" "</i>"                                                          -- util/GenerateHtmlVariant.hs:183
-{-# INLINE i #-}                                                                -- util/GenerateHtmlVariant.hs:184
+i :: Html  -- ^ Inner HTML.                                                     -- util/GenerateHtmlVariant.hs:182
+  -> Html  -- ^ Resulting HTML.                                                 -- util/GenerateHtmlVariant.hs:183
+i = Parent "<i" "</i>"                                                          -- util/GenerateHtmlVariant.hs:184
+{-# INLINE i #-}                                                                -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<iframe>@ element.
 --
@@ -876,10 +876,10 @@ i = Parent "<i" "</i>"                                                          
 --
 -- > <iframe><span>foo</span></iframe>
 --
-iframe :: Html  -- ^ Inner HTML.                                                -- util/GenerateHtmlVariant.hs:181
-       -> Html  -- ^ Resulting HTML.                                            -- util/GenerateHtmlVariant.hs:182
-iframe = Parent "<iframe" "</iframe>"                                           -- util/GenerateHtmlVariant.hs:183
-{-# INLINE iframe #-}                                                           -- util/GenerateHtmlVariant.hs:184
+iframe :: Html  -- ^ Inner HTML.                                                -- util/GenerateHtmlVariant.hs:182
+       -> Html  -- ^ Resulting HTML.                                            -- util/GenerateHtmlVariant.hs:183
+iframe = Parent "<iframe" "</iframe>"                                           -- util/GenerateHtmlVariant.hs:184
+{-# INLINE iframe #-}                                                           -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<img />@ element.
 --
@@ -891,9 +891,9 @@ iframe = Parent "<iframe" "</iframe>"                                           
 --
 -- > <img />
 --
-img :: Html  -- ^ Resulting HTML.                                               -- util/GenerateHtmlVariant.hs:203
-img = Leaf "<img" " />"                                                         -- util/GenerateHtmlVariant.hs:204
-{-# INLINE img #-}                                                              -- util/GenerateHtmlVariant.hs:205
+img :: Html  -- ^ Resulting HTML.                                               -- util/GenerateHtmlVariant.hs:206
+img = Leaf "<img" " />"                                                         -- util/GenerateHtmlVariant.hs:207
+{-# INLINE img #-}                                                              -- util/GenerateHtmlVariant.hs:208
 
 -- | Combinator for the @\<input />@ element.
 --
@@ -905,9 +905,9 @@ img = Leaf "<img" " />"                                                         
 --
 -- > <input />
 --
-input :: Html  -- ^ Resulting HTML.                                             -- util/GenerateHtmlVariant.hs:203
-input = Leaf "<input" " />"                                                     -- util/GenerateHtmlVariant.hs:204
-{-# INLINE input #-}                                                            -- util/GenerateHtmlVariant.hs:205
+input :: Html  -- ^ Resulting HTML.                                             -- util/GenerateHtmlVariant.hs:206
+input = Leaf "<input" " />"                                                     -- util/GenerateHtmlVariant.hs:207
+{-# INLINE input #-}                                                            -- util/GenerateHtmlVariant.hs:208
 
 -- | Combinator for the @\<ins>@ element.
 --
@@ -919,10 +919,10 @@ input = Leaf "<input" " />"                                                     
 --
 -- > <ins><span>foo</span></ins>
 --
-ins :: Html  -- ^ Inner HTML.                                                   -- util/GenerateHtmlVariant.hs:181
-    -> Html  -- ^ Resulting HTML.                                               -- util/GenerateHtmlVariant.hs:182
-ins = Parent "<ins" "</ins>"                                                    -- util/GenerateHtmlVariant.hs:183
-{-# INLINE ins #-}                                                              -- util/GenerateHtmlVariant.hs:184
+ins :: Html  -- ^ Inner HTML.                                                   -- util/GenerateHtmlVariant.hs:182
+    -> Html  -- ^ Resulting HTML.                                               -- util/GenerateHtmlVariant.hs:183
+ins = Parent "<ins" "</ins>"                                                    -- util/GenerateHtmlVariant.hs:184
+{-# INLINE ins #-}                                                              -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<kbd>@ element.
 --
@@ -934,10 +934,10 @@ ins = Parent "<ins" "</ins>"                                                    
 --
 -- > <kbd><span>foo</span></kbd>
 --
-kbd :: Html  -- ^ Inner HTML.                                                   -- util/GenerateHtmlVariant.hs:181
-    -> Html  -- ^ Resulting HTML.                                               -- util/GenerateHtmlVariant.hs:182
-kbd = Parent "<kbd" "</kbd>"                                                    -- util/GenerateHtmlVariant.hs:183
-{-# INLINE kbd #-}                                                              -- util/GenerateHtmlVariant.hs:184
+kbd :: Html  -- ^ Inner HTML.                                                   -- util/GenerateHtmlVariant.hs:182
+    -> Html  -- ^ Resulting HTML.                                               -- util/GenerateHtmlVariant.hs:183
+kbd = Parent "<kbd" "</kbd>"                                                    -- util/GenerateHtmlVariant.hs:184
+{-# INLINE kbd #-}                                                              -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<keygen>@ element.
 --
@@ -949,10 +949,10 @@ kbd = Parent "<kbd" "</kbd>"                                                    
 --
 -- > <keygen><span>foo</span></keygen>
 --
-keygen :: Html  -- ^ Inner HTML.                                                -- util/GenerateHtmlVariant.hs:181
-       -> Html  -- ^ Resulting HTML.                                            -- util/GenerateHtmlVariant.hs:182
-keygen = Parent "<keygen" "</keygen>"                                           -- util/GenerateHtmlVariant.hs:183
-{-# INLINE keygen #-}                                                           -- util/GenerateHtmlVariant.hs:184
+keygen :: Html  -- ^ Inner HTML.                                                -- util/GenerateHtmlVariant.hs:182
+       -> Html  -- ^ Resulting HTML.                                            -- util/GenerateHtmlVariant.hs:183
+keygen = Parent "<keygen" "</keygen>"                                           -- util/GenerateHtmlVariant.hs:184
+{-# INLINE keygen #-}                                                           -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<label>@ element.
 --
@@ -964,10 +964,10 @@ keygen = Parent "<keygen" "</keygen>"                                           
 --
 -- > <label><span>foo</span></label>
 --
-label :: Html  -- ^ Inner HTML.                                                 -- util/GenerateHtmlVariant.hs:181
-      -> Html  -- ^ Resulting HTML.                                             -- util/GenerateHtmlVariant.hs:182
-label = Parent "<label" "</label>"                                              -- util/GenerateHtmlVariant.hs:183
-{-# INLINE label #-}                                                            -- util/GenerateHtmlVariant.hs:184
+label :: Html  -- ^ Inner HTML.                                                 -- util/GenerateHtmlVariant.hs:182
+      -> Html  -- ^ Resulting HTML.                                             -- util/GenerateHtmlVariant.hs:183
+label = Parent "<label" "</label>"                                              -- util/GenerateHtmlVariant.hs:184
+{-# INLINE label #-}                                                            -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<legend>@ element.
 --
@@ -979,10 +979,10 @@ label = Parent "<label" "</label>"                                              
 --
 -- > <legend><span>foo</span></legend>
 --
-legend :: Html  -- ^ Inner HTML.                                                -- util/GenerateHtmlVariant.hs:181
-       -> Html  -- ^ Resulting HTML.                                            -- util/GenerateHtmlVariant.hs:182
-legend = Parent "<legend" "</legend>"                                           -- util/GenerateHtmlVariant.hs:183
-{-# INLINE legend #-}                                                           -- util/GenerateHtmlVariant.hs:184
+legend :: Html  -- ^ Inner HTML.                                                -- util/GenerateHtmlVariant.hs:182
+       -> Html  -- ^ Resulting HTML.                                            -- util/GenerateHtmlVariant.hs:183
+legend = Parent "<legend" "</legend>"                                           -- util/GenerateHtmlVariant.hs:184
+{-# INLINE legend #-}                                                           -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<li>@ element.
 --
@@ -994,10 +994,10 @@ legend = Parent "<legend" "</legend>"                                           
 --
 -- > <li><span>foo</span></li>
 --
-li :: Html  -- ^ Inner HTML.                                                    -- util/GenerateHtmlVariant.hs:181
-   -> Html  -- ^ Resulting HTML.                                                -- util/GenerateHtmlVariant.hs:182
-li = Parent "<li" "</li>"                                                       -- util/GenerateHtmlVariant.hs:183
-{-# INLINE li #-}                                                               -- util/GenerateHtmlVariant.hs:184
+li :: Html  -- ^ Inner HTML.                                                    -- util/GenerateHtmlVariant.hs:182
+   -> Html  -- ^ Resulting HTML.                                                -- util/GenerateHtmlVariant.hs:183
+li = Parent "<li" "</li>"                                                       -- util/GenerateHtmlVariant.hs:184
+{-# INLINE li #-}                                                               -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<link />@ element.
 --
@@ -1009,9 +1009,9 @@ li = Parent "<li" "</li>"                                                       
 --
 -- > <link />
 --
-link :: Html  -- ^ Resulting HTML.                                              -- util/GenerateHtmlVariant.hs:203
-link = Leaf "<link" " />"                                                       -- util/GenerateHtmlVariant.hs:204
-{-# INLINE link #-}                                                             -- util/GenerateHtmlVariant.hs:205
+link :: Html  -- ^ Resulting HTML.                                              -- util/GenerateHtmlVariant.hs:206
+link = Leaf "<link" " />"                                                       -- util/GenerateHtmlVariant.hs:207
+{-# INLINE link #-}                                                             -- util/GenerateHtmlVariant.hs:208
 
 -- | Combinator for the @\<map>@ element.
 --
@@ -1023,10 +1023,10 @@ link = Leaf "<link" " />"                                                       
 --
 -- > <map><span>foo</span></map>
 --
-map :: Html  -- ^ Inner HTML.                                                   -- util/GenerateHtmlVariant.hs:181
-    -> Html  -- ^ Resulting HTML.                                               -- util/GenerateHtmlVariant.hs:182
-map = Parent "<map" "</map>"                                                    -- util/GenerateHtmlVariant.hs:183
-{-# INLINE map #-}                                                              -- util/GenerateHtmlVariant.hs:184
+map :: Html  -- ^ Inner HTML.                                                   -- util/GenerateHtmlVariant.hs:182
+    -> Html  -- ^ Resulting HTML.                                               -- util/GenerateHtmlVariant.hs:183
+map = Parent "<map" "</map>"                                                    -- util/GenerateHtmlVariant.hs:184
+{-# INLINE map #-}                                                              -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<mark>@ element.
 --
@@ -1038,10 +1038,10 @@ map = Parent "<map" "</map>"                                                    
 --
 -- > <mark><span>foo</span></mark>
 --
-mark :: Html  -- ^ Inner HTML.                                                  -- util/GenerateHtmlVariant.hs:181
-     -> Html  -- ^ Resulting HTML.                                              -- util/GenerateHtmlVariant.hs:182
-mark = Parent "<mark" "</mark>"                                                 -- util/GenerateHtmlVariant.hs:183
-{-# INLINE mark #-}                                                             -- util/GenerateHtmlVariant.hs:184
+mark :: Html  -- ^ Inner HTML.                                                  -- util/GenerateHtmlVariant.hs:182
+     -> Html  -- ^ Resulting HTML.                                              -- util/GenerateHtmlVariant.hs:183
+mark = Parent "<mark" "</mark>"                                                 -- util/GenerateHtmlVariant.hs:184
+{-# INLINE mark #-}                                                             -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<menu>@ element.
 --
@@ -1053,10 +1053,10 @@ mark = Parent "<mark" "</mark>"                                                 
 --
 -- > <menu><span>foo</span></menu>
 --
-menu :: Html  -- ^ Inner HTML.                                                  -- util/GenerateHtmlVariant.hs:181
-     -> Html  -- ^ Resulting HTML.                                              -- util/GenerateHtmlVariant.hs:182
-menu = Parent "<menu" "</menu>"                                                 -- util/GenerateHtmlVariant.hs:183
-{-# INLINE menu #-}                                                             -- util/GenerateHtmlVariant.hs:184
+menu :: Html  -- ^ Inner HTML.                                                  -- util/GenerateHtmlVariant.hs:182
+     -> Html  -- ^ Resulting HTML.                                              -- util/GenerateHtmlVariant.hs:183
+menu = Parent "<menu" "</menu>"                                                 -- util/GenerateHtmlVariant.hs:184
+{-# INLINE menu #-}                                                             -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<meta />@ element.
 --
@@ -1068,9 +1068,9 @@ menu = Parent "<menu" "</menu>"                                                 
 --
 -- > <meta />
 --
-meta :: Html  -- ^ Resulting HTML.                                              -- util/GenerateHtmlVariant.hs:203
-meta = Leaf "<meta" " />"                                                       -- util/GenerateHtmlVariant.hs:204
-{-# INLINE meta #-}                                                             -- util/GenerateHtmlVariant.hs:205
+meta :: Html  -- ^ Resulting HTML.                                              -- util/GenerateHtmlVariant.hs:206
+meta = Leaf "<meta" " />"                                                       -- util/GenerateHtmlVariant.hs:207
+{-# INLINE meta #-}                                                             -- util/GenerateHtmlVariant.hs:208
 
 -- | Combinator for the @\<meter>@ element.
 --
@@ -1082,10 +1082,10 @@ meta = Leaf "<meta" " />"                                                       
 --
 -- > <meter><span>foo</span></meter>
 --
-meter :: Html  -- ^ Inner HTML.                                                 -- util/GenerateHtmlVariant.hs:181
-      -> Html  -- ^ Resulting HTML.                                             -- util/GenerateHtmlVariant.hs:182
-meter = Parent "<meter" "</meter>"                                              -- util/GenerateHtmlVariant.hs:183
-{-# INLINE meter #-}                                                            -- util/GenerateHtmlVariant.hs:184
+meter :: Html  -- ^ Inner HTML.                                                 -- util/GenerateHtmlVariant.hs:182
+      -> Html  -- ^ Resulting HTML.                                             -- util/GenerateHtmlVariant.hs:183
+meter = Parent "<meter" "</meter>"                                              -- util/GenerateHtmlVariant.hs:184
+{-# INLINE meter #-}                                                            -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<nav>@ element.
 --
@@ -1097,10 +1097,10 @@ meter = Parent "<meter" "</meter>"                                              
 --
 -- > <nav><span>foo</span></nav>
 --
-nav :: Html  -- ^ Inner HTML.                                                   -- util/GenerateHtmlVariant.hs:181
-    -> Html  -- ^ Resulting HTML.                                               -- util/GenerateHtmlVariant.hs:182
-nav = Parent "<nav" "</nav>"                                                    -- util/GenerateHtmlVariant.hs:183
-{-# INLINE nav #-}                                                              -- util/GenerateHtmlVariant.hs:184
+nav :: Html  -- ^ Inner HTML.                                                   -- util/GenerateHtmlVariant.hs:182
+    -> Html  -- ^ Resulting HTML.                                               -- util/GenerateHtmlVariant.hs:183
+nav = Parent "<nav" "</nav>"                                                    -- util/GenerateHtmlVariant.hs:184
+{-# INLINE nav #-}                                                              -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<noscript>@ element.
 --
@@ -1112,10 +1112,10 @@ nav = Parent "<nav" "</nav>"                                                    
 --
 -- > <noscript><span>foo</span></noscript>
 --
-noscript :: Html  -- ^ Inner HTML.                                              -- util/GenerateHtmlVariant.hs:181
-         -> Html  -- ^ Resulting HTML.                                          -- util/GenerateHtmlVariant.hs:182
-noscript = Parent "<noscript" "</noscript>"                                     -- util/GenerateHtmlVariant.hs:183
-{-# INLINE noscript #-}                                                         -- util/GenerateHtmlVariant.hs:184
+noscript :: Html  -- ^ Inner HTML.                                              -- util/GenerateHtmlVariant.hs:182
+         -> Html  -- ^ Resulting HTML.                                          -- util/GenerateHtmlVariant.hs:183
+noscript = Parent "<noscript" "</noscript>"                                     -- util/GenerateHtmlVariant.hs:184
+{-# INLINE noscript #-}                                                         -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<object>@ element.
 --
@@ -1127,10 +1127,10 @@ noscript = Parent "<noscript" "</noscript>"                                     
 --
 -- > <object><span>foo</span></object>
 --
-object :: Html  -- ^ Inner HTML.                                                -- util/GenerateHtmlVariant.hs:181
-       -> Html  -- ^ Resulting HTML.                                            -- util/GenerateHtmlVariant.hs:182
-object = Parent "<object" "</object>"                                           -- util/GenerateHtmlVariant.hs:183
-{-# INLINE object #-}                                                           -- util/GenerateHtmlVariant.hs:184
+object :: Html  -- ^ Inner HTML.                                                -- util/GenerateHtmlVariant.hs:182
+       -> Html  -- ^ Resulting HTML.                                            -- util/GenerateHtmlVariant.hs:183
+object = Parent "<object" "</object>"                                           -- util/GenerateHtmlVariant.hs:184
+{-# INLINE object #-}                                                           -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<ol>@ element.
 --
@@ -1142,10 +1142,10 @@ object = Parent "<object" "</object>"                                           
 --
 -- > <ol><span>foo</span></ol>
 --
-ol :: Html  -- ^ Inner HTML.                                                    -- util/GenerateHtmlVariant.hs:181
-   -> Html  -- ^ Resulting HTML.                                                -- util/GenerateHtmlVariant.hs:182
-ol = Parent "<ol" "</ol>"                                                       -- util/GenerateHtmlVariant.hs:183
-{-# INLINE ol #-}                                                               -- util/GenerateHtmlVariant.hs:184
+ol :: Html  -- ^ Inner HTML.                                                    -- util/GenerateHtmlVariant.hs:182
+   -> Html  -- ^ Resulting HTML.                                                -- util/GenerateHtmlVariant.hs:183
+ol = Parent "<ol" "</ol>"                                                       -- util/GenerateHtmlVariant.hs:184
+{-# INLINE ol #-}                                                               -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<optgroup>@ element.
 --
@@ -1157,10 +1157,10 @@ ol = Parent "<ol" "</ol>"                                                       
 --
 -- > <optgroup><span>foo</span></optgroup>
 --
-optgroup :: Html  -- ^ Inner HTML.                                              -- util/GenerateHtmlVariant.hs:181
-         -> Html  -- ^ Resulting HTML.                                          -- util/GenerateHtmlVariant.hs:182
-optgroup = Parent "<optgroup" "</optgroup>"                                     -- util/GenerateHtmlVariant.hs:183
-{-# INLINE optgroup #-}                                                         -- util/GenerateHtmlVariant.hs:184
+optgroup :: Html  -- ^ Inner HTML.                                              -- util/GenerateHtmlVariant.hs:182
+         -> Html  -- ^ Resulting HTML.                                          -- util/GenerateHtmlVariant.hs:183
+optgroup = Parent "<optgroup" "</optgroup>"                                     -- util/GenerateHtmlVariant.hs:184
+{-# INLINE optgroup #-}                                                         -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<option>@ element.
 --
@@ -1172,10 +1172,10 @@ optgroup = Parent "<optgroup" "</optgroup>"                                     
 --
 -- > <option><span>foo</span></option>
 --
-option :: Html  -- ^ Inner HTML.                                                -- util/GenerateHtmlVariant.hs:181
-       -> Html  -- ^ Resulting HTML.                                            -- util/GenerateHtmlVariant.hs:182
-option = Parent "<option" "</option>"                                           -- util/GenerateHtmlVariant.hs:183
-{-# INLINE option #-}                                                           -- util/GenerateHtmlVariant.hs:184
+option :: Html  -- ^ Inner HTML.                                                -- util/GenerateHtmlVariant.hs:182
+       -> Html  -- ^ Resulting HTML.                                            -- util/GenerateHtmlVariant.hs:183
+option = Parent "<option" "</option>"                                           -- util/GenerateHtmlVariant.hs:184
+{-# INLINE option #-}                                                           -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<output>@ element.
 --
@@ -1187,10 +1187,10 @@ option = Parent "<option" "</option>"                                           
 --
 -- > <output><span>foo</span></output>
 --
-output :: Html  -- ^ Inner HTML.                                                -- util/GenerateHtmlVariant.hs:181
-       -> Html  -- ^ Resulting HTML.                                            -- util/GenerateHtmlVariant.hs:182
-output = Parent "<output" "</output>"                                           -- util/GenerateHtmlVariant.hs:183
-{-# INLINE output #-}                                                           -- util/GenerateHtmlVariant.hs:184
+output :: Html  -- ^ Inner HTML.                                                -- util/GenerateHtmlVariant.hs:182
+       -> Html  -- ^ Resulting HTML.                                            -- util/GenerateHtmlVariant.hs:183
+output = Parent "<output" "</output>"                                           -- util/GenerateHtmlVariant.hs:184
+{-# INLINE output #-}                                                           -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<p>@ element.
 --
@@ -1202,10 +1202,10 @@ output = Parent "<output" "</output>"                                           
 --
 -- > <p><span>foo</span></p>
 --
-p :: Html  -- ^ Inner HTML.                                                     -- util/GenerateHtmlVariant.hs:181
-  -> Html  -- ^ Resulting HTML.                                                 -- util/GenerateHtmlVariant.hs:182
-p = Parent "<p" "</p>"                                                          -- util/GenerateHtmlVariant.hs:183
-{-# INLINE p #-}                                                                -- util/GenerateHtmlVariant.hs:184
+p :: Html  -- ^ Inner HTML.                                                     -- util/GenerateHtmlVariant.hs:182
+  -> Html  -- ^ Resulting HTML.                                                 -- util/GenerateHtmlVariant.hs:183
+p = Parent "<p" "</p>"                                                          -- util/GenerateHtmlVariant.hs:184
+{-# INLINE p #-}                                                                -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<param />@ element.
 --
@@ -1217,9 +1217,9 @@ p = Parent "<p" "</p>"                                                          
 --
 -- > <param />
 --
-param :: Html  -- ^ Resulting HTML.                                             -- util/GenerateHtmlVariant.hs:203
-param = Leaf "<param" " />"                                                     -- util/GenerateHtmlVariant.hs:204
-{-# INLINE param #-}                                                            -- util/GenerateHtmlVariant.hs:205
+param :: Html  -- ^ Resulting HTML.                                             -- util/GenerateHtmlVariant.hs:206
+param = Leaf "<param" " />"                                                     -- util/GenerateHtmlVariant.hs:207
+{-# INLINE param #-}                                                            -- util/GenerateHtmlVariant.hs:208
 
 -- | Combinator for the @\<pre>@ element.
 --
@@ -1231,10 +1231,10 @@ param = Leaf "<param" " />"                                                     
 --
 -- > <pre><span>foo</span></pre>
 --
-pre :: Html  -- ^ Inner HTML.                                                   -- util/GenerateHtmlVariant.hs:181
-    -> Html  -- ^ Resulting HTML.                                               -- util/GenerateHtmlVariant.hs:182
-pre = Parent "<pre" "</pre>"                                                    -- util/GenerateHtmlVariant.hs:183
-{-# INLINE pre #-}                                                              -- util/GenerateHtmlVariant.hs:184
+pre :: Html  -- ^ Inner HTML.                                                   -- util/GenerateHtmlVariant.hs:182
+    -> Html  -- ^ Resulting HTML.                                               -- util/GenerateHtmlVariant.hs:183
+pre = Parent "<pre" "</pre>"                                                    -- util/GenerateHtmlVariant.hs:184
+{-# INLINE pre #-}                                                              -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<progress>@ element.
 --
@@ -1246,10 +1246,10 @@ pre = Parent "<pre" "</pre>"                                                    
 --
 -- > <progress><span>foo</span></progress>
 --
-progress :: Html  -- ^ Inner HTML.                                              -- util/GenerateHtmlVariant.hs:181
-         -> Html  -- ^ Resulting HTML.                                          -- util/GenerateHtmlVariant.hs:182
-progress = Parent "<progress" "</progress>"                                     -- util/GenerateHtmlVariant.hs:183
-{-# INLINE progress #-}                                                         -- util/GenerateHtmlVariant.hs:184
+progress :: Html  -- ^ Inner HTML.                                              -- util/GenerateHtmlVariant.hs:182
+         -> Html  -- ^ Resulting HTML.                                          -- util/GenerateHtmlVariant.hs:183
+progress = Parent "<progress" "</progress>"                                     -- util/GenerateHtmlVariant.hs:184
+{-# INLINE progress #-}                                                         -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<q>@ element.
 --
@@ -1261,10 +1261,10 @@ progress = Parent "<progress" "</progress>"                                     
 --
 -- > <q><span>foo</span></q>
 --
-q :: Html  -- ^ Inner HTML.                                                     -- util/GenerateHtmlVariant.hs:181
-  -> Html  -- ^ Resulting HTML.                                                 -- util/GenerateHtmlVariant.hs:182
-q = Parent "<q" "</q>"                                                          -- util/GenerateHtmlVariant.hs:183
-{-# INLINE q #-}                                                                -- util/GenerateHtmlVariant.hs:184
+q :: Html  -- ^ Inner HTML.                                                     -- util/GenerateHtmlVariant.hs:182
+  -> Html  -- ^ Resulting HTML.                                                 -- util/GenerateHtmlVariant.hs:183
+q = Parent "<q" "</q>"                                                          -- util/GenerateHtmlVariant.hs:184
+{-# INLINE q #-}                                                                -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<rp>@ element.
 --
@@ -1276,10 +1276,10 @@ q = Parent "<q" "</q>"                                                          
 --
 -- > <rp><span>foo</span></rp>
 --
-rp :: Html  -- ^ Inner HTML.                                                    -- util/GenerateHtmlVariant.hs:181
-   -> Html  -- ^ Resulting HTML.                                                -- util/GenerateHtmlVariant.hs:182
-rp = Parent "<rp" "</rp>"                                                       -- util/GenerateHtmlVariant.hs:183
-{-# INLINE rp #-}                                                               -- util/GenerateHtmlVariant.hs:184
+rp :: Html  -- ^ Inner HTML.                                                    -- util/GenerateHtmlVariant.hs:182
+   -> Html  -- ^ Resulting HTML.                                                -- util/GenerateHtmlVariant.hs:183
+rp = Parent "<rp" "</rp>"                                                       -- util/GenerateHtmlVariant.hs:184
+{-# INLINE rp #-}                                                               -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<rt>@ element.
 --
@@ -1291,10 +1291,10 @@ rp = Parent "<rp" "</rp>"                                                       
 --
 -- > <rt><span>foo</span></rt>
 --
-rt :: Html  -- ^ Inner HTML.                                                    -- util/GenerateHtmlVariant.hs:181
-   -> Html  -- ^ Resulting HTML.                                                -- util/GenerateHtmlVariant.hs:182
-rt = Parent "<rt" "</rt>"                                                       -- util/GenerateHtmlVariant.hs:183
-{-# INLINE rt #-}                                                               -- util/GenerateHtmlVariant.hs:184
+rt :: Html  -- ^ Inner HTML.                                                    -- util/GenerateHtmlVariant.hs:182
+   -> Html  -- ^ Resulting HTML.                                                -- util/GenerateHtmlVariant.hs:183
+rt = Parent "<rt" "</rt>"                                                       -- util/GenerateHtmlVariant.hs:184
+{-# INLINE rt #-}                                                               -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<ruby>@ element.
 --
@@ -1306,10 +1306,10 @@ rt = Parent "<rt" "</rt>"                                                       
 --
 -- > <ruby><span>foo</span></ruby>
 --
-ruby :: Html  -- ^ Inner HTML.                                                  -- util/GenerateHtmlVariant.hs:181
-     -> Html  -- ^ Resulting HTML.                                              -- util/GenerateHtmlVariant.hs:182
-ruby = Parent "<ruby" "</ruby>"                                                 -- util/GenerateHtmlVariant.hs:183
-{-# INLINE ruby #-}                                                             -- util/GenerateHtmlVariant.hs:184
+ruby :: Html  -- ^ Inner HTML.                                                  -- util/GenerateHtmlVariant.hs:182
+     -> Html  -- ^ Resulting HTML.                                              -- util/GenerateHtmlVariant.hs:183
+ruby = Parent "<ruby" "</ruby>"                                                 -- util/GenerateHtmlVariant.hs:184
+{-# INLINE ruby #-}                                                             -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<samp>@ element.
 --
@@ -1321,10 +1321,10 @@ ruby = Parent "<ruby" "</ruby>"                                                 
 --
 -- > <samp><span>foo</span></samp>
 --
-samp :: Html  -- ^ Inner HTML.                                                  -- util/GenerateHtmlVariant.hs:181
-     -> Html  -- ^ Resulting HTML.                                              -- util/GenerateHtmlVariant.hs:182
-samp = Parent "<samp" "</samp>"                                                 -- util/GenerateHtmlVariant.hs:183
-{-# INLINE samp #-}                                                             -- util/GenerateHtmlVariant.hs:184
+samp :: Html  -- ^ Inner HTML.                                                  -- util/GenerateHtmlVariant.hs:182
+     -> Html  -- ^ Resulting HTML.                                              -- util/GenerateHtmlVariant.hs:183
+samp = Parent "<samp" "</samp>"                                                 -- util/GenerateHtmlVariant.hs:184
+{-# INLINE samp #-}                                                             -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<script>@ element.
 --
@@ -1336,10 +1336,10 @@ samp = Parent "<samp" "</samp>"                                                 
 --
 -- > <script><span>foo</span></script>
 --
-script :: Html  -- ^ Inner HTML.                                                -- util/GenerateHtmlVariant.hs:181
-       -> Html  -- ^ Resulting HTML.                                            -- util/GenerateHtmlVariant.hs:182
-script = Parent "<script" "</script>"                                           -- util/GenerateHtmlVariant.hs:183
-{-# INLINE script #-}                                                           -- util/GenerateHtmlVariant.hs:184
+script :: Html  -- ^ Inner HTML.                                                -- util/GenerateHtmlVariant.hs:182
+       -> Html  -- ^ Resulting HTML.                                            -- util/GenerateHtmlVariant.hs:183
+script = Parent "<script" "</script>" . external                                -- util/GenerateHtmlVariant.hs:184
+{-# INLINE script #-}                                                           -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<section>@ element.
 --
@@ -1351,10 +1351,10 @@ script = Parent "<script" "</script>"                                           
 --
 -- > <section><span>foo</span></section>
 --
-section :: Html  -- ^ Inner HTML.                                               -- util/GenerateHtmlVariant.hs:181
-        -> Html  -- ^ Resulting HTML.                                           -- util/GenerateHtmlVariant.hs:182
-section = Parent "<section" "</section>"                                        -- util/GenerateHtmlVariant.hs:183
-{-# INLINE section #-}                                                          -- util/GenerateHtmlVariant.hs:184
+section :: Html  -- ^ Inner HTML.                                               -- util/GenerateHtmlVariant.hs:182
+        -> Html  -- ^ Resulting HTML.                                           -- util/GenerateHtmlVariant.hs:183
+section = Parent "<section" "</section>"                                        -- util/GenerateHtmlVariant.hs:184
+{-# INLINE section #-}                                                          -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<select>@ element.
 --
@@ -1366,10 +1366,10 @@ section = Parent "<section" "</section>"                                        
 --
 -- > <select><span>foo</span></select>
 --
-select :: Html  -- ^ Inner HTML.                                                -- util/GenerateHtmlVariant.hs:181
-       -> Html  -- ^ Resulting HTML.                                            -- util/GenerateHtmlVariant.hs:182
-select = Parent "<select" "</select>"                                           -- util/GenerateHtmlVariant.hs:183
-{-# INLINE select #-}                                                           -- util/GenerateHtmlVariant.hs:184
+select :: Html  -- ^ Inner HTML.                                                -- util/GenerateHtmlVariant.hs:182
+       -> Html  -- ^ Resulting HTML.                                            -- util/GenerateHtmlVariant.hs:183
+select = Parent "<select" "</select>"                                           -- util/GenerateHtmlVariant.hs:184
+{-# INLINE select #-}                                                           -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<small>@ element.
 --
@@ -1381,10 +1381,10 @@ select = Parent "<select" "</select>"                                           
 --
 -- > <small><span>foo</span></small>
 --
-small :: Html  -- ^ Inner HTML.                                                 -- util/GenerateHtmlVariant.hs:181
-      -> Html  -- ^ Resulting HTML.                                             -- util/GenerateHtmlVariant.hs:182
-small = Parent "<small" "</small>"                                              -- util/GenerateHtmlVariant.hs:183
-{-# INLINE small #-}                                                            -- util/GenerateHtmlVariant.hs:184
+small :: Html  -- ^ Inner HTML.                                                 -- util/GenerateHtmlVariant.hs:182
+      -> Html  -- ^ Resulting HTML.                                             -- util/GenerateHtmlVariant.hs:183
+small = Parent "<small" "</small>"                                              -- util/GenerateHtmlVariant.hs:184
+{-# INLINE small #-}                                                            -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<source>@ element.
 --
@@ -1396,10 +1396,10 @@ small = Parent "<small" "</small>"                                              
 --
 -- > <source><span>foo</span></source>
 --
-source :: Html  -- ^ Inner HTML.                                                -- util/GenerateHtmlVariant.hs:181
-       -> Html  -- ^ Resulting HTML.                                            -- util/GenerateHtmlVariant.hs:182
-source = Parent "<source" "</source>"                                           -- util/GenerateHtmlVariant.hs:183
-{-# INLINE source #-}                                                           -- util/GenerateHtmlVariant.hs:184
+source :: Html  -- ^ Inner HTML.                                                -- util/GenerateHtmlVariant.hs:182
+       -> Html  -- ^ Resulting HTML.                                            -- util/GenerateHtmlVariant.hs:183
+source = Parent "<source" "</source>"                                           -- util/GenerateHtmlVariant.hs:184
+{-# INLINE source #-}                                                           -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<span>@ element.
 --
@@ -1411,10 +1411,10 @@ source = Parent "<source" "</source>"                                           
 --
 -- > <span><span>foo</span></span>
 --
-span :: Html  -- ^ Inner HTML.                                                  -- util/GenerateHtmlVariant.hs:181
-     -> Html  -- ^ Resulting HTML.                                              -- util/GenerateHtmlVariant.hs:182
-span = Parent "<span" "</span>"                                                 -- util/GenerateHtmlVariant.hs:183
-{-# INLINE span #-}                                                             -- util/GenerateHtmlVariant.hs:184
+span :: Html  -- ^ Inner HTML.                                                  -- util/GenerateHtmlVariant.hs:182
+     -> Html  -- ^ Resulting HTML.                                              -- util/GenerateHtmlVariant.hs:183
+span = Parent "<span" "</span>"                                                 -- util/GenerateHtmlVariant.hs:184
+{-# INLINE span #-}                                                             -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<strong>@ element.
 --
@@ -1426,10 +1426,10 @@ span = Parent "<span" "</span>"                                                 
 --
 -- > <strong><span>foo</span></strong>
 --
-strong :: Html  -- ^ Inner HTML.                                                -- util/GenerateHtmlVariant.hs:181
-       -> Html  -- ^ Resulting HTML.                                            -- util/GenerateHtmlVariant.hs:182
-strong = Parent "<strong" "</strong>"                                           -- util/GenerateHtmlVariant.hs:183
-{-# INLINE strong #-}                                                           -- util/GenerateHtmlVariant.hs:184
+strong :: Html  -- ^ Inner HTML.                                                -- util/GenerateHtmlVariant.hs:182
+       -> Html  -- ^ Resulting HTML.                                            -- util/GenerateHtmlVariant.hs:183
+strong = Parent "<strong" "</strong>"                                           -- util/GenerateHtmlVariant.hs:184
+{-# INLINE strong #-}                                                           -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<style>@ element.
 --
@@ -1441,10 +1441,10 @@ strong = Parent "<strong" "</strong>"                                           
 --
 -- > <style><span>foo</span></style>
 --
-style :: Html  -- ^ Inner HTML.                                                 -- util/GenerateHtmlVariant.hs:181
-      -> Html  -- ^ Resulting HTML.                                             -- util/GenerateHtmlVariant.hs:182
-style = Parent "<style" "</style>"                                              -- util/GenerateHtmlVariant.hs:183
-{-# INLINE style #-}                                                            -- util/GenerateHtmlVariant.hs:184
+style :: Html  -- ^ Inner HTML.                                                 -- util/GenerateHtmlVariant.hs:182
+      -> Html  -- ^ Resulting HTML.                                             -- util/GenerateHtmlVariant.hs:183
+style = Parent "<style" "</style>" . external                                   -- util/GenerateHtmlVariant.hs:184
+{-# INLINE style #-}                                                            -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<sub>@ element.
 --
@@ -1456,10 +1456,10 @@ style = Parent "<style" "</style>"                                              
 --
 -- > <sub><span>foo</span></sub>
 --
-sub :: Html  -- ^ Inner HTML.                                                   -- util/GenerateHtmlVariant.hs:181
-    -> Html  -- ^ Resulting HTML.                                               -- util/GenerateHtmlVariant.hs:182
-sub = Parent "<sub" "</sub>"                                                    -- util/GenerateHtmlVariant.hs:183
-{-# INLINE sub #-}                                                              -- util/GenerateHtmlVariant.hs:184
+sub :: Html  -- ^ Inner HTML.                                                   -- util/GenerateHtmlVariant.hs:182
+    -> Html  -- ^ Resulting HTML.                                               -- util/GenerateHtmlVariant.hs:183
+sub = Parent "<sub" "</sub>"                                                    -- util/GenerateHtmlVariant.hs:184
+{-# INLINE sub #-}                                                              -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<summary>@ element.
 --
@@ -1471,10 +1471,10 @@ sub = Parent "<sub" "</sub>"                                                    
 --
 -- > <summary><span>foo</span></summary>
 --
-summary :: Html  -- ^ Inner HTML.                                               -- util/GenerateHtmlVariant.hs:181
-        -> Html  -- ^ Resulting HTML.                                           -- util/GenerateHtmlVariant.hs:182
-summary = Parent "<summary" "</summary>"                                        -- util/GenerateHtmlVariant.hs:183
-{-# INLINE summary #-}                                                          -- util/GenerateHtmlVariant.hs:184
+summary :: Html  -- ^ Inner HTML.                                               -- util/GenerateHtmlVariant.hs:182
+        -> Html  -- ^ Resulting HTML.                                           -- util/GenerateHtmlVariant.hs:183
+summary = Parent "<summary" "</summary>"                                        -- util/GenerateHtmlVariant.hs:184
+{-# INLINE summary #-}                                                          -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<sup>@ element.
 --
@@ -1486,10 +1486,10 @@ summary = Parent "<summary" "</summary>"                                        
 --
 -- > <sup><span>foo</span></sup>
 --
-sup :: Html  -- ^ Inner HTML.                                                   -- util/GenerateHtmlVariant.hs:181
-    -> Html  -- ^ Resulting HTML.                                               -- util/GenerateHtmlVariant.hs:182
-sup = Parent "<sup" "</sup>"                                                    -- util/GenerateHtmlVariant.hs:183
-{-# INLINE sup #-}                                                              -- util/GenerateHtmlVariant.hs:184
+sup :: Html  -- ^ Inner HTML.                                                   -- util/GenerateHtmlVariant.hs:182
+    -> Html  -- ^ Resulting HTML.                                               -- util/GenerateHtmlVariant.hs:183
+sup = Parent "<sup" "</sup>"                                                    -- util/GenerateHtmlVariant.hs:184
+{-# INLINE sup #-}                                                              -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<table>@ element.
 --
@@ -1501,10 +1501,10 @@ sup = Parent "<sup" "</sup>"                                                    
 --
 -- > <table><span>foo</span></table>
 --
-table :: Html  -- ^ Inner HTML.                                                 -- util/GenerateHtmlVariant.hs:181
-      -> Html  -- ^ Resulting HTML.                                             -- util/GenerateHtmlVariant.hs:182
-table = Parent "<table" "</table>"                                              -- util/GenerateHtmlVariant.hs:183
-{-# INLINE table #-}                                                            -- util/GenerateHtmlVariant.hs:184
+table :: Html  -- ^ Inner HTML.                                                 -- util/GenerateHtmlVariant.hs:182
+      -> Html  -- ^ Resulting HTML.                                             -- util/GenerateHtmlVariant.hs:183
+table = Parent "<table" "</table>"                                              -- util/GenerateHtmlVariant.hs:184
+{-# INLINE table #-}                                                            -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<tbody>@ element.
 --
@@ -1516,10 +1516,10 @@ table = Parent "<table" "</table>"                                              
 --
 -- > <tbody><span>foo</span></tbody>
 --
-tbody :: Html  -- ^ Inner HTML.                                                 -- util/GenerateHtmlVariant.hs:181
-      -> Html  -- ^ Resulting HTML.                                             -- util/GenerateHtmlVariant.hs:182
-tbody = Parent "<tbody" "</tbody>"                                              -- util/GenerateHtmlVariant.hs:183
-{-# INLINE tbody #-}                                                            -- util/GenerateHtmlVariant.hs:184
+tbody :: Html  -- ^ Inner HTML.                                                 -- util/GenerateHtmlVariant.hs:182
+      -> Html  -- ^ Resulting HTML.                                             -- util/GenerateHtmlVariant.hs:183
+tbody = Parent "<tbody" "</tbody>"                                              -- util/GenerateHtmlVariant.hs:184
+{-# INLINE tbody #-}                                                            -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<td>@ element.
 --
@@ -1531,10 +1531,10 @@ tbody = Parent "<tbody" "</tbody>"                                              
 --
 -- > <td><span>foo</span></td>
 --
-td :: Html  -- ^ Inner HTML.                                                    -- util/GenerateHtmlVariant.hs:181
-   -> Html  -- ^ Resulting HTML.                                                -- util/GenerateHtmlVariant.hs:182
-td = Parent "<td" "</td>"                                                       -- util/GenerateHtmlVariant.hs:183
-{-# INLINE td #-}                                                               -- util/GenerateHtmlVariant.hs:184
+td :: Html  -- ^ Inner HTML.                                                    -- util/GenerateHtmlVariant.hs:182
+   -> Html  -- ^ Resulting HTML.                                                -- util/GenerateHtmlVariant.hs:183
+td = Parent "<td" "</td>"                                                       -- util/GenerateHtmlVariant.hs:184
+{-# INLINE td #-}                                                               -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<textarea>@ element.
 --
@@ -1546,10 +1546,10 @@ td = Parent "<td" "</td>"                                                       
 --
 -- > <textarea><span>foo</span></textarea>
 --
-textarea :: Html  -- ^ Inner HTML.                                              -- util/GenerateHtmlVariant.hs:181
-         -> Html  -- ^ Resulting HTML.                                          -- util/GenerateHtmlVariant.hs:182
-textarea = Parent "<textarea" "</textarea>"                                     -- util/GenerateHtmlVariant.hs:183
-{-# INLINE textarea #-}                                                         -- util/GenerateHtmlVariant.hs:184
+textarea :: Html  -- ^ Inner HTML.                                              -- util/GenerateHtmlVariant.hs:182
+         -> Html  -- ^ Resulting HTML.                                          -- util/GenerateHtmlVariant.hs:183
+textarea = Parent "<textarea" "</textarea>"                                     -- util/GenerateHtmlVariant.hs:184
+{-# INLINE textarea #-}                                                         -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<tfoot>@ element.
 --
@@ -1561,10 +1561,10 @@ textarea = Parent "<textarea" "</textarea>"                                     
 --
 -- > <tfoot><span>foo</span></tfoot>
 --
-tfoot :: Html  -- ^ Inner HTML.                                                 -- util/GenerateHtmlVariant.hs:181
-      -> Html  -- ^ Resulting HTML.                                             -- util/GenerateHtmlVariant.hs:182
-tfoot = Parent "<tfoot" "</tfoot>"                                              -- util/GenerateHtmlVariant.hs:183
-{-# INLINE tfoot #-}                                                            -- util/GenerateHtmlVariant.hs:184
+tfoot :: Html  -- ^ Inner HTML.                                                 -- util/GenerateHtmlVariant.hs:182
+      -> Html  -- ^ Resulting HTML.                                             -- util/GenerateHtmlVariant.hs:183
+tfoot = Parent "<tfoot" "</tfoot>"                                              -- util/GenerateHtmlVariant.hs:184
+{-# INLINE tfoot #-}                                                            -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<th>@ element.
 --
@@ -1576,10 +1576,10 @@ tfoot = Parent "<tfoot" "</tfoot>"                                              
 --
 -- > <th><span>foo</span></th>
 --
-th :: Html  -- ^ Inner HTML.                                                    -- util/GenerateHtmlVariant.hs:181
-   -> Html  -- ^ Resulting HTML.                                                -- util/GenerateHtmlVariant.hs:182
-th = Parent "<th" "</th>"                                                       -- util/GenerateHtmlVariant.hs:183
-{-# INLINE th #-}                                                               -- util/GenerateHtmlVariant.hs:184
+th :: Html  -- ^ Inner HTML.                                                    -- util/GenerateHtmlVariant.hs:182
+   -> Html  -- ^ Resulting HTML.                                                -- util/GenerateHtmlVariant.hs:183
+th = Parent "<th" "</th>"                                                       -- util/GenerateHtmlVariant.hs:184
+{-# INLINE th #-}                                                               -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<thead>@ element.
 --
@@ -1591,10 +1591,10 @@ th = Parent "<th" "</th>"                                                       
 --
 -- > <thead><span>foo</span></thead>
 --
-thead :: Html  -- ^ Inner HTML.                                                 -- util/GenerateHtmlVariant.hs:181
-      -> Html  -- ^ Resulting HTML.                                             -- util/GenerateHtmlVariant.hs:182
-thead = Parent "<thead" "</thead>"                                              -- util/GenerateHtmlVariant.hs:183
-{-# INLINE thead #-}                                                            -- util/GenerateHtmlVariant.hs:184
+thead :: Html  -- ^ Inner HTML.                                                 -- util/GenerateHtmlVariant.hs:182
+      -> Html  -- ^ Resulting HTML.                                             -- util/GenerateHtmlVariant.hs:183
+thead = Parent "<thead" "</thead>"                                              -- util/GenerateHtmlVariant.hs:184
+{-# INLINE thead #-}                                                            -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<time>@ element.
 --
@@ -1606,10 +1606,10 @@ thead = Parent "<thead" "</thead>"                                              
 --
 -- > <time><span>foo</span></time>
 --
-time :: Html  -- ^ Inner HTML.                                                  -- util/GenerateHtmlVariant.hs:181
-     -> Html  -- ^ Resulting HTML.                                              -- util/GenerateHtmlVariant.hs:182
-time = Parent "<time" "</time>"                                                 -- util/GenerateHtmlVariant.hs:183
-{-# INLINE time #-}                                                             -- util/GenerateHtmlVariant.hs:184
+time :: Html  -- ^ Inner HTML.                                                  -- util/GenerateHtmlVariant.hs:182
+     -> Html  -- ^ Resulting HTML.                                              -- util/GenerateHtmlVariant.hs:183
+time = Parent "<time" "</time>"                                                 -- util/GenerateHtmlVariant.hs:184
+{-# INLINE time #-}                                                             -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<title>@ element.
 --
@@ -1621,10 +1621,10 @@ time = Parent "<time" "</time>"                                                 
 --
 -- > <title><span>foo</span></title>
 --
-title :: Html  -- ^ Inner HTML.                                                 -- util/GenerateHtmlVariant.hs:181
-      -> Html  -- ^ Resulting HTML.                                             -- util/GenerateHtmlVariant.hs:182
-title = Parent "<title" "</title>"                                              -- util/GenerateHtmlVariant.hs:183
-{-# INLINE title #-}                                                            -- util/GenerateHtmlVariant.hs:184
+title :: Html  -- ^ Inner HTML.                                                 -- util/GenerateHtmlVariant.hs:182
+      -> Html  -- ^ Resulting HTML.                                             -- util/GenerateHtmlVariant.hs:183
+title = Parent "<title" "</title>"                                              -- util/GenerateHtmlVariant.hs:184
+{-# INLINE title #-}                                                            -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<tr>@ element.
 --
@@ -1636,10 +1636,10 @@ title = Parent "<title" "</title>"                                              
 --
 -- > <tr><span>foo</span></tr>
 --
-tr :: Html  -- ^ Inner HTML.                                                    -- util/GenerateHtmlVariant.hs:181
-   -> Html  -- ^ Resulting HTML.                                                -- util/GenerateHtmlVariant.hs:182
-tr = Parent "<tr" "</tr>"                                                       -- util/GenerateHtmlVariant.hs:183
-{-# INLINE tr #-}                                                               -- util/GenerateHtmlVariant.hs:184
+tr :: Html  -- ^ Inner HTML.                                                    -- util/GenerateHtmlVariant.hs:182
+   -> Html  -- ^ Resulting HTML.                                                -- util/GenerateHtmlVariant.hs:183
+tr = Parent "<tr" "</tr>"                                                       -- util/GenerateHtmlVariant.hs:184
+{-# INLINE tr #-}                                                               -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<ul>@ element.
 --
@@ -1651,10 +1651,10 @@ tr = Parent "<tr" "</tr>"                                                       
 --
 -- > <ul><span>foo</span></ul>
 --
-ul :: Html  -- ^ Inner HTML.                                                    -- util/GenerateHtmlVariant.hs:181
-   -> Html  -- ^ Resulting HTML.                                                -- util/GenerateHtmlVariant.hs:182
-ul = Parent "<ul" "</ul>"                                                       -- util/GenerateHtmlVariant.hs:183
-{-# INLINE ul #-}                                                               -- util/GenerateHtmlVariant.hs:184
+ul :: Html  -- ^ Inner HTML.                                                    -- util/GenerateHtmlVariant.hs:182
+   -> Html  -- ^ Resulting HTML.                                                -- util/GenerateHtmlVariant.hs:183
+ul = Parent "<ul" "</ul>"                                                       -- util/GenerateHtmlVariant.hs:184
+{-# INLINE ul #-}                                                               -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<var>@ element.
 --
@@ -1666,10 +1666,10 @@ ul = Parent "<ul" "</ul>"                                                       
 --
 -- > <var><span>foo</span></var>
 --
-var :: Html  -- ^ Inner HTML.                                                   -- util/GenerateHtmlVariant.hs:181
-    -> Html  -- ^ Resulting HTML.                                               -- util/GenerateHtmlVariant.hs:182
-var = Parent "<var" "</var>"                                                    -- util/GenerateHtmlVariant.hs:183
-{-# INLINE var #-}                                                              -- util/GenerateHtmlVariant.hs:184
+var :: Html  -- ^ Inner HTML.                                                   -- util/GenerateHtmlVariant.hs:182
+    -> Html  -- ^ Resulting HTML.                                               -- util/GenerateHtmlVariant.hs:183
+var = Parent "<var" "</var>"                                                    -- util/GenerateHtmlVariant.hs:184
+{-# INLINE var #-}                                                              -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<video>@ element.
 --
@@ -1681,7 +1681,7 @@ var = Parent "<var" "</var>"                                                    
 --
 -- > <video><span>foo</span></video>
 --
-video :: Html  -- ^ Inner HTML.                                                 -- util/GenerateHtmlVariant.hs:181
-      -> Html  -- ^ Resulting HTML.                                             -- util/GenerateHtmlVariant.hs:182
-video = Parent "<video" "</video>"                                              -- util/GenerateHtmlVariant.hs:183
-{-# INLINE video #-}                                                            -- util/GenerateHtmlVariant.hs:184
+video :: Html  -- ^ Inner HTML.                                                 -- util/GenerateHtmlVariant.hs:182
+      -> Html  -- ^ Resulting HTML.                                             -- util/GenerateHtmlVariant.hs:183
+video = Parent "<video" "</video>"                                              -- util/GenerateHtmlVariant.hs:184
+{-# INLINE video #-}                                                            -- util/GenerateHtmlVariant.hs:186

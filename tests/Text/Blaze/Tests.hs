@@ -9,6 +9,7 @@ import Control.Monad (replicateM, forM_, sequence_)
 import Control.Applicative ((<$>))
 import Data.Word (Word8)
 import Data.Char (ord)
+import Data.List (isInfixOf)
 
 import Debug.Trace (traceShow)
 import qualified Data.ByteString.Lazy.Char8 as LBC
@@ -20,6 +21,7 @@ import Test.Framework.Providers.HUnit
 import Test.HUnit hiding (Test)
 
 import Text.Blaze.Html5 hiding (map)
+import Text.Blaze.Internal
 import qualified Text.Blaze.Html5 as H
 import Text.Blaze.Html5.Attributes
 import Text.Blaze.Renderer.Utf8 (renderHtml)
@@ -40,6 +42,7 @@ tests = [ testProperty "left identity Monoid law"  monoidLeftIdentity
         , testCase     "template case 6"           template6
         , testCase     "template case 7"           template7
         , testProperty "valid UTF-8"               isValidUtf8
+        , testProperty "external </ sequence"      externalEndSequence
         ]
 
 -- | The left identity Monoid law.
@@ -165,6 +168,11 @@ isValidUtf8 = isValidUtf8' . LB.unpack . renderHtml
             _         -> False
         | otherwise = False
 
+-- | Check if the "</" sequence does not appear in @<script>@ or @<style>@ tags.
+--
+externalEndSequence :: String -> Bool
+externalEndSequence = not . isInfixOf "</" . LBC.unpack
+                    . renderHtml . external . string
 
 -- Show instance for the HTML type, so we can debug.
 --
@@ -209,7 +217,7 @@ arbitraryHtml depth = do
 
     -- Generate an arbitrary parent element.
     arbitraryParent = do
-        parent <- elements [p, div, table]
+        parent <- elements [p, div, table, H.style]
         parent <$> arbitraryHtml (depth - 1)
 
     -- Generate an arbitrary leaf element.

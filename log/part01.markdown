@@ -846,3 +846,32 @@ very small speedup:
 
 **Edit**: after checking the benchmarks on more machines, it didn't look like an
 improvement, so I rolled back these changes.
+
+Saturday, July 10th, midday
+===========================
+
+Among with other improvements to the library (and an annoying bug in the UTF-8
+encoder), I "merged" the `Html` and `ChoiceString` datatypes to remove more
+indirections from the rendering pipeline.
+
+However, it doesn't look like this gives us a big speedup. Here are the results
+from before the merge:
+
+- `bigTable`: 5.288188 ms (std dev: 85.59033 us)
+- `basic`: 18.19994 us (std dev: 32.91020 ns)
+- `wideTree`: 5.569250 ms (std dev: 94.57532 us)
+- `wideTreeEscaping`: 1.002324 ms (std dev: 27.32290 us)
+- `deepTree`: 1.456465 ms (std dev: 91.44543 us)
+- `manyAttributes`: 4.564583 ms (std dev: 192.2367 us)
+
+And we get these results after the merge:
+
+- `bigTable`: 5.267530 ms (std dev: 162.7872 us)
+- `basic`: 18.36696 us (std dev: 155.4146 ns)
+- `wideTree`: 5.669859 ms (std dev: 338.5240 us)
+- `wideTreeEscaping`: 990.6610 us (std dev: 23.07648 us)
+- `deepTree`: 1.403002 ms (std dev: 36.50825 us)
+- `manyAttributes`: 4.597317 ms (std dev: 210.3049 us)
+
+So, I comitted this code to a separate branch (`no-choicestring`), because it
+might be useful later, but it's not going into the `develop` branch for now.

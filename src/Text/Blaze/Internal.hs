@@ -59,9 +59,9 @@ import GHC.Exts (IsString (..))
 -- | A static string that supports efficient output to all possible backends.
 --
 data StaticString = StaticString
-    { getString         :: String        -- ^ Regular Haskell string
-    , getUtf8ByteString :: S.ByteString  -- ^ UTF-8 encoded bytestring
-    , getText           :: Text          -- ^ Text value
+    { getString         :: String -> String  -- ^ Appending haskell string
+    , getUtf8ByteString :: S.ByteString      -- ^ UTF-8 encoded bytestring
+    , getText           :: Text              -- ^ Text value
     }
 
 -- 'StaticString's should only be converted from string literals, as far as I
@@ -69,23 +69,23 @@ data StaticString = StaticString
 --
 instance IsString StaticString where
     fromString s = let t = T.pack s
-                   in StaticString s (T.encodeUtf8 t) t
+                   in StaticString (s ++) (T.encodeUtf8 t) t
 
 -- | A string denoting input from different string representations.
 --
 data ChoiceString
     -- | Static data
-    = Static     StaticString
+    = Static {-# UNPACK #-} !StaticString
     -- | A Haskell String
-    | String     String
+    | String String
     -- | A Text value
-    | Text       Text
+    | Text Text
     -- | An encoded bytestring
     | ByteString S.ByteString
     -- | A pre-escaped string
     | PreEscaped ChoiceString
     -- | External data in style/script tags, should be checked for validity
-    | External   ChoiceString
+    | External ChoiceString
     -- | Concatenation
     | AppendChoiceString ChoiceString ChoiceString
     -- | Empty string
@@ -252,7 +252,7 @@ unsafeByteString = Content . ByteString
 --
 textTag :: Text  -- ^ Text to create a tag from
         -> Tag   -- ^ Resulting tag
-textTag t = Tag $ StaticString (T.unpack t) (T.encodeUtf8 t) t
+textTag t = Tag $ StaticString (T.unpack t ++) (T.encodeUtf8 t) t
 
 -- | Create a 'Tag' from a 'String'.
 --

@@ -225,7 +225,7 @@ makeOpen tag = unlines
     , LINE $ "-- > <" ++ tag ++ ">"
     , LINE "--"
     , LINE $ function        ++ " :: Html  -- ^ Resulting HTML."
-    , LINE $ function ++ " = Open \"<" ++ tag ++ "\" \">\""
+    , LINE $ function ++ " = Leaf \"<" ++ tag ++ "\" \">\""
     , LINE $ "{-# INLINE " ++ function ++ " #-}"
     ]
   where

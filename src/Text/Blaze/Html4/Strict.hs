@@ -197,7 +197,7 @@ address = Parent "<address" "</address>"                                        
 -- > <area>
 --
 area :: Html  -- ^ Resulting HTML.                                              -- util/GenerateHtmlVariant.hs:227
-area = Open "<area" ">"                                                         -- util/GenerateHtmlVariant.hs:228
+area = Leaf "<area" ">"                                                         -- util/GenerateHtmlVariant.hs:228
 {-# INLINE area #-}                                                             -- util/GenerateHtmlVariant.hs:229
 
 -- | Combinator for the @\<b>@ element.
@@ -286,7 +286,7 @@ body = Parent "<body" "</body>"                                                 
 -- > <br>
 --
 br :: Html  -- ^ Resulting HTML.                                                -- util/GenerateHtmlVariant.hs:227
-br = Open "<br" ">"                                                             -- util/GenerateHtmlVariant.hs:228
+br = Leaf "<br" ">"                                                             -- util/GenerateHtmlVariant.hs:228
 {-# INLINE br #-}                                                               -- util/GenerateHtmlVariant.hs:229
 
 -- | Combinator for the @\<button>@ element.
@@ -360,7 +360,7 @@ code = Parent "<code" "</code>"                                                 
 -- > <col>
 --
 col :: Html  -- ^ Resulting HTML.                                               -- util/GenerateHtmlVariant.hs:227
-col = Open "<col" ">"                                                           -- util/GenerateHtmlVariant.hs:228
+col = Leaf "<col" ">"                                                           -- util/GenerateHtmlVariant.hs:228
 {-# INLINE col #-}                                                              -- util/GenerateHtmlVariant.hs:229
 
 -- | Combinator for the @\<colgroup>@ element.
@@ -629,7 +629,7 @@ head = Parent "<head" "</head>"                                                 
 -- > <hr>
 --
 hr :: Html  -- ^ Resulting HTML.                                                -- util/GenerateHtmlVariant.hs:227
-hr = Open "<hr" ">"                                                             -- util/GenerateHtmlVariant.hs:228
+hr = Leaf "<hr" ">"                                                             -- util/GenerateHtmlVariant.hs:228
 {-# INLINE hr #-}                                                               -- util/GenerateHtmlVariant.hs:229
 
 -- | Combinator for the @\<html>@ element.
@@ -673,7 +673,7 @@ i = Parent "<i" "</i>"                                                          
 -- > <img>
 --
 img :: Html  -- ^ Resulting HTML.                                               -- util/GenerateHtmlVariant.hs:227
-img = Open "<img" ">"                                                           -- util/GenerateHtmlVariant.hs:228
+img = Leaf "<img" ">"                                                           -- util/GenerateHtmlVariant.hs:228
 {-# INLINE img #-}                                                              -- util/GenerateHtmlVariant.hs:229
 
 -- | Combinator for the @\<input>@ element.
@@ -687,7 +687,7 @@ img = Open "<img" ">"                                                           
 -- > <input>
 --
 input :: Html  -- ^ Resulting HTML.                                             -- util/GenerateHtmlVariant.hs:227
-input = Open "<input" ">"                                                       -- util/GenerateHtmlVariant.hs:228
+input = Leaf "<input" ">"                                                       -- util/GenerateHtmlVariant.hs:228
 {-# INLINE input #-}                                                            -- util/GenerateHtmlVariant.hs:229
 
 -- | Combinator for the @\<ins>@ element.
@@ -776,7 +776,7 @@ li = Parent "<li" "</li>"                                                       
 -- > <link>
 --
 link :: Html  -- ^ Resulting HTML.                                              -- util/GenerateHtmlVariant.hs:227
-link = Open "<link" ">"                                                         -- util/GenerateHtmlVariant.hs:228
+link = Leaf "<link" ">"                                                         -- util/GenerateHtmlVariant.hs:228
 {-# INLINE link #-}                                                             -- util/GenerateHtmlVariant.hs:229
 
 -- | Combinator for the @\<map>@ element.
@@ -805,7 +805,7 @@ map = Parent "<map" "</map>"                                                    
 -- > <meta>
 --
 meta :: Html  -- ^ Resulting HTML.                                              -- util/GenerateHtmlVariant.hs:227
-meta = Open "<meta" ">"                                                         -- util/GenerateHtmlVariant.hs:228
+meta = Leaf "<meta" ">"                                                         -- util/GenerateHtmlVariant.hs:228
 {-# INLINE meta #-}                                                             -- util/GenerateHtmlVariant.hs:229
 
 -- | Combinator for the @\<noscript>@ element.
@@ -909,7 +909,7 @@ p = Parent "<p" "</p>"                                                          
 -- > <param>
 --
 param :: Html  -- ^ Resulting HTML.                                             -- util/GenerateHtmlVariant.hs:227
-param = Open "<param" ">"                                                       -- util/GenerateHtmlVariant.hs:228
+param = Leaf "<param" ">"                                                       -- util/GenerateHtmlVariant.hs:228
 {-# INLINE param #-}                                                            -- util/GenerateHtmlVariant.hs:229
 
 -- | Combinator for the @\<pre>@ element.

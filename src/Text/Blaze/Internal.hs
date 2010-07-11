@@ -108,8 +108,6 @@ data HtmlM a
     = forall b. Parent StaticString StaticString (HtmlM b)
     -- | Open tag, end tag
     | Leaf StaticString StaticString
-    -- | Open tag, end tag
-    | Open StaticString StaticString
     -- | HTML content
     | Content ChoiceString
     -- | Concatenation of two HTML pieces

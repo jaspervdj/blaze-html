@@ -6,10 +6,8 @@ module Text.Blaze.Renderer.String
     ( renderHtml
     ) where
 
-import Data.Monoid (mappend, mempty)
 import Data.List (isInfixOf)
 
-import qualified Data.ByteString.Lazy as L
 import qualified Data.ByteString.Char8 as SBC
 import qualified Data.Text as T
 import qualified Data.ByteString as S
@@ -36,8 +34,8 @@ fromChoiceString :: ChoiceString  -- ^ String to render
                  -> String        -- ^ String to append
                  -> String        -- ^ Resulting string
 fromChoiceString (Static s)     = getString s
-fromChoiceString (String s)     = (s ++) -- escape!
-fromChoiceString (Text s)       = (T.unpack s ++) -- escape!
+fromChoiceString (String s)     = escapeHtmlEntities s
+fromChoiceString (Text s)       = escapeHtmlEntities $ T.unpack s
 fromChoiceString (ByteString s) = (SBC.unpack s ++)
 fromChoiceString (PreEscaped x) = case x of
     String s -> (s ++)
@@ -45,9 +43,9 @@ fromChoiceString (PreEscaped x) = case x of
     s        -> fromChoiceString s
 fromChoiceString (External x) = case x of
     -- Check that the sequence "</" is *not* in the external data.
-    String s     -> if "</" `isInfixOf` s then mempty else (s ++)
-    Text   s     -> if "</" `T.isInfixOf` s then mempty else (T.unpack s ++)
-    ByteString s -> if "</" `S.isInfixOf` s then mempty else (SBC.unpack s ++)
+    String s     -> if "</" `isInfixOf` s then id else (s ++)
+    Text   s     -> if "</" `T.isInfixOf` s then id else (T.unpack s ++)
+    ByteString s -> if "</" `S.isInfixOf` s then id else (SBC.unpack s ++)
     s            -> fromChoiceString s
 fromChoiceString (AppendChoiceString x y) =
     fromChoiceString x . fromChoiceString y
@@ -65,8 +63,6 @@ renderString = go id
     go attrs (Parent open close content) k =
         getString open $ attrs $ '>' : go id content (getString close k)
     go attrs (Leaf begin end) k = 
-        getString begin $ attrs $ getString end k
-    go attrs (Open begin end) k = 
         getString begin $ attrs $ getString end k
     go attrs (AddAttribute key value h) k =
         go (\k' -> getString key $ fromChoiceString value $ '"' : attrs k') h k

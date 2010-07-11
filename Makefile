@@ -1,6 +1,6 @@
 bench-html:
-	ghc --make -O2 -fforce-recomp -isrc -main-is Utf8Html benchmarks/Utf8Html.hs
-	./benchmarks/Utf8Html --resamples 10000
+	ghc --make -O2 -fforce-recomp -isrc -main-is HtmlBenchmarks benchmarks/HtmlBenchmarks.hs
+	./benchmarks/HtmlBenchmarks --resamples 10000
 
 bench-constructor-html:
 	ghc --make -O2 -fforce-recomp -isrc -ilib/binary-0.5.0.2/src -main-is Main benchmarks/bigtable/constructor.hs

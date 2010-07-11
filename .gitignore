@@ -6,7 +6,7 @@ local
 *.swp
 
 benchmarks/Utf8Builder
-benchmarks/Utf8Html
+benchmarks/HtmlBenchmarks
 benchmarks/BigTableServer
 
 website/_site

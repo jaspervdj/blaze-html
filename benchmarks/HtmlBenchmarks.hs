@@ -1,7 +1,7 @@
--- | This is a possible library implementation experiment and benchmark.
+-- | This is a collection of HTML benchmarks for BlazeHtml.
 --
 {-# LANGUAGE OverloadedStrings, ExistentialQuantification #-}
-module Utf8Html where
+module HtmlBenchmarks where
 
 import Data.Monoid (Monoid, mempty, mconcat, mappend)
 import Prelude hiding (div, id)
@@ -15,12 +15,15 @@ import qualified Data.ByteString.Lazy as LB
 import Text.Blaze.Html5 hiding (map)
 import qualified Text.Blaze.Html5 as H
 import Text.Blaze.Html5.Attributes hiding (title, rows)
-import Text.Blaze.Renderer.Utf8 (renderHtml)
+import qualified Text.Blaze.Renderer.Utf8 as Utf8
+import qualified Text.Blaze.Renderer.String as String
 
-main = defaultMain $ map benchHtml benchmarks
+main = defaultMain $ concatMap benchHtml benchmarks
   where
     benchHtml (HtmlBenchmark name f x _) =
-        bench name $ nf (LB.length .  renderHtml . f) x
+        [ bench (name ++ " (Utf8)") $ nf (LB.length .  Utf8.renderHtml . f) x
+        , bench (name ++ " (String)") $ nf (String.renderHtml . f) x
+        ]
 
 data HtmlBenchmark = forall a b c. HtmlBenchmark
     String       -- ^ Name.

@@ -21,7 +21,7 @@ the simple `SnapFramework` example as well.
 
 > import Text.Blaze.Renderer.Utf8 (renderHtml)
 > import BenchmarkServer hiding (main)
-> import Utf8Html hiding (main)
+> import HtmlBenchmarks hiding (main)
 > import SnapFramework (blazeTemplate)
 
 We now present "Handlers" for our templates: these are values of the type

@@ -37,7 +37,7 @@ a literate Haskell file, feel free to skip the imports.
 > import qualified Data.ByteString.Char8 as SBC
 > import qualified Data.ByteString.Lazy as LB
 
-> import Utf8Html (HtmlBenchmark (..), benchmarks)
+> import HtmlBenchmarks (HtmlBenchmark (..), benchmarks)
 > import Text.Blaze.Html5 hiding (map, head)
 > import qualified Text.Blaze.Html5 as H
 > import Text.Blaze.Html5.Attributes hiding (title, rows, accept)

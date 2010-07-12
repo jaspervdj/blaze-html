@@ -3,7 +3,9 @@
 --
 {-# LANGUAGE OverloadedStrings #-}
 module Text.Blaze.Renderer.String
-    ( renderHtml
+    ( escapeHtmlEntities
+    , fromChoiceString
+    , renderHtml
     ) where
 
 import Data.List (isInfixOf)
@@ -60,22 +62,20 @@ renderString :: HtmlM a  -- ^ HTML to render
 renderString = go id 
   where
     go :: (String -> String) -> HtmlM b -> String -> String
-    go attrs (Parent open close content) k =
-        getString open $ attrs $ '>' : go id content (getString close k)
-    go attrs (Leaf begin end) k = 
-        getString begin $ attrs $ getString end k
-    go attrs (AddAttribute key value h) k =
-        go (\k' -> getString key $ fromChoiceString value $ '"' : attrs k') h k
-    go attrs (AddCustomAttribute key value h) k =
-        go (\k' -> fromChoiceString key $
-            fromChoiceString value $ '"' : attrs k') h k
-    go _ (Content content) k = fromChoiceString content k
-    go attrs (Append h1 h2) k = go attrs h1 $ go attrs h2 k
-    go _ Empty k            = k
+    go attrs (Parent open close content) =
+        getString open . attrs . ('>' :) . go id content . getString close
+    go attrs (Leaf begin end) = getString begin . attrs . getString end
+    go attrs (AddAttribute key value h) = flip go h $
+        getString key . fromChoiceString value . ('"' :) . attrs
+    go attrs (AddCustomAttribute key value h) = flip go h $
+        fromChoiceString key . fromChoiceString value . ('"' :) . attrs
+    go _ (Content content) = fromChoiceString content
+    go attrs (Append h1 h2) = go attrs h1 . go attrs h2
+    go _ Empty = id
     {-# NOINLINE go #-}
 {-# INLINE renderString #-}
 
--- | Render HTML to a lazy UTF-8 encoded 'L.ByteString.'
+-- | Render HTML to a lazy 'String'.
 --
 renderHtml :: HtmlM a  -- ^ HTML to render
            -> String   -- ^ Resulting 'String'

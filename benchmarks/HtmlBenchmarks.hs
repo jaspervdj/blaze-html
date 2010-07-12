@@ -70,7 +70,7 @@ items = map (("Number " `mappend`) . show) [1 .. 14]
 
 wideTreeData :: [String]
 wideTreeData = take 5000 $
-    cycle ["λf.(λx.fxx)(λx.fxx)", "These & Those", "Foobar", "lol"]
+    cycle ["λf.(λx.fxx)(λx.fxx)", "These old days", "Foobar", "lol", "x ∈ A"]
 {-# NOINLINE wideTreeData #-}
 
 wideTreeEscapingData :: [String]
@@ -105,7 +105,7 @@ basic (title', user, items) = html $ do
         p $ "Hello, me!"
         p $ "Hello, world!"
         h2 $ "loop"
-        mconcat $ map (li . string) items
+        ol $ mconcat $ map (li . string) items
         div ! id "footer" $ mempty
 
 -- | A benchmark producing a very wide but very shallow tree.

@@ -43,6 +43,7 @@ tests = [ testProperty "left identity Monoid law"  monoidLeftIdentity
         , testCase     "template case 7"           template7
         , testProperty "valid UTF-8"               isValidUtf8
         , testProperty "external </ sequence"      externalEndSequence
+        , testProperty "well nested <>"            wellNestedBrackets
         ]
 
 -- | The left identity Monoid law.
@@ -174,6 +175,17 @@ externalEndSequence :: String -> Bool
 externalEndSequence = not . isInfixOf "</" . LBC.unpack
                     . renderHtml . external . string
 
+-- | Check that the "<>" characters are well-nested.
+--
+wellNestedBrackets :: Html -> Bool
+wellNestedBrackets = wellNested False . LBC.unpack . renderHtml
+  where
+    wellNested isOpen [] = not isOpen
+    wellNested isOpen (x:xs) = case x of
+        '<' -> if isOpen then False else wellNested True xs
+        '>' -> if isOpen then wellNested False xs else False
+        _   -> wellNested isOpen xs
+
 -- Show instance for the HTML type, so we can debug.
 --
 instance Show Html where
@@ -217,7 +229,7 @@ arbitraryHtml depth = do
 
     -- Generate an arbitrary parent element.
     arbitraryParent = do
-        parent <- elements [p, div, table, H.style]
+        parent <- elements [p, div, table]
         parent <$> arbitraryHtml (depth - 1)
 
     -- Generate an arbitrary leaf element.

@@ -8,6 +8,29 @@ The goal of this document is to create a fixed set of benchmarks, that can be
 implemented in all HTML templating libraries. The goal is a fair comparison
 between the different libraries (in different languages).
 
+A fair comparison is a difficult task for a number of reasons:
+
+- the language used has a big influence on the performance;
+- different templating libraries produce different encodings;
+- some libraries escape content by default while others do not;
+- the web server/framework used also has a big influence on the performance.
+
+What is benchmarked
+-------------------
+
+There are a lot of measures one could use to time the performance of an HTML
+generation library. One could measure the number of requests that are completed
+per second, using a tool like [ab] or [httperf].
+
+While that is the most complete measure, and "closest to the real world", this
+would make a fair comparison harder because the web server used will determine
+a large part of the performance.
+
+Therefore, we propose to measure the time to *generate the HTML*. That is, the
+time used to build the HTML from scratch. The end result should be the HTML in
+it's final format -- in most languages/libraries, this will be some kind of
+string type.
+
 Big table
 =========
 

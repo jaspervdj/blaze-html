@@ -12,3 +12,12 @@ benchmarks/BigTableServer
 website/_site
 website/_cache
 website/hakyll
+
+src/Text/Blaze/Html4/FrameSet.hs
+src/Text/Blaze/Html4/FrameSet/Attributes.hs
+src/Text/Blaze/Html4/Strict.hs
+src/Text/Blaze/Html4/Strict/Attributes.hs
+src/Text/Blaze/Html4/Transitional.hs
+src/Text/Blaze/Html4/Transitional/Attributes.hs
+src/Text/Blaze/Html5.hs
+src/Text/Blaze/Html5/Attributes.hs

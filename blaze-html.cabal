@@ -39,7 +39,7 @@ Stability:           Experimental
 
 Category:            Text
 
-Build-type:          Simple
+Build-type:          Custom
 
 -- Extra files to be distributed with the package, such as examples or
 -- a README.

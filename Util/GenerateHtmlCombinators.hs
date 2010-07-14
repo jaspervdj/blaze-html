@@ -4,15 +4,15 @@
 
 -- | Generates code for HTML tags.
 --
-module GenerateHtmlVariant where
-
-import Sanitize (sanitize)
+module Util.GenerateHtmlCombinators where
 
 import Data.List (isPrefixOf, sort, sortBy)
 import Data.List (intersperse, intercalate)
 import Data.Ord (comparing)
 import System.Directory (createDirectoryIfMissing)
 import System.FilePath ((</>), (<.>))
+
+import Util.Sanitize (sanitize)
 
 -- | Datatype for an HTML variant.
 --
@@ -385,8 +385,8 @@ html5 = HtmlVariant
         ]
     }
 
-main :: IO ()
-main = do
+generateHtmlCombinators :: IO ()
+generateHtmlCombinators = do
     writeHtmlVariant html4Strict
     writeHtmlVariant html4Transitional
     writeHtmlVariant html4FrameSet

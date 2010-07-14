@@ -6,13 +6,14 @@ import Distribution.PackageDescription
 
 import System.Process (rawSystem)
 
+import Util.GenerateHtmlCombinators (generateHtmlCombinators)
+
 main :: IO ()
 main = defaultMainWithHooks hooks
   where
-    hooks = simpleUserHooks { preConf = generateHtmlCombinators }
+    hooks = simpleUserHooks { preConf = preConf' }
 
-generateHtmlCombinators :: Args -> ConfigFlags -> IO HookedBuildInfo
-generateHtmlCombinators _ _ = do
-    -- Portability needs to be tested.
-    _ <- rawSystem "runghc" ["-iutil", "util/GenerateHtmlVariant.hs"]
-    return emptyHookedBuildInfo
+    -- Simple hook that generates the code for the HTML combinators.
+    preConf' _ _ = do
+        generateHtmlCombinators
+        return emptyHookedBuildInfo

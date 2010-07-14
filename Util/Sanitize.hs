@@ -1,6 +1,6 @@
 -- | A program to sanitize an HTML tag to a Haskell function.
 --
-module Sanitize
+module Util.Sanitize
     ( sanitize
     ) where
 

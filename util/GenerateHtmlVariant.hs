@@ -296,6 +296,27 @@ html4Strict = HtmlVariant
         ]
     }
 
+-- | HTML 4.0 Transitional
+--
+html4Transitional :: HtmlVariant
+html4Transitional = HtmlVariant
+    { version = ["Html4", "Transitional"]
+    , docType =
+        [ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\""
+        , "    \"http://www.w3.org/TR/html4/loose.dtd\">"
+        ]
+    , parents = parents html4Strict ++
+        [ "applet", "center", "dir", "font", "iframe", "isindex", "menu"
+        , "noframes", "s", "u"
+        ]
+    , leafs = []
+    , opens = opens html4Strict ++ ["basefont"]
+    , attributes = attributes html4Strict ++
+        [ "background", "bgcolor", "clear", "compact", "hspace", "language"
+        , "noshade", "nowrap", "size", "start", "target", "vspace"
+        ]
+    }
+
 -- | HTML 4.0 Frameset
 --
 html4FrameSet :: HtmlVariant
@@ -305,39 +326,11 @@ html4FrameSet = HtmlVariant
         [ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Frameset//EN\""
         , "    \"http://www.w3.org/TR/html4/frameset.dtd\">"
         ]
-    , parents =
-        [ "a", "abbr", "acronym", "address", "applet", "b", "bdo", "big"
-        , "blockquote", "body", "button", "caption", "center", "cite", "code"
-        , "colgroup", "dd", "del", "dfn", "dir", "div", "dl", "dt", "em"
-        , "fieldset", "font", "form", "frameset", "h6", "head", "html", "i"
-        , "iframe", "ins", "kbd", "label", "legend", "li", "map", "menu"
-        , "noframes", "noscript", "object", "ol", "optgroup", "option", "p"
-        , "pre", "q", "s", "samp", "script", "select", "small", "span", "strike"
-        , "strong", "style", "sub", "sup", "table", "tbody", "td", "textarea"
-        , "tfoot", "th", "thead", "title", "tr", "tt", "u", "ul", "var"
-        ]
+    , parents = parents html4Transitional ++ ["frameset"]
     , leafs = []
-    , opens =
-        [ "area", "base", "basefont", "br", "col", "frame", "hr", "img", "input"
-        , "link", "meta", "param" ]
-    , attributes =
-        [ "abbr", "accept", "accept-charset", "accesskey", "align", "alink"
-        , "alt", "axis", "background", "bgcolor", "border", "cellpadding"
-        , "cellspacing", "char", "charoff", "charset", "checked", "cite"
-        , "class", "color", "cols", "colspan", "compact", "coords", "datetime"
-        , "defer", "disabled", "enctype", "face", "for", "frame", "frameborder"
-        , "headers", "height", "href", "hreflang", "hspace", "http-equiv", "id"
-        , "label", "lang", "link", "longdesc", "marginheight", "marginwidth"
-        , "maxlength", "media", "method", "multiple", "name", "nohref"
-        , "noresize", "noshade", "nowrap", "onabort", "onblur", "onchange"
-        , "onclick", "ondblclick", "onfocus", "onkeydown", "onkeypress"
-        , "onkeyup", "onload", "onmousedown", "onmousemove", "onmouseout"
-        , "onmouseover", "onmouseup", "onreset", "onselect", "onsubmit"
-        , "onunload", "readonly", "rel", "rev", "rows", "rowspan", "rules"
-        , "scheme", "scope", "scrolling", "selected", "shape", "size", "span"
-        , "src", "start", "style", "summary", "tabindex", "target", "text"
-        , "title", "type", "usemap", "valign", "value", "vlink", "vspace"
-        , "width"
+    , opens = opens html4Transitional ++ ["frame"]
+    , attributes = attributes html4Transitional ++
+        [ "frameborder", "scrolling"
         ]
     }
 
@@ -395,5 +388,6 @@ html5 = HtmlVariant
 main :: IO ()
 main = do
     writeHtmlVariant html4Strict
+    writeHtmlVariant html4Transitional
     writeHtmlVariant html4FrameSet
     writeHtmlVariant html5

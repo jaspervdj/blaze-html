@@ -5,7 +5,7 @@
 {-# LANGUAGE OverloadedStrings #-}                                              -- util/GenerateHtmlVariant.hs:50
 -- | This module exports HTML combinators used to create documents.
 --
-module Text.Blaze.Html4.FrameSet                                                -- util/GenerateHtmlVariant.hs:121
+module Text.Blaze.Html4.Transitional                                            -- util/GenerateHtmlVariant.hs:121
     ( module Text.Blaze                                                         -- util/GenerateHtmlVariant.hs:122
     , html                                                                      -- util/GenerateHtmlVariant.hs:124
     , docType                                                                   -- util/GenerateHtmlVariant.hs:124
@@ -40,8 +40,6 @@ module Text.Blaze.Html4.FrameSet                                                
     , fieldset                                                                  -- util/GenerateHtmlVariant.hs:124
     , font                                                                      -- util/GenerateHtmlVariant.hs:124
     , form                                                                      -- util/GenerateHtmlVariant.hs:124
-    , frame                                                                     -- util/GenerateHtmlVariant.hs:124
-    , frameset                                                                  -- util/GenerateHtmlVariant.hs:124
     , h1                                                                        -- util/GenerateHtmlVariant.hs:124
     , h2                                                                        -- util/GenerateHtmlVariant.hs:124
     , h3                                                                        -- util/GenerateHtmlVariant.hs:124
@@ -114,8 +112,8 @@ import Text.Blaze.Internal                                                      
 --
 -- Result:
 --
--- > <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN"
--- >     "http://www.w3.org/TR/html4/frameset.dtd">
+-- > <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+-- >     "http://www.w3.org/TR/html4/loose.dtd">
 -- > <html><span>foo</span></html>
 --
 html :: Html  -- ^ Inner HTML.                                                  -- util/GenerateHtmlVariant.hs:162
@@ -132,11 +130,11 @@ html inner = docType >> htmlNoDocType inner                                     
 --
 -- Result:
 --
--- > <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN"
--- >     "http://www.w3.org/TR/html4/frameset.dtd">
+-- > <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+-- >     "http://www.w3.org/TR/html4/loose.dtd">
 --
 docType :: Html  -- ^ The document type HTML.                                   -- util/GenerateHtmlVariant.hs:141
-docType = preEscapedText "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Frameset//EN\"\n    \"http://www.w3.org/TR/html4/frameset.dtd\">\n" -- util/GenerateHtmlVariant.hs:142
+docType = preEscapedText "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"\n    \"http://www.w3.org/TR/html4/loose.dtd\">\n" -- util/GenerateHtmlVariant.hs:142
 {-# INLINE docType #-}                                                          -- util/GenerateHtmlVariant.hs:143
 
 -- | Combinator for the @\<a>@ element.
@@ -599,35 +597,6 @@ form :: Html  -- ^ Inner HTML.                                                  
      -> Html  -- ^ Resulting HTML.                                              -- util/GenerateHtmlVariant.hs:183
 form = Parent "<form" "</form>"                                                 -- util/GenerateHtmlVariant.hs:184
 {-# INLINE form #-}                                                             -- util/GenerateHtmlVariant.hs:186
-
--- | Combinator for the @\<frame>@ element.
---
--- Example:
---
--- > frame
---
--- Result:
---
--- > <frame>
---
-frame :: Html  -- ^ Resulting HTML.                                             -- util/GenerateHtmlVariant.hs:227
-frame = Leaf "<frame" ">"                                                       -- util/GenerateHtmlVariant.hs:228
-{-# INLINE frame #-}                                                            -- util/GenerateHtmlVariant.hs:229
-
--- | Combinator for the @\<frameset>@ element.
---
--- Example:
---
--- > frameset $ span $ text "foo"
---
--- Result:
---
--- > <frameset><span>foo</span></frameset>
---
-frameset :: Html  -- ^ Inner HTML.                                              -- util/GenerateHtmlVariant.hs:182
-         -> Html  -- ^ Resulting HTML.                                          -- util/GenerateHtmlVariant.hs:183
-frameset = Parent "<frameset" "</frameset>"                                     -- util/GenerateHtmlVariant.hs:184
-{-# INLINE frameset #-}                                                         -- util/GenerateHtmlVariant.hs:186
 
 -- | Combinator for the @\<h1>@ element.
 --

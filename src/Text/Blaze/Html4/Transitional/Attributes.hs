@@ -6,7 +6,7 @@
 -- | This module exports combinators that provide you with the
 -- ability to set attributes on HTML elements.
 --
-module Text.Blaze.Html4.FrameSet.Attributes                                     -- util/GenerateHtmlVariant.hs:121
+module Text.Blaze.Html4.Transitional.Attributes                                 -- util/GenerateHtmlVariant.hs:121
     ( abbr                                                                      -- util/GenerateHtmlVariant.hs:122
     , accept                                                                    -- util/GenerateHtmlVariant.hs:124
     , accesskey                                                                 -- util/GenerateHtmlVariant.hs:124
@@ -44,7 +44,6 @@ module Text.Blaze.Html4.FrameSet.Attributes                                     
     , enctype                                                                   -- util/GenerateHtmlVariant.hs:124
     , for                                                                       -- util/GenerateHtmlVariant.hs:124
     , frame                                                                     -- util/GenerateHtmlVariant.hs:124
-    , frameborder                                                               -- util/GenerateHtmlVariant.hs:124
     , headers                                                                   -- util/GenerateHtmlVariant.hs:124
     , height                                                                    -- util/GenerateHtmlVariant.hs:124
     , href                                                                      -- util/GenerateHtmlVariant.hs:124
@@ -91,7 +90,6 @@ module Text.Blaze.Html4.FrameSet.Attributes                                     
     , rules                                                                     -- util/GenerateHtmlVariant.hs:124
     , scheme                                                                    -- util/GenerateHtmlVariant.hs:124
     , scope                                                                     -- util/GenerateHtmlVariant.hs:124
-    , scrolling                                                                 -- util/GenerateHtmlVariant.hs:124
     , selected                                                                  -- util/GenerateHtmlVariant.hs:124
     , shape                                                                     -- util/GenerateHtmlVariant.hs:124
     , size                                                                      -- util/GenerateHtmlVariant.hs:124
@@ -672,21 +670,6 @@ frame :: AttributeValue  -- ^ Attribute value.                                  
       -> Attribute       -- ^ Resulting attribute.                              -- util/GenerateHtmlVariant.hs:249
 frame = attribute " frame=\""                                                   -- util/GenerateHtmlVariant.hs:250
 {-# INLINE frame #-}                                                            -- util/GenerateHtmlVariant.hs:251
-
--- | Combinator for the @frameborder@ attribute.
---
--- Example:
---
--- > div ! frameborder "bar" $ "Hello."
---
--- Result:
---
--- > <div frameborder="bar">Hello.</div>
---
-frameborder :: AttributeValue  -- ^ Attribute value.                            -- util/GenerateHtmlVariant.hs:248
-            -> Attribute       -- ^ Resulting attribute.                        -- util/GenerateHtmlVariant.hs:249
-frameborder = attribute " frameborder=\""                                       -- util/GenerateHtmlVariant.hs:250
-{-# INLINE frameborder #-}                                                      -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @headers@ attribute.
 --
@@ -1377,21 +1360,6 @@ scope :: AttributeValue  -- ^ Attribute value.                                  
       -> Attribute       -- ^ Resulting attribute.                              -- util/GenerateHtmlVariant.hs:249
 scope = attribute " scope=\""                                                   -- util/GenerateHtmlVariant.hs:250
 {-# INLINE scope #-}                                                            -- util/GenerateHtmlVariant.hs:251
-
--- | Combinator for the @scrolling@ attribute.
---
--- Example:
---
--- > div ! scrolling "bar" $ "Hello."
---
--- Result:
---
--- > <div scrolling="bar">Hello.</div>
---
-scrolling :: AttributeValue  -- ^ Attribute value.                              -- util/GenerateHtmlVariant.hs:248
-          -> Attribute       -- ^ Resulting attribute.                          -- util/GenerateHtmlVariant.hs:249
-scrolling = attribute " scrolling=\""                                           -- util/GenerateHtmlVariant.hs:250
-{-# INLINE scrolling #-}                                                        -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @selected@ attribute.
 --

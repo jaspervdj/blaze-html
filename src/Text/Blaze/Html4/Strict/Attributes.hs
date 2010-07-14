@@ -37,6 +37,7 @@ module Text.Blaze.Html4.Strict.Attributes                                       
     , defer                                                                     -- util/GenerateHtmlVariant.hs:124
     , dir                                                                       -- util/GenerateHtmlVariant.hs:124
     , disabled                                                                  -- util/GenerateHtmlVariant.hs:124
+    , enctype                                                                   -- util/GenerateHtmlVariant.hs:124
     , for                                                                       -- util/GenerateHtmlVariant.hs:124
     , frame                                                                     -- util/GenerateHtmlVariant.hs:124
     , headers                                                                   -- util/GenerateHtmlVariant.hs:124
@@ -552,6 +553,21 @@ disabled :: AttributeValue  -- ^ Attribute value.                               
          -> Attribute       -- ^ Resulting attribute.                           -- util/GenerateHtmlVariant.hs:249
 disabled = attribute " disabled=\""                                             -- util/GenerateHtmlVariant.hs:250
 {-# INLINE disabled #-}                                                         -- util/GenerateHtmlVariant.hs:251
+
+-- | Combinator for the @enctype@ attribute.
+--
+-- Example:
+--
+-- > div ! enctype "bar" $ "Hello."
+--
+-- Result:
+--
+-- > <div enctype="bar">Hello.</div>
+--
+enctype :: AttributeValue  -- ^ Attribute value.                                -- util/GenerateHtmlVariant.hs:248
+        -> Attribute       -- ^ Resulting attribute.                            -- util/GenerateHtmlVariant.hs:249
+enctype = attribute " enctype=\""                                               -- util/GenerateHtmlVariant.hs:250
+{-# INLINE enctype #-}                                                          -- util/GenerateHtmlVariant.hs:251
 
 -- | Combinator for the @for@ attribute.
 --

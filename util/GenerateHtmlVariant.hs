@@ -296,6 +296,51 @@ html4Strict = HtmlVariant
         ]
     }
 
+-- | HTML 4.0 Frameset
+--
+html4FrameSet :: HtmlVariant
+html4FrameSet = HtmlVariant
+    { version = ["Html4", "FrameSet"]
+    , docType =
+        [ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Frameset//EN\""
+        , "    \"http://www.w3.org/TR/html4/frameset.dtd\">"
+        ]
+    , parents =
+        [ "a", "abbr", "acronym", "address", "applet", "b", "bdo", "big"
+        , "blockquote", "body", "button", "caption", "center", "cite", "code"
+        , "colgroup", "dd", "del", "dfn", "dir", "div", "dl", "dt", "em"
+        , "fieldset", "font", "form", "frameset", "h6", "head", "html", "i"
+        , "iframe", "ins", "kbd", "label", "legend", "li", "map", "menu"
+        , "noframes", "noscript", "object", "ol", "optgroup", "option", "p"
+        , "pre", "q", "s", "samp", "script", "select", "small", "span", "strike"
+        , "strong", "style", "sub", "sup", "table", "tbody", "td", "textarea"
+        , "tfoot", "th", "thead", "title", "tr", "tt", "u", "ul", "var"
+        ]
+    , leafs = []
+    , opens =
+        [ "area", "base", "basefont", "br", "col", "frame", "hr", "img", "input"
+        , "link", "meta", "param" ]
+    , attributes =
+        [ "abbr", "accept", "accept-charset", "accesskey", "align", "alink"
+        , "alt", "axis", "background", "bgcolor", "border", "cellpadding"
+        , "cellspacing", "char", "charoff", "charset", "checked", "cite"
+        , "class", "color", "cols", "colspan", "compact", "coords", "datetime"
+        , "defer", "disabled", "enctype", "face", "for", "frame", "frameborder"
+        , "headers", "height", "href", "hreflang", "hspace", "http-equiv", "id"
+        , "label", "lang", "link", "longdesc", "marginheight", "marginwidth"
+        , "maxlength", "media", "method", "multiple", "name", "nohref"
+        , "noresize", "noshade", "nowrap", "onabort", "onblur", "onchange"
+        , "onclick", "ondblclick", "onfocus", "onkeydown", "onkeypress"
+        , "onkeyup", "onload", "onmousedown", "onmousemove", "onmouseout"
+        , "onmouseover", "onmouseup", "onreset", "onselect", "onsubmit"
+        , "onunload", "readonly", "rel", "rev", "rows", "rowspan", "rules"
+        , "scheme", "scope", "scrolling", "selected", "shape", "size", "span"
+        , "src", "start", "style", "summary", "tabindex", "target", "text"
+        , "title", "type", "usemap", "valign", "value", "vlink", "vspace"
+        , "width"
+        ]
+    }
+
 -- | HTML 5.0
 -- A good reference can be found here:
 -- http://www.w3schools.com/html5/html5_reference.asp
@@ -350,4 +395,5 @@ html5 = HtmlVariant
 main :: IO ()
 main = do
     writeHtmlVariant html4Strict
+    writeHtmlVariant html4FrameSet
     writeHtmlVariant html5

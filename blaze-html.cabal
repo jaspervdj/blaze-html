@@ -58,6 +58,8 @@ Library
 
   -- Modules exported by the library.
   Exposed-modules:   Text.Blaze
+                     Text.Blaze.Html4.FrameSet
+                     Text.Blaze.Html4.FrameSet.Attributes
                      Text.Blaze.Html4.Strict
                      Text.Blaze.Html4.Strict.Attributes
                      Text.Blaze.Html5

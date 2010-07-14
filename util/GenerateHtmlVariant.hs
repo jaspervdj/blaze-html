@@ -313,7 +313,7 @@ html4Transitional = HtmlVariant
     , opens = opens html4Strict ++ ["basefont"]
     , attributes = attributes html4Strict ++
         [ "background", "bgcolor", "clear", "compact", "hspace", "language"
-        , "noshade", "nowrap", "size", "start", "target", "vspace"
+        , "noshade", "nowrap", "start", "target", "vspace"
         ]
     }
 

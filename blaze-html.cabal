@@ -52,10 +52,6 @@ Cabal-version:       >=1.2
 Library
   Ghc-Options:       -Wall
 
-  -- Source directories
-  Hs-Source-Dirs:    src,
-                     lib/binary-0.5.0.2/src
-
   -- Modules exported by the library.
   Exposed-modules:   Text.Blaze
                      Text.Blaze.Html4.FrameSet

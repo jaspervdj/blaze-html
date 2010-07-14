@@ -45,7 +45,7 @@ writeHtmlVariant htmlVariant = do
         appliedTags = map (\(x, f) -> f x) sortedTags
 
     -- Write the main module.
-    writeFile (basePath <.> "hs") $ removeTrailingNewlines $ unlines
+    writeFile' (basePath <.> "hs") $ removeTrailingNewlines $ unlines
         [ doNotEdit
         , LINE "{-# LANGUAGE OverloadedStrings #-}"
         , LINE "-- | This module exports HTML combinators used to create documents."
@@ -67,7 +67,7 @@ writeHtmlVariant htmlVariant = do
     let sortedAttributes = sort attributes'
 
     -- Write the attribute module.
-    writeFile (basePath </> "Attributes.hs") $ removeTrailingNewlines $ unlines
+    writeFile' (basePath </> "Attributes.hs") $ removeTrailingNewlines $ unlines
         [ doNotEdit
         , LINE "{-# LANGUAGE OverloadedStrings #-}"
         , LINE "-- | This module exports combinators that provide you with the"
@@ -90,6 +90,9 @@ writeHtmlVariant htmlVariant = do
     opens'      = opens htmlVariant
     version'    = version htmlVariant
     removeTrailingNewlines = reverse . drop 2 . reverse
+    writeFile' file content = do
+        putStrLn ("Generating " ++ file)
+        writeFile file content
 
 -- | Create a string, consisting of @x@ spaces, where @x@ is the length of the
 -- argument.

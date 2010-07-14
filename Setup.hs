@@ -4,8 +4,6 @@ import Distribution.Simple
 import Distribution.Simple.Setup
 import Distribution.PackageDescription
 
-import System.Process (rawSystem)
-
 import Util.GenerateHtmlCombinators (generateHtmlCombinators)
 
 main :: IO ()

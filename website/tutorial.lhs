@@ -153,6 +153,10 @@ A lazy `ByteString` is basically a list of _byte chunks_. The list of byte
 chunks the `renderHtml` is your HTML page, encoded in UTF-8. Furthermore, all
 chunks will be nicely-sized, so the overhead is minimal.
 
+There are other renderers as well -- for example there is a prettifying renderer
+called `Text.Blaze.Renderer.Pretty`, and if you just want a `String`, use
+`Text.Blaze.Renderer.String`.
+
 Further examples
 ================
 

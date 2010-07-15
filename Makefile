@@ -37,3 +37,14 @@ bench-bigtable-non-haskell:
 
 test:
 	runghc -itests tests/TestSuite.hs
+
+# The current target used
+CURRENT=$(shell ls *.cabal | sed 's/\.cabal//')
+
+hide-cabal-files:
+	mv ${CURRENT}.cabal ${CURRENT}.cabal.${CURRENT}
+	mv Setup.hs Setup.hs.${CURRENT}
+
+blaze-html: hide-cabal-files
+	mv blaze-html.cabal.blaze-html blaze-html.cabal
+	mv Setup.hs.blaze-html Setup.hs

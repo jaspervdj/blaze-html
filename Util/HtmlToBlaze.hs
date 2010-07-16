@@ -104,7 +104,8 @@ fromHtml variant (Parent tag attrs inner) = case combinatorType variant tag of
         (Block b) -> (combinator ++ " $ do") : indent (fromHtml variant inner)
         -- We join non-block parents for better readability.
         x -> let ls = fromHtml variant x
-             in case ls of (y : ys) -> (combinator ++ " $ " ++ y) : ys
+                 apply = if dropApply x then " " else " $ "
+             in case ls of (y : ys) -> (combinator ++ apply ++ y) : ys
                            [] -> [combinator]
     -- Leaf tags
     LeafCombinator -> [combinator]
@@ -118,6 +119,19 @@ fromHtml variant (Parent tag attrs inner) = case combinatorType variant tag of
         then " ! " ++ sanitize k ++ " " ++ show v
         else error $ "Unknown attribute: " ++ k
 
+    -- Check if we can drop the apply operator ($), for readability reasons.
+    -- This would change:
+    --
+    -- > p $ "Some text"
+    --
+    -- Into
+    --
+    -- > p "Some text"
+    --
+    dropApply (Parent _ _ _) = False
+    dropApply (Block _) = False
+    dropApply _ = True
+
 -- | Convert the HTML to blaze code.
 --
 htmlToBlaze :: HtmlVariant -> String -> String
@@ -130,5 +144,5 @@ test = unlines
     [ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Frameset//EN\""
     , "    \"http://www.w3.org/TR/html4/frameset.dtd\">"
     , "<html><head><title>lol</title></head><body style=\"lol\">"
-    , "Haha<img src=\"foo.png\" alt=\"bar\"/></body></html>"
+    , "Haha<img src=\"foo.png\" alt=\"bar\"/><p>Hello!</p></body></html>"
     ]

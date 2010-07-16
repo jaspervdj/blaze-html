@@ -92,7 +92,10 @@ combinatorType variant combinator
 --
 fromHtml :: HtmlVariant -> Html -> [String]
 fromHtml _ Doctype = ["docType"]
-fromHtml _ (Text text) = [show text]
+fromHtml _ (Text text) = [show $ trim text]
+  where
+    -- Remove whitespace on both ends of a string
+    trim = reverse . dropWhile isSpace . reverse . dropWhile isSpace
 fromHtml _ (Comment comment) = ["-- " ++ comment]
 fromHtml variant (Block block) = concatMap (fromHtml variant) block
 fromHtml variant (Parent tag attrs inner) = case combinatorType variant tag of

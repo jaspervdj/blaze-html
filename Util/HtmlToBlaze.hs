@@ -11,9 +11,15 @@ import Text.HTML.TagSoup
 
 import Util.GenerateHtmlCombinators
 
--- | Intermediate tree representation
+-- | Simple type to represent attributes.
 --
-data Html = Parent String [(String, String)] [Html]
+type Attributes = [(String, String)]
+
+-- | Intermediate tree representation. This representation contains several
+-- constructors aimed at pretty-printing.
+--
+data Html = Parent String Attributes Html
+          | Block [Html]
           | Text String
           | Comment String
           | Doctype
@@ -22,56 +28,72 @@ data Html = Parent String [(String, String)] [Html]
 -- | Traverse the list of tags to produce an intermediate representation of the
 -- HTML tree.
 --
-parseHtml :: [String]                -- ^ Stack of open tags
-          -> [Tag String]            -- ^ Tags to parse
-          -> ([Html], [Tag String])  -- ^ (Result, unparsed part)
-parseHtml stack []
-    | null stack = ([], [])
+makeTree :: [String]                -- ^ Stack of open tags
+         -> [Tag String]            -- ^ Tags to parse
+         -> (Html, [Tag String])  -- ^ (Result, unparsed part)
+makeTree stack []
+    | null stack = (Block [], [])
     | otherwise = error $ "Error: tags left open at the end: " ++ show stack
-parseHtml stack (TagPosition row column : x : xs) = case x of
+makeTree stack (TagPosition row column : x : xs) = case x of
     TagOpen tag attrs -> if toLower' tag == "!doctype"
         then addHtml Doctype xs
-        else let (inner, t) = parseHtml (tag : stack) xs
+        else let (inner, t) = makeTree (tag : stack) xs
                  p = Parent (toLower' tag) (map (first toLower') attrs) inner
              in addHtml p t
     -- The closing tag must match the stack.
     TagClose tag -> if listToMaybe stack == Just (toLower' tag)
-        then ([], xs)
+        then (Block [], xs)
         else error $  "Line " ++ show row ++ ": " ++ show tag ++ " closed but "
                    ++ show stack ++ " should be closed instead."
     TagText text -> addHtml (Text text) xs
     TagComment comment -> addHtml (Comment comment) xs
-    _ -> parseHtml stack xs
+    _ -> makeTree stack xs
   where
-    addHtml html xs' = let (l, r) = parseHtml stack xs'
-                       in (html : l, r)
+    addHtml html xs' = let (Block l, r) = makeTree stack xs'
+                       in (Block (html : l), r)
 
     toLower' = map toLower
 
 -- | Remove empty text from the HTML.
 --
-removeEmptyText :: [Html] -> [Html]
-removeEmptyText = map go . filter (not . isEmpty)
-  where
-    isEmpty (Text text) = all isSpace text
-    isEmpty _           = False
+removeEmptyText :: Html -> Html
+removeEmptyText (Block b) = Block $ map removeEmptyText $ flip filter b $ \h ->
+    case h of Text text -> any (not . isSpace) text
+              _         -> True
+removeEmptyText (Parent tag attrs inner) =
+    Parent tag attrs $ removeEmptyText inner
+removeEmptyText x = x
 
-    go (Parent tag attrs inner) = Parent tag attrs $ removeEmptyText inner
-    go x = x
+-- | Try to eliminiate Block constructors as much as possible.
+--
+minimizeBlocks :: Html -> Html
+minimizeBlocks (Parent t a (Block [x])) = minimizeBlocks $ Parent t a x
+minimizeBlocks (Parent t a x) = Parent t a $ minimizeBlocks x
+minimizeBlocks (Block x) = Block $ map minimizeBlocks x
+minimizeBlocks x = x
 
 -- | Convert the HTML to blaze code.
 --
+{-
 toBlaze :: Int -> [Html] -> String
-toBlaze indent = intercalate "\n"
-               . map (replicate (indent * 4) ' ' ++) . map toBlaze'
+toBlaze indent [] = ""
+toBlaze indent (x : xs) = case x of
+    Text text -> text ++ continue
+    Comment comment -> "-- " ++ comment ++ continue
+    Doctype -> "doctype" ++ continue
+    Parent tag _ inner -> tag ++ case inner of
+        [_] -> " $ " ++ toBlaze indent inner ++ toBlaze indent xs
+        _ -> " $\n" ++ ind (indent + 1) ++ toBlaze (indent + 1) inner
+                    ++ toBlaze indent xs
   where
-    toBlaze' (Text text) = show text
-    toBlaze' (Comment comment) = "-- " ++ comment
-    toBlaze' Doctype = "docType"
-    toBlaze' (Parent tag _ inner)
-        | length inner == 1 = tag ++ " $ "
-                                  ++ dropWhile isSpace (toBlaze indent inner)
-        | otherwise = tag ++ " $\n" ++ toBlaze (indent + 1) inner
+    ind i = replicate (i * 4) ' '
+    continue = "\n" ++ case xs of
+        (_ : _) -> ind indent ++ toBlaze indent xs
+        [] -> ind (indent - 1)
+-}
+
+htmlToBlaze = minimizeBlocks . removeEmptyText . fst . makeTree []
+            . parseTagsOptions parseOptions { optTagPosition = True }
 
 parse' :: String -> [Tag String]
 parse' = parseTagsOptions parseOptions { optTagPosition = True }

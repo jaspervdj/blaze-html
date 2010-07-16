@@ -9,7 +9,7 @@ import Control.Arrow (first)
 
 import Text.HTML.TagSoup
 
-import Util.GenerateHtmlCombinators
+import Util.Sanitize (sanitize)
 
 -- | Simple type to represent attributes.
 --
@@ -72,35 +72,35 @@ minimizeBlocks (Parent t a x) = Parent t a $ minimizeBlocks x
 minimizeBlocks (Block x) = Block $ map minimizeBlocks x
 minimizeBlocks x = x
 
+-- | Produce the Blaze code from the HTML. The result is a list of lines.
+--
+fromHtml :: Html -> [String]
+fromHtml Doctype = ["docType"]
+fromHtml (Text text) = [text]
+fromHtml (Comment comment) = ["-- " ++ comment]
+fromHtml (Block block) = concatMap fromHtml block
+fromHtml (Parent tag _ inner) = case inner of
+    (Block b) -> (combinator ++ " $") : indent (fromHtml inner)
+    -- We join non-block parents for better readability.
+    x -> let ls = fromHtml x
+         in case ls of (y : ys) -> (combinator ++ " $ " ++ y) : ys
+                       [] -> [combinator]
+  where
+    indent :: [String] -> [String]
+    indent = map ("    " ++)
+
+    combinator = sanitize tag
+
 -- | Convert the HTML to blaze code.
 --
-{-
-toBlaze :: Int -> [Html] -> String
-toBlaze indent [] = ""
-toBlaze indent (x : xs) = case x of
-    Text text -> text ++ continue
-    Comment comment -> "-- " ++ comment ++ continue
-    Doctype -> "doctype" ++ continue
-    Parent tag _ inner -> tag ++ case inner of
-        [_] -> " $ " ++ toBlaze indent inner ++ toBlaze indent xs
-        _ -> " $\n" ++ ind (indent + 1) ++ toBlaze (indent + 1) inner
-                    ++ toBlaze indent xs
-  where
-    ind i = replicate (i * 4) ' '
-    continue = "\n" ++ case xs of
-        (_ : _) -> ind indent ++ toBlaze indent xs
-        [] -> ind (indent - 1)
--}
-
-htmlToBlaze = minimizeBlocks . removeEmptyText . fst . makeTree []
+htmlToBlaze :: String -> String
+htmlToBlaze = unlines . fromHtml
+            . minimizeBlocks . removeEmptyText . fst . makeTree []
             . parseTagsOptions parseOptions { optTagPosition = True }
-
-parse' :: String -> [Tag String]
-parse' = parseTagsOptions parseOptions { optTagPosition = True }
 
 test :: String
 test = unlines
     [ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Frameset//EN\""
     , "    \"http://www.w3.org/TR/html4/frameset.dtd\">"
-    , "<html><head><title><foo>lol<img /></foo></title></head><body><img /></body></html>"
+    , "<html><head><title>lol</title></head><body><class /><img /></body></html>"
     ]

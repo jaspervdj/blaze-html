@@ -21,8 +21,8 @@ data HtmlVariant = HtmlVariant
     , docType    :: [String]
     , parents    :: [String]
     , leafs      :: [String]
-    , opens      :: [String]
     , attributes :: [String]
+    , openLeafs  :: Bool
     } deriving (Show)
 
 codeLine :: String -> Int -> String -> String
@@ -39,8 +39,7 @@ writeHtmlVariant htmlVariant = do
     createDirectoryIfMissing True $ basePath
 
     let tags =  zip parents' (repeat makeParent)
-             ++ zip leafs' (repeat makeLeaf)
-             ++ zip opens' (repeat makeOpen)
+             ++ zip leafs' (repeat $ makeLeaf $ openLeafs htmlVariant)
         sortedTags = sortBy (comparing fst) tags
         appliedTags = map (\(x, f) -> f x) sortedTags
 
@@ -87,7 +86,6 @@ writeHtmlVariant htmlVariant = do
     attributes' = attributes htmlVariant
     parents'    = parents htmlVariant
     leafs'      = leafs htmlVariant
-    opens'      = opens htmlVariant
     version'    = version htmlVariant
     removeTrailingNewlines = reverse . drop 2 . reverse
     writeFile' file content = do
@@ -123,7 +121,7 @@ exportList _    []            = error "exportList without functions."
 exportList name (f:functions) = unlines $
     [ LINE $ "module " ++ name
     , LINE $ "    ( " ++ sanitize f
-    ] ++ 
+    ] ++
     map (LINE . ("    , " ++)) functions ++
     [ LINE "    ) where"]
 
@@ -194,8 +192,10 @@ makeParent tag = unlines
 
 -- | Generate a function for an HTML tag that must be a leaf.
 --
-makeLeaf :: String -> String
-makeLeaf tag = unlines
+makeLeaf :: Bool    -- ^ If we should use open leafs
+         -> String  -- ^ Tag for the combinator
+         -> String  -- ^ Combinator code
+makeLeaf openLeaf tag = unlines
     [ LINE $ "-- | Combinator for the @\\<" ++ tag ++ " />@ element."
     , LINE "--"
     , LINE "-- Example:"
@@ -207,32 +207,12 @@ makeLeaf tag = unlines
     , LINE $ "-- > <" ++ tag ++ " />"
     , LINE "--"
     , LINE $ function        ++ " :: Html  -- ^ Resulting HTML."
-    , LINE $ function ++ " = Leaf \"<" ++ tag ++ "\" \" />\""
+    , LINE $ function ++ " = Leaf \"<" ++ tag ++ "\" " ++ end
     , LINE $ "{-# INLINE " ++ function ++ " #-}"
     ]
   where
     function = sanitize tag
-
--- | Generate a function for an HTML tag that must be open.
---
-makeOpen :: String -> String
-makeOpen tag = unlines
-    [ LINE $ "-- | Combinator for the @\\<" ++ tag ++ ">@ element."
-    , LINE "--"
-    , LINE "-- Example:"
-    , LINE "--"
-    , LINE $ "-- > " ++ function
-    , LINE "--"
-    , LINE "-- Result:"
-    , LINE "--"
-    , LINE $ "-- > <" ++ tag ++ ">"
-    , LINE "--"
-    , LINE $ function        ++ " :: Html  -- ^ Resulting HTML."
-    , LINE $ function ++ " = Leaf \"<" ++ tag ++ "\" \">\""
-    , LINE $ "{-# INLINE " ++ function ++ " #-}"
-    ]
-  where
-    function = sanitize tag
+    end = if openLeaf then "\">\"" else "\" />\""
 
 -- | Generate a function for an HTML attribute.
 --
@@ -266,7 +246,7 @@ html4Strict = HtmlVariant
         [ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\""
         , "    \"http://www.w3.org/TR/html4/strict.dtd\">"
         ]
-    , parents = 
+    , parents =
         [ "a", "abbr", "acronym", "address", "b", "bdo", "big", "blockquote"
         , "body" , "button", "caption", "cite", "code", "colgroup", "dd", "del"
         , "dfn", "div" , "dl", "dt", "em", "fieldset", "form", "h1", "h2", "h3"
@@ -276,11 +256,10 @@ html4Strict = HtmlVariant
         , "span", "strong", "style", "sub", "sup", "table", "tbody", "td"
         , "textarea", "tfoot", "th", "thead", "title", "tr", "tt", "ul", "var"
         ]
-    , leafs = []
-    , opens = 
+    , leafs =
         [ "area", "br", "col", "hr", "link", "img", "input",  "meta", "param"
         ]
-    , attributes = 
+    , attributes =
         [ "abbr", "accept", "accesskey", "action", "align", "alt", "archive"
         , "axis", "border", "cellpadding", "cellspacing", "char", "charoff"
         , "charset", "checked", "cite", "class", "classid", "codebase"
@@ -297,6 +276,7 @@ html4Strict = HtmlVariant
         , "tabindex", "title", "type", "usemap", "valign", "value", "valuetype"
         , "width"
         ]
+    , openLeafs = True
     }
 
 -- | HTML 4.0 Transitional
@@ -312,12 +292,12 @@ html4Transitional = HtmlVariant
         [ "applet", "center", "dir", "font", "iframe", "isindex", "menu"
         , "noframes", "s", "u"
         ]
-    , leafs = []
-    , opens = opens html4Strict ++ ["basefont"]
+    , leafs = leafs html4Strict ++ ["basefont"]
     , attributes = attributes html4Strict ++
         [ "background", "bgcolor", "clear", "compact", "hspace", "language"
         , "noshade", "nowrap", "start", "target", "vspace"
         ]
+    , openLeafs = True
     }
 
 -- | HTML 4.0 Frameset
@@ -330,11 +310,11 @@ html4FrameSet = HtmlVariant
         , "    \"http://www.w3.org/TR/html4/frameset.dtd\">"
         ]
     , parents = parents html4Transitional ++ ["frameset"]
-    , leafs = []
-    , opens = opens html4Transitional ++ ["frame"]
+    , leafs = leafs html4Transitional ++ ["frame"]
     , attributes = attributes html4Transitional ++
         [ "frameborder", "scrolling"
         ]
+    , openLeafs = True
     }
 
 -- | HTML 5.0
@@ -363,8 +343,7 @@ html5 = HtmlVariant
         [ "area", "br", "col", "embed", "hr", "img", "input", "meta", "link"
         , "param"
         ]
-    , opens = []
-    , attributes = 
+    , attributes =
         [ "accept", "accept-charset", "accesskey", "action", "alt", "async"
         , "autocomplete", "autofocus", "autoplay", "challenge", "charset"
         , "checked", "cite", "class", "cols", "colspan", "content"
@@ -386,6 +365,7 @@ html5 = HtmlVariant
         , "start", "step", "style", "subject", "summary", "tabindex", "target"
         , "title", "type", "usemap", "value", "width", "wrap", "xmlns"
         ]
+    , openLeafs = False
     }
 
 generateHtmlCombinators :: IO ()

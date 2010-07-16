@@ -10,6 +10,7 @@ import Control.Arrow (first)
 import Text.HTML.TagSoup
 
 import Util.Sanitize (sanitize)
+import Util.GenerateHtmlCombinators
 
 -- | Simple type to represent attributes.
 --
@@ -24,6 +25,13 @@ data Html = Parent String Attributes Html
           | Comment String
           | Doctype
           deriving (Show)
+
+-- | Different combinator types.
+--
+data CombinatorType = ParentCombinator
+                    | LeafCombinator
+                    | UnknownCombinator
+                    deriving (Show)
 
 -- | Traverse the list of tags to produce an intermediate representation of the
 -- HTML tree.
@@ -72,19 +80,34 @@ minimizeBlocks (Parent t a x) = Parent t a $ minimizeBlocks x
 minimizeBlocks (Block x) = Block $ map minimizeBlocks x
 minimizeBlocks x = x
 
+-- | Get the type of a combinator, using a given variant.
+--
+combinatorType :: HtmlVariant -> String -> CombinatorType
+combinatorType variant combinator
+    | combinator `elem` parents variant = ParentCombinator
+    | combinator `elem` leafs variant = LeafCombinator
+    | otherwise = UnknownCombinator
+
 -- | Produce the Blaze code from the HTML. The result is a list of lines.
 --
-fromHtml :: Html -> [String]
-fromHtml Doctype = ["docType"]
-fromHtml (Text text) = [text]
-fromHtml (Comment comment) = ["-- " ++ comment]
-fromHtml (Block block) = concatMap fromHtml block
-fromHtml (Parent tag _ inner) = case inner of
-    (Block b) -> (combinator ++ " $") : indent (fromHtml inner)
-    -- We join non-block parents for better readability.
-    x -> let ls = fromHtml x
-         in case ls of (y : ys) -> (combinator ++ " $ " ++ y) : ys
-                       [] -> [combinator]
+fromHtml :: HtmlVariant -> Html -> [String]
+fromHtml _ Doctype = ["docType"]
+fromHtml _ (Text text) = [show text]
+fromHtml _ (Comment comment) = ["-- " ++ comment]
+fromHtml variant (Block block) = concatMap (fromHtml variant) block
+fromHtml variant (Parent tag _ inner) = case combinatorType variant tag of
+    -- Actual parent tags
+    ParentCombinator -> case inner of
+        (Block b) -> (combinator ++ " $ do") : indent (fromHtml variant inner)
+        -- We join non-block parents for better readability.
+        x -> let ls = fromHtml variant x
+             in case ls of (y : ys) -> (combinator ++ " $ " ++ y) : ys
+                           [] -> [combinator]
+    -- Leaf tags
+    LeafCombinator -> [combinator]
+
+    -- Unknown tag
+    UnknownCombinator -> error $ "Unknown tag: " ++ tag
   where
     indent :: [String] -> [String]
     indent = map ("    " ++)
@@ -93,14 +116,14 @@ fromHtml (Parent tag _ inner) = case inner of
 
 -- | Convert the HTML to blaze code.
 --
-htmlToBlaze :: String -> String
-htmlToBlaze = unlines . fromHtml
-            . minimizeBlocks . removeEmptyText . fst . makeTree []
-            . parseTagsOptions parseOptions { optTagPosition = True }
+htmlToBlaze :: HtmlVariant -> String -> String
+htmlToBlaze variant = unlines . fromHtml variant
+                    . minimizeBlocks . removeEmptyText . fst . makeTree []
+                    . parseTagsOptions parseOptions { optTagPosition = True }
 
 test :: String
 test = unlines
     [ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Frameset//EN\""
     , "    \"http://www.w3.org/TR/html4/frameset.dtd\">"
-    , "<html><head><title>lol</title></head><body><class /><img /></body></html>"
+    , "<html><head><title>lol</title></head><body>Haha<img /></body></html>"
     ]

@@ -95,7 +95,7 @@ fromHtml _ Doctype = ["docType"]
 fromHtml _ (Text text) = [show text]
 fromHtml _ (Comment comment) = ["-- " ++ comment]
 fromHtml variant (Block block) = concatMap (fromHtml variant) block
-fromHtml variant (Parent tag _ inner) = case combinatorType variant tag of
+fromHtml variant (Parent tag attrs inner) = case combinatorType variant tag of
     -- Actual parent tags
     ParentCombinator -> case inner of
         (Block b) -> (combinator ++ " $ do") : indent (fromHtml variant inner)
@@ -109,10 +109,11 @@ fromHtml variant (Parent tag _ inner) = case combinatorType variant tag of
     -- Unknown tag
     UnknownCombinator -> error $ "Unknown tag: " ++ tag
   where
-    indent :: [String] -> [String]
     indent = map ("    " ++)
-
-    combinator = sanitize tag
+    combinator = sanitize tag ++ attributes'
+    attributes' = attrs >>= \(k, v) -> if k `elem` attributes variant
+        then " ! " ++ sanitize k ++ " " ++ show v
+        else error $ "Unknown attribute: " ++ k
 
 -- | Convert the HTML to blaze code.
 --
@@ -125,5 +126,6 @@ test :: String
 test = unlines
     [ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Frameset//EN\""
     , "    \"http://www.w3.org/TR/html4/frameset.dtd\">"
-    , "<html><head><title>lol</title></head><body>Haha<img /></body></html>"
+    , "<html><head><title>lol</title></head><body style=\"lol\">"
+    , "Haha<img src=\"foo.png\" alt=\"bar\"/></body></html>"
     ]

@@ -383,7 +383,7 @@ htmlVariants = M.fromList $ map makeTuple $
     , html5
     ]
   where
-    makeTuple = map toLower . intercalate "." . version &&& id
+    makeTuple = map toLower . intercalate "-" . version &&& id
 
 generateHtmlCombinators :: IO ()
 generateHtmlCombinators = mapM_ (writeHtmlVariant . snd) $ M.toList htmlVariants

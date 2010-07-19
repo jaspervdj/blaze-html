@@ -2,10 +2,14 @@
 --
 module HtmlToBlaze where
 
+import Control.Monad (forM_)
 import Data.List (intercalate)
 import Data.Maybe (listToMaybe, fromMaybe)
 import Data.Char (toLower, isSpace)
 import Control.Arrow (first)
+import System.Environment (getArgs)
+import System.FilePath (dropExtension)
+import qualified Data.Map as M
 
 import Text.HTML.TagSoup
 
@@ -134,15 +138,56 @@ fromHtml variant (Parent tag attrs inner) = case combinatorType variant tag of
 
 -- | Convert the HTML to blaze code.
 --
-htmlToBlaze :: HtmlVariant -> String -> String
-htmlToBlaze variant = unlines . fromHtml variant
-                    . minimizeBlocks . removeEmptyText . fst . makeTree []
-                    . parseTagsOptions parseOptions { optTagPosition = True }
+htmlToBlaze :: HtmlVariant  -- ^ Variant to use
+            -> String       -- ^ Template name
+            -> String       -- ^ HTML code
+            -> String       -- ^ Resulting code
+htmlToBlaze variant name =
+    addSignature . unlines . fromHtml variant
+                 . minimizeBlocks . removeEmptyText . fst . makeTree []
+                 . parseTagsOptions parseOptions { optTagPosition = True }
+  where
+    addSignature body =  name ++ " :: Html\n"
+                      ++ name ++ " = " ++ body
 
-test :: String
-test = unlines
-    [ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Frameset//EN\""
-    , "    \"http://www.w3.org/TR/html4/frameset.dtd\">"
-    , "<html><head><title>lol</title></head><body style=\"lol\">"
-    , "Haha<img src=\"foo.png\" alt=\"bar\"/><p>Hello!</p></body></html>"
+-- | Main function
+--
+main :: IO ()
+main = do
+    args <- getArgs
+    case args of
+        []       -> help
+        (x : xs) -> case M.lookup (x :: String) htmlVariants of
+            Nothing      -> help
+            Just variant -> main' variant xs
+  where
+    -- No files given, work with stdin
+    main' variant [] = interact $ htmlToBlaze variant "template"
+
+    -- Handle all files
+    main' variant files = forM_ files $ \file -> do
+        body <- readFile file
+        putStrLn $ htmlToBlaze variant (dropExtension file) body
+
+-- | Show some help information.
+--
+help :: IO ()
+help = mapM_ putStrLn $
+    [ "This is a tool to convert HTML code to BlazeHtml code. It is still"
+    , "experimental and the results might need to be edited manually."
+    , ""
+    , "Usage:"
+    , ""
+    , "    html-to-blaze html-version [FILES ...]"
+    , ""
+    , "When no files are given, it works as a filter. The HTML version should"
+    , "be one of:"
+    , ""
+    ] ++
+    map (("- " ++) . fst) (M.toList htmlVariants) ++
+    [ ""
+    , "Example:"
+    , ""
+    , "    html-to-blaze html4-strict index.html"
+    , ""
     ]

@@ -1,10 +1,9 @@
 -- | A module for conversion from HTML to BlazeHtml Haskell code.
 --
-module HtmlToBlaze where
+module Main where
 
 import Control.Monad (forM_)
-import Data.List (intercalate)
-import Data.Maybe (listToMaybe, fromMaybe)
+import Data.Maybe (listToMaybe)
 import Data.Char (toLower, isSpace)
 import Control.Arrow (first)
 import System.Environment (getArgs)
@@ -46,7 +45,7 @@ makeTree :: [String]                -- ^ Stack of open tags
 makeTree stack []
     | null stack = (Block [], [])
     | otherwise = error $ "Error: tags left open at the end: " ++ show stack
-makeTree stack (TagPosition row column : x : xs) = case x of
+makeTree stack (TagPosition row _ : x : xs) = case x of
     TagOpen tag attrs -> if toLower' tag == "!doctype"
         then addHtml Doctype xs
         else let (inner, t) = makeTree (tag : stack) xs
@@ -65,6 +64,7 @@ makeTree stack (TagPosition row column : x : xs) = case x of
                        in (Block (html : l), r)
 
     toLower' = map toLower
+makeTree _ _ = error "TagSoup error"
 
 -- | Remove empty text from the HTML.
 --
@@ -105,7 +105,7 @@ fromHtml variant (Block block) = concatMap (fromHtml variant) block
 fromHtml variant (Parent tag attrs inner) = case combinatorType variant tag of
     -- Actual parent tags
     ParentCombinator -> case inner of
-        (Block b) -> (combinator ++ " $ do") : indent (fromHtml variant inner)
+        (Block _) -> (combinator ++ " $ do") : indent (fromHtml variant inner)
         -- We join non-block parents for better readability.
         x -> let ls = fromHtml variant x
                  apply = if dropApply x then " " else " $ "

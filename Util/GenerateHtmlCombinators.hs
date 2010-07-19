@@ -7,7 +7,6 @@
 module Util.GenerateHtmlCombinators where
 
 import Control.Arrow ((&&&))
-import Control.Monad (mapM_)
 import Data.List (isPrefixOf, sort, sortBy)
 import Data.List (intersperse, intercalate)
 import Data.Ord (comparing)

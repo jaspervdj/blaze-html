@@ -34,5 +34,5 @@ sanitize tag = if tag == "html" -- We make an exception for the html tag, since
     replace' '-' = '_'
     replace' x   = x
 
-    appendUnderscore tag | tag `S.member` keywords = tag ++ "_"
-                         | otherwise               = tag
+    appendUnderscore t | t `S.member` keywords = t ++ "_"
+                       | otherwise             = t

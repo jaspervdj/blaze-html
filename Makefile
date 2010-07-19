@@ -48,3 +48,7 @@ hide-cabal-files:
 blaze-html: hide-cabal-files
 	mv blaze-html.cabal.blaze-html blaze-html.cabal
 	mv Setup.hs.blaze-html Setup.hs
+
+blaze-html-to-blaze: hide-cabal-files
+	mv blaze-html-to-blaze.cabal.blaze-html-to-blaze blaze-html-to-blaze.cabal
+	mv Setup.hs.blaze-html-to-blaze Setup.hs

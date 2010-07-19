@@ -1,0 +1,24 @@
+Name:                blaze-html-to-blaze
+Version:             0.2.0
+Synopsis:            Tool to convert HTML to BlazeHtml code.
+Description:         Tool that converts HTML files to Haskell code, ready to be
+                     used with the BlazeHtml library.
+Homepage:            http://jaspervdj.be/blaze
+Bug-Reports:         http://github.com/jaspervdj/BlazeHtml/issues
+License:             BSD3
+License-file:        LICENSE
+Author:              Jasper Van der Jeugt, Simon Meier
+Maintainer:          jaspervdj@gmail.com, simon.meier@inf.ethz.ch
+Stability:           Experimental
+Category:            Text
+Build-type:          Simple
+Cabal-version:       >= 1.2
+
+Executable html-to-blaze
+  Ghc-Options:       -Wall
+  Main-Is:           Util/HtmlToBlaze.hs
+  Build-depends:     base >= 4 && < 5,
+                     containers >= 0.3,
+                     filepath >= 1.1,
+                     directory >= 1.0,
+                     tagsoup >= 0.10

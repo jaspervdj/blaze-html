@@ -138,11 +138,11 @@ fromHtml variant (Parent tag attrs inner) = case combinatorType variant tag of
 
 -- | Convert the HTML to blaze code.
 --
-htmlToBlaze :: HtmlVariant  -- ^ Variant to use
-            -> String       -- ^ Template name
-            -> String       -- ^ HTML code
-            -> String       -- ^ Resulting code
-htmlToBlaze variant name =
+blazeFromHtml :: HtmlVariant  -- ^ Variant to use
+              -> String       -- ^ Template name
+              -> String       -- ^ HTML code
+              -> String       -- ^ Resulting code
+blazeFromHtml variant name =
     addSignature . unlines . fromHtml variant
                  . minimizeBlocks . removeEmptyText . fst . makeTree []
                  . parseTagsOptions parseOptions { optTagPosition = True }
@@ -162,12 +162,12 @@ main = do
             Just variant -> main' variant xs
   where
     -- No files given, work with stdin
-    main' variant [] = interact $ htmlToBlaze variant "template"
+    main' variant [] = interact $ blazeFromHtml variant "template"
 
     -- Handle all files
     main' variant files = forM_ files $ \file -> do
         body <- readFile file
-        putStrLn $ htmlToBlaze variant (dropExtension file) body
+        putStrLn $ blazeFromHtml variant (dropExtension file) body
 
 -- | Show some help information.
 --
@@ -178,7 +178,7 @@ help = mapM_ putStrLn $
     , ""
     , "Usage:"
     , ""
-    , "    html-to-blaze html-version [FILES ...]"
+    , "    blaze-from-html html-version [FILES ...]"
     , ""
     , "When no files are given, it works as a filter. The HTML version should"
     , "be one of:"
@@ -188,6 +188,6 @@ help = mapM_ putStrLn $
     [ ""
     , "Example:"
     , ""
-    , "    html-to-blaze html4-strict index.html"
+    , "    blaze-from-html html4-strict index.html"
     , ""
     ]

@@ -6,11 +6,16 @@
 --
 module Util.GenerateHtmlCombinators where
 
+import Control.Arrow ((&&&))
+import Control.Monad (mapM_)
 import Data.List (isPrefixOf, sort, sortBy)
 import Data.List (intersperse, intercalate)
 import Data.Ord (comparing)
 import System.Directory (createDirectoryIfMissing)
 import System.FilePath ((</>), (<.>))
+import Data.Map (Map)
+import qualified Data.Map as M
+import Data.Char (toLower)
 
 import Util.Sanitize (sanitize)
 
@@ -368,9 +373,17 @@ html5 = HtmlVariant
     , openLeafs = False
     }
 
+-- | A map of HTML variants, per version, lowercase.
+--
+htmlVariants :: Map String HtmlVariant
+htmlVariants = M.fromList $ map makeTuple $
+    [ html4Strict
+    , html4Transitional
+    , html4FrameSet
+    , html5
+    ]
+  where
+    makeTuple = map toLower . intercalate "." . version &&& id
+
 generateHtmlCombinators :: IO ()
-generateHtmlCombinators = do
-    writeHtmlVariant html4Strict
-    writeHtmlVariant html4Transitional
-    writeHtmlVariant html4FrameSet
-    writeHtmlVariant html5
+generateHtmlCombinators = mapM_ (writeHtmlVariant . snd) $ M.toList htmlVariants

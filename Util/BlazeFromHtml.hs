@@ -3,12 +3,14 @@
 module Main where
 
 import Control.Monad (forM_)
-import Data.Maybe (listToMaybe)
+import Control.Applicative ((<$>))
+import Data.Maybe (listToMaybe, fromMaybe)
 import Data.Char (toLower, isSpace)
 import Control.Arrow (first)
 import System.Environment (getArgs)
 import System.FilePath (dropExtension)
 import qualified Data.Map as M
+import System.Console.GetOpt
 
 import Text.HTML.TagSoup
 
@@ -174,12 +176,10 @@ blazeFromHtml variant name =
 --
 main :: IO ()
 main = do
-    args <- getArgs
+    args <- getOpt Permute options <$> getArgs
     case args of
-        []       -> help
-        (x : xs) -> case M.lookup (x :: String) htmlVariants of
-            Nothing      -> help
-            Just variant -> main' variant xs
+        (o, n, []) -> main' (getVariant o) n
+        (_, _, _)  -> putStr help
   where
     -- No files given, work with stdin
     main' variant [] = interact $ blazeFromHtml variant "template"
@@ -189,25 +189,58 @@ main = do
         body <- readFile file
         putStrLn $ blazeFromHtml variant (dropExtension file) body
 
--- | Show some help information.
+    -- Get the variant from the options
+    getVariant opts = fromMaybe defaultHtmlVariant $ listToMaybe $
+        flip concatMap opts $ \o -> case o of (ArgHtmlVariant x) -> [x]
+                                              _ -> []
+
+-- | Help information.
 --
-help :: IO ()
-help = mapM_ putStrLn $
+help :: String
+help = unlines $
     [ "This is a tool to convert HTML code to BlazeHtml code. It is still"
     , "experimental and the results might need to be edited manually."
     , ""
-    , "Usage:"
+    , "USAGE"
     , ""
-    , "    blaze-from-html html-version [FILES ...]"
+    , "  blaze-from-html [OPTIONS...] [FILES ...]"
     , ""
-    , "When no files are given, it works as a filter. The HTML version should"
-    , "be one of:"
+    , "When no files are given, it works as a filter."
+    , ""
+    , "EXAMPLE"
+    , ""
+    , "  blaze-from-html -v html4-strict index.html"
+    , ""
+    , "This converts the index.html file to Haskell code, writing to stdout."
+    , ""
+    , "OPTIONS"
+    , usageInfo "" options
+    , "VARIANTS"
     , ""
     ] ++
-    map (("- " ++) . fst) (M.toList htmlVariants) ++
+    map (("  " ++) . fst) (M.toList htmlVariants) ++
     [ ""
-    , "Example:"
-    , ""
-    , "    blaze-from-html html4-strict index.html"
-    , ""
+    , "By default, " ++ show defaultHtmlVariant ++ " is used."
     ]
+
+-- | Options for the CLI program
+--
+data Arg = ArgHtmlVariant HtmlVariant
+         | ArgAddImports
+         deriving (Show)
+
+-- | A description of the options
+--
+options :: [OptDescr Arg]
+options =
+    [ Option "v" ["html-variant"] htmlVariantOption "HTML variant to use"
+    ]
+  where
+    htmlVariantOption = flip ReqArg "VARIANT" $ \name -> ArgHtmlVariant $
+        fromMaybe (error $ "No HTML variant called " ++ name ++ " found.")
+                  (M.lookup name htmlVariants)
+
+-- | The default HTML variant
+--
+defaultHtmlVariant :: HtmlVariant
+defaultHtmlVariant = html5

@@ -27,7 +27,10 @@ data HtmlVariant = HtmlVariant
     , leafs      :: [String]
     , attributes :: [String]
     , openLeafs  :: Bool
-    } deriving (Show)
+    }
+
+instance Show HtmlVariant where
+    show = map toLower . intercalate "-" . version
 
 -- | Get the full module name for an HTML variant.
 --
@@ -387,14 +390,12 @@ html5 = HtmlVariant
 -- | A map of HTML variants, per version, lowercase.
 --
 htmlVariants :: Map String HtmlVariant
-htmlVariants = M.fromList $ map makeTuple $
+htmlVariants = M.fromList $ map (show &&& id) $
     [ html4Strict
     , html4Transitional
     , html4FrameSet
     , html5
     ]
-  where
-    makeTuple = map toLower . intercalate "-" . version &&& id
 
 generateHtmlCombinators :: IO ()
 generateHtmlCombinators = mapM_ (writeHtmlVariant . snd) $ M.toList htmlVariants

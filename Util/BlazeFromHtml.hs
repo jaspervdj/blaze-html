@@ -98,12 +98,14 @@ combinatorType variant combinator
 --
 fromHtml :: HtmlVariant -> Html -> [String]
 fromHtml _ Doctype = ["docType"]
-fromHtml _ (Text text) = ["\"" ++ escapeQuotes (trim text) ++ "\""]
+fromHtml _ (Text text) = ["\"" ++ concatMap escape (trim text) ++ "\""]
   where
     -- Remove whitespace on both ends of a string
     trim = reverse . dropWhile isSpace . reverse . dropWhile isSpace
-    -- Escape double quotes
-    escapeQuotes = concatMap (\x -> if x == '"' then "\\\"" else [x])
+    -- Escape a number of characters
+    escape '"'  = "\\\""
+    escape '\n' = "\\n"
+    escape x    = [x]
 fromHtml _ (Comment comment) = map ("-- " ++) $ lines comment
 fromHtml variant (Block block) = concatMap (fromHtml variant) block
 fromHtml variant (Parent tag attrs inner) = case combinatorType variant tag of

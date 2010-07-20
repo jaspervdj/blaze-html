@@ -191,7 +191,9 @@ main = do
     args <- getOpt Permute options <$> getArgs
     case args of
         (o, n, []) -> let v = getVariant o
-                      in imports' v o >> main' v n
+                      in do putStrLn "{-# LANGUAGE OverloadedStrings #-}\n"
+                            imports' v o
+                            main' v n
         (_, _, _)  -> putStr help
   where
     -- No files given, work with stdin

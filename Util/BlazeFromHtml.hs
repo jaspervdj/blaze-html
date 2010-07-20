@@ -144,7 +144,7 @@ fromHtml variant (Parent tag attrs inner) = case combinatorType variant tag of
     --
     dropApply (Parent _ _ _) = False
     dropApply (Block _) = False
-    dropApply _ = True
+    dropApply _ = null attrs
 
 -- | Produce the code needed for initial imports.
 --

@@ -121,10 +121,14 @@ fromHtml variant (Parent tag attrs inner) = case combinatorType variant tag of
     -- Unknown tag
     UnknownCombinator -> error $ "Unknown tag: " ++ tag
   where
-    combinator = sanitize tag ++ attributes'
+    combinator = qualifiedSanitize "H." tag ++ attributes'
     attributes' = attrs >>= \(k, v) -> if k `elem` attributes variant
-        then " ! " ++ sanitize k ++ " " ++ show v
+        then " ! " ++ qualifiedSanitize "A." k ++ " " ++ show v
         else error $ "Unknown attribute: " ++ k
+
+    -- Qualifies a tag with the given qualifier if needed, and sanitizes it.
+    qualifiedSanitize qualifier tag =
+        (if isNameClash variant tag then qualifier else "") ++ sanitize tag
 
     -- Check if we can drop the apply operator ($), for readability reasons.
     -- This would change:

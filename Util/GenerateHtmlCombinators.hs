@@ -15,8 +15,9 @@ import System.FilePath ((</>), (<.>))
 import Data.Map (Map)
 import qualified Data.Map as M
 import Data.Char (toLower)
+import qualified Data.Set as S
 
-import Util.Sanitize (sanitize)
+import Util.Sanitize (sanitize, prelude)
 
 -- | Datatype for an HTML variant.
 --
@@ -41,6 +42,16 @@ getModuleName = ("Text.Blaze." ++) . intercalate "." . version
 --
 getAttributeModuleName :: HtmlVariant -> String
 getAttributeModuleName = (++ ".Attributes") . getModuleName
+
+-- | Check if a given name causes a name clash.
+--
+isNameClash :: HtmlVariant -> String -> Bool
+isNameClash v t
+    -- Both an element and an attribute
+    | (t `elem` parents v || t `elem` leafs v) && t `elem` attributes v = True
+    -- Already a prelude function
+    | sanitize t `S.member` prelude = True
+    | otherwise = False
 
 -- | Annotate a line of code with the line by which it was generated.
 --

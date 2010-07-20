@@ -138,6 +138,24 @@ fromHtml variant (Parent tag attrs inner) = case combinatorType variant tag of
     dropApply (Block _) = False
     dropApply _ = True
 
+-- | Produce the code needed for initial imports.
+--
+imports :: HtmlVariant -> [String]
+imports variant =
+    [ import_ "Prelude"
+    , qualify "Prelude" "P"
+    , ""
+    , import_ h
+    , qualify h "H"
+    , import_ a
+    , qualify a "A"
+    ]
+  where
+    import_ = ("import " ++)
+    qualify name short = "import qualified " ++ name ++ " as " ++ short
+    h = getModuleName variant
+    a = getAttributeModuleName variant
+
 -- | Convert the HTML to blaze code.
 --
 blazeFromHtml :: HtmlVariant  -- ^ Variant to use

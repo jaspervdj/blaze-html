@@ -27,7 +27,7 @@ data HtmlVariant = HtmlVariant
     , leafs      :: [String]
     , attributes :: [String]
     , openLeafs  :: Bool
-    }
+    } deriving (Eq)
 
 instance Show HtmlVariant where
     show = map toLower . intercalate "-" . version

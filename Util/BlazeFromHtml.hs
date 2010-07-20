@@ -2,7 +2,7 @@
 --
 module Main where
 
-import Control.Monad (forM_)
+import Control.Monad (forM_, when)
 import Control.Applicative ((<$>))
 import Data.Maybe (listToMaybe, fromMaybe)
 import Data.Char (toLower, isSpace)
@@ -121,7 +121,6 @@ fromHtml variant (Parent tag attrs inner) = case combinatorType variant tag of
     -- Unknown tag
     UnknownCombinator -> error $ "Unknown tag: " ++ tag
   where
-    indent = map ("    " ++)
     combinator = sanitize tag ++ attributes'
     attributes' = attrs >>= \(k, v) -> if k `elem` attributes variant
         then " ! " ++ sanitize k ++ " " ++ show v
@@ -142,8 +141,8 @@ fromHtml variant (Parent tag attrs inner) = case combinatorType variant tag of
 
 -- | Produce the code needed for initial imports.
 --
-imports :: HtmlVariant -> [String]
-imports variant =
+getImports :: HtmlVariant -> [String]
+getImports variant =
     [ import_ "Prelude"
     , qualify "Prelude" "P"
     , ""
@@ -165,12 +164,18 @@ blazeFromHtml :: HtmlVariant  -- ^ Variant to use
               -> String       -- ^ HTML code
               -> String       -- ^ Resulting code
 blazeFromHtml variant name =
-    addSignature . unlines . fromHtml variant
-                 . minimizeBlocks . removeEmptyText . fst . makeTree []
-                 . parseTagsOptions parseOptions { optTagPosition = True }
+    unlines . addSignature . fromHtml variant
+            . minimizeBlocks . removeEmptyText . fst . makeTree []
+            . parseTagsOptions parseOptions { optTagPosition = True }
   where
-    addSignature body =  name ++ " :: Html\n"
-                      ++ name ++ " = " ++ body
+    addSignature body = [ name ++ " :: Html"
+                        , name ++ " = do"
+                        ] ++ indent body
+
+-- | Indent block of code.
+--
+indent :: [String] -> [String]
+indent = map ("    " ++)
 
 -- | Main function
 --
@@ -178,7 +183,8 @@ main :: IO ()
 main = do
     args <- getOpt Permute options <$> getArgs
     case args of
-        (o, n, []) -> main' (getVariant o) n
+        (o, n, []) -> let v = getVariant o
+                      in imports' v o >> main' v n
         (_, _, _)  -> putStr help
   where
     -- No files given, work with stdin
@@ -188,6 +194,10 @@ main = do
     main' variant files = forM_ files $ \file -> do
         body <- readFile file
         putStrLn $ blazeFromHtml variant (dropExtension file) body
+
+    -- Print imports if needed
+    imports' variant opts = when (ArgAddImports `elem` opts) $
+        putStrLn $ unlines $ getImports variant
 
     -- Get the variant from the options
     getVariant opts = fromMaybe defaultHtmlVariant $ listToMaybe $
@@ -227,13 +237,14 @@ help = unlines $
 --
 data Arg = ArgHtmlVariant HtmlVariant
          | ArgAddImports
-         deriving (Show)
+         deriving (Show, Eq)
 
 -- | A description of the options
 --
 options :: [OptDescr Arg]
 options =
     [ Option "v" ["html-variant"] htmlVariantOption "HTML variant to use"
+    , Option "i" ["imports"] (NoArg ArgAddImports) "Add initial imports"
     ]
   where
     htmlVariantOption = flip ReqArg "VARIANT" $ \name -> ArgHtmlVariant $

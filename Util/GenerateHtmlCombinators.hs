@@ -29,6 +29,18 @@ data HtmlVariant = HtmlVariant
     , openLeafs  :: Bool
     } deriving (Show)
 
+-- | Get the full module name for an HTML variant.
+--
+getModuleName :: HtmlVariant -> String
+getModuleName = ("Text.Blaze." ++) . intercalate "." . version
+
+-- | Get the attribute module name for an HTML variant.
+--
+getAttributeModuleName :: HtmlVariant -> String
+getAttributeModuleName = (++ ".Attributes") . getModuleName
+
+-- | Annotate a line of code with the line by which it was generated.
+--
 codeLine :: String -> Int -> String -> String
 codeLine filename lineNo line
     | "--" `isPrefixOf` line = line
@@ -85,8 +97,8 @@ writeHtmlVariant htmlVariant = do
         ]
   where
     basePath = "Text" </> "Blaze" </> foldl1 (</>) version'
-    modulName = "Text.Blaze." ++ intercalate "." version'
-    attributeModuleName = modulName ++ ".Attributes"
+    modulName = getModuleName htmlVariant
+    attributeModuleName = getAttributeModuleName htmlVariant
     attributes' = attributes htmlVariant
     parents'    = parents htmlVariant
     leafs'      = leafs htmlVariant

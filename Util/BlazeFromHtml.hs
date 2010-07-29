@@ -96,9 +96,12 @@ combinatorType variant combinator
 
 -- | Produce the Blaze code from the HTML. The result is a list of lines.
 --
-fromHtml :: HtmlVariant -> Html -> [String]
-fromHtml _ Doctype = ["docType"]
-fromHtml _ (Text text) = ["\"" ++ concatMap escape (trim text) ++ "\""]
+fromHtml :: HtmlVariant  -- ^ Used HTML variant
+         -> Bool         -- ^ Should ignore errors
+         -> Html         -- ^ HTML tree
+         -> [String]     -- ^ Resulting lines of code
+fromHtml _ _ Doctype = ["docType"]
+fromHtml _ _ (Text text) = ["\"" ++ concatMap escape (trim text) ++ "\""]
   where
     -- Remove whitespace on both ends of a string
     trim = reverse . dropWhile isSpace . reverse . dropWhile isSpace
@@ -106,28 +109,35 @@ fromHtml _ (Text text) = ["\"" ++ concatMap escape (trim text) ++ "\""]
     escape '"'  = "\\\""
     escape '\n' = "\\n"
     escape x    = [x]
-fromHtml _ (Comment comment) = map ("-- " ++) $ lines comment
-fromHtml variant (Block block) = concatMap (fromHtml variant) block
-fromHtml variant (Parent tag attrs inner) = case combinatorType variant tag of
-    -- Actual parent tags
-    ParentCombinator -> case inner of
-        (Block _) -> (combinator ++ " $ do") : indent (fromHtml variant inner)
-        -- We join non-block parents for better readability.
-        x -> let ls = fromHtml variant x
-                 apply = if dropApply x then " " else " $ "
-             in case ls of (y : ys) -> (combinator ++ apply ++ y) : ys
-                           [] -> [combinator]
-    -- Leaf tags
-    LeafCombinator -> [combinator]
+fromHtml _ _ (Comment comment) = map ("-- " ++) $ lines comment
+fromHtml variant ignore (Block block) =
+    concatMap (fromHtml variant ignore) block
+fromHtml variant ignore (Parent tag attrs inner) =
+    case combinatorType variant tag of
+        -- Actual parent tags
+        ParentCombinator -> case inner of
+            (Block _) ->
+                (combinator ++ " $ do") : indent (fromHtml variant ignore inner)
+            -- We join non-block parents for better readability.
+            x -> let ls = fromHtml variant ignore x
+                     apply = if dropApply x then " " else " $ "
+                 in case ls of (y : ys) -> (combinator ++ apply ++ y) : ys
+                               [] -> [combinator]
+        -- Leaf tags
+        LeafCombinator -> [combinator]
 
-    -- Unknown tag
-    UnknownCombinator -> error $ "Tag " ++ tag ++ " is illegal in "
-                                        ++ show variant
+        -- Unknown tag
+        UnknownCombinator -> if ignore
+            then []
+            else error $ "Tag " ++ tag ++ " is illegal in "
+                                       ++ show variant
   where
     combinator = qualifiedSanitize "H." tag ++ attributes'
     attributes' = attrs >>= \(k, v) -> if k `elem` attributes variant
         then " ! " ++ qualifiedSanitize "A." k ++ " " ++ show v
-        else error $ "Attribute " ++ k ++ " is illegal in " ++ show variant
+        else if ignore
+            then ""
+            else error $ "Attribute " ++ k ++ " is illegal in " ++ show variant
 
     -- Qualifies a tag with the given qualifier if needed, and sanitizes it.
     qualifiedSanitize qualifier tag' =
@@ -167,11 +177,12 @@ getImports variant =
 -- | Convert the HTML to blaze code.
 --
 blazeFromHtml :: HtmlVariant  -- ^ Variant to use
+              -> Bool         -- ^ Should we ignore errors
               -> String       -- ^ Template name
               -> String       -- ^ HTML code
               -> String       -- ^ Resulting code
-blazeFromHtml variant name =
-    unlines . addSignature . fromHtml variant
+blazeFromHtml variant ignore name =
+    unlines . addSignature . fromHtml variant ignore
             . minimizeBlocks . removeEmptyText . fst . makeTree []
             . parseTagsOptions parseOptions { optTagPosition = True }
   where
@@ -191,22 +202,26 @@ main = do
     args <- getOpt Permute options <$> getArgs
     case args of
         (o, n, []) -> let v = getVariant o
+                          i = ignore o
                       in do putStrLn "{-# LANGUAGE OverloadedStrings #-}\n"
                             imports' v o
-                            main' v n
+                            main' v i n
         (_, _, _)  -> putStr help
   where
     -- No files given, work with stdin
-    main' variant [] = interact $ blazeFromHtml variant "template"
+    main' variant ignore [] = interact $ blazeFromHtml variant ignore "template"
 
     -- Handle all files
-    main' variant files = forM_ files $ \file -> do
+    main' variant ignore files = forM_ files $ \file -> do
         body <- readFile file
-        putStrLn $ blazeFromHtml variant (dropExtension file) body
+        putStrLn $ blazeFromHtml variant ignore (dropExtension file) body
 
     -- Print imports if needed
     imports' variant opts = when (ArgAddImports `elem` opts) $
         putStrLn $ unlines $ getImports variant
+
+    -- Should we ignore errors?
+    ignore opts = ArgIgnoreErrors `elem` opts
 
     -- Get the variant from the options
     getVariant opts = fromMaybe defaultHtmlVariant $ listToMaybe $
@@ -246,6 +261,7 @@ help = unlines $
 --
 data Arg = ArgHtmlVariant HtmlVariant
          | ArgAddImports
+         | ArgIgnoreErrors
          deriving (Show, Eq)
 
 -- | A description of the options
@@ -254,6 +270,7 @@ options :: [OptDescr Arg]
 options =
     [ Option "v" ["html-variant"] htmlVariantOption "HTML variant to use"
     , Option "i" ["imports"] (NoArg ArgAddImports) "Add initial imports"
+    , Option "e" ["ignore-errors"] (NoArg ArgIgnoreErrors) "Ignore most errors"
     ]
   where
     htmlVariantOption = flip ReqArg "VARIANT" $ \name -> ArgHtmlVariant $

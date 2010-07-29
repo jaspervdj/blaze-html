@@ -161,7 +161,13 @@ The blaze-from-html tool
 ========================
 
 There is also a tool called `blaze-from-html` which is used to convert HTML
-pages to Haskell code using the BlazeHtml library. Usage is pretty
+pages to Haskell code using the BlazeHtml library. It needs to be installed
+seperately using cabal:
+
+    [jasper@alice ~]$ cabal install blaze-from-html
+
+The reason that we use a seperate package is because we want to keep the set of
+`blaze-html` dependencies small. `blaze-from-html` usage is pretty
 straightforward. An example:
 
     [jasper@alice ~]$ curl -S http://jaspervdj.be/blaze | blaze-from-html

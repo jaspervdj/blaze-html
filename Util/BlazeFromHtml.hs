@@ -116,8 +116,10 @@ fromHtml variant ignore (Parent tag attrs inner) =
     case combinatorType variant tag of
         -- Actual parent tags
         ParentCombinator -> case inner of
-            (Block _) ->
-                (combinator ++ " $ do") : indent (fromHtml variant ignore inner)
+            (Block ls) -> if null ls
+                then [combinator ++ " mempty"]
+                else (combinator ++ " $ do") :
+                        indent (fromHtml variant ignore inner)
             -- We join non-block parents for better readability.
             x -> let ls = fromHtml variant ignore x
                      apply = if dropApply x then " " else " $ "

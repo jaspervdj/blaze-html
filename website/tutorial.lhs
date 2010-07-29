@@ -157,6 +157,25 @@ There are other renderers as well -- for example there is a prettifying renderer
 called `Text.Blaze.Renderer.Pretty`, and if you just want a `String`, use
 `Text.Blaze.Renderer.String`.
 
+The blaze-from-html tool
+========================
+
+There is also a tool called `blaze-from-html` which is used to convert HTML
+pages to Haskell code using the BlazeHtml library. Usage is pretty
+straightforward. An example:
+
+    [jasper@alice ~]$ curl http://jaspervdj.be/blaze | blaze-from-html
+
+will output the Haskell code that would be needed to produce
+(this page)[http://jaspervdj.be/blaze]. By default, `blaze-from-html` will use
+HTML5. You can use other variants as well:
+
+    [jasper@alice ~]$ blaze-from-html -v html4-transitional index.html
+
+To include the imports as well, use the `-i` flag. The `-e` flag causes
+`blaze-from-html` to ignore a lot of errors, which might come in handy if the
+page you are trying to convert has some faults in it.
+
 Further examples
 ================
 

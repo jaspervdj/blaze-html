@@ -29,7 +29,8 @@ h1 {
 
 code {
     color: #000000;
-    font-family: 'Inconsolata', monospace;
+    font-family: 'Inconsolata', 'Courier', 'Courier New', monospace;
+    font-size: 16px;
 }
 
 pre code {

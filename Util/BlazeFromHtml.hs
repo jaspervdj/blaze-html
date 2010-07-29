@@ -118,7 +118,8 @@ fromHtml variant ignore (Parent tag attrs inner) =
         -- Actual parent tags
         ParentCombinator -> case inner of
             (Block ls) -> if null ls
-                then [combinator ++ " mempty"]
+                then [combinator ++
+                        if null attrs then " " else " $ " ++ "mempty"]
                 else (combinator ++ " $ do") :
                         indent (fromHtml variant ignore inner)
             -- We join non-block parents for better readability.
@@ -165,6 +166,7 @@ getImports :: HtmlVariant -> [String]
 getImports variant =
     [ import_ "Prelude"
     , qualify "Prelude" "P"
+    , import_ "Data.Monoid (mempty)"
     , ""
     , import_ h
     , qualify h "H"

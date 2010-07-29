@@ -41,32 +41,33 @@ data CombinatorType = ParentCombinator
 -- | Traverse the list of tags to produce an intermediate representation of the
 -- HTML tree.
 --
-makeTree :: [String]                -- ^ Stack of open tags
-         -> [Tag String]            -- ^ Tags to parse
+makeTree :: Bool                  -- ^ Should ignore errors
+         -> [String]              -- ^ Stack of open tags
+         -> [Tag String]          -- ^ Tags to parse
          -> (Html, [Tag String])  -- ^ (Result, unparsed part)
-makeTree stack []
-    | null stack = (Block [], [])
+makeTree ignore stack []
+    | null stack || ignore = (Block [], [])
     | otherwise = error $ "Error: tags left open at the end: " ++ show stack
-makeTree stack (TagPosition row _ : x : xs) = case x of
+makeTree ignore stack (TagPosition row _ : x : xs) = case x of
     TagOpen tag attrs -> if toLower' tag == "!doctype"
         then addHtml Doctype xs
-        else let (inner, t) = makeTree (tag : stack) xs
+        else let (inner, t) = makeTree ignore (tag : stack) xs
                  p = Parent (toLower' tag) (map (first toLower') attrs) inner
              in addHtml p t
     -- The closing tag must match the stack.
-    TagClose tag -> if listToMaybe stack == Just (toLower' tag)
+    TagClose tag -> if listToMaybe stack == Just (toLower' tag) || ignore
         then (Block [], xs)
         else error $  "Line " ++ show row ++ ": " ++ show tag ++ " closed but "
                    ++ show stack ++ " should be closed instead."
     TagText text -> addHtml (Text text) xs
     TagComment comment -> addHtml (Comment comment) xs
-    _ -> makeTree stack xs
+    _ -> makeTree ignore stack xs
   where
-    addHtml html xs' = let (Block l, r) = makeTree stack xs'
+    addHtml html xs' = let (Block l, r) = makeTree ignore stack xs'
                        in (Block (html : l), r)
 
     toLower' = map toLower
-makeTree _ _ = error "TagSoup error"
+makeTree _ _ _ = error "TagSoup error"
 
 -- | Remove empty text from the HTML.
 --
@@ -130,7 +131,7 @@ fromHtml variant ignore (Parent tag attrs inner) =
 
         -- Unknown tag
         UnknownCombinator -> if ignore
-            then []
+            then fromHtml variant ignore inner
             else error $ "Tag " ++ tag ++ " is illegal in "
                                        ++ show variant
   where
@@ -185,7 +186,7 @@ blazeFromHtml :: HtmlVariant  -- ^ Variant to use
               -> String       -- ^ Resulting code
 blazeFromHtml variant ignore name =
     unlines . addSignature . fromHtml variant ignore
-            . minimizeBlocks . removeEmptyText . fst . makeTree []
+            . minimizeBlocks . removeEmptyText . fst . makeTree ignore []
             . parseTagsOptions parseOptions { optTagPosition = True }
   where
     addSignature body = [ name ++ " :: Html"
@@ -204,7 +205,7 @@ main = do
     args <- getOpt Permute options <$> getArgs
     case args of
         (o, n, []) -> let v = getVariant o
-                          i = ignore o
+                          i = ignore' o
                       in do putStrLn "{-# LANGUAGE OverloadedStrings #-}\n"
                             imports' v o
                             main' v i n
@@ -223,7 +224,7 @@ main = do
         putStrLn $ unlines $ getImports variant
 
     -- Should we ignore errors?
-    ignore opts = ArgIgnoreErrors `elem` opts
+    ignore' opts = ArgIgnoreErrors `elem` opts
 
     -- Get the variant from the options
     getVariant opts = fromMaybe defaultHtmlVariant $ listToMaybe $

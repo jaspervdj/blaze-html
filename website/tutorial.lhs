@@ -164,7 +164,7 @@ There is also a tool called `blaze-from-html` which is used to convert HTML
 pages to Haskell code using the BlazeHtml library. Usage is pretty
 straightforward. An example:
 
-    [jasper@alice ~]$ curl http://jaspervdj.be/blaze | blaze-from-html
+    [jasper@alice ~]$ curl -S http://jaspervdj.be/blaze | blaze-from-html
 
 will output the Haskell code that would be needed to produce
 (this page)[http://jaspervdj.be/blaze]. By default, `blaze-from-html` will use

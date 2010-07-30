@@ -178,7 +178,8 @@ HTML5. You can use other variants as well:
 
     [jasper@alice ~]$ blaze-from-html -v html4-transitional index.html
 
-To include the imports as well, use the `-i` flag. The `-e` flag causes
+To include the imports as well, use the `-s` flag -- this will give you a
+piece of standalone code that can be compiled directly. The `-e` flag causes
 `blaze-from-html` to ignore a lot of errors, which might come in handy if the
 page you are trying to convert has some faults in it.
 

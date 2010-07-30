@@ -164,7 +164,9 @@ fromHtml variant ignore (Parent tag attrs inner) =
 --
 getImports :: HtmlVariant -> [String]
 getImports variant =
-    [ import_ "Prelude"
+    [ "{-# LANGUAGE OverloadedStrings #-}"
+    , ""
+    , import_ "Prelude"
     , qualify "Prelude" "P"
     , import_ "Data.Monoid (mempty)"
     , ""
@@ -182,18 +184,20 @@ getImports variant =
 -- | Convert the HTML to blaze code.
 --
 blazeFromHtml :: HtmlVariant  -- ^ Variant to use
+              -> Bool         -- ^ Produce standalone code
               -> Bool         -- ^ Should we ignore errors
               -> String       -- ^ Template name
               -> String       -- ^ HTML code
               -> String       -- ^ Resulting code
-blazeFromHtml variant ignore name =
+blazeFromHtml variant standalone ignore name =
     unlines . addSignature . fromHtml variant ignore
             . minimizeBlocks . removeEmptyText . fst . makeTree ignore []
             . parseTagsOptions parseOptions { optTagPosition = True }
   where
-    addSignature body = [ name ++ " :: Html"
-                        , name ++ " = do"
-                        ] ++ indent body
+    addSignature body = if standalone then [ name ++ " :: Html"
+                                           , name ++ " = do"
+                                           ] ++ indent body
+                                      else body
 
 -- | Indent block of code.
 --
@@ -207,23 +211,28 @@ main = do
     args <- getOpt Permute options <$> getArgs
     case args of
         (o, n, []) -> let v = getVariant o
+                          s = standalone' o
                           i = ignore' o
-                      in do putStrLn "{-# LANGUAGE OverloadedStrings #-}\n"
-                            imports' v o
-                            main' v i n
+                      in do imports' v o
+                            main' v s i n
         (_, _, _)  -> putStr help
   where
     -- No files given, work with stdin
-    main' variant ignore [] = interact $ blazeFromHtml variant ignore "template"
+    main' variant standalone ignore [] = interact $
+        blazeFromHtml variant standalone ignore "template"
 
     -- Handle all files
-    main' variant ignore files = forM_ files $ \file -> do
+    main' variant standalone ignore files = forM_ files $ \file -> do
         body <- readFile file
-        putStrLn $ blazeFromHtml variant ignore (dropExtension file) body
+        putStrLn $ blazeFromHtml variant standalone ignore
+                                 (dropExtension file) body
 
     -- Print imports if needed
-    imports' variant opts = when (ArgAddImports `elem` opts) $
+    imports' variant opts = when (standalone' opts) $
         putStrLn $ unlines $ getImports variant
+
+    -- Should we produce standalone code?
+    standalone' opts = ArgStandalone `elem` opts
 
     -- Should we ignore errors?
     ignore' opts = ArgIgnoreErrors `elem` opts
@@ -265,7 +274,7 @@ help = unlines $
 -- | Options for the CLI program
 --
 data Arg = ArgHtmlVariant HtmlVariant
-         | ArgAddImports
+         | ArgStandalone
          | ArgIgnoreErrors
          deriving (Show, Eq)
 
@@ -274,7 +283,7 @@ data Arg = ArgHtmlVariant HtmlVariant
 options :: [OptDescr Arg]
 options =
     [ Option "v" ["html-variant"] htmlVariantOption "HTML variant to use"
-    , Option "i" ["imports"] (NoArg ArgAddImports) "Add initial imports"
+    , Option "s" ["standalone"] (NoArg ArgStandalone) "Produce standalone code"
     , Option "e" ["ignore-errors"] (NoArg ArgIgnoreErrors) "Ignore most errors"
     ]
   where

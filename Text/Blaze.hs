@@ -20,8 +20,6 @@ module Text.Blaze
     , preEscapedString
     , showHtml
     , preEscapedShowHtml
-
-      -- * Inserting literal ByteString's.
     , unsafeByteString
 
       -- * Creating tags.
@@ -33,6 +31,7 @@ module Text.Blaze
     , preEscapedTextValue
     , stringValue
     , preEscapedStringValue
+    , unsafeByteStringValue
 
       -- * Setting attributes
     , (!)

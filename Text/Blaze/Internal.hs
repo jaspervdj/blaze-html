@@ -26,8 +26,6 @@ module Text.Blaze.Internal
     , preEscapedString
     , showHtml
     , preEscapedShowHtml
-
-      -- * Inserting literal 'ByteString's.
     , unsafeByteString
 
       -- * Converting values to tags.
@@ -39,6 +37,7 @@ module Text.Blaze.Internal
     , preEscapedTextValue
     , stringValue
     , preEscapedStringValue
+    , unsafeByteStringValue
 
       -- * Setting attributes
     , (!)
@@ -157,7 +156,7 @@ newtype Attribute = Attribute (forall a. HtmlM a -> HtmlM a)
 -- | The type for the value part of an attribute.
 --
 newtype AttributeValue = AttributeValue { unAttributeValue :: ChoiceString }
-    deriving (IsString)
+    deriving (IsString, Monoid)
 
 -- | Create an HTML attribute that can be applied to an HTML element later using
 -- the '!' operator.
@@ -283,6 +282,13 @@ stringValue = AttributeValue . String
 preEscapedStringValue :: String -> AttributeValue
 preEscapedStringValue = AttributeValue . PreEscaped . String
 {-# INLINE preEscapedStringValue #-}
+
+-- | Create an attribute value from a 'ByteString'. See 'unsafeByteString'
+-- for reasons why this might not be a good idea.
+--
+unsafeByteStringValue :: ByteString      -- ^ ByteString value
+                      -> AttributeValue  -- ^ Resulting attribute value
+unsafeByteStringValue = AttributeValue . ByteString
 
 class Attributable h where
     -- | Apply an attribute to an element.

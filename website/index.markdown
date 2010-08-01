@@ -34,9 +34,9 @@ The best way to get started with BlazeHtml is to have a look at our [tutorial].
 
 # Status
 
-BlazeHtml is currently in a very experimental state. Upcoming releases have a
-good chance to break your code. Nevertheless, we like to encourage you to try
-it and tell us what you think, and submit possible bugs to the [issue tracker].
+The BlazeHtml API is considered stable, however, the implementation is still
+experimental. We like to encourage you to try it and tell us what you think, and
+submit possible bugs to the [issue tracker].
 
 [issue tracker]: http://github.com/jaspervdj/BlazeHtml/issues/
 

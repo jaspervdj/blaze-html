@@ -11,10 +11,10 @@ import qualified Data.Text as T (isInfixOf)
 import qualified Data.ByteString as S (isInfixOf)
 
 import Text.Blaze.Internal
-import Text.Blaze.Internal.Builder.Core (Builder)
-import qualified Text.Blaze.Internal.Builder.Core as B
-import qualified Text.Blaze.Internal.Builder.Utf8 as B
-import qualified Text.Blaze.Internal.Builder.Html as B
+import Text.Blaze.Builder.Core (Builder)
+import qualified Text.Blaze.Builder.Core as B
+import qualified Text.Blaze.Builder.Utf8 as B
+import qualified Text.Blaze.Builder.Html as B
 
 -- | Render a 'ChoiceString'.
 --

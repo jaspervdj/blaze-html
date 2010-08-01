@@ -1,5 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
-module Text.Blaze.Internal.Builder.Html
+module Text.Blaze.Builder.Html
     ( 
       -- * Custom writes to the builder
       writeHtmlEscapedChar
@@ -16,8 +16,8 @@ import Data.Monoid (mempty, mappend)
 import Data.Text (Text)
 import qualified Data.Text as T
 
-import Text.Blaze.Internal.Builder.Core
-import Text.Blaze.Internal.Builder.Utf8
+import Text.Blaze.Builder.Core
+import Text.Blaze.Builder.Utf8
 
 -- | Write an unicode character to a 'Builder', doing HTML escaping.
 --

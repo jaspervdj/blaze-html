@@ -1,7 +1,7 @@
 -- | The builder monoid from BlazeHtml.
 --
 {-# LANGUAGE BangPatterns, OverloadedStrings #-}
-module Text.Blaze.Internal.Builder.Core
+module Text.Blaze.Builder.Core
     ( 
       -- * Main builder type
       Builder (..)

@@ -1,0 +1,27 @@
+Name:                blaze-builder
+Version:             0.2.0
+Synopsis:            Builder to efficiently append text.
+Description:         Builder to efficiently append text, optimized for
+                     HTML generation.
+Homepage:            http://jaspervdj.be/blaze
+Bug-Reports:         http://github.com/jaspervdj/BlazeHtml/issues
+License:             BSD3
+License-file:        LICENSE
+Author:              Jasper Van der Jeugt, Simon Meier
+Maintainer:          jaspervdj@gmail.com, simon.meier@inf.ethz.ch
+Stability:           Experimental
+Category:            Text
+Build-type:          Simple
+Cabal-version:       >=1.2
+Library
+  Ghc-Options:       -Wall
+
+  -- Modules exported by the library.
+  Exposed-modules:   Text.Blaze.Builder.Core
+                     Text.Blaze.Builder.Utf8
+                     Text.Blaze.Builder.Html
+  
+  -- Packages needed in order to build this package.
+  Build-depends:     base >= 4 && < 5,
+                     text >= 0.7,
+                     bytestring >= 0.9

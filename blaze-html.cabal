@@ -69,10 +69,8 @@ Library
   Build-depends:     base >= 4 && < 5,
                      text >= 0.7,
                      bytestring >= 0.9,
-                     monads-fd == 0.1.*
+                     monads-fd == 0.1.*,
+                     blaze-builder == 0.2.0
   
   -- Modules not exported by this package.
   Other-modules:     Text.Blaze.Internal
-                     Text.Blaze.Internal.Builder.Core
-                     Text.Blaze.Internal.Builder.Utf8
-                     Text.Blaze.Internal.Builder.Html

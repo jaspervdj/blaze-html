@@ -1,4 +1,4 @@
-module Text.Blaze.Internal.Builder.Utf8
+module Text.Blaze.Builder.Utf8
     ( 
       -- * Custom writes to the builder
       writeChar
@@ -16,7 +16,7 @@ import Data.Monoid (mempty, mappend)
 import Data.Text (Text)
 import qualified Data.Text as T
 
-import Text.Blaze.Internal.Builder.Core
+import Text.Blaze.Builder.Core
 
 -- | Write a Unicode character, encoding it as UTF-8.
 --

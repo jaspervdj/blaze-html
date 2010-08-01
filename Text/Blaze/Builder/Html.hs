@@ -1,3 +1,6 @@
+-- | A module that extends the builder monoid from BlazeHtml with function to
+-- insert HTML, including HTML escaping and the like.
+--
 {-# LANGUAGE OverloadedStrings #-}
 module Text.Blaze.Builder.Html
     ( 

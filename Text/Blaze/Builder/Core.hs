@@ -4,7 +4,7 @@
 module Text.Blaze.Builder.Core
     ( 
       -- * Main builder type
-      Builder (..)
+      Builder
 
       -- * Custom writes to the builder
     , Write (..)
@@ -28,12 +28,10 @@ import qualified Data.ByteString as S
 import qualified Data.ByteString.Internal as S
 import qualified Data.ByteString.Lazy as L
 
--- | Main builder type.
+-- | Main builder type. It simply contains a function to extract the actual
+-- data.
 --
-newtype Builder = Builder
-    { -- ^ Extract the data
-      unBuilder :: BuildStep -> BuildStep
-    }
+newtype Builder = Builder (BuildStep -> BuildStep)
 
 -- | A buildsignal is a signal returned from a write to the builder, it tells us
 -- what should happen next.
@@ -42,10 +40,12 @@ data BuildSignal
   -- | Signal the completion of the write process.
   = Done {-# UNPACK #-} !(Ptr Word8)  -- ^ Pointer to the next free byte
   -- | Signal that the buffer is full and a new one needs to be allocated.
+  -- It contains the minimal size required for the next buffer, a pointer to the
+  -- next free byte, and a continuation.
   | BufferFull
-      {-# UNPACK #-} !Int          -- ^ Minimal size required for next buffer
-      {-# UNPACK #-} !(Ptr Word8)  -- ^ Pointer to the next free byte
-      {-# UNPACK #-} !BuildStep    -- ^ Continuation
+      {-# UNPACK #-} !Int
+      {-# UNPACK #-} !(Ptr Word8)
+      {-# UNPACK #-} !BuildStep
 
 -- | Type for a single build step. Every build step checks that
 --
@@ -63,11 +63,13 @@ instance Monoid Builder where
     mconcat = foldr mappend mempty
     {-# INLINE mconcat #-}
 
--- | Write abstraction so we can avoid some gory and bloody details.
+-- | Write abstraction so we can avoid some gory and bloody details. A write
+-- abstration holds the exact size of the write in bytes, and a function to
+-- carry out the write operation.
 --
 data Write = Write
-    {-# UNPACK #-} !Int   -- ^ Exact size of the write, in bytes
-    (Ptr Word8 -> IO ())  -- ^ Function to carry out the write
+    {-# UNPACK #-} !Int
+    (Ptr Word8 -> IO ())
 
 -- A monoid interface for the write actions.
 instance Monoid Write where

@@ -44,6 +44,7 @@ CURRENT=$(shell ls *.cabal | sed 's/\.cabal//')
 hide-cabal-files:
 	mv ${CURRENT}.cabal ${CURRENT}.cabal.${CURRENT}
 	mv Setup.hs Setup.hs.${CURRENT}
+	cabal clean
 
 blaze-html: hide-cabal-files
 	mv blaze-html.cabal.blaze-html blaze-html.cabal

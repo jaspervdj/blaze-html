@@ -1,3 +1,6 @@
+-- | A module that extends the builder monoid from BlazeHtml with a number of
+-- functions to insert unicode as UTF-8.
+--
 module Text.Blaze.Builder.Utf8
     ( 
       -- * Custom writes to the builder

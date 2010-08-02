@@ -12,7 +12,9 @@ Version:             0.2.0
 -- A short (one-line) description of the package.
 Synopsis:            A blazingly fast HTML combinator library.
 Description:         A blazingly fast HTML combinator library for the Haskell
-                     programming language.
+                     programming language. The Text.Blaze module is a good
+                     starting point, as well as this tutorial:
+                     <http://jaspervdj.be/blaze/tutorial.html>.
 
 -- URL for the project homepage or repository.
 Homepage:            http://jaspervdj.be/blaze
@@ -69,8 +71,10 @@ Library
   Build-depends:     base >= 4 && < 5,
                      text >= 0.7,
                      bytestring >= 0.9,
-                     monads-fd == 0.1.*,
-                     blaze-builder == 0.2.0
+                     monads-fd == 0.1.*
   
   -- Modules not exported by this package.
   Other-modules:     Text.Blaze.Internal
+                     Text.Blaze.Builder.Core
+                     Text.Blaze.Builder.Utf8
+                     Text.Blaze.Builder.Html

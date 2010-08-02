@@ -28,7 +28,8 @@ The best way to get started with BlazeHtml is to have a look at our [tutorial].
 - Lightweight DSL syntax
 - Embedded in Haskell
 - Efficient Unicode support
-- Supports HTML 4 Strict and HTML 5.
+- Supports HTML 4 Strict and HTML 5
+- Tool to create code from an HTML file
 
 [our benchmarks]: $root/benchmarks.html
 

@@ -38,6 +38,12 @@ bench-bigtable-non-haskell:
 test:
 	runghc -itests tests/TestSuite.hs
 
+# Copy the docs the website directory
+website-docs:
+	cabal haddock
+	rm -rf website/docs
+	cp -r dist/doc/html/blaze-html website/docs
+
 # The current target used
 CURRENT=$(shell ls *.cabal | sed 's/\.cabal//')
 

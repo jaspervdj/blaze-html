@@ -7,7 +7,7 @@ Name:                blaze-html
 -- The package version. See the Haskell package versioning policy
 -- (http://www.haskell.org/haskellwiki/Package_versioning_policy) for
 -- standards guiding when and how versions should be incremented.
-Version:             0.2.0
+Version:             0.2
 
 -- A short (one-line) description of the package.
 Synopsis:            A blazingly fast HTML combinator library.
@@ -71,10 +71,8 @@ Library
   Build-depends:     base >= 4 && < 5,
                      text >= 0.7,
                      bytestring >= 0.9,
-                     monads-fd == 0.1.*
+                     -- monads-fd == 0.1.*,
+                     blaze-builder == 0.2.0
   
   -- Modules not exported by this package.
   Other-modules:     Text.Blaze.Internal
-                     Text.Blaze.Builder.Core
-                     Text.Blaze.Builder.Utf8
-                     Text.Blaze.Builder.Html

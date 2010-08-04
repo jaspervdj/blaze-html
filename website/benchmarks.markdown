@@ -46,15 +46,15 @@ doesn't want some content to be escaped.
 
 Get the BlazeHtml repo.
 
-    git clone git://github.com/jaspervdj/BlazeHtml.git
-    cd BlazeHtml
+    git clone git://github.com/jaspervdj/blaze-html.git
+    cd blaze-html
 
 Run the ruby/php/... benchmarks. This requires you to have the different
 templating systems installed, of course.
 
     make bench-bigtable-non-haskell
 
-Run the BlazeHtml HTML benchmarks. The benchmark discussed above is called
+Run the blaze-html HTML benchmarks. The benchmark discussed above is called
 `bigTable`.
 
     make bench-html

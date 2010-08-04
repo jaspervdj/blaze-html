@@ -37,7 +37,7 @@ BlazeHtml is currently in a very experimental state. Upcoming releases have a
 good chance to break your code. Nevertheless, we like to encourage you to try
 it and tell us what you think, and submit possible bugs to the [issue tracker].
 
-[issue tracker]: http://github.com/jaspervdj/BlazeHtml/issues/
+[issue tracker]: http://github.com/jaspervdj/blaze-html/issues/
 
 # Google Summer of Code
 
@@ -61,4 +61,4 @@ Jasper Van der Jeugt is working on this project for [Google Summer of Code]
 
 If you are interested, all code is available on [GitHub].
 
-[GitHub]: http://github.com/jaspervdj/BlazeHtml/
+[GitHub]: http://github.com/jaspervdj/blaze-html/

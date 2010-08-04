@@ -190,6 +190,6 @@ This tutorial should have given you a good idea of how BlazeHtml works. We have
 also provided some more real-world examples, you can find them all in [this
 directory] on github.
 
-[this directory]: http://github.com/jaspervdj/BlazeHtml/tree/master/doc/examples/
+[this directory]: http://github.com/jaspervdj/blaze-html/tree/master/doc/examples/
 
 Go forth, and generate some HTML!

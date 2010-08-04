@@ -46,8 +46,8 @@ doesn't want some content to be escaped.
 
 Get the BlazeHtml repo.
 
-    git clone git://github.com/jaspervdj/BlazeHtml.git
-    cd BlazeHtml
+    git clone git://github.com/jaspervdj/blaze-html.git
+    cd blaze-html
 
 Run the ruby/php/... benchmarks. This requires you to have the different
 templating systems installed, of course.

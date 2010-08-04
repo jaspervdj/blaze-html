@@ -35,4 +35,4 @@ Simon Meier and Johan Tibell.
 If you want file a bug, please use our [issue tracker]. For other questions, you
 are free to contact `jaspervdj@gmail.com`.
 
-[issue tracker]: http://github.com/jaspervdj/BlazeHtml/issues/
+[issue tracker]: http://github.com/jaspervdj/blaze-html/issues/

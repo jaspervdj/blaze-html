@@ -72,7 +72,7 @@ Library
                      text >= 0.7,
                      bytestring >= 0.9,
                      -- monads-fd == 0.1.*,
-                     blaze-builder == 0.2.0
+                     blaze-builder == 0.2
   
   -- Modules not exported by this package.
   Other-modules:     Text.Blaze.Internal

@@ -20,10 +20,10 @@ import qualified Text.Blaze.Builder.Html as B
 --
 fromChoiceString :: ChoiceString  -- ^ String to render
                  -> Builder       -- ^ Resulting builder
-fromChoiceString (Static s)     = B.copyByteString $ getUtf8ByteString s
+fromChoiceString (Static s)     = B.fromByteString $ getUtf8ByteString s
 fromChoiceString (String s)     = B.fromHtmlEscapedString s
 fromChoiceString (Text s)       = B.fromHtmlEscapedText s
-fromChoiceString (ByteString s) = B.copyByteString s
+fromChoiceString (ByteString s) = B.fromByteString s
 fromChoiceString (PreEscaped x) = case x of
     String s -> B.fromString s
     Text   s -> B.fromText s
@@ -32,7 +32,7 @@ fromChoiceString (External x) = case x of
     -- Check that the sequence "</" is *not* in the external data.
     String s     -> if "</" `isInfixOf` s then mempty else B.fromString s
     Text   s     -> if "</" `T.isInfixOf` s then mempty else B.fromText s
-    ByteString s -> if "</" `S.isInfixOf` s then mempty else B.copyByteString s
+    ByteString s -> if "</" `S.isInfixOf` s then mempty else B.fromByteString s
     s            -> fromChoiceString s
 fromChoiceString (AppendChoiceString x y) =
     fromChoiceString x `mappend` fromChoiceString y
@@ -47,17 +47,17 @@ renderBuilder = go mempty
   where
     go :: Builder -> HtmlM b -> Builder
     go attrs (Parent open close content) =
-        B.copyByteString (getUtf8ByteString open)
+        B.fromByteString (getUtf8ByteString open)
             `mappend` attrs
             `mappend` B.fromChar '>'
             `mappend` go mempty content
-            `mappend` B.copyByteString (getUtf8ByteString close)
+            `mappend` B.fromByteString (getUtf8ByteString close)
     go attrs (Leaf begin end) = 
-        B.copyByteString (getUtf8ByteString begin)
+        B.fromByteString (getUtf8ByteString begin)
             `mappend` attrs
-            `mappend` B.copyByteString (getUtf8ByteString end)
+            `mappend` B.fromByteString (getUtf8ByteString end)
     go attrs (AddAttribute key value h) =
-        go (B.copyByteString (getUtf8ByteString key)
+        go (B.fromByteString (getUtf8ByteString key)
             `mappend` fromChoiceString value
             `mappend` B.fromChar '"'
             `mappend` attrs) h

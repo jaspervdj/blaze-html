@@ -18,7 +18,7 @@ Description:         A blazingly fast HTML combinator library for the Haskell
 
 -- URL for the project homepage or repository.
 Homepage:            http://jaspervdj.be/blaze
-Bug-Reports:         http://github.com/jaspervdj/BlazeHtml/issues
+Bug-Reports:         http://github.com/jaspervdj/blaze-html/issues
 
 -- The license under which the package is released.
 License:             BSD3
@@ -71,8 +71,7 @@ Library
   Build-depends:     base >= 4 && < 5,
                      text >= 0.7,
                      bytestring >= 0.9,
-                     -- monads-fd == 0.1.*,
-                     blaze-builder == 0.2
+                     blaze-builder == 0.1
   
   -- Modules not exported by this package.
   Other-modules:     Text.Blaze.Internal

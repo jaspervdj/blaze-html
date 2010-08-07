@@ -32,7 +32,8 @@ Simon Meier and Johan Tibell.
 
 # Contact
 
-If you want file a bug, please use our [issue tracker]. For other questions, you
-are free to contact `jaspervdj@gmail.com`.
+If you want file a bug, please use our [issue tracker] or mail to
+`jaspervdj@gmail.com`. If you have other questions about usage or installation,
+they are welcome as well.
 
 [issue tracker]: http://github.com/jaspervdj/blaze-html/issues/

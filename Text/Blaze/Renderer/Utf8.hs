@@ -41,7 +41,7 @@ fromChoiceString EmptyChoiceString = mempty
 
 -- | Render some 'Html' to a 'Builder'.
 --
-renderBuilder :: HtmlM a  -- ^ HTML to render
+renderBuilder :: Html     -- ^ HTML to render
               -> Builder  -- ^ Resulting builder
 renderBuilder = go mempty 
   where
@@ -74,7 +74,7 @@ renderBuilder = go mempty
 
 -- | Render HTML to a lazy UTF-8 encoded 'L.ByteString.'
 --
-renderHtml :: HtmlM a       -- ^ HTML to render
+renderHtml :: Html          -- ^ HTML to render
            -> L.ByteString  -- ^ Resulting 'L.ByteString'
 renderHtml = B.toLazyByteString . renderBuilder
 {-# INLINE renderHtml #-}

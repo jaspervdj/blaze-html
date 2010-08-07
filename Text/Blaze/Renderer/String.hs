@@ -3,8 +3,7 @@
 --
 {-# LANGUAGE OverloadedStrings #-}
 module Text.Blaze.Renderer.String
-    ( escapeHtmlEntities
-    , fromChoiceString
+    ( fromChoiceString
     , renderHtml
     ) where
 
@@ -56,9 +55,9 @@ fromChoiceString EmptyChoiceString = id
 
 -- | Render some 'Html' to an appending 'String'.
 --
-renderString :: HtmlM a  -- ^ HTML to render
-             -> String   -- ^ String to append
-             -> String   -- ^ Resulting String
+renderString :: Html    -- ^ HTML to render
+             -> String  -- ^ String to append
+             -> String  -- ^ Resulting String
 renderString = go id 
   where
     go :: (String -> String) -> HtmlM b -> String -> String
@@ -77,7 +76,7 @@ renderString = go id
 
 -- | Render HTML to a lazy 'String'.
 --
-renderHtml :: HtmlM a  -- ^ HTML to render
-           -> String   -- ^ Resulting 'String'
+renderHtml :: Html    -- ^ HTML to render
+           -> String  -- ^ Resulting 'String'
 renderHtml html = renderString html ""
 {-# INLINE renderHtml #-}

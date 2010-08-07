@@ -5,13 +5,13 @@ module Text.Blaze.Renderer.Pretty
     ) where
 
 import Text.Blaze.Internal
-import Text.Blaze.Renderer.String (escapeHtmlEntities, fromChoiceString)
+import Text.Blaze.Renderer.String (fromChoiceString)
 
 -- | Render some 'Html' to an appending 'String'.
 --
-renderString :: HtmlM a  -- ^ HTML to render
-             -> String   -- ^ String to append
-             -> String   -- ^ Resulting String
+renderString :: Html    -- ^ HTML to render
+             -> String  -- ^ String to append
+             -> String  -- ^ Resulting String
 renderString = go 0 id
   where
     go :: Int -> (String -> String) -> HtmlM b -> String -> String
@@ -38,7 +38,7 @@ renderString = go 0 id
 
 -- | Render HTML to a lazy 'String'. The result is prettified.
 --
-renderHtml :: HtmlM a  -- ^ HTML to render
-           -> String   -- ^ Resulting 'String'.
+renderHtml :: Html    -- ^ HTML to render
+           -> String  -- ^ Resulting 'String'.
 renderHtml html = renderString html ""
 {-# INLINE renderHtml #-}

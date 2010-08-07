@@ -6,6 +6,7 @@ module Util.Sanitize
     , prelude
     ) where
 
+import Data.Maybe (fromMaybe)
 import Data.Set (Set)
 import qualified Data.Set as S
 
@@ -18,11 +19,7 @@ import qualified Data.Set as S
 -- > sanitize "http-equiv" = "http_equiv"
 --
 sanitize :: String -> String
-sanitize tag = if tag == "html" -- We make an exception for the html tag, since
-                                -- we want the regular html combinator to
-                                -- include the doctype.
-                                then "htmlNoDocType"
-                                else appendUnderscore $ map replace' tag
+sanitize = appendUnderscore . map replace'
   where
     replace' '-' = '_'
     replace' x   = x

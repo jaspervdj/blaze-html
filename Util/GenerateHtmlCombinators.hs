@@ -7,8 +7,7 @@
 module Util.GenerateHtmlCombinators where
 
 import Control.Arrow ((&&&))
-import Data.List (isPrefixOf, sort, sortBy)
-import Data.List (intersperse, intercalate)
+import Data.List (isPrefixOf, sort, sortBy, intersperse, intercalate)
 import Data.Ord (comparing)
 import System.Directory (createDirectoryIfMissing)
 import System.FilePath ((</>), (<.>))
@@ -58,7 +57,7 @@ isNameClash v t
 codeLine :: String -> Int -> String -> String
 codeLine filename lineNo line
     | "--" `isPrefixOf` line = line
-    | otherwise = line ++ (replicate (79 - length line) ' ')
+    | otherwise = line ++ replicate (79 - length line) ' '
                        ++ " -- " ++ filename ++ ":" ++ show lineNo
 
 -- | Write an HTML variant.
@@ -66,7 +65,7 @@ codeLine filename lineNo line
 writeHtmlVariant :: HtmlVariant -> IO ()
 writeHtmlVariant htmlVariant = do
     -- Make a directory.
-    createDirectoryIfMissing True $ basePath
+    createDirectoryIfMissing True basePath
 
     let tags =  zip parents' (repeat makeParent)
              ++ zip leafs' (repeat $ makeLeaf $ openLeafs htmlVariant)
@@ -80,16 +79,16 @@ writeHtmlVariant htmlVariant = do
         , LINE "-- | This module exports HTML combinators used to create documents."
         , LINE "--"
         , exportList modulName $ "module Text.Blaze"
-                                : "html"
                                 : "docType"
-                                : (map (sanitize . fst) sortedTags)
+                                : "docTypeHtml"
+                                : map (sanitize . fst) sortedTags
         , LINE "import Prelude ((>>), (.))"
         , LINE ""
         , LINE "import Text.Blaze"
         , LINE "import Text.Blaze.Internal"
         , LINE ""
-        , makeHtml $ docType htmlVariant
         , makeDocType $ docType htmlVariant
+        , makeDocTypeHtml $ docType htmlVariant
         , unlines appliedTags
         ]
 
@@ -98,10 +97,10 @@ writeHtmlVariant htmlVariant = do
     -- Write the attribute module.
     writeFile' (basePath </> "Attributes.hs") $ removeTrailingNewlines $ unlines
         [ doNotEdit
-        , LINE "{-# LANGUAGE OverloadedStrings #-}"
         , LINE "-- | This module exports combinators that provide you with the"
         , LINE "-- ability to set attributes on HTML elements."
         , LINE "--"
+        , LINE "{-# LANGUAGE OverloadedStrings #-}"
         , exportList attributeModuleName $ map sanitize sortedAttributes
         , LINE "import Prelude ()"
         , LINE ""
@@ -170,30 +169,30 @@ makeDocType lines' = unlines
     , LINE "--"
     , unlines (map ("-- > " ++) lines') ++ "--"
     , LINE "docType :: Html  -- ^ The document type HTML."
-    , LINE $ "docType = preEscapedText " ++ (show $ unlines lines')
+    , LINE $ "docType = preEscapedText " ++ show (unlines lines')
     , LINE "{-# INLINE docType #-}"
     ]
 
 -- | Generate a function for the HTML tag (including the doctype).
 --
-makeHtml :: [String]  -- ^ The doctype.
-         -> String    -- ^ Resulting combinator function.
-makeHtml lines' = unlines
+makeDocTypeHtml :: [String]  -- ^ The doctype.
+                -> String    -- ^ Resulting combinator function.
+makeDocTypeHtml lines' = unlines
     [ LINE "-- | Combinator for the @\\<html>@ element. This combinator will also"
     , LINE "-- insert the correct doctype."
     , LINE "--"
     , LINE "-- Example:"
     , LINE "--"
-    , LINE "-- > html $ span $ text \"foo\""
+    , LINE "-- > docTypeHtml $ span $ text \"foo\""
     , LINE "--"
     , LINE "-- Result:"
     , LINE "--"
     , LINE $ unlines (map ("-- > " ++) lines') ++ "-- > <html><span>foo</span></html>"
     , LINE "--"
-    , LINE "html :: Html  -- ^ Inner HTML."
-    , LINE "     -> Html  -- ^ Resulting HTML."
-    , LINE "html inner = docType >> htmlNoDocType inner"
-    , LINE "{-# INLINE html #-}"
+    , LINE "docTypeHtml :: Html  -- ^ Inner HTML."
+    , LINE "            -> Html  -- ^ Resulting HTML."
+    , LINE "docTypeHtml inner = docType >> html inner"
+    , LINE "{-# INLINE docTypeHtml #-}"
     ]
 
 -- | Generate a function for an HTML tag that can be a parent.
@@ -411,7 +410,7 @@ html5 = HtmlVariant
 -- | A map of HTML variants, per version, lowercase.
 --
 htmlVariants :: Map String HtmlVariant
-htmlVariants = M.fromList $ map (show &&& id) $
+htmlVariants = M.fromList $ map (show &&& id)
     [ html4Strict
     , html4Transitional
     , html4FrameSet

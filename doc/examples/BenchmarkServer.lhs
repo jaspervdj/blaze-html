@@ -48,7 +48,7 @@ Our first template is the root page. It's a static template, so it takes no
 parameters.
 
 > root :: Html
-> root = html $ do
+> root = htmlDocType $ do
 >     H.head $ do
 >         title "BlazeHtml benchmarks"
 >     body ! A.style "width: 500px; margin: 0px auto 0px auto;" $ do

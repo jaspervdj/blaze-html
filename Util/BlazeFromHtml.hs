@@ -95,6 +95,13 @@ combinatorType variant combinator
     | combinator `elem` leafs variant = LeafCombinator
     | otherwise = UnknownCombinator
 
+-- | Create a special @<html>@ parent that includes the docype.
+--
+joinHtmlDoctype :: Html -> Html
+joinHtmlDoctype (Block (Doctype : Parent "html" attrs inner : xs)) =
+    Block $ Parent "htmlDocType" attrs inner : xs
+joinHtmlDoctype x = x
+
 -- | Produce the Blaze code from the HTML. The result is a list of lines.
 --
 fromHtml :: HtmlVariant  -- ^ Used HTML variant
@@ -127,6 +134,7 @@ fromHtml variant ignore (Parent tag attrs inner) =
                      apply = if dropApply x then " " else " $ "
                  in case ls of (y : ys) -> (combinator ++ apply ++ y) : ys
                                [] -> [combinator]
+
         -- Leaf tags
         LeafCombinator -> [combinator]
 
@@ -190,7 +198,7 @@ blazeFromHtml :: HtmlVariant  -- ^ Variant to use
               -> String       -- ^ HTML code
               -> String       -- ^ Resulting code
 blazeFromHtml variant standalone ignore name =
-    unlines . addSignature . fromHtml variant ignore
+    unlines . addSignature . fromHtml variant ignore . joinHtmlDoctype
             . minimizeBlocks . removeEmptyText . fst . makeTree ignore []
             . parseTagsOptions parseOptions { optTagPosition = True }
   where

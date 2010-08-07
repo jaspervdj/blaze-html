@@ -68,12 +68,15 @@ Note how these templates are pure. It is therefore not recommended to mix them
 with `IO` code, or complicated control paths, generally -- you should separate
 your "view" code from your "logic" code -- but you already knew that, right?
 
-> numbers n = html $ do
+> numbers n = docTypeHtml $ do
 >     H.head $ do
 >         H.title "Natural numbers"
 >     body $ do
 >         p "A list of natural numbers:"
 >         ul $ forM_ [1 .. n] (li . showHtml)
+
+We use the `docTypeHtml` combinator which is basically the doctype followed by
+the `<html>` tag.
 
 Attributes
 ==========

@@ -65,6 +65,7 @@ Library
                      Text.Blaze.Html5
                      Text.Blaze.Html5.Attributes
                      Text.Blaze.Renderer.String
+                     Text.Blaze.Renderer.Pretty
                      Text.Blaze.Renderer.Utf8
   
   -- Packages needed in order to build this package.

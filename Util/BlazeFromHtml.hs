@@ -91,6 +91,7 @@ minimizeBlocks x = x
 --
 combinatorType :: HtmlVariant -> String -> CombinatorType
 combinatorType variant combinator
+    | combinator == "docTypeHtml" = ParentCombinator
     | combinator `elem` parents variant = ParentCombinator
     | combinator `elem` leafs variant = LeafCombinator
     | otherwise = UnknownCombinator
@@ -99,7 +100,7 @@ combinatorType variant combinator
 --
 joinHtmlDoctype :: Html -> Html
 joinHtmlDoctype (Block (Doctype : Parent "html" attrs inner : xs)) =
-    Block $ Parent "htmlDocType" attrs inner : xs
+    Block $ Parent "docTypeHtml" attrs inner : xs
 joinHtmlDoctype x = x
 
 -- | Produce the Blaze code from the HTML. The result is a list of lines.
@@ -126,7 +127,7 @@ fromHtml variant ignore (Parent tag attrs inner) =
         ParentCombinator -> case inner of
             (Block ls) -> if null ls
                 then [combinator ++
-                        if null attrs then " " else " $ " ++ "mempty"]
+                        (if null attrs then " " else " $ ") ++ "mempty"]
                 else (combinator ++ " $ do") :
                         indent (fromHtml variant ignore inner)
             -- We join non-block parents for better readability.

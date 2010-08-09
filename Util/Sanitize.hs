@@ -6,7 +6,6 @@ module Util.Sanitize
     , prelude
     ) where
 
-import Data.Maybe (fromMaybe)
 import Data.Set (Set)
 import qualified Data.Set as S
 

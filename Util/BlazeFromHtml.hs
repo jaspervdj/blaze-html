@@ -15,7 +15,7 @@ import System.Console.GetOpt
 import Text.HTML.TagSoup
 
 import Util.Sanitize (sanitize)
-import Util.GenerateHtmlCombinators
+import Util.GenerateHtmlCombinators hiding (main)
 
 -- | Simple type to represent attributes.
 --
@@ -41,18 +41,22 @@ data CombinatorType = ParentCombinator
 -- | Traverse the list of tags to produce an intermediate representation of the
 -- HTML tree.
 --
-makeTree :: Bool                  -- ^ Should ignore errors
+makeTree :: HtmlVariant           -- ^ HTML variant used
+         -> Bool                  -- ^ Should ignore errors
          -> [String]              -- ^ Stack of open tags
          -> [Tag String]          -- ^ Tags to parse
          -> (Html, [Tag String])  -- ^ (Result, unparsed part)
-makeTree ignore stack []
+makeTree _ ignore stack []
     | null stack || ignore = (Block [], [])
     | otherwise = error $ "Error: tags left open at the end: " ++ show stack
-makeTree ignore stack (TagPosition row _ : x : xs) = case x of
+makeTree variant ignore stack (TagPosition row _ : x : xs) = case x of
     TagOpen tag attrs -> if toLower' tag == "!doctype"
         then addHtml Doctype xs
-        else let (inner, t) = makeTree ignore (tag : stack) xs
-                 p = Parent (toLower' tag) (map (first toLower') attrs) inner
+        else let tag' = toLower' tag
+                 (inner, t) = case combinatorType variant tag' of
+                    LeafCombinator -> (Block [], xs)
+                    _ -> makeTree variant ignore (tag' : stack) xs
+                 p = Parent tag' (map (first toLower') attrs) inner
              in addHtml p t
     -- The closing tag must match the stack.
     TagClose tag -> if listToMaybe stack == Just (toLower' tag) || ignore
@@ -61,13 +65,13 @@ makeTree ignore stack (TagPosition row _ : x : xs) = case x of
                    ++ show stack ++ " should be closed instead."
     TagText text -> addHtml (Text text) xs
     TagComment comment -> addHtml (Comment comment) xs
-    _ -> makeTree ignore stack xs
+    _ -> makeTree variant ignore stack xs
   where
-    addHtml html xs' = let (Block l, r) = makeTree ignore stack xs'
+    addHtml html xs' = let (Block l, r) = makeTree variant ignore stack xs'
                        in (Block (html : l), r)
 
     toLower' = map toLower
-makeTree _ _ _ = error "TagSoup error"
+makeTree _ _ _ _ = error "TagSoup error"
 
 -- | Remove empty text from the HTML.
 --
@@ -199,8 +203,9 @@ blazeFromHtml :: HtmlVariant  -- ^ Variant to use
               -> String       -- ^ HTML code
               -> String       -- ^ Resulting code
 blazeFromHtml variant standalone ignore name =
-    unlines . addSignature . fromHtml variant ignore . joinHtmlDoctype
-            . minimizeBlocks . removeEmptyText . fst . makeTree ignore []
+    unlines . addSignature . fromHtml variant ignore
+            . joinHtmlDoctype . minimizeBlocks
+            . removeEmptyText . fst . makeTree variant ignore []
             . parseTagsOptions parseOptions { optTagPosition = True }
   where
     addSignature body = if standalone then [ name ++ " :: Html"

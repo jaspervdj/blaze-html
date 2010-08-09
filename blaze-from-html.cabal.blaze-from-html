@@ -1,5 +1,5 @@
 Name:                blaze-from-html
-Version:             0.2
+Version:             0.2.1
 Synopsis:            Tool to convert HTML to BlazeHtml code.
 Description:         Tool that converts HTML files to Haskell code, ready to be
                      used with the BlazeHtml library.
@@ -17,6 +17,8 @@ Cabal-version:       >= 1.2
 Executable blaze-from-html
   Ghc-Options:       -Wall
   Main-Is:           Util/BlazeFromHtml.hs
+  Other-Modules:     Util.GenerateHtmlCombinators,
+                     Util.Sanitize
   Build-depends:     base >= 4 && < 5,
                      containers >= 0.3,
                      filepath >= 1.1,

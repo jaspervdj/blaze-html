@@ -1,4 +1,4 @@
-bench-html:
+benchmark:
 	ghc --make -O2 -fforce-recomp -main-is HtmlBenchmarks benchmarks/HtmlBenchmarks.hs
 	./benchmarks/HtmlBenchmarks --resamples 10000
 
@@ -35,6 +35,11 @@ bench-bigtable-non-haskell:
 	ruby benchmarks/bigtable/erubis.rb
 	php -n benchmarks/bigtable/php.php
 
+# Generate the actual HTML combinators
+combinators:
+	runghc Util/GenerateHtmlCombinators.hs
+
+# Run the tests
 test:
 	runghc -itests tests/TestSuite.hs
 

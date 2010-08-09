@@ -10,5 +10,18 @@ designs are tried. For more information, refer to [the website][].
 
 [the website]: http://jaspervdj.be/blaze
 
-I keep a log of my actions in the `log/` directory, you can find more
-information there.
+How
+---
+
+We have a makefile to manage most tasks. First off, a part of the code is
+generated automatically, so you should begin by running
+
+    make combinators
+
+Run the tests using
+
+    make test
+
+And the benchmarks using
+
+    make benchmark

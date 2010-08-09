@@ -417,5 +417,5 @@ htmlVariants = M.fromList $ map (show &&& id)
     , html5
     ]
 
-generateHtmlCombinators :: IO ()
-generateHtmlCombinators = mapM_ (writeHtmlVariant . snd) $ M.toList htmlVariants
+main :: IO ()
+main = mapM_ (writeHtmlVariant . snd) $ M.toList htmlVariants

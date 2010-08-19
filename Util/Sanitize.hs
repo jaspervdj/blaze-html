@@ -6,6 +6,7 @@ module Util.Sanitize
     , prelude
     ) where
 
+import Data.Char (toLower, toUpper)
 import Data.Set (Set)
 import qualified Data.Set as S
 
@@ -15,13 +16,20 @@ import qualified Data.Set as S
 -- Examples:
 --
 -- > sanitize "class" == "class_"
--- > sanitize "http-equiv" = "http_equiv"
+-- > sanitize "http-equiv" == "httpEquiv"
 --
 sanitize :: String -> String
-sanitize = appendUnderscore . map replace'
+sanitize = appendUnderscore . removeDash . map toLower
   where
-    replace' '-' = '_'
-    replace' x   = x
+    -- Remove a dash, replacing it by camelcase notation
+    --
+    -- Example:
+    --
+    -- > removeDash "foo-bar" == "fooBar"
+    --
+    removeDash ('-' : x : xs) = toUpper x : removeDash xs
+    removeDash (x : xs) = x : removeDash xs
+    removeDash [] = []
 
     appendUnderscore t | t `S.member` keywords = t ++ "_"
                        | otherwise             = t

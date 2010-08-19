@@ -16,7 +16,7 @@ import Text.Blaze.Renderer.Utf8 (renderHtml)
 -- | A welcome page.
 --
 welcomePage :: Html
-welcomePage = htmlDocType $ do
+welcomePage = docTypeHtml $ do
     H.head $ do
         title $ "Snap & BlazeHtml"
     body $ do

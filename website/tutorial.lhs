@@ -176,7 +176,7 @@ straightforward. An example:
     [jasper@alice ~]$ curl -S http://jaspervdj.be/blaze | blaze-from-html
 
 will output the Haskell code that would be needed to produce
-(this page)[http://jaspervdj.be/blaze]. By default, `blaze-from-html` will use
+[this page](http://jaspervdj.be/blaze). By default, `blaze-from-html` will use
 HTML5. You can use other variants as well:
 
     [jasper@alice ~]$ blaze-from-html -v html4-transitional index.html

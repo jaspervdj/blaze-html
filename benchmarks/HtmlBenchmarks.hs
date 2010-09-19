@@ -25,7 +25,7 @@ main = defaultMain $ concatMap benchHtml benchmarks
         , bench (name ++ " (String)") $ nf (String.renderHtml . f) x
         ]
 
-data HtmlBenchmark = forall a b c. HtmlBenchmark
+data HtmlBenchmark = forall a. HtmlBenchmark
     String       -- ^ Name.
     (a -> Html)  -- ^ Rendering function.
     a            -- ^ Data.

@@ -1,6 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Text.Blaze.Renderer.Utf8
     ( renderHtml
+    , renderHtmlToByteStringIO
     ) where
 
 import Data.Monoid (mappend, mempty)
@@ -8,7 +9,7 @@ import Data.List (isInfixOf)
 
 import qualified Data.ByteString.Lazy as L
 import qualified Data.Text as T (isInfixOf)
-import qualified Data.ByteString as S (isInfixOf)
+import qualified Data.ByteString as S (ByteString, isInfixOf)
 
 import Text.Blaze.Internal
 import Text.Blaze.Builder.Core (Builder)
@@ -78,3 +79,13 @@ renderHtml :: Html          -- ^ HTML to render
            -> L.ByteString  -- ^ Resulting 'L.ByteString'
 renderHtml = B.toLazyByteString . renderBuilder
 {-# INLINE renderHtml #-}
+
+-- | Repeatedly render HTML to a buffer and process this buffer using the given
+-- IO action.
+--
+renderHtmlToByteStringIO :: Html          -- ^ HTML to render
+                         -> (S.ByteString -> IO ()) 
+                                          -- ^ IO action to execute per rendered buffer
+                         -> IO ()         -- ^ Resulting IO action
+renderHtmlToByteStringIO = B.toByteStringIO . renderBuilder
+{-# INLINE renderHtmlToByteStringIO #-}

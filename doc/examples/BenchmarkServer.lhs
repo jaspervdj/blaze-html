@@ -31,8 +31,8 @@ a literate Haskell file, feel free to skip the imports.
 > import Data.Map (Map)
 > import qualified Data.Map as M
 
-> import Network.Socket.ByteString (recv, send)
-> import Network.Socket.ByteString.Lazy (sendAll)
+> import Network.Socket.ByteString (recv, send, sendAll)
+> import qualified Network.Socket.ByteString.Lazy as LN (sendAll) 
 > import qualified Data.ByteString as SB
 > import qualified Data.ByteString.Char8 as SBC
 > import qualified Data.ByteString.Lazy as LB
@@ -42,7 +42,7 @@ a literate Haskell file, feel free to skip the imports.
 > import qualified Text.Blaze.Html5 as H
 > import Text.Blaze.Html5.Attributes hiding (title, rows, accept)
 > import qualified Text.Blaze.Html5.Attributes as A
-> import Text.Blaze.Renderer.Utf8 (renderHtml)
+> import Text.Blaze.Renderer.Utf8 (renderHtml, renderHtmlToByteStringIO)
 
 Our first template is the root page. It's a static template, so it takes no
 parameters.
@@ -125,7 +125,9 @@ letting the browser know all is fine.
 
 >             [""] -> do
 >                 ok s
->                 sendAll s $ renderHtml root
+>                 LN.sendAll s $ renderHtml root
+
+                  renderHtmlToByteStringIO root (sendAll s)
 
 We do a very broad pattern match now, taking the first part of the URL. This is
 supposed to be the name of a benchmark.
@@ -143,7 +145,9 @@ If all goes well, we found a benchmark. In that case, we can run and send it.
 >                 case benchmark of
 >                     Just (HtmlBenchmark _ f x _) -> do
 >                         ok s
->                         sendAll s $ renderHtml $ f x
+>                         LN.sendAll s $ renderHtml $ f x
+
+                          renderHtmlToByteStringIO (f x) (sendAll s)
 
 If the benchmark is not found, we give a `404` error back.
 

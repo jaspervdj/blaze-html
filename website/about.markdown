@@ -16,17 +16,20 @@ Simon Meier and Johan Tibell.
 
 ---
 
+# Authors
+
+- Jasper van der Jeugt
+- Simon Meier
+
 # Contributors
 
 - Chris Done
 - Frederick Ross
 - Harald Holtmann
-- Jasper van der Jeugt
 - Jim Whitehead
 - Johan Tibell
 - Oliver Mueller
 - Pieter De Baets
-- Simon Meier
 - Tom Harper
 - Yair Chuchem
 

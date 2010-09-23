@@ -9,6 +9,8 @@ benchmarks/Utf8Builder
 benchmarks/HtmlBenchmarks
 benchmarks/BigTableServer
 
+doc/examples/BenchmarkServer
+
 website/_site
 website/_cache
 website/docs

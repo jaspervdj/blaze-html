@@ -13,7 +13,8 @@ import qualified Data.ByteString as S (ByteString, isInfixOf)
 
 import Text.Blaze.Internal
 import Text.Blaze.Builder.Core (Builder)
-import qualified Text.Blaze.Builder as B
+import qualified Text.Blaze.Builder           as B
+import qualified Text.Blaze.Builder.Html.Utf8 as B
 
 -- | Render a 'ChoiceString'.
 --

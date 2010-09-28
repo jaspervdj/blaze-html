@@ -12,7 +12,7 @@ import qualified Data.Text as T (isInfixOf)
 import qualified Data.ByteString as S (ByteString, isInfixOf)
 
 import Text.Blaze.Internal
-import Text.Blaze.Builder.Core (Builder)
+import Text.Blaze.Builder (Builder)
 import qualified Text.Blaze.Builder           as B
 import qualified Text.Blaze.Builder.Html.Utf8 as B
 
@@ -82,9 +82,9 @@ renderHtml = B.toLazyByteString . renderBuilder
 -- | Repeatedly render HTML to a buffer and process this buffer using the given
 -- IO action.
 --
-renderHtmlToByteStringIO :: Html          -- ^ HTML to render
-                         -> (S.ByteString -> IO ()) 
+renderHtmlToByteStringIO :: (S.ByteString -> IO ()) 
                                           -- ^ IO action to execute per rendered buffer
+                         -> Html          -- ^ HTML to render
                          -> IO ()         -- ^ Resulting IO action
-renderHtmlToByteStringIO = B.toByteStringIO . renderBuilder
+renderHtmlToByteStringIO io = B.toByteStringIO io . renderBuilder
 {-# INLINE renderHtmlToByteStringIO #-}

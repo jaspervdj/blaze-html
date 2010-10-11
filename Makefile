@@ -1,30 +1,43 @@
+
+## Config
+#########
+
+# GHC = ghc-6.12.3
+GHC = ghc-7.0.0.20100924
+
+GHCI = ghci-6.12.3
+
+
+## All benchmarks
+#################
+
 benchmark:
-	ghc --make -O2 -fforce-recomp -main-is HtmlBenchmarks benchmarks/HtmlBenchmarks.hs
+	$(GHC) --make -O2 -fforce-recomp -main-is HtmlBenchmarks benchmarks/HtmlBenchmarks.hs
 	./benchmarks/HtmlBenchmarks --resamples 10000
 
 bench-constructor-html:
-	ghc --make -O2 -fforce-recomp -ilib/binary-0.5.0.2/src -main-is Main benchmarks/bigtable/constructor.hs
+	$(GHC) --make -O2 -fforce-recomp -ilib/binary-0.5.0.2/src -main-is Main benchmarks/bigtable/constructor.hs
 	./benchmarks/bigtable/constructor --resamples 10000
 
 bench-closure-constructor-html:
-	ghc --make -O2 -fforce-recomp -ilib/binary-0.5.0.2/src -main-is Main benchmarks/bigtable/closure-constructor.hs
+	$(GHC) --make -O2 -fforce-recomp -ilib/binary-0.5.0.2/src -main-is Main benchmarks/bigtable/closure-constructor.hs
 	./benchmarks/bigtable/closure-constructor --resamples 10000
 
 core-closure-constructor-html:
-	ghc-core -- --make -O2 -fforce-recomp -ilib/binary-0.5.0.2/src -main-is Main benchmarks/bigtable/closure-constructor.hs
+	$(GHC)-core -- --make -O2 -fforce-recomp -ilib/binary-0.5.0.2/src -main-is Main benchmarks/bigtable/closure-constructor.hs
 
 bench-builder:
-	ghc --make -O2 -fforce-recomp -ilib/binary-0.5.0.2/src -main-is Utf8Builder benchmarks/Utf8Builder.hs
+	$(GHC) --make -O2 -fforce-recomp -ilib/binary-0.5.0.2/src -main-is Utf8Builder benchmarks/Utf8Builder.hs
 	./benchmarks/Utf8Builder --resamples 10000
 
 benchmarkserver:
-	ghc --make -threaded -O2 -fforce-recomp -idoc/examples -ibenchmarks -main-is BenchmarkServer doc/examples/BenchmarkServer.lhs
+	$(GHC) --make -threaded -O2 -fforce-recomp -idoc/examples -ibenchmarks -main-is BenchmarkServer doc/examples/BenchmarkServer.lhs
 
 snapbenchmarkserver:
-	ghc --make -threaded -O2 -fforce-recomp -idoc/examples -ibenchmarks -main-is SnapBenchmarkServer doc/examples/SnapBenchmarkServer.hs
+	$(GHC) --make -threaded -O2 -fforce-recomp -idoc/examples -ibenchmarks -main-is SnapBenchmarkServer doc/examples/SnapBenchmarkServer.hs
 
 bench-new-builder:
-	ghc --make -O2 -fforce-recomp -ilib/binary-0.5.0.2/src -main-is Data.Binary.NewBuilder lib/binary-0.5.0.2/src/Data/Binary/NewBuilder.hs
+	$(GHC) --make -O2 -fforce-recomp -ilib/binary-0.5.0.2/src -main-is Data.Binary.NewBuilder lib/binary-0.5.0.2/src/Data/Binary/NewBuilder.hs
 	./lib/binary-0.5.0.2/src/Data/Binary/NewBuilder --resamples 10000
 
 core-new-builder:

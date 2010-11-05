@@ -12,9 +12,9 @@ import qualified Data.Text as T (isInfixOf)
 import qualified Data.ByteString as S (ByteString, isInfixOf)
 
 import Text.Blaze.Internal
-import Text.Blaze.Builder (Builder)
-import qualified Text.Blaze.Builder           as B
-import qualified Text.Blaze.Builder.Html.Utf8 as B
+import Blaze.ByteString.Builder (Builder)
+import qualified Blaze.ByteString.Builder           as B
+import qualified Blaze.ByteString.Builder.Html.Utf8 as B
 
 -- | Render a 'ChoiceString'.
 --

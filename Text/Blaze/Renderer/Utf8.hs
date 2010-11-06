@@ -12,10 +12,9 @@ import qualified Data.Text as T (isInfixOf)
 import qualified Data.ByteString as S (ByteString, isInfixOf)
 
 import Text.Blaze.Internal
-import Text.Blaze.Builder.Core (Builder)
-import qualified Text.Blaze.Builder.Core as B
-import qualified Text.Blaze.Builder.Utf8 as B
-import qualified Text.Blaze.Builder.Html as B
+import Blaze.ByteString.Builder (Builder)
+import qualified Blaze.ByteString.Builder           as B
+import qualified Blaze.ByteString.Builder.Html.Utf8 as B
 
 -- | Render a 'ChoiceString'.
 --
@@ -83,9 +82,9 @@ renderHtml = B.toLazyByteString . renderBuilder
 -- | Repeatedly render HTML to a buffer and process this buffer using the given
 -- IO action.
 --
-renderHtmlToByteStringIO :: Html          -- ^ HTML to render
-                         -> (S.ByteString -> IO ()) 
+renderHtmlToByteStringIO :: (S.ByteString -> IO ()) 
                                           -- ^ IO action to execute per rendered buffer
+                         -> Html          -- ^ HTML to render
                          -> IO ()         -- ^ Resulting IO action
-renderHtmlToByteStringIO = B.toByteStringIO . renderBuilder
+renderHtmlToByteStringIO io = B.toByteStringIO io . renderBuilder
 {-# INLINE renderHtmlToByteStringIO #-}

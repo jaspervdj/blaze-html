@@ -40,12 +40,12 @@ fromChoiceString (Text s)       = escapeHtmlEntities $ T.unpack s
 fromChoiceString (ByteString s) = (SBC.unpack s ++)
 fromChoiceString (PreEscaped x) = case x of
     String s -> (s ++)
-    Text   s -> (T.unpack s ++)
+    Text   s -> (\k -> T.foldr (:) k s)
     s        -> fromChoiceString s
 fromChoiceString (External x) = case x of
     -- Check that the sequence "</" is *not* in the external data.
     String s     -> if "</" `isInfixOf` s then id else (s ++)
-    Text   s     -> if "</" `T.isInfixOf` s then id else (T.unpack s ++)
+    Text   s     -> if "</" `T.isInfixOf` s then id else (\k -> T.foldr (:) k s)
     ByteString s -> if "</" `S.isInfixOf` s then id else (SBC.unpack s ++)
     s            -> fromChoiceString s
 fromChoiceString (AppendChoiceString x y) =

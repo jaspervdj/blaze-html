@@ -41,6 +41,7 @@ tests = [ testProperty "left identity Monoid law"  monoidLeftIdentity
         , testCase     "template case 5"           template5
         , testCase     "template case 6"           template6
         , testCase     "template case 7"           template7
+        , testCase     "template case 8"           template8
         , testProperty "valid UTF-8"               isValidUtf8
         , testProperty "external </ sequence"      externalEndSequence
         , testProperty "well nested <>"            wellNestedBrackets
@@ -143,6 +144,14 @@ template7 = expected @=? renderHtml template
   where
     expected = "$6, \226\130\172\&7.01, \194\163\&75"
     template = "$6, €7.01, £75"
+
+-- | Simple template test case
+--
+template8 :: Assertion
+template8 = expected @=? renderHtml template
+  where
+    expected = "<p data-foo=\"bar\">A paragraph</p>"
+    template = p ! (dataAttribute "foo" "bar") $ "A paragraph"
 
 -- | Check if the produced bytes are valid UTF-8
 --

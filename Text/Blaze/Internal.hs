@@ -184,7 +184,7 @@ dataAttribute :: Tag             -- ^ Name of the attribute.
               -> Attribute       -- ^ Resulting HTML attribute.
 dataAttribute tag value = Attribute $
     AddCustomAttribute
-        (Static "data-" `mappend` Static (unTag tag) `mappend` "=\"")
+        (Static " data-" `mappend` Static (unTag tag) `mappend` Static "=\"")
         (unAttributeValue value)
 {-# INLINE dataAttribute #-}
 

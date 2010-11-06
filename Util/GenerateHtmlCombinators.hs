@@ -149,7 +149,7 @@ exportList :: String   -- ^ Module name.
 exportList _    []            = error "exportList without functions."
 exportList name (f:functions) = unlines $
     [ LINE $ "module " ++ name
-    , LINE $ "    ( " ++ sanitize f
+    , LINE $ "    ( " ++ f
     ] ++
     map (LINE . ("    , " ++)) functions ++
     [ LINE "    ) where"]

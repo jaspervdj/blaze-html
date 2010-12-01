@@ -18,6 +18,7 @@ module Text.Blaze.Internal
       -- * Creating custom tags and attributes.
     , attribute
     , dataAttribute
+    , customAttribute
 
       -- * Converting values to HTML.
     , text
@@ -182,11 +183,29 @@ attribute key value = Attribute $
 dataAttribute :: Tag             -- ^ Name of the attribute.
               -> AttributeValue  -- ^ Value for the attribute.
               -> Attribute       -- ^ Resulting HTML attribute.
-dataAttribute tag value = Attribute $
-    AddCustomAttribute
-        (Static " data-" `mappend` Static (unTag tag) `mappend` Static "=\"")
-        (unAttributeValue value)
+dataAttribute tag value = Attribute $ AddCustomAttribute
+    (Static " data-" `mappend` Static (unTag tag) `mappend` Static "=\"")
+    (unAttributeValue value)
 {-# INLINE dataAttribute #-}
+
+-- | Create a custom attribute. This is not specified in the HTML spec, but some
+-- JavaScript libraries rely on it.
+--
+-- An example:
+--
+-- > <select dojoType="select">foo</select>
+--
+-- Can be produced using:
+--
+-- > select ! customAttribute "dojoType" "select" $ "foo"
+--
+customAttribute :: Tag             -- ^ Name of the attribute
+                -> AttributeValue  -- ^ Value for the attribute
+                -> Attribute       -- ^ Resulting HTML attribtue
+customAttribute tag value = Attribute $ AddCustomAttribute
+    (Static " " `mappend` Static (unTag tag) `mappend` Static "=\"")
+    (unAttributeValue value)
+{-# INLINE customAttribute #-}
 
 -- | Render text. Functions like these can be used to supply content in HTML.
 --

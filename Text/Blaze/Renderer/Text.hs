@@ -23,15 +23,15 @@ import qualified Data.Text.Lazy.Builder as B
 --
 escapeHtmlEntities :: Text     -- ^ Text to escape
                    -> Builder  -- ^ Resulting text builder
-escapeHtmlEntities = T.foldl escape mempty
+escapeHtmlEntities = T.foldr escape mempty
   where
-    escape :: Builder -> Char -> Builder
-    escape b '<'  = b `mappend` B.fromText "&lt;"
-    escape b '>'  = b `mappend` B.fromText "&gt;"
-    escape b '&'  = b `mappend` B.fromText "&amp;"
-    escape b '"'  = b `mappend` B.fromText "&quot;"
-    escape b '\'' = b `mappend` B.fromText "&#39;"
-    escape b x    = b `mappend` B.singleton x
+    escape :: Char -> Builder -> Builder
+    escape '<'  b = B.fromText "&lt;"   `mappend` b
+    escape '>'  b = B.fromText "&gt;"   `mappend` b
+    escape '&'  b = B.fromText "&amp;"  `mappend` b
+    escape '"'  b = B.fromText "&quot;" `mappend` b
+    escape '\'' b = B.fromText "&#39;"  `mappend` b
+    escape x    b = B.singleton x       `mappend` b
 
 -- | Render a 'ChoiceString'. TODO: Optimization possibility, apply static
 -- argument transformation.

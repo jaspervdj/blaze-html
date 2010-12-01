@@ -47,6 +47,7 @@ tests = [ testProperty "left identity Monoid law"  monoidLeftIdentity
         , testCase     "template case 6"           template6
         , testCase     "template case 7"           template7
         , testCase     "template case 8"           template8
+        , testCase     "template case 9"           template9
         , testProperty "valid UTF-8"               isValidUtf8
         , testProperty "external </ sequence"      externalEndSequence
         , testProperty "well nested <>"            wellNestedBrackets
@@ -185,6 +186,14 @@ template8 = testTemplate expected template
   where
     expected = "<p data-foo=\"bar\">A paragraph</p>"
     template = p ! (dataAttribute "foo" "bar") $ "A paragraph"
+
+-- | Simple template test case
+--
+template9 :: Assertion
+template9 = testTemplate expected template
+  where
+    expected = "<p dojoType=\"select\">A paragraph</p>"
+    template = p ! (customAttribute "dojoType" "select") $ "A paragraph"
 
 -- | Check if the produced bytes are valid UTF-8
 --

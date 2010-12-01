@@ -42,6 +42,7 @@ module Text.Blaze
 
       -- * Creating attributes.
     , dataAttribute
+    , customAttribute
 
       -- * Converting values to HTML.
     , text

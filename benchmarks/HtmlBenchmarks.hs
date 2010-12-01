@@ -10,6 +10,7 @@ import qualified Prelude as P
 import Criterion.Main
 import Data.ByteString.Char8 (ByteString)
 import GHC.Exts (IsString, fromString)
+import qualified Data.Text.Lazy as LT
 import qualified Data.ByteString.Lazy as LB
 
 import Text.Blaze.Html5 hiding (map)
@@ -17,12 +18,14 @@ import qualified Text.Blaze.Html5 as H
 import Text.Blaze.Html5.Attributes hiding (title, rows)
 import qualified Text.Blaze.Renderer.Utf8 as Utf8
 import qualified Text.Blaze.Renderer.String as String
+import qualified Text.Blaze.Renderer.Text as Text
 
 main = defaultMain $ concatMap benchHtml benchmarks
   where
     benchHtml (HtmlBenchmark name f x _) =
         [ bench (name ++ " (Utf8)") $ nf (LB.length .  Utf8.renderHtml . f) x
         , bench (name ++ " (String)") $ nf (String.renderHtml . f) x
+        , bench (name ++ " (Text)") $ nf (LT.length . Text.renderHtml . f) x
         ]
 
 data HtmlBenchmark = forall a. HtmlBenchmark

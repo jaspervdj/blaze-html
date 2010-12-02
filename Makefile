@@ -1,60 +1,20 @@
+################################################################################
+# Code generation
+################################################################################
 
-## Config
-#########
+GHC = ghc
+GHCI = ghci
+GHC_FLAGS = -O2 -fforce-recomp -ilib/binarty-0.5.0.2/src -idoc/examples -ibenchmarks
 
-# GHC = ghc-6.12.3
-GHC = ghc-7.0.0.20100924
+BENCHMARK_FLAGS = --resamples 10000
 
-GHCI = ghci-6.12.3
-
-
-## All benchmarks
-#################
-
-benchmark:
-	$(GHC) --make -O2 -fforce-recomp -main-is HtmlBenchmarks benchmarks/HtmlBenchmarks.hs
-	./benchmarks/HtmlBenchmarks --resamples 10000
-
-bench-constructor-html:
-	$(GHC) --make -O2 -fforce-recomp -ilib/binary-0.5.0.2/src -main-is Main benchmarks/bigtable/constructor.hs
-	./benchmarks/bigtable/constructor --resamples 10000
-
-bench-closure-constructor-html:
-	$(GHC) --make -O2 -fforce-recomp -ilib/binary-0.5.0.2/src -main-is Main benchmarks/bigtable/closure-constructor.hs
-	./benchmarks/bigtable/closure-constructor --resamples 10000
-
-core-closure-constructor-html:
-	$(GHC)-core -- --make -O2 -fforce-recomp -ilib/binary-0.5.0.2/src -main-is Main benchmarks/bigtable/closure-constructor.hs
-
-bench-builder:
-	$(GHC) --make -O2 -fforce-recomp -ilib/binary-0.5.0.2/src -main-is Utf8Builder benchmarks/Utf8Builder.hs
-	./benchmarks/Utf8Builder --resamples 10000
-
-benchmarkserver:
-	$(GHC) --make -threaded -O2 -fforce-recomp -idoc/examples -ibenchmarks -main-is BenchmarkServer doc/examples/BenchmarkServer.lhs
-
-snapbenchmarkserver:
-	$(GHC) --make -threaded -O2 -fforce-recomp -idoc/examples -ibenchmarks -main-is SnapBenchmarkServer doc/examples/SnapBenchmarkServer.hs
-
-bench-new-builder:
-	$(GHC) --make -O2 -fforce-recomp -ilib/binary-0.5.0.2/src -main-is Data.Binary.NewBuilder lib/binary-0.5.0.2/src/Data/Binary/NewBuilder.hs
-	./lib/binary-0.5.0.2/src/Data/Binary/NewBuilder --resamples 10000
-
-core-new-builder:
-	ghc-core -- --make -O2 -fforce-recomp -ilib/binary-0.5.0.2/src -main-is Data.Binary.NewBuilder lib/binary-0.5.0.2/src/Data/Binary/NewBuilder.hs
-
-bench-bigtable-non-haskell:
-	ruby benchmarks/bigtable/erb.rb
-	ruby benchmarks/bigtable/erubis.rb
-	php -n benchmarks/bigtable/php.php
+################################################################################
+# Code generation
+################################################################################
 
 # Generate the actual HTML combinators
 combinators:
 	runghc Util/GenerateHtmlCombinators.hs
-
-# Run the tests
-test:
-	runghc -itests tests/TestSuite.hs
 
 # Copy the docs the website directory
 website-docs:
@@ -62,9 +22,45 @@ website-docs:
 	rm -rf website/docs
 	cp -r dist/doc/html/blaze-html website/docs
 
+################################################################################
+# Tests
+################################################################################
+
+# Run the tests
+test:
+	runghc -itests tests/TestSuite.hs
+
+################################################################################
+# Benchmarks
+################################################################################
+
+benchmark:
+	$(GHC) $(GHC_FLAGS) --make -main-is HtmlBenchmarks benchmarks/HtmlBenchmarks.hs
+	./benchmarks/HtmlBenchmarks $(BENCHMARK_FLAGS)
+
+benchmark-builder:
+	$(GHC) $(GHC_FLAGS) --make -main-is Utf8Builder benchmarks/Utf8Builder.hs
+	./benchmarks/Utf8Builder $(BENCHMARK_FLAGS)
+
+benchmark-server:
+	$(GHC) $(GHC_FLAGS) --make -threaded -main-is BenchmarkServer doc/examples/BenchmarkServer.lhs
+
+snap-benchmark-server:
+	$(GHC) $(GHC_FLAGS) --make -threaded -main-is SnapBenchmarkServer doc/examples/SnapBenchmarkServer.lhs
+
+benchmark-bigtable-non-haskell:
+	ruby benchmarks/bigtable/erb.rb
+	ruby benchmarks/bigtable/erubis.rb
+	php -n benchmarks/bigtable/php.php
+
+################################################################################
+# Switching cabal files
+################################################################################
+
 # The current target used
 CURRENT=$(shell ls *.cabal | sed 's/\.cabal//')
 
+# Auxiliary
 hide-cabal-files:
 	cabal clean
 	mv ${CURRENT}.cabal ${CURRENT}.cabal.${CURRENT}
@@ -77,6 +73,10 @@ blaze-html: hide-cabal-files
 blaze-from-html: hide-cabal-files
 	mv blaze-from-html.cabal.blaze-from-html blaze-from-html.cabal
 	mv Setup.hs.blaze-from-html Setup.hs
+
+################################################################################
+# Switching cabal files
+################################################################################
 
 # Cleanup
 clean:

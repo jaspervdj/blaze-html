@@ -5,11 +5,12 @@ local
 *.hi
 *.swp
 
-benchmarks/Utf8Builder
 benchmarks/HtmlBenchmarks
 benchmarks/BigTableServer
 
 doc/examples/BenchmarkServer
+doc/examples/SnapBenchmarkServer
+doc/examples/SnapFramework
 
 website/_site
 website/_cache

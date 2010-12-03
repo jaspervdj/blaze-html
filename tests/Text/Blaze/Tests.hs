@@ -11,6 +11,7 @@ import Data.Word (Word8)
 import Data.Char (ord)
 import Data.List (isInfixOf)
 
+import qualified Data.ByteString as SB
 import qualified Data.ByteString.Lazy.Char8 as LBC
 import qualified Data.ByteString.Lazy as LB
 import Test.Framework
@@ -31,6 +32,7 @@ tests = [ testProperty "left identity Monoid law"  monoidLeftIdentity
         , testProperty "valid UTF-8"               isValidUtf8
         , testProperty "external </ sequence"      externalEndSequence
         , testProperty "well nested <>"            wellNestedBrackets
+        , testProperty "unsafeByteString id"       unsafeByteStringId
         ]
 
 -- | The left identity Monoid law.
@@ -85,6 +87,12 @@ isValidUtf8 = isValidUtf8' . LB.unpack . renderUsingUtf8
             (y:z:u:t') -> all (isIn 0x80 0xbf) [y, z, u] && isValidUtf8' t'
             _          -> False
         | otherwise = False
+
+-- | Rendering an unsafe bytestring should not do anything
+--
+unsafeByteStringId :: [Word8] -> Bool
+unsafeByteStringId ws =
+    LB.pack ws == renderUsingUtf8 (unsafeByteString $ SB.pack ws)
 
 -- | Check if the "</" sequence does not appear in @<script>@ or @<style>@ tags.
 --

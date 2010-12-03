@@ -29,6 +29,7 @@ website-docs:
 # Run the tests
 test:
 	$(GHC) $(GHC_FLAGS) -fhpc --make -main-is TestSuite tests/TestSuite.hs
+	rm -f TestSuite.tix
 	./tests/TestSuite
 
 # HPC

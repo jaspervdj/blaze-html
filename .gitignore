@@ -5,6 +5,7 @@ local
 *.hi
 *.swp
 
+TestSuite.tix
 .hpc
 hpc
 

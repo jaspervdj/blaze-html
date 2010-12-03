@@ -1,7 +1,7 @@
 -- | A whole bunch of simple test cases
 --
 {-# LANGUAGE OverloadedStrings #-}
-module Text.Blaze.Tests.Cases 
+module Text.Blaze.Tests.Cases
     ( tests
     ) where
 
@@ -26,7 +26,7 @@ data HtmlTest = HtmlTest LBC.ByteString Html
 -- | Create tests from an HTML test
 --
 makeTests :: String -> HtmlTest -> [Test]
-makeTests baseName (HtmlTest expected h) = 
+makeTests baseName (HtmlTest expected h) =
     [ testCase (baseName ++ " (String)") $ expected @=? renderUsingString h
     , testCase (baseName ++ " (Text)") $ expected @=? renderUsingText h
     , testCase (baseName ++ " (Utf8)") $ expected @=? renderUsingUtf8 h
@@ -36,19 +36,31 @@ makeTests baseName (HtmlTest expected h) =
 --
 tests :: [Test]
 tests = concatMap (uncurry makeTests) $ zip names
-    -- Escaping cases
-    [ HtmlTest "&quot;&amp;&quot;" $ string "\"&\""    
-
-    , HtmlTest "&lt;img&gt;" $ text "<img>"
-
     -- Simple cases
-    , HtmlTest "<div id=\"foo\"><p>banana</p><span>banana</span></div>" $
+    [ HtmlTest "<div id=\"foo\"><p>banana</p><span>banana</span></div>" $
         div ! id "foo" $ do
             p "banana"
             H.span "banana"
 
     , HtmlTest "<img src=\"foo.png\" alt=\"bar\" />" $
         img ! src "foo.png" ! alt "bar"
+
+    -- Escaping cases
+    , HtmlTest "&quot;&amp;&quot;" "\"&\""
+
+    , HtmlTest "&lt;img&gt;" $ text "<img>"
+
+    , HtmlTest "&quot;&#39;&quot;" "\"'\""
+
+    , HtmlTest "<img src=\"&amp;\" />" $ img ! src "&"
+
+    -- Pre-escaping cases
+    , HtmlTest "<3 Haskell" $ preEscapedText "<3 Haskell"
+
+    , HtmlTest "<script />" $ preEscapedString "<script />"
+
+    , HtmlTest "<p class=\"'&!;\">bad</p>" $
+        p ! class_ (preEscapedTextValue "'&!;") $ "bad"
 
     -- Unicode cases
     , HtmlTest "<span id=\"&amp;\">\206\187</span>" $

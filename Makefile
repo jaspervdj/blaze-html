@@ -28,8 +28,12 @@ website-docs:
 
 # Run the tests
 test:
-	$(GHC) $(GHC_FLAGS) --make -main-is TestSuite tests/TestSuite.hs
+	$(GHC) $(GHC_FLAGS) -fhpc --make -main-is TestSuite tests/TestSuite.hs
 	./tests/TestSuite
+
+# HPC
+test-hpc:
+	hpc markup --destdir=hpc TestSuite
 
 ################################################################################
 # Benchmarks

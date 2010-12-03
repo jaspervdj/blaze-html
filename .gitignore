@@ -5,6 +5,9 @@ local
 *.hi
 *.swp
 
+.hpc
+hpc
+
 benchmarks/HtmlBenchmarks
 benchmarks/BigTableServer
 

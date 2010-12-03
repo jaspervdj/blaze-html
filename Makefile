@@ -4,7 +4,7 @@
 
 GHC = ghc
 GHCI = ghci
-GHC_FLAGS = -O2 -fforce-recomp -ilib/binarty-0.5.0.2/src -idoc/examples -ibenchmarks
+GHC_FLAGS = -O2 -fforce-recomp -ilib/binarty-0.5.0.2/src -idoc/examples -ibenchmarks -itests
 
 BENCHMARK_FLAGS = --resamples 10000
 
@@ -28,7 +28,8 @@ website-docs:
 
 # Run the tests
 test:
-	runghc -itests tests/TestSuite.hs
+	$(GHC) $(GHC_FLAGS) --make -main-is TestSuite tests/TestSuite.hs
+	./tests/TestSuite
 
 ################################################################################
 # Benchmarks

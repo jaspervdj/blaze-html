@@ -8,6 +8,8 @@ local
 benchmarks/HtmlBenchmarks
 benchmarks/BigTableServer
 
+tests/TestSuite
+
 doc/examples/BenchmarkServer
 doc/examples/SnapBenchmarkServer
 doc/examples/SnapFramework

@@ -31,7 +31,7 @@ Author:              Jasper Van der Jeugt, Simon Meier
 
 -- An email address to which users can send suggestions, bug reports,
 -- and patches.
-Maintainer:          jaspervdj@gmail.com, simon.meier@inf.ethz.ch
+Maintainer:          Jasper Van der Jeugt <jaspervdj@gmail.com>
 
 -- A copyright notice.
 -- Copyright:           
@@ -50,6 +50,10 @@ Build-type:          Simple
 -- Constraint on the version of Cabal needed to build this package.
 Cabal-version:       >=1.6
 
+
+Source-repository head
+  Type:              git
+  Location:          http://github.com/jaspervdj/blaze-html.git
 
 Library
   Ghc-Options:       -Wall

@@ -31,12 +31,12 @@ Author:              Jasper Van der Jeugt, Simon Meier
 
 -- An email address to which users can send suggestions, bug reports,
 -- and patches.
-Maintainer:          jaspervdj@gmail.com, simon.meier@inf.ethz.ch
+Maintainer:          jaspervdj@gmail.com, iridcode@gmail.com
 
 -- A copyright notice.
 -- Copyright:           
 
--- Stability of the pakcage (experimental, provisional, stable...)
+-- Stability of the package (experimental, provisional, stable...)
 Stability:           Experimental
 
 Category:            Text
@@ -72,7 +72,7 @@ Library
   Build-depends:     base >= 4 && < 5,
                      text >= 0.10,
                      bytestring >= 0.9,
-                     blaze-builder == 0.2.*
+                     blaze-builder == 0.2.* && >= 0.2.1
   
   -- Modules not exported by this package.
   Other-modules:     Text.Blaze.Internal

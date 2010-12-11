@@ -1,0 +1,127 @@
+warming up
+estimating clock resolution...
+mean is 16.88382 us (40001 iterations)
+found 1536 outliers among 39999 samples (3.8%)
+  28 (7.0e-2%) low severe
+  1069 (2.7%) high severe
+estimating cost of a clock call...
+mean is 1.444274 us (72 iterations)
+found 7 outliers among 72 samples (9.7%)
+  7 (9.7%) high severe
+
+benchmarking bigTable (Utf8)
+collecting 100 samples, 7 iterations each, in estimated 1.881072 s
+bootstrapping with 100000 resamples
+mean: 2.584626 ms, lb 2.580504 ms, ub 2.592990 ms, ci 0.950
+std dev: 28.73362 us, lb 14.43975 us, ub 48.08991 us, ci 0.950
+found 17 outliers among 100 samples (17.0%)
+  4 (4.0%) low severe
+  5 (5.0%) low mild
+  3 (3.0%) high mild
+  5 (5.0%) high severe
+variance introduced by outliers: 0.990%
+variance is unaffected by outliers
+
+benchmarking bigTable (String)
+collecting 100 samples, 4 iterations each, in estimated 1.952195 s
+bootstrapping with 100000 resamples
+mean: 4.913297 ms, lb 4.907689 ms, ub 4.927607 ms, ci 0.950
+std dev: 42.65945 us, lb 20.58297 us, ub 84.61474 us, ci 0.950
+found 8 outliers among 100 samples (8.0%)
+  7 (7.0%) high severe
+variance introduced by outliers: 0.990%
+variance is unaffected by outliers
+
+benchmarking basic (Utf8)
+collecting 100 samples, 1730 iterations each, in estimated 1.688686 s
+bootstrapping with 100000 resamples
+mean: 9.814915 us, lb 9.804270 us, ub 9.843601 us, ci 0.950
+std dev: 82.32328 ns, lb 30.01711 ns, ub 168.0808 ns, ci 0.950
+found 10 outliers among 100 samples (10.0%)
+  4 (4.0%) high mild
+  6 (6.0%) high severe
+variance introduced by outliers: 0.990%
+variance is unaffected by outliers
+
+benchmarking basic (String)
+collecting 100 samples, 1056 iterations each, in estimated 1.689023 s
+bootstrapping with 100000 resamples
+mean: 16.08221 us, lb 16.06504 us, ub 16.12133 us, ci 0.950
+std dev: 125.8313 ns, lb 69.00371 ns, ub 247.6060 ns, ci 0.950
+found 10 outliers among 100 samples (10.0%)
+  2 (2.0%) high mild
+  8 (8.0%) high severe
+variance introduced by outliers: 0.990%
+variance is unaffected by outliers
+
+benchmarking wideTree (Utf8)
+collecting 100 samples, 7 iterations each, in estimated 1.958594 s
+bootstrapping with 100000 resamples
+mean: 3.063142 ms, lb 3.010301 ms, ub 3.117916 ms, ci 0.950
+std dev: 275.5234 us, lb 266.1363 us, ub 282.5958 us, ci 0.950
+variance introduced by outliers: 1.000%
+variance is unaffected by outliers
+
+benchmarking wideTree (String)
+collecting 100 samples, 4 iterations each, in estimated 1.920819 s
+bootstrapping with 100000 resamples
+mean: 4.806400 ms, lb 4.799060 ms, ub 4.815557 ms, ci 0.950
+std dev: 41.73762 us, lb 34.27933 us, ub 54.39989 us, ci 0.950
+found 3 outliers among 100 samples (3.0%)
+  3 (3.0%) high mild
+variance introduced by outliers: 0.990%
+variance is unaffected by outliers
+
+benchmarking wideTreeEscaping (Utf8)
+collecting 100 samples, 33 iterations each, in estimated 1.710217 s
+bootstrapping with 100000 resamples
+mean: 530.9193 us, lb 524.1955 us, ub 540.8656 us, ci 0.950
+std dev: 41.29335 us, lb 30.35683 us, ub 51.91998 us, ci 0.950
+found 13 outliers among 100 samples (13.0%)
+  2 (2.0%) high mild
+  11 (11.0%) high severe
+variance introduced by outliers: 1.000%
+variance is unaffected by outliers
+
+benchmarking wideTreeEscaping (String)
+collecting 100 samples, 15 iterations each, in estimated 1.710556 s
+bootstrapping with 100000 resamples
+mean: 1.134601 ms, lb 1.132883 ms, ub 1.137927 ms, ci 0.950
+std dev: 11.83973 us, lb 7.447905 us, ub 22.26158 us, ci 0.950
+found 4 outliers among 100 samples (4.0%)
+  3 (3.0%) high mild
+  1 (1.0%) high severe
+variance introduced by outliers: 0.990%
+variance is unaffected by outliers
+
+benchmarking deepTree (Utf8)
+collecting 100 samples, 24 iterations each, in estimated 1.719385 s
+bootstrapping with 100000 resamples
+mean: 754.8425 us, lb 739.7486 us, ub 772.3920 us, ci 0.950
+std dev: 83.10072 us, lb 73.88556 us, ub 89.97769 us, ci 0.950
+variance introduced by outliers: 1.000%
+variance is unaffected by outliers
+
+benchmarking deepTree (String)
+collecting 100 samples, 7 iterations each, in estimated 1.880331 s
+bootstrapping with 100000 resamples
+mean: 2.485456 ms, lb 2.421606 ms, ub 2.546204 ms, ci 0.950
+std dev: 319.6754 us, lb 301.3650 us, ub 336.2996 us, ci 0.950
+variance introduced by outliers: 1.000%
+variance is unaffected by outliers
+
+benchmarking manyAttributes (Utf8)
+collecting 100 samples, 8 iterations each, in estimated 1.825595 s
+bootstrapping with 100000 resamples
+mean: 2.491527 ms, lb 2.438397 ms, ub 2.548182 ms, ci 0.950
+std dev: 282.0034 us, lb 267.6402 us, ub 289.8338 us, ci 0.950
+variance introduced by outliers: 1.000%
+variance is unaffected by outliers
+
+benchmarking manyAttributes (String)
+collecting 100 samples, 6 iterations each, in estimated 1.736176 s
+bootstrapping with 100000 resamples
+mean: 3.218249 ms, lb 3.147520 ms, ub 3.293767 ms, ci 0.950
+std dev: 374.1855 us, lb 349.9660 us, ub 391.5972 us, ci 0.950
+variance introduced by outliers: 1.000%
+variance is unaffected by outliers

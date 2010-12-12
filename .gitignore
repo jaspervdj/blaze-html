@@ -9,6 +9,8 @@ TestSuite.tix
 .hpc
 hpc
 
+notes/
+
 benchmarks/HtmlBenchmarks
 benchmarks/BigTableServer
 

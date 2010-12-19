@@ -4,7 +4,7 @@
 
 GHC = ghc
 GHCI = ghci
-GHC_FLAGS = -O2 -fforce-recomp -ilib/binarty-0.5.0.2/src -idoc/examples -ibenchmarks -itests
+GHC_FLAGS = -O2 -fforce-recomp -idoc/examples -ibenchmarks -itests
 
 BENCHMARK_FLAGS = --resamples 10000
 

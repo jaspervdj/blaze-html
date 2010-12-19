@@ -1,6 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Text.Blaze.Renderer.Utf8
-    ( renderHtml
+    ( renderHtmlBuilder
+    , renderHtml
     , renderHtmlToByteStringIO
     ) where
 
@@ -41,9 +42,9 @@ fromChoiceString EmptyChoiceString = mempty
 
 -- | Render some 'Html' to a 'Builder'.
 --
-renderBuilder :: Html     -- ^ HTML to render
-              -> Builder  -- ^ Resulting builder
-renderBuilder = go mempty 
+renderHtmlBuilder :: Html     -- ^ HTML to render
+                  -> Builder  -- ^ Resulting builder
+renderHtmlBuilder = go mempty
   where
     go :: Builder -> HtmlM b -> Builder
     go attrs (Parent open close content) =
@@ -52,7 +53,7 @@ renderBuilder = go mempty
             `mappend` B.fromChar '>'
             `mappend` go mempty content
             `mappend` B.copyByteString (getUtf8ByteString close)
-    go attrs (Leaf begin end) = 
+    go attrs (Leaf begin end) =
         B.copyByteString (getUtf8ByteString begin)
             `mappend` attrs
             `mappend` B.copyByteString (getUtf8ByteString end)
@@ -70,21 +71,21 @@ renderBuilder = go mempty
     go attrs (Append h1 h2) = go attrs h1 `mappend` go attrs h2
     go _ Empty              = mempty
     {-# NOINLINE go #-}
-{-# INLINE renderBuilder #-}
+{-# INLINE renderHtmlBuilder #-}
 
 -- | Render HTML to a lazy UTF-8 encoded 'L.ByteString.'
 --
 renderHtml :: Html          -- ^ HTML to render
            -> L.ByteString  -- ^ Resulting 'L.ByteString'
-renderHtml = B.toLazyByteString . renderBuilder
+renderHtml = B.toLazyByteString . renderHtmlBuilder
 {-# INLINE renderHtml #-}
 
 -- | Repeatedly render HTML to a buffer and process this buffer using the given
 -- IO action.
 --
-renderHtmlToByteStringIO :: (S.ByteString -> IO ()) 
+renderHtmlToByteStringIO :: (S.ByteString -> IO ())
                                           -- ^ IO action to execute per rendered buffer
                          -> Html          -- ^ HTML to render
                          -> IO ()         -- ^ Resulting IO action
-renderHtmlToByteStringIO io = B.toByteStringIO io . renderBuilder
+renderHtmlToByteStringIO io = B.toByteStringIO io . renderHtmlBuilder
 {-# INLINE renderHtmlToByteStringIO #-}

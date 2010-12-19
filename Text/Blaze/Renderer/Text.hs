@@ -1,9 +1,10 @@
 {-# LANGUAGE OverloadedStrings #-}
 -- | A renderer that produces a lazy 'L.Text' value, using the Text Builder.
 --
-module Text.Blaze.Renderer.Text where
-    -- ( renderHtml
-    -- ) where
+module Text.Blaze.Renderer.Text
+    ( renderHtml
+    , renderHtmlWith
+    ) where
 
 import Data.Monoid (mappend, mempty)
 import Data.List (isInfixOf)

@@ -98,7 +98,7 @@ renderBuilder d = go mempty
 -- decode them that way.
 --
 renderHtml :: Html    -- ^ HTML to render
-           -> L.Text  -- ^ Resulting 'L.ByteString'
+           -> L.Text  -- ^ Resulting 'L.Text'
 renderHtml = renderHtmlWith decodeUtf8
 {-# INLINE renderHtml #-}
 

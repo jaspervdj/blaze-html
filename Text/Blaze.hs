@@ -47,6 +47,8 @@ module Text.Blaze
       -- * Converting values to HTML.
     , text
     , preEscapedText
+    , lazyText
+    , preEscapedLazyText
     , string
     , preEscapedString
     , showHtml
@@ -60,6 +62,8 @@ module Text.Blaze
       -- * Converting values to attribute values.
     , textValue
     , preEscapedTextValue
+    , lazyTextValue
+    , preEscapedLazyTextValue
     , stringValue
     , preEscapedStringValue
     , unsafeByteStringValue

@@ -23,6 +23,8 @@ module Text.Blaze.Internal
       -- * Converting values to HTML.
     , text
     , preEscapedText
+    , lazyText
+    , preEscapedLazyText
     , string
     , preEscapedString
     , showHtml
@@ -36,6 +38,8 @@ module Text.Blaze.Internal
       -- * Converting values to attribute values.
     , textValue
     , preEscapedTextValue
+    , lazyTextValue
+    , preEscapedLazyTextValue
     , stringValue
     , preEscapedStringValue
     , unsafeByteStringValue
@@ -54,6 +58,7 @@ import qualified Data.ByteString as S
 import Data.Text (Text)
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
+import qualified Data.Text.Lazy as LT
 import GHC.Exts (IsString (..))
 
 -- | A static string that supports efficient output to all possible backends.
@@ -216,10 +221,23 @@ text = Content . Text
 
 -- | Render text without escaping.
 --
-preEscapedText :: Text  -- ^ Text to insert.
-               -> Html  -- Resulting HTML fragment.
+preEscapedText :: Text  -- ^ Text to insert
+               -> Html  -- ^ Resulting HTML fragment
 preEscapedText = Content . PreEscaped . Text
 {-# INLINE preEscapedText #-}
+
+-- | A variant of 'text' for lazy 'LT.Text'.
+--
+lazyText :: LT.Text  -- ^ Text to insert
+         -> Html     -- ^ Resulting HTML fragment
+lazyText = mconcat . map text . LT.toChunks
+{-# INLINE lazyText #-}
+
+-- | A variant of 'preEscapedText' for lazy 'LT.Text'
+--
+preEscapedLazyText :: LT.Text  -- ^ Text to insert
+                   -> Html     -- ^ Resulting HTML fragment
+preEscapedLazyText = mconcat . map preEscapedText . LT.toChunks
 
 -- | Create an HTML snippet from a 'String'.
 --
@@ -285,10 +303,24 @@ textValue = AttributeValue . Text
 
 -- | Render an attribute value from 'Text' without escaping.
 --
-preEscapedTextValue :: Text            -- ^ Text to insert.
-                    -> AttributeValue  -- Resulting HTML fragment.
+preEscapedTextValue :: Text            -- ^ The actual value
+                    -> AttributeValue  -- ^ Resulting attribute value
 preEscapedTextValue = AttributeValue . PreEscaped . Text
 {-# INLINE preEscapedTextValue #-}
+
+-- | A variant of 'textValue' for lazy 'LT.Text'
+--
+lazyTextValue :: LT.Text         -- ^ The actual value
+              -> AttributeValue  -- ^ Resulting attribute value
+lazyTextValue = mconcat . map textValue . LT.toChunks
+{-# INLINE lazyTextValue #-}
+
+-- | A variant of 'preEscapedTextValue' for lazy 'LT.Text'
+--
+preEscapedLazyTextValue :: LT.Text         -- ^ The actual value
+                        -> AttributeValue  -- ^ Resulting attribute value
+preEscapedLazyTextValue = mconcat . map preEscapedTextValue . LT.toChunks
+{-# INLINE preEscapedLazyTextValue #-}
 
 -- | Create an attribute value from a 'String'.
 --

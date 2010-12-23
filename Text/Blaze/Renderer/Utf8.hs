@@ -47,22 +47,22 @@ renderHtmlBuilder :: Html     -- ^ HTML to render
 renderHtmlBuilder = go mempty
   where
     go :: Builder -> HtmlM b -> Builder
-    go attrs (Parent open close content) =
+    go attrs (Parent _ open close content) =
         B.copyByteString (getUtf8ByteString open)
             `mappend` attrs
             `mappend` B.fromChar '>'
             `mappend` go mempty content
             `mappend` B.copyByteString (getUtf8ByteString close)
-    go attrs (Leaf begin end) =
+    go attrs (Leaf _ begin end) =
         B.copyByteString (getUtf8ByteString begin)
             `mappend` attrs
             `mappend` B.copyByteString (getUtf8ByteString end)
-    go attrs (AddAttribute key value h) =
+    go attrs (AddAttribute _ key value h) =
         go (B.copyByteString (getUtf8ByteString key)
             `mappend` fromChoiceString value
             `mappend` B.fromChar '"'
             `mappend` attrs) h
-    go attrs (AddCustomAttribute key value h) =
+    go attrs (AddCustomAttribute _ key value h) =
         go (fromChoiceString key
             `mappend` fromChoiceString value
             `mappend` B.fromChar '"'

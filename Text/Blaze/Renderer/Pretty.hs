@@ -15,14 +15,14 @@ renderString :: Html    -- ^ HTML to render
 renderString = go 0 id
   where
     go :: Int -> (String -> String) -> HtmlM b -> String -> String
-    go i attrs (Parent open close content) =
+    go i attrs (Parent _ open close content) =
         ind i . getString open . attrs . (">\n" ++) . go (inc i) id content
               . ind i . getString close .  ('\n' :)
-    go i attrs (Leaf begin end) =
+    go i attrs (Leaf _ begin end) =
         ind i . getString begin . attrs . getString end . ('\n' :)
-    go i attrs (AddAttribute key value h) = flip (go i) h $
+    go i attrs (AddAttribute _ key value h) = flip (go i) h $
         getString key . fromChoiceString value . ('"' :) . attrs
-    go i attrs (AddCustomAttribute key value h) = flip (go i) h $
+    go i attrs (AddCustomAttribute _ key value h) = flip (go i) h $
         fromChoiceString key . fromChoiceString value . ('"' :) . attrs
     go i _ (Content content) = ind i . fromChoiceString content . ('\n' :)
     go i attrs (Append h1 h2) = go i attrs h1 . go i attrs h2

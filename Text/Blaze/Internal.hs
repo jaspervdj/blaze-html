@@ -109,19 +109,19 @@ instance IsString ChoiceString where
 -- | The core HTML datatype.
 --
 data HtmlM a
-    -- | Open tag, end tag, content
-    = forall b. Parent StaticString StaticString (HtmlM b)
-    -- | Open tag, end tag
-    | Leaf StaticString StaticString
+    -- | Tag, open tag, end tag, content
+    = forall b. Parent StaticString StaticString StaticString (HtmlM b)
+    -- | Tag, open tag, end tag
+    | Leaf StaticString StaticString StaticString
     -- | HTML content
     | Content ChoiceString
     -- | Concatenation of two HTML pieces
     | forall b c. Append (HtmlM b) (HtmlM c)
-    -- | Add an attribute to the inner HTML. Key, value, HTML to receive the
-    -- attribute.
-    | AddAttribute StaticString ChoiceString (HtmlM a)
+    -- | Add an attribute to the inner HTML. Raw key, key, value, HTML to
+    -- receive the attribute.
+    | AddAttribute StaticString StaticString ChoiceString (HtmlM a)
     -- | Add a custom attribute to the inner HTML.
-    | AddCustomAttribute ChoiceString ChoiceString (HtmlM a)
+    | AddCustomAttribute ChoiceString ChoiceString ChoiceString (HtmlM a)
     -- | Empty HTML.
     | Empty
 
@@ -167,11 +167,12 @@ newtype AttributeValue = AttributeValue { unAttributeValue :: ChoiceString }
 -- | Create an HTML attribute that can be applied to an HTML element later using
 -- the '!' operator.
 --
-attribute :: Tag             -- ^ Shared key string for the HTML attribute.
+attribute :: Tag             -- ^ Raw key
+          -> Tag             -- ^ Shared key string for the HTML attribute.
           -> AttributeValue  -- ^ Value for the HTML attribute.
           -> Attribute       -- ^ Resulting HTML attribute.
-attribute key value = Attribute $
-    AddAttribute (unTag key) (unAttributeValue value)
+attribute rawKey key value = Attribute $
+    AddAttribute (unTag rawKey) (unTag key) (unAttributeValue value)
 {-# INLINE attribute #-}
 
 -- | From HTML 5 onwards, the user is able to specify custom data attributes.
@@ -189,6 +190,7 @@ dataAttribute :: Tag             -- ^ Name of the attribute.
               -> AttributeValue  -- ^ Value for the attribute.
               -> Attribute       -- ^ Resulting HTML attribute.
 dataAttribute tag value = Attribute $ AddCustomAttribute
+    (Static "data-" `mappend` Static (unTag tag))
     (Static " data-" `mappend` Static (unTag tag) `mappend` Static "=\"")
     (unAttributeValue value)
 {-# INLINE dataAttribute #-}
@@ -208,6 +210,7 @@ customAttribute :: Tag             -- ^ Name of the attribute
                 -> AttributeValue  -- ^ Value for the attribute
                 -> Attribute       -- ^ Resulting HTML attribtue
 customAttribute tag value = Attribute $ AddCustomAttribute
+    (Static $ unTag tag)
     (Static " " `mappend` Static (unTag tag) `mappend` Static "=\"")
     (unAttributeValue value)
 {-# INLINE customAttribute #-}
@@ -384,8 +387,8 @@ instance Attributable (HtmlM a -> HtmlM b) where
 external :: HtmlM a -> HtmlM a
 external (Content x) = Content $ External x
 external (Append x y) = Append (external x) (external y)
-external (Parent x y z) = Parent x y $ external z
-external (AddAttribute x y z) = AddAttribute x y $ external z
-external (AddCustomAttribute x y z) = AddCustomAttribute x y $ external z
+external (Parent x y z i) = Parent x y z $ external i
+external (AddAttribute x y z i) = AddAttribute x y z $ external i
+external (AddCustomAttribute x y z i) = AddCustomAttribute x y z $ external i
 external x = x
 {-# INLINE external #-}

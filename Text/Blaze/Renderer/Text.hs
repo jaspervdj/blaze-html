@@ -67,22 +67,22 @@ renderBuilder :: (ByteString -> Text)  -- ^ Decoder for bytestrings
 renderBuilder d = go mempty 
   where
     go :: Builder -> HtmlM b -> Builder
-    go attrs (Parent open close content) =
+    go attrs (Parent _ open close content) =
         B.fromText (getText open)
             `mappend` attrs
             `mappend` B.singleton '>'
             `mappend` go mempty content
             `mappend` B.fromText (getText close)
-    go attrs (Leaf begin end) = 
+    go attrs (Leaf _ begin end) = 
         B.fromText (getText begin)
             `mappend` attrs
             `mappend` B.fromText (getText end)
-    go attrs (AddAttribute key value h) =
+    go attrs (AddAttribute _ key value h) =
         go (B.fromText (getText key)
             `mappend` fromChoiceString d value
             `mappend` B.singleton '"'
             `mappend` attrs) h
-    go attrs (AddCustomAttribute key value h) =
+    go attrs (AddCustomAttribute _ key value h) =
         go (fromChoiceString d key
             `mappend` fromChoiceString d value
             `mappend` B.singleton '"'

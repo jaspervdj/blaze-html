@@ -208,7 +208,7 @@ makeParent tag = unlines
     , "--"
     , function        ++ " :: Html  -- ^ Inner HTML."
     , spaces function ++ " -> Html  -- ^ Resulting HTML."
-    , function        ++ " = Parent \"<" ++ tag
+    , function        ++ " = Parent \"" ++ tag ++ "\" \"<" ++ tag
                       ++ "\" \"</" ++ tag ++ ">\"" ++ modifier
     , "{-# INLINE " ++ function ++ " #-}"
     ]
@@ -234,7 +234,7 @@ makeLeaf openLeaf tag = unlines
     , "-- > <" ++ tag ++ " />"
     , "--"
     , function ++ " :: Html  -- ^ Resulting HTML."
-    , function ++ " = Leaf \"<" ++ tag ++ "\" " ++ end
+    , function ++ " = Leaf \"" ++ tag ++ "\" \"<" ++ tag ++ "\" " ++ end
     , "{-# INLINE " ++ function ++ " #-}"
     ]
   where
@@ -258,7 +258,8 @@ makeAttribute name = unlines
     , "--"
     , function        ++ " :: AttributeValue  -- ^ Attribute value."
     , spaces function ++ " -> Attribute       -- ^ Resulting attribute."
-    , function        ++ " = attribute \" " ++ name ++ "=\\\"\""
+    , function        ++ " = attribute \"" ++ name ++ "\" \" "
+                      ++ name ++ "=\\\"\""
     , "{-# INLINE " ++ function ++ " #-}"
     ]
   where

@@ -61,12 +61,12 @@ renderString :: Html    -- ^ HTML to render
 renderString = go id 
   where
     go :: (String -> String) -> HtmlM b -> String -> String
-    go attrs (Parent open close content) =
+    go attrs (Parent _ open close content) =
         getString open . attrs . ('>' :) . go id content . getString close
-    go attrs (Leaf begin end) = getString begin . attrs . getString end
-    go attrs (AddAttribute key value h) = flip go h $
+    go attrs (Leaf _ begin end) = getString begin . attrs . getString end
+    go attrs (AddAttribute _ key value h) = flip go h $
         getString key . fromChoiceString value . ('"' :) . attrs
-    go attrs (AddCustomAttribute key value h) = flip go h $
+    go attrs (AddCustomAttribute _ key value h) = flip go h $
         fromChoiceString key . fromChoiceString value . ('"' :) . attrs
     go _ (Content content) = fromChoiceString content
     go attrs (Append h1 h2) = go attrs h1 . go attrs h2

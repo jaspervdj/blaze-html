@@ -60,6 +60,7 @@ Library
 
   -- Modules exported by the library.
   Exposed-modules:   Text.Blaze
+                     Text.Blaze.Internal
                      Text.Blaze.Html4.FrameSet
                      Text.Blaze.Html4.FrameSet.Attributes
                      Text.Blaze.Html4.Strict
@@ -78,6 +79,3 @@ Library
                      text >= 0.10,
                      bytestring >= 0.9,
                      blaze-builder == 0.2.* && >= 0.2.1
-  
-  -- Modules not exported by this package.
-  Other-modules:     Text.Blaze.Internal

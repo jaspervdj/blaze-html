@@ -4,6 +4,9 @@
 -- generate custom HTML elements. It also offers user-centric functions, which
 -- are exposed through 'Text.Blaze'.
 --
+-- While this module is exported, usage of it is not recommended, unless you
+-- know what you are doing. This module might undergo changes at any time.
+--
 module Text.Blaze.Internal
     (
       -- * Important types.

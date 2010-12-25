@@ -41,8 +41,8 @@ test-hpc:
 ################################################################################
 
 benchmark:
-	$(GHC) $(GHC_FLAGS) --make -main-is HtmlBenchmarks benchmarks/HtmlBenchmarks.hs
-	./benchmarks/HtmlBenchmarks $(BENCHMARK_FLAGS)
+	$(GHC) $(GHC_FLAGS) --make -main-is RunHtmlBenchmarks benchmarks/RunHtmlBenchmarks.hs
+	./benchmarks/RunHtmlBenchmarks $(BENCHMARK_FLAGS)
 
 benchmark-builder:
 	$(GHC) $(GHC_FLAGS) --make -main-is Utf8Builder benchmarks/Utf8Builder.hs

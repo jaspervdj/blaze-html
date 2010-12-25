@@ -4,8 +4,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 module SnapFramework where
 
-import System (getArgs)
-
 import Snap.Http.Server
 import Snap.Types
 
@@ -38,12 +36,4 @@ site = blazeTemplate welcomePage
 -- | Snap main function.
 --
 main :: IO ()
-main = do
-    args <- getArgs
-    let port = case args of
-                   []  -> 8000
-                   p:_ -> read p
-    httpServe "*" port "myserver"
-        (Just "access.log")
-        (Just "error.log")
-        site
+main = httpServe defaultConfig site

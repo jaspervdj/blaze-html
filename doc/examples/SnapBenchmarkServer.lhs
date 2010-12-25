@@ -6,7 +6,6 @@ Haskell web framework.
 > {-# LANGUAGE OverloadedStrings #-}
 > module SnapBenchmarkServer where
 
-> import System (getArgs)
 > import Data.Maybe (fromMaybe)
 > import Data.Char (toLower)
 > import Control.Applicative ((<$>))
@@ -19,9 +18,8 @@ Haskell web framework.
 We re-use most of the `BenchmarkServer`, and the `blazeTemplate` function from
 the simple `SnapFramework` example as well.
 
-> import Text.Blaze.Renderer.Utf8 (renderHtml)
 > import BenchmarkServer hiding (main)
-> import HtmlBenchmarks hiding (main)
+> import HtmlBenchmarks (HtmlBenchmark (..))
 > import SnapFramework (blazeTemplate)
 
 We now present "Handlers" for our templates: these are values of the type
@@ -63,9 +61,4 @@ the top, and then we can access the benchmarks by name.
 The main function is simply the same as in the `SnapFramework` example.
 
 > main :: IO ()
-> main = do
->     args <- getArgs
->     let port = case args of
->                    []  -> 8000
->                    p:_ -> read p
->     httpServe "*" port "myserver" (Just "access.log") (Just "error.log") site
+> main = httpServe defaultConfig site

@@ -7,27 +7,12 @@ import Data.Monoid (Monoid, mempty, mconcat, mappend)
 import Prelude hiding (div, id)
 import qualified Prelude as P
 
-import Criterion.Main
-import Data.ByteString.Char8 (ByteString)
-import GHC.Exts (IsString, fromString)
-import qualified Data.Text.Lazy as LT
-import qualified Data.ByteString.Lazy as LB
-
 import Text.Blaze.Html5 hiding (map)
 import qualified Text.Blaze.Html5 as H
 import Text.Blaze.Html5.Attributes hiding (title, rows)
-import qualified Text.Blaze.Renderer.Utf8 as Utf8
-import qualified Text.Blaze.Renderer.String as String
-import qualified Text.Blaze.Renderer.Text as Text
 
-main = defaultMain $ concatMap benchHtml benchmarks
-  where
-    benchHtml (HtmlBenchmark name f x _) =
-        [ bench (name ++ " (Utf8)") $ nf (LB.length .  Utf8.renderHtml . f) x
-        , bench (name ++ " (String)") $ nf (String.renderHtml . f) x
-        , bench (name ++ " (Text)") $ nf (LT.length . Text.renderHtml . f) x
-        ]
-
+-- | Description of an HTML benchmark
+--
 data HtmlBenchmark = forall a. HtmlBenchmark
     String       -- ^ Name.
     (a -> Html)  -- ^ Rendering function.
@@ -68,7 +53,7 @@ basicData = ("Just a test", "joe", items)
 {-# NOINLINE basicData #-}
 
 items :: [String]
-items = map (("Number " `mappend`) . show) [1 .. 14]
+items = map (("Number " `mappend`) . show) [1 :: Int .. 14]
 {-# NOINLINE items #-}
 
 wideTreeData :: [String]
@@ -100,7 +85,7 @@ bigTable t = table $ mconcat $ map row t
 --
 basic :: (String, String, [String])  -- ^ (Title, User, Items)
       -> Html                        -- ^ Result.
-basic (title', user, items) = html $ do
+basic (title', user, items') = html $ do
     H.head $ title $ string title'
     body $ do
         div ! id "header" $ (h1 $ string title')
@@ -108,7 +93,7 @@ basic (title', user, items) = html $ do
         p $ "Hello, me!"
         p $ "Hello, world!"
         h2 $ "loop"
-        ol $ mconcat $ map (li . string) items
+        ol $ mconcat $ map (li . string) items'
         div ! id "footer" $ mempty
 
 -- | A benchmark producing a very wide but very shallow tree.
@@ -130,5 +115,5 @@ manyAttributes :: [String]  -- ^ List of attribute values.
                -> Html      -- ^ Result.
 manyAttributes = foldl setAttribute img
   where
-    setAttribute html value = html ! id (stringValue value)
+    setAttribute html' value' = html' ! id (stringValue value')
     {-# INLINE setAttribute #-}

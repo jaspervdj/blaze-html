@@ -32,6 +32,7 @@ Simon Meier and Johan Tibell.
 - Pieter De Baets
 - Tom Harper
 - Yair Chuchem
+- Alex Mason
 
 # Contact
 

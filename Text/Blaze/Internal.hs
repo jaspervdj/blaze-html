@@ -1,5 +1,5 @@
 {-# LANGUAGE OverloadedStrings, GeneralizedNewtypeDeriving, Rank2Types,
-             FlexibleInstances, ExistentialQuantification #-}
+             FlexibleInstances, ExistentialQuantification, DeriveDataTypeable #-}
 -- | The BlazeHtml core, consisting of functions that offer the power to
 -- generate custom HTML elements. It also offers user-centric functions, which
 -- are exposed through 'Text.Blaze'.
@@ -63,6 +63,7 @@ import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
 import qualified Data.Text.Lazy as LT
 import GHC.Exts (IsString (..))
+import Data.Typeable(Typeable)
 
 -- | A static string that supports efficient output to all possible backends.
 --
@@ -127,6 +128,7 @@ data HtmlM a
     | AddCustomAttribute ChoiceString ChoiceString ChoiceString (HtmlM a)
     -- | Empty HTML.
     | Empty
+    deriving (Typeable)
 
 -- | Simplification of the 'HtmlM' datatype.
 --

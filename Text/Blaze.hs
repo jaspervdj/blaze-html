@@ -66,6 +66,8 @@ module Text.Blaze
     , preEscapedLazyTextValue
     , stringValue
     , preEscapedStringValue
+    , showValue
+    , preEscapedShowValue
     , unsafeByteStringValue
 
       -- * Setting attributes

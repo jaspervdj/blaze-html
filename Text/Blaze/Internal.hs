@@ -45,6 +45,8 @@ module Text.Blaze.Internal
     , preEscapedLazyTextValue
     , stringValue
     , preEscapedStringValue
+    , showValue
+    , preEscapedShowValue
     , unsafeByteStringValue
 
       -- * Setting attributes
@@ -341,6 +343,19 @@ stringValue = AttributeValue . String
 preEscapedStringValue :: String -> AttributeValue
 preEscapedStringValue = AttributeValue . PreEscaped . String
 {-# INLINE preEscapedStringValue #-}
+
+-- | Create an attribute value from a value implementing the 'Show' class
+--
+showValue :: Show a => a -> AttributeValue
+showValue = stringValue . show
+{-# INLINE showValue #-}
+
+-- | Create an attribute value from a value implementing the 'Show' class,
+-- without escaping the result
+--
+preEscapedShowValue :: Show a => a -> AttributeValue
+preEscapedShowValue = preEscapedStringValue . show
+{-# INLINE preEscapedShowValue #-}
 
 -- | Create an attribute value from a 'ByteString'. See 'unsafeByteString'
 -- for reasons why this might not be a good idea.

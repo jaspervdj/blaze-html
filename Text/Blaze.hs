@@ -1,5 +1,4 @@
-{-# LANGUAGE OverloadedStrings, GeneralizedNewtypeDeriving, Rank2Types,
-             FlexibleInstances #-}
+{-# LANGUAGE TypeSynonymInstances #-}
 -- | BlazeHtml is an HTML combinator library. It provides a way to embed HTML in
 -- Haskell in an efficient and convenient way, with a light-weight syntax.
 --
@@ -45,6 +44,7 @@ module Text.Blaze
     , customAttribute
 
       -- * Converting values to HTML.
+    , ToHtml (..)
     , text
     , preEscapedText
     , lazyText
@@ -60,6 +60,7 @@ module Text.Blaze
     , stringTag
 
       -- * Converting values to attribute values.
+    , ToValue (..)
     , textValue
     , preEscapedTextValue
     , lazyTextValue
@@ -74,4 +75,41 @@ module Text.Blaze
     , (!)
     ) where
 
+import Data.Text (Text)
+import qualified Data.Text.Lazy as LT
+
 import Text.Blaze.Internal
+
+-- | Class allowing us to use a single function for HTML values
+--
+class ToHtml a where
+    toHtml :: a -> Html
+
+instance ToHtml Html where
+    toHtml = id
+
+instance ToHtml Text where
+    toHtml = text
+
+instance ToHtml LT.Text where
+    toHtml = lazyText
+
+instance ToHtml String where
+    toHtml = string
+
+-- | Class allowing us to use a single function for attribute values
+--
+class ToValue a where
+    toValue :: a -> AttributeValue
+
+instance ToValue AttributeValue where
+    toValue = id
+
+instance ToValue Text where
+    toValue = textValue
+
+instance ToValue LT.Text where
+    toValue = lazyTextValue
+
+instance ToValue String where
+    toValue = stringValue

@@ -86,36 +86,47 @@ class ToHtml a where
     -- | Convert a value to HTML.
     --
     toHtml :: a -> Html
+    {-# INLINE toHtml #-}
 
 instance ToHtml Html where
     toHtml = id
+    {-# INLINE toHtml #-}
 
 instance ToHtml Text where
     toHtml = text
+    {-# INLINE toHtml #-}
 
 instance ToHtml LT.Text where
     toHtml = lazyText
+    {-# INLINE toHtml #-}
 
 instance ToHtml String where
     toHtml = string
+    {-# INLINE toHtml #-}
 
 instance ToHtml Int where
-    toHtml = string . show
+    toHtml = showHtml
+    {-# INLINE toHtml #-}
 
 instance ToHtml Char where
-    toHtml = string . show
+    toHtml = showHtml
+    {-# INLINE toHtml #-}
 
 instance ToHtml Bool where
-    toHtml = string . show
+    toHtml = showHtml
+    {-# INLINE toHtml #-}
 
 instance ToHtml Integer where
-    toHtml = string . show
+    toHtml = showHtml
+    {-# INLINE toHtml #-}
 
 instance ToHtml Float where
-    toHtml = string . show
+    toHtml = showHtml
+    {-# INLINE toHtml #-}
 
 instance ToHtml Double where
-    toHtml = string . show
+    toHtml = showHtml
+    {-# INLINE toHtml #-}
 
 
 -- | Class allowing us to use a single function for attribute values
@@ -124,33 +135,44 @@ class ToValue a where
     -- | Convert a value to an HTML attribute value
     --
     toValue :: a -> AttributeValue
+    {-# INLINE toValue #-}
 
 instance ToValue AttributeValue where
     toValue = id
+    {-# INLINE toValue #-}
 
 instance ToValue Text where
     toValue = textValue
+    {-# INLINE toValue #-}
 
 instance ToValue LT.Text where
     toValue = lazyTextValue
+    {-# INLINE toValue #-}
 
 instance ToValue String where
     toValue = stringValue
+    {-# INLINE toValue #-}
 
 instance ToValue Int where
-    toValue = stringValue . show
+    toValue = showValue
+    {-# INLINE toValue #-}
 
 instance ToValue Char where
-    toValue = stringValue . show
+    toValue = showValue
+    {-# INLINE toValue #-}
 
 instance ToValue Bool where
-    toValue = stringValue . show
+    toValue = showValue
+    {-# INLINE toValue #-}
 
 instance ToValue Integer where
-    toValue = stringValue . show
+    toValue = showValue
+    {-# INLINE toValue #-}
 
 instance ToValue Float where
-    toValue = stringValue . show
+    toValue = showValue
+    {-# INLINE toValue #-}
 
 instance ToValue Double where
-    toValue = stringValue . show
+    toValue = showValue
+    {-# INLINE toValue #-}

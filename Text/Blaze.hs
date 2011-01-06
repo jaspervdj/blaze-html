@@ -83,6 +83,8 @@ import Text.Blaze.Internal
 -- | Class allowing us to use a single function for HTML values
 --
 class ToHtml a where
+    -- | Convert a value to HTML.
+    --
     toHtml :: a -> Html
 
 instance ToHtml Html where
@@ -97,9 +99,30 @@ instance ToHtml LT.Text where
 instance ToHtml String where
     toHtml = string
 
+instance ToHtml Int where
+    toHtml = string . show
+
+instance ToHtml Char where
+    toHtml = string . show
+
+instance ToHtml Bool where
+    toHtml = string . show
+
+instance ToHtml Integer where
+    toHtml = string . show
+
+instance ToHtml Float where
+    toHtml = string . show
+
+instance ToHtml Double where
+    toHtml = string . show
+
+
 -- | Class allowing us to use a single function for attribute values
 --
 class ToValue a where
+    -- | Convert a value to an HTML attribute value
+    --
     toValue :: a -> AttributeValue
 
 instance ToValue AttributeValue where
@@ -113,3 +136,21 @@ instance ToValue LT.Text where
 
 instance ToValue String where
     toValue = stringValue
+
+instance ToValue Int where
+    toValue = stringValue . show
+
+instance ToValue Char where
+    toValue = stringValue . show
+
+instance ToValue Bool where
+    toValue = stringValue . show
+
+instance ToValue Integer where
+    toValue = stringValue . show
+
+instance ToValue Float where
+    toValue = stringValue . show
+
+instance ToValue Double where
+    toValue = stringValue . show

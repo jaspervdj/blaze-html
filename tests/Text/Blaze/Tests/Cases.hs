@@ -7,12 +7,14 @@ module Text.Blaze.Tests.Cases
 
 import Prelude hiding (div, id)
 import Control.Monad (forM_)
+import Data.Monoid (mappend, mconcat)
 
 import Test.HUnit ((@=?))
 import Test.Framework.Providers.HUnit (testCase)
 import Test.Framework (Test)
 import qualified Data.ByteString.Lazy.Char8 as LBC
 
+import Text.Blaze
 import Text.Blaze.Html5 hiding (map)
 import qualified Text.Blaze.Html5 as H
 import Text.Blaze.Html5.Attributes
@@ -85,6 +87,13 @@ tests = concatMap (uncurry makeTests) $ zip names
 
     , HtmlTest "<p dojoType=\"select\">A paragraph</p>" $
         p ! (customAttribute "dojoType" "select") $ "A paragraph"
+
+    -- ToHtml/ToValue tests
+    , HtmlTest "12345678910" $ mconcat $ map toHtml [1 :: Int .. 10]
+
+    , HtmlTest "<img src=\"funny-picture-4.png\" />" $
+        img ! src ("funny-picture-" `mappend` toValue (4 :: Integer)
+                                    `mappend` ".png")
     ]
   where
     names = map (("Test case " ++) . show) [1 :: Int ..]

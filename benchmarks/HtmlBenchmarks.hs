@@ -7,6 +7,7 @@ import Data.Monoid (Monoid, mempty, mconcat, mappend)
 import Prelude hiding (div, id)
 import qualified Prelude as P
 
+import Text.Blaze
 import Text.Blaze.Html5 hiding (map)
 import qualified Text.Blaze.Html5 as H
 import Text.Blaze.Html5.Attributes hiding (title, rows)
@@ -24,20 +25,20 @@ data HtmlBenchmark = forall a. HtmlBenchmark
 benchmarks :: [HtmlBenchmark]
 benchmarks =
     [ HtmlBenchmark "bigTable" bigTable bigTableData $
-        let h = showHtml $ length bigTableData
-            w = showHtml $ length $ P.head bigTableData
+        let h = toHtml $ length bigTableData
+            w = toHtml $ length $ P.head bigTableData
         in "Rendering of a big (" >> h >> "x" >> w >> ") HTML table"
     , HtmlBenchmark "basic" basic basicData
         "A simple, small basic template with a few holes to fill in"
     , HtmlBenchmark "wideTree" wideTree wideTreeData $
-        "A very wide tree (" >> showHtml (length wideTreeData) >> " elements)"
+        "A very wide tree (" >> toHtml (length wideTreeData) >> " elements)"
     , HtmlBenchmark "wideTreeEscaping" wideTree wideTreeEscapingData $ do
-        "A very wide tree (" >> showHtml (length wideTreeData) >> " elements)"
+        "A very wide tree (" >> toHtml (length wideTreeData) >> " elements)"
         " with lots of escaping"
     , HtmlBenchmark "deepTree" deepTree deepTreeData $ do
-        "A really deep tree (" >> showHtml deepTreeData >> " nested templates)"
+        "A really deep tree (" >> toHtml deepTreeData >> " nested templates)"
     , HtmlBenchmark "manyAttributes" manyAttributes manyAttributesData $ do
-        "A single element with " >> showHtml (length manyAttributesData)
+        "A single element with " >> toHtml (length manyAttributesData)
         " attributes."
     ]
 

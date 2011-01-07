@@ -30,8 +30,6 @@ module Text.Blaze.Internal
     , preEscapedLazyText
     , string
     , preEscapedString
-    , showHtml
-    , preEscapedShowHtml
     , unsafeByteString
 
       -- * Converting values to tags.
@@ -45,8 +43,6 @@ module Text.Blaze.Internal
     , preEscapedLazyTextValue
     , stringValue
     , preEscapedStringValue
-    , showValue
-    , preEscapedShowValue
     , unsafeByteStringValue
 
       -- * Setting attributes
@@ -263,23 +259,6 @@ preEscapedString :: String  -- ^ String to insert.
 preEscapedString = Content . PreEscaped . String
 {-# INLINE preEscapedString #-}
 
--- | Create an HTML snippet from a datatype that instantiates 'Show'.
---
-showHtml :: Show a
-         => a       -- ^ Value to insert.
-         -> Html    -- ^ Resulting HTML fragment.
-showHtml = string . show
-{-# INLINE showHtml #-}
-
--- | Create an HTML snippet from a datatype that instantiates 'Show'. This
--- function will not do any HTML entity escaping.
---
-preEscapedShowHtml :: Show a
-                   => a     -- ^ Value to insert.
-                   -> Html  -- ^ Resulting HTML fragment.
-preEscapedShowHtml = preEscapedString . show
-{-# INLINE preEscapedShowHtml #-}
-
 -- | Insert a 'ByteString'. This is an unsafe operation:
 --
 -- * The 'ByteString' could have the wrong encoding.
@@ -343,19 +322,6 @@ stringValue = AttributeValue . String
 preEscapedStringValue :: String -> AttributeValue
 preEscapedStringValue = AttributeValue . PreEscaped . String
 {-# INLINE preEscapedStringValue #-}
-
--- | Create an attribute value from a value implementing the 'Show' class
---
-showValue :: Show a => a -> AttributeValue
-showValue = stringValue . show
-{-# INLINE showValue #-}
-
--- | Create an attribute value from a value implementing the 'Show' class,
--- without escaping the result
---
-preEscapedShowValue :: Show a => a -> AttributeValue
-preEscapedShowValue = preEscapedStringValue . show
-{-# INLINE preEscapedShowValue #-}
 
 -- | Create an attribute value from a 'ByteString'. See 'unsafeByteString'
 -- for reasons why this might not be a good idea.

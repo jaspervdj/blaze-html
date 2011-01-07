@@ -51,8 +51,6 @@ module Text.Blaze
     , preEscapedLazyText
     , string
     , preEscapedString
-    , showHtml
-    , preEscapedShowHtml
     , unsafeByteString
 
       -- * Creating tags.
@@ -67,8 +65,6 @@ module Text.Blaze
     , preEscapedLazyTextValue
     , stringValue
     , preEscapedStringValue
-    , showValue
-    , preEscapedShowValue
     , unsafeByteStringValue
 
       -- * Setting attributes
@@ -105,27 +101,27 @@ instance ToHtml String where
     {-# INLINE toHtml #-}
 
 instance ToHtml Int where
-    toHtml = showHtml
+    toHtml = string . show
     {-# INLINE toHtml #-}
 
 instance ToHtml Char where
-    toHtml = showHtml
+    toHtml = string . show
     {-# INLINE toHtml #-}
 
 instance ToHtml Bool where
-    toHtml = showHtml
+    toHtml = string . show
     {-# INLINE toHtml #-}
 
 instance ToHtml Integer where
-    toHtml = showHtml
+    toHtml = string . show
     {-# INLINE toHtml #-}
 
 instance ToHtml Float where
-    toHtml = showHtml
+    toHtml = string . show
     {-# INLINE toHtml #-}
 
 instance ToHtml Double where
-    toHtml = showHtml
+    toHtml = string . show
     {-# INLINE toHtml #-}
 
 
@@ -154,25 +150,25 @@ instance ToValue String where
     {-# INLINE toValue #-}
 
 instance ToValue Int where
-    toValue = showValue
+    toValue = stringValue . show
     {-# INLINE toValue #-}
 
 instance ToValue Char where
-    toValue = showValue
+    toValue = stringValue . show
     {-# INLINE toValue #-}
 
 instance ToValue Bool where
-    toValue = showValue
+    toValue = stringValue . show
     {-# INLINE toValue #-}
 
 instance ToValue Integer where
-    toValue = showValue
+    toValue = stringValue . show
     {-# INLINE toValue #-}
 
 instance ToValue Float where
-    toValue = showValue
+    toValue = stringValue . show
     {-# INLINE toValue #-}
 
 instance ToValue Double where
-    toValue = showValue
+    toValue = stringValue . show
     {-# INLINE toValue #-}

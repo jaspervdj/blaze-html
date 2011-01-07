@@ -76,7 +76,7 @@ tests = concatMap (uncurry makeTests) $ zip names
 
     -- Control cases
     , HtmlTest "<li>4</li><li>5</li><li>6</li>" $
-        forM_ [4 :: Int .. 6] (li . showHtml)
+        forM_ [4 :: Int .. 6] (li . string . show)
 
     , HtmlTest "<br /><img /><area />" $
         sequence_ [br, img, area]

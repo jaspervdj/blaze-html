@@ -94,6 +94,8 @@ tests = concatMap (uncurry makeTests) $ zip names
     , HtmlTest "<img src=\"funny-picture-4.png\" />" $
         img ! src ("funny-picture-" `mappend` toValue (4 :: Integer)
                                     `mappend` ".png")
+
+    , HtmlTest "abcdefghijklmnopqrstuvwxyz" $ forM_ ['a' .. 'z'] toHtml
     ]
   where
     names = map (("Test case " ++) . show) [1 :: Int ..]

@@ -105,7 +105,7 @@ instance ToHtml Int where
     {-# INLINE toHtml #-}
 
 instance ToHtml Char where
-    toHtml = string . show
+    toHtml = string . return
     {-# INLINE toHtml #-}
 
 instance ToHtml Bool where
@@ -154,7 +154,7 @@ instance ToValue Int where
     {-# INLINE toValue #-}
 
 instance ToValue Char where
-    toValue = stringValue . show
+    toValue = stringValue . return
     {-# INLINE toValue #-}
 
 instance ToValue Bool where

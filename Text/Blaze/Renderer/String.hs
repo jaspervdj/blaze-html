@@ -22,12 +22,12 @@ escapeHtmlEntities :: String  -- ^ String to escape
                    -> String  -- ^ Resulting string
 escapeHtmlEntities []     k = k
 escapeHtmlEntities (c:cs) k = case c of
-    '<'  -> "&lt;"   ++ escapeHtmlEntities cs k
-    '>'  -> "&gt;"   ++ escapeHtmlEntities cs k
-    '&'  -> "&amp;"  ++ escapeHtmlEntities cs k
-    '"'  -> "&quot;" ++ escapeHtmlEntities cs k
-    '\'' -> "&#39;"  ++ escapeHtmlEntities cs k
-    x    -> x : escapeHtmlEntities cs k
+    '<'  -> '&' : 'l' : 't' : ';'             : escapeHtmlEntities cs k
+    '>'  -> '&' : 'g' : 't' : ';'             : escapeHtmlEntities cs k
+    '&'  -> '&' : 'a' : 'm' : 'p' : ';'       : escapeHtmlEntities cs k
+    '"'  -> '&' : 'q' : 'u' : 'o' : 't' : ';' : escapeHtmlEntities cs k
+    '\'' -> '&' : '#' : '3' : '9' : ';'       : escapeHtmlEntities cs k
+    x    -> x                                 : escapeHtmlEntities cs k
 
 -- | Render a 'ChoiceString'.
 --

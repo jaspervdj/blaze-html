@@ -41,8 +41,6 @@ This tutorial is a literate haskell file, thus we should begin by importing the
 modules we are going to use. To avoid name clashes, we just import everything
 twice -- once with an alias and once without.
 
-> import Prelude
-> import qualified Prelude as P
 > import Control.Monad (forM_)
 
 > import Text.Blaze.Html5
@@ -73,7 +71,7 @@ your "view" code from your "logic" code -- but you already knew that, right?
 >         H.title "Natural numbers"
 >     body $ do
 >         p "A list of natural numbers:"
->         ul $ forM_ [1 .. n] (li . showHtml)
+>         ul $ forM_ [1 .. n] (li . toHtml)
 
 We use the `docTypeHtml` combinator which is basically the doctype followed by
 the `<html>` tag.
@@ -129,7 +127,7 @@ current status.
 >         "Logged in as "
 >         string $ getUserName user
 >         ". Your points: "
->         showHtml $ getPoints user
+>         toHtml $ getPoints user
 
 Once we have this, we can easily embed it somewhere else.
 

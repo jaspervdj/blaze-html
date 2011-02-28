@@ -223,6 +223,7 @@ customAttribute tag value = Attribute $ AddCustomAttribute
 text :: Text  -- ^ Text to render.
      -> Html  -- ^ Resulting HTML fragment.
 text = Content . Text
+{-# DEPRECATED text "Use Blaze.Html.toHtml" #-}
 {-# INLINE text #-}
 
 -- | Render text without escaping.
@@ -237,6 +238,7 @@ preEscapedText = Content . PreEscaped . Text
 lazyText :: LT.Text  -- ^ Text to insert
          -> Html     -- ^ Resulting HTML fragment
 lazyText = mconcat . map text . LT.toChunks
+{-# DEPRECATED lazyText "Use Blaze.Html.toHtml" #-}
 {-# INLINE lazyText #-}
 
 -- | A variant of 'preEscapedText' for lazy 'LT.Text'
@@ -250,6 +252,7 @@ preEscapedLazyText = mconcat . map preEscapedText . LT.toChunks
 string :: String  -- ^ String to insert.
        -> Html    -- ^ Resulting HTML fragment.
 string = Content . String
+{-# DEPRECATED string "Use Blaze.Html.toHtml" #-}
 {-# INLINE string #-}
 
 -- | Create an HTML snippet from a 'String' without escaping
@@ -288,6 +291,7 @@ stringTag = Tag . fromString
 textValue :: Text            -- ^ The actual value.
           -> AttributeValue  -- ^ Resulting attribute value.
 textValue = AttributeValue . Text
+{-# DEPRECATED textValue "Use Blaze.Html.toValue" #-}
 {-# INLINE textValue #-}
 
 -- | Render an attribute value from 'Text' without escaping.
@@ -302,6 +306,7 @@ preEscapedTextValue = AttributeValue . PreEscaped . Text
 lazyTextValue :: LT.Text         -- ^ The actual value
               -> AttributeValue  -- ^ Resulting attribute value
 lazyTextValue = mconcat . map textValue . LT.toChunks
+{-# DEPRECATED lazyTextValue "Use Blaze.Html.toValue" #-}
 {-# INLINE lazyTextValue #-}
 
 -- | A variant of 'preEscapedTextValue' for lazy 'LT.Text'
@@ -315,6 +320,7 @@ preEscapedLazyTextValue = mconcat . map preEscapedTextValue . LT.toChunks
 --
 stringValue :: String -> AttributeValue
 stringValue = AttributeValue . String
+{-# DEPRECATED stringValue "Use Blaze.Html.toValue" #-}
 {-# INLINE stringValue #-}
 
 -- | Create an attribute value from a 'String' without escaping.

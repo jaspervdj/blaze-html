@@ -124,7 +124,6 @@ instance ToHtml Double where
     toHtml = string . show
     {-# INLINE toHtml #-}
 
-
 -- | Class allowing us to use a single function for attribute values
 --
 class ToValue a where

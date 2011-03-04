@@ -36,7 +36,7 @@ data Html = Parent String Attributes Html
 data CombinatorType = ParentCombinator
                     | LeafCombinator
                     | UnknownCombinator
-                    deriving (Show)
+                    deriving (Eq, Show)
 
 -- | Traverse the list of tags to produce an intermediate representation of the
 -- HTML tree.
@@ -58,11 +58,20 @@ makeTree variant ignore stack (TagPosition row _ : x : xs) = case x of
                     _ -> makeTree variant ignore (tag' : stack) xs
                  p = Parent tag' (map (first toLower') attrs) inner
              in addHtml p t
-    -- The closing tag must match the stack.
-    TagClose tag -> if listToMaybe stack == Just (toLower' tag) || ignore
-        then (Block [], xs)
-        else error $  "Line " ++ show row ++ ": " ++ show tag ++ " closed but "
-                   ++ show stack ++ " should be closed instead."
+    -- The closing tag must match the stack. If it is a closing leaf, we can
+    -- ignore it
+    TagClose tag ->
+        let isLeafCombinator = combinatorType variant tag == LeafCombinator
+            matchesStack = listToMaybe stack == Just (toLower' tag)
+        in case (isLeafCombinator, matchesStack, ignore) of
+            -- It's a leaf combinator, don't care about this element
+            (True, _, _)          -> makeTree variant ignore stack xs
+            -- It's a parent and the stack doesn't match
+            (False, False, False) -> error $
+                "Line " ++ show row ++ ": " ++ show tag ++ " closed but "
+                        ++ show stack ++ " should be closed instead."
+            -- Stack might not match but we ignore it anyway
+            (False, _, _)         -> (Block [], xs)
     TagText text -> addHtml (Text text) xs
     TagComment comment -> addHtml (Comment comment) xs
     _ -> makeTree variant ignore stack xs

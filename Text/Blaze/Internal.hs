@@ -31,6 +31,7 @@ module Text.Blaze.Internal
     , string
     , preEscapedString
     , unsafeByteString
+    , unsafeLazyByteString
 
       -- * Converting values to tags.
     , textTag
@@ -44,6 +45,7 @@ module Text.Blaze.Internal
     , stringValue
     , preEscapedStringValue
     , unsafeByteStringValue
+    , unsafeLazyByteStringValue
 
       -- * Setting attributes
     , (!)
@@ -55,19 +57,20 @@ module Text.Blaze.Internal
 import Data.Monoid (Monoid, mappend, mempty, mconcat)
 
 import Data.ByteString.Char8 (ByteString)
-import qualified Data.ByteString as S
 import Data.Text (Text)
+import Data.Typeable (Typeable)
+import GHC.Exts (IsString (..))
+import qualified Data.ByteString as B
+import qualified Data.ByteString.Lazy as BL
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
 import qualified Data.Text.Lazy as LT
-import GHC.Exts (IsString (..))
-import Data.Typeable (Typeable)
 
 -- | A static string that supports efficient output to all possible backends.
 --
 data StaticString = StaticString
     { getString         :: String -> String  -- ^ Appending haskell string
-    , getUtf8ByteString :: S.ByteString      -- ^ UTF-8 encoded bytestring
+    , getUtf8ByteString :: B.ByteString      -- ^ UTF-8 encoded bytestring
     , getText           :: Text              -- ^ Text value
     }
 
@@ -88,7 +91,7 @@ data ChoiceString
     -- | A Text value
     | Text Text
     -- | An encoded bytestring
-    | ByteString S.ByteString
+    | ByteString B.ByteString
     -- | A pre-escaped string
     | PreEscaped ChoiceString
     -- | External data in style/script tags, should be checked for validity
@@ -274,6 +277,14 @@ unsafeByteString :: ByteString  -- ^ Value to insert.
 unsafeByteString = Content . ByteString
 {-# INLINE unsafeByteString #-}
 
+-- | Insert a lazy 'BL.ByteString'. See 'unsafeByteString' for reasons why this
+-- is an unsafe operation.
+--
+unsafeLazyByteString :: BL.ByteString  -- ^ Value to insert
+                     -> Html           -- ^ Resulting HTML fragment
+unsafeLazyByteString = mconcat . map unsafeByteString . BL.toChunks
+{-# INLINE unsafeLazyByteString #-}
+
 -- | Create a 'Tag' from some 'Text'.
 --
 textTag :: Text  -- ^ Text to create a tag from
@@ -335,6 +346,15 @@ preEscapedStringValue = AttributeValue . PreEscaped . String
 unsafeByteStringValue :: ByteString      -- ^ ByteString value
                       -> AttributeValue  -- ^ Resulting attribute value
 unsafeByteStringValue = AttributeValue . ByteString
+{-# INLINE unsafeByteStringValue #-}
+
+-- | Create an attribute value from a lazy 'BL.ByteString'. See
+-- 'unsafeByteString' for reasons why this might not be a good idea.
+--
+unsafeLazyByteStringValue :: BL.ByteString   -- ^ ByteString value
+                          -> AttributeValue  -- ^ Resulting attribute value
+unsafeLazyByteStringValue = mconcat . map unsafeByteStringValue . BL.toChunks
+{-# INLINE unsafeLazyByteStringValue #-}
 
 class Attributable h where
     -- | Apply an attribute to an element.

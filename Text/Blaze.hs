@@ -52,6 +52,7 @@ module Text.Blaze
     , string
     , preEscapedString
     , unsafeByteString
+    , unsafeLazyByteString
 
       -- * Creating tags.
     , textTag
@@ -66,6 +67,7 @@ module Text.Blaze
     , stringValue
     , preEscapedStringValue
     , unsafeByteStringValue
+    , unsafeLazyByteStringValue
 
       -- * Setting attributes
     , (!)

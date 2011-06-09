@@ -16,10 +16,10 @@ import HtmlBenchmarks (HtmlBenchmark (..), benchmarks)
 -- | Function to run the benchmarks using criterion
 --
 main :: IO ()
-main = defaultMain $ concatMap benchHtml benchmarks
+main = defaultMain $ map benchHtml benchmarks
   where
-    benchHtml (HtmlBenchmark name f x _) =
-        [ bench (name ++ " (Utf8)")   $ nf (LB.length .  Utf8.renderHtml . f) x
-        , bench (name ++ " (String)") $ nf (String.renderHtml . f) x
-        , bench (name ++ " (Text)")   $ nf (LT.length . Text.renderHtml . f) x
+    benchHtml (HtmlBenchmark name f x _) = bgroup name $
+        [ bench "Utf8"   $ nf (LB.length .  Utf8.renderHtml . f) x
+        , bench "String" $ nf (String.renderHtml . f) x
+        , bench "Text"   $ nf (LT.length . Text.renderHtml . f) x
         ]

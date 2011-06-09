@@ -80,28 +80,28 @@ bigTable :: [[Int]]  -- ^ Matrix.
          -> Html     -- ^ Result.
 bigTable t = table $ mconcat $ map row t
   where
-    row r = tr $ mconcat $ map (td . string . show) r
+    row r = tr $ mconcat $ map (td . toHtml) r
 
 -- | Render a simple HTML page with some data.
 --
 basic :: (String, String, [String])  -- ^ (Title, User, Items)
       -> Html                        -- ^ Result.
 basic (title', user, items') = html $ do
-    H.head $ title $ string title'
+    H.head $ title $ toHtml title'
     body $ do
-        div ! id "header" $ (h1 $ string title')
-        p $ "Hello, " `mappend` string user `mappend` string "!"
+        div ! id "header" $ (h1 $ toHtml title')
+        p $ "Hello, " `mappend` toHtml user `mappend` "!"
         p $ "Hello, me!"
         p $ "Hello, world!"
         h2 $ "loop"
-        ol $ mconcat $ map (li . string) items'
+        ol $ mconcat $ map (li . toHtml) items'
         div ! id "footer" $ mempty
 
 -- | A benchmark producing a very wide but very shallow tree.
 --
 wideTree :: [String]  -- ^ Text to create a tree from.
          -> Html      -- ^ Result.
-wideTree = div . mapM_ ((p ! id "foo") . string)
+wideTree = div . mapM_ ((p ! id "foo") . toHtml)
 
 -- | Create a very deep tree.
 --
@@ -116,5 +116,5 @@ manyAttributes :: [String]  -- ^ List of attribute values.
                -> Html      -- ^ Result.
 manyAttributes = foldl setAttribute img
   where
-    setAttribute html' value' = html' ! id (stringValue value')
+    setAttribute html' value' = html' ! id (toValue value')
     {-# INLINE setAttribute #-}

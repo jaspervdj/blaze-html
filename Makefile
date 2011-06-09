@@ -42,11 +42,7 @@ test-hpc:
 
 benchmark:
 	$(GHC) $(GHC_FLAGS) --make -main-is RunHtmlBenchmarks benchmarks/RunHtmlBenchmarks.hs
-	./benchmarks/RunHtmlBenchmarks $(BENCHMARK_FLAGS)
-
-benchmark-builder:
-	$(GHC) $(GHC_FLAGS) --make -main-is Utf8Builder benchmarks/Utf8Builder.hs
-	./benchmarks/Utf8Builder $(BENCHMARK_FLAGS)
+	./benchmarks/RunHtmlBenchmarks $(BENCHMARK_FLAGS) -u results.csv
 
 benchmark-server:
 	$(GHC) $(GHC_FLAGS) --make -threaded -main-is BenchmarkServer doc/examples/BenchmarkServer.lhs

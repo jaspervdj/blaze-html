@@ -148,7 +148,8 @@ instance Monad HtmlM where
     {-# INLINE return #-}
     (>>) = Append
     {-# INLINE (>>) #-}
-    h1 >>= f = h1 >> f (error "_|_")
+    h1 >>= f = h1 >> f
+        (error "Text.Blaze.Internal.HtmlM: invalid use of monadic bind")
     {-# INLINE (>>=) #-}
 
 instance IsString (HtmlM a) where

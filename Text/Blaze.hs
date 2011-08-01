@@ -1,4 +1,5 @@
 {-# LANGUAGE TypeSynonymInstances #-}
+{-# LANGUAGE FlexibleInstances #-}
 -- | BlazeHtml is an HTML combinator library. It provides a way to embed HTML in
 -- Haskell in an efficient and convenient way, with a light-weight syntax.
 --
@@ -84,7 +85,6 @@ class ToHtml a where
     -- | Convert a value to HTML.
     --
     toHtml :: a -> Html
-    {-# INLINE toHtml #-}
 
 instance ToHtml Html where
     toHtml = id
@@ -132,7 +132,6 @@ class ToValue a where
     -- | Convert a value to an HTML attribute value
     --
     toValue :: a -> AttributeValue
-    {-# INLINE toValue #-}
 
 instance ToValue AttributeValue where
     toValue = id

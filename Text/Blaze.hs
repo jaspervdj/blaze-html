@@ -1,5 +1,4 @@
-{-# LANGUAGE TypeSynonymInstances #-}
-{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE FlexibleInstances, TypeSynonymInstances #-}
 -- | BlazeHtml is an HTML combinator library. It provides a way to embed HTML in
 -- Haskell in an efficient and convenient way, with a light-weight syntax.
 --

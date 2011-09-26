@@ -48,6 +48,7 @@ module Text.Blaze.Internal
     , unsafeLazyByteStringValue
 
       -- * Setting attributes
+    , Attributable
     , (!)
 
       -- * Modifying HTML elements
@@ -357,6 +358,8 @@ unsafeLazyByteStringValue :: BL.ByteString   -- ^ ByteString value
 unsafeLazyByteStringValue = mconcat . map unsafeByteStringValue . BL.toChunks
 {-# INLINE unsafeLazyByteStringValue #-}
 
+-- | Used for applying attributes. You should not define your own instances of
+-- this class.
 class Attributable h where
     -- | Apply an attribute to an element.
     --

@@ -9,6 +9,7 @@ import Prelude hiding (div, id)
 import Control.Monad (forM_)
 import Data.Monoid (mappend, mconcat)
 
+import Data.Text (Text)
 import Test.HUnit ((@=?))
 import Test.Framework.Providers.HUnit (testCase)
 import Test.Framework (Test)
@@ -44,17 +45,17 @@ tests = concatMap (uncurry makeTests) $ zip names
             p "banana"
             H.span "banana"
 
-    , HtmlTest "<img src=\"foo.png\" alt=\"bar\" />" $
+    , HtmlTest "<img src=\"foo.png\" alt=\"bar\">" $
         img ! src "foo.png" ! alt "bar"
 
     -- Escaping cases
     , HtmlTest "&quot;&amp;&quot;" "\"&\""
 
-    , HtmlTest "&lt;img&gt;" $ text "<img>"
+    , HtmlTest "&lt;img&gt;" $ toHtml ("<img>" :: Text)
 
     , HtmlTest "&quot;&#39;&quot;" "\"'\""
 
-    , HtmlTest "<img src=\"&amp;\" />" $ img ! src "&"
+    , HtmlTest "<img src=\"&amp;\">" $ img ! src "&"
 
     -- Pre-escaping cases
     , HtmlTest "<3 Haskell" $ preEscapedText "<3 Haskell"
@@ -76,9 +77,9 @@ tests = concatMap (uncurry makeTests) $ zip names
 
     -- Control cases
     , HtmlTest "<li>4</li><li>5</li><li>6</li>" $
-        forM_ [4 :: Int .. 6] (li . string . show)
+        forM_ [4 :: Int .. 6] (li . toHtml)
 
-    , HtmlTest "<br /><img /><area />" $
+    , HtmlTest "<br><img><area>" $
         sequence_ [br, img, area]
 
     -- Attribute tests
@@ -91,7 +92,7 @@ tests = concatMap (uncurry makeTests) $ zip names
     -- ToHtml/ToValue tests
     , HtmlTest "12345678910" $ mconcat $ map toHtml [1 :: Int .. 10]
 
-    , HtmlTest "<img src=\"funny-picture-4.png\" />" $
+    , HtmlTest "<img src=\"funny-picture-4.png\">" $
         img ! src ("funny-picture-" `mappend` toValue (4 :: Integer)
                                     `mappend` ".png")
 

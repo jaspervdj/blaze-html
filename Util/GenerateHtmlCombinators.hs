@@ -26,7 +26,6 @@ data HtmlVariant = HtmlVariant
     , parents    :: [String]
     , leafs      :: [String]
     , attributes :: [String]
-    , openLeafs  :: Bool
     } deriving (Eq)
 
 instance Show HtmlVariant where
@@ -60,7 +59,7 @@ writeHtmlVariant htmlVariant = do
     createDirectoryIfMissing True basePath
 
     let tags =  zip parents' (repeat makeParent)
-             ++ zip leafs' (repeat $ makeLeaf $ openLeafs htmlVariant)
+             ++ zip leafs' (repeat makeLeaf)
         sortedTags = sortBy (comparing fst) tags
         appliedTags = map (\(x, f) -> f x) sortedTags
 
@@ -218,10 +217,9 @@ makeParent tag = unlines
 
 -- | Generate a function for an HTML tag that must be a leaf.
 --
-makeLeaf :: Bool    -- ^ If we should use open leafs
-         -> String  -- ^ Tag for the combinator
+makeLeaf :: String  -- ^ Tag for the combinator
          -> String  -- ^ Combinator code
-makeLeaf openLeaf tag = unlines
+makeLeaf tag = unlines
     [ DO_NOT_EDIT
     , "-- | Combinator for the @\\<" ++ tag ++ " />@ element."
     , "--"
@@ -234,12 +232,11 @@ makeLeaf openLeaf tag = unlines
     , "-- > <" ++ tag ++ " />"
     , "--"
     , function ++ " :: Html  -- ^ Resulting HTML."
-    , function ++ " = Leaf \"" ++ tag ++ "\" \"<" ++ tag ++ "\" " ++ end
+    , function ++ " = Leaf \"" ++ tag ++ "\" \"<" ++ tag ++ "\" " ++ "\">\""
     , "{-# INLINE " ++ function ++ " #-}"
     ]
   where
     function = sanitize tag
-    end = if openLeaf then "\">\"" else "\" />\""
 
 -- | Generate a function for an HTML attribute.
 --
@@ -305,7 +302,6 @@ html4Strict = HtmlVariant
         , "tabindex", "title", "type", "usemap", "valign", "value", "valuetype"
         , "width"
         ]
-    , openLeafs = True
     }
 
 -- | HTML 4.0 Transitional
@@ -326,7 +322,6 @@ html4Transitional = HtmlVariant
         [ "background", "bgcolor", "clear", "compact", "hspace", "language"
         , "noshade", "nowrap", "start", "target", "vspace"
         ]
-    , openLeafs = True
     }
 
 -- | HTML 4.0 Frameset
@@ -343,7 +338,6 @@ html4FrameSet = HtmlVariant
     , attributes = attributes html4Transitional ++
         [ "frameborder", "scrolling"
         ]
-    , openLeafs = True
     }
 
 -- | HTML 5.0
@@ -404,7 +398,6 @@ html5 = HtmlVariant
         , "summary", "tabindex", "target", "title", "type", "usemap", "value"
         , "width", "wrap", "xmlns"
         ]
-    , openLeafs = False
     }
 
 -- | A map of HTML variants, per version, lowercase.

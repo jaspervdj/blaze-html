@@ -73,6 +73,8 @@ module Text.Blaze
     , (!)
     ) where
 
+import Data.Monoid (mconcat)
+
 import Data.Text (Text)
 import qualified Data.Text.Lazy as LT
 
@@ -87,6 +89,10 @@ class ToHtml a where
 
 instance ToHtml Html where
     toHtml = id
+    {-# INLINE toHtml #-}
+
+instance ToHtml [Html] where
+    toHtml = mconcat
     {-# INLINE toHtml #-}
 
 instance ToHtml Text where

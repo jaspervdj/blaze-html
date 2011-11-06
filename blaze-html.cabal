@@ -8,6 +8,7 @@ Author:       Jasper Van der Jeugt, Simon Meier
 Maintainer:   Jasper Van der Jeugt <m@jaspervdj.be>
 Stability:    Experimental
 Category:     Text
+Synopsis:     A blazingly fast HTML combinator library for Haskell
 Description:
   A blazingly fast HTML combinator library for the Haskell
   programming language. The Text.Blaze module is a good

@@ -17,6 +17,8 @@
 --
 -- Now, you can describe pages using the imported combinators.
 --
+-- > import Control.Monad
+-- >
 -- > page1 :: Html
 -- > page1 = html $ do
 -- >     head $ do
@@ -25,7 +27,7 @@
 -- >     body $ do
 -- >         div ! id "header" $ "Syntax"
 -- >         p "This is an example of BlazeHtml syntax."
--- >         ul $ forM_ [1, 2, 3] (li . string . show)
+-- >         ul $ forM_ [1, 2, 3] (li . toHtml . show)
 --
 -- The resulting HTML can now be extracted using:
 --

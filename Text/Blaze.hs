@@ -25,7 +25,7 @@
 -- >     body $ do
 -- >         div ! id "header" $ "Syntax"
 -- >         p "This is an example of BlazeHtml syntax."
--- >         ul $ forM_ [1, 2, 3] (li . string . show)
+-- >         ul $ mapM_ (li . toHtml . show) [1, 2, 3]
 --
 -- The resulting HTML can now be extracted using:
 --

@@ -19,13 +19,13 @@
 --
 -- > page1 :: Html
 -- > page1 = html $ do
--- > 	head $ do
--- > 		title "Introduction page."
--- > 		link ! rel "stylesheet" ! type_ "text/css" ! href "screen.css"
--- > 	body $ do
--- > 		div ! id "header" $ "Syntax"
--- > 		p "This is an example of BlazeHtml syntax."
--- > 		ul $ forM_ [1, 2, 3] (li . string . show)
+-- >     head $ do
+-- >         title "Introduction page."
+-- >         link ! rel "stylesheet" ! type_ "text/css" ! href "screen.css"
+-- >     body $ do
+-- >         div ! id "header" $ "Syntax"
+-- >         p "This is an example of BlazeHtml syntax."
+-- >         ul $ forM_ [1, 2, 3] (li . string . show)
 --
 -- The resulting HTML can now be extracted using:
 --

@@ -38,6 +38,12 @@ Library
     Text.Blaze.Html4.Strict.Attributes
     Text.Blaze.Html4.Transitional
     Text.Blaze.Html4.Transitional.Attributes
+    Text.Blaze.XHtml1.FrameSet
+    Text.Blaze.XHtml1.FrameSet.Attributes
+    Text.Blaze.XHtml1.Strict
+    Text.Blaze.XHtml1.Strict.Attributes
+    Text.Blaze.XHtml1.Transitional
+    Text.Blaze.XHtml1.Transitional.Attributes
     Text.Blaze.Html5
     Text.Blaze.Html5.Attributes
     Text.Blaze.Renderer.String

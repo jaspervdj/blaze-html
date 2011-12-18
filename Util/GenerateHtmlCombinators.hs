@@ -21,11 +21,12 @@ import Util.Sanitize (sanitize, prelude)
 -- | Datatype for an HTML variant.
 --
 data HtmlVariant = HtmlVariant
-    { version    :: [String]
-    , docType    :: [String]
-    , parents    :: [String]
-    , leafs      :: [String]
-    , attributes :: [String]
+    { version     :: [String]
+    , docType     :: [String]
+    , parents     :: [String]
+    , leafs       :: [String]
+    , attributes  :: [String]
+    , selfClosing :: Bool
     } deriving (Eq)
 
 instance Show HtmlVariant where
@@ -59,7 +60,7 @@ writeHtmlVariant htmlVariant = do
     createDirectoryIfMissing True basePath
 
     let tags =  zip parents' (repeat makeParent)
-             ++ zip leafs' (repeat makeLeaf)
+             ++ zip leafs' (repeat (makeLeaf $ selfClosing htmlVariant))
         sortedTags = sortBy (comparing fst) tags
         appliedTags = map (\(x, f) -> f x) sortedTags
 
@@ -217,9 +218,10 @@ makeParent tag = unlines
 
 -- | Generate a function for an HTML tag that must be a leaf.
 --
-makeLeaf :: String  -- ^ Tag for the combinator
+makeLeaf :: Bool    -- ^ Make leaf tags self-closing
+         -> String  -- ^ Tag for the combinator
          -> String  -- ^ Combinator code
-makeLeaf tag = unlines
+makeLeaf selfClosing tag = unlines
     [ DO_NOT_EDIT
     , "-- | Combinator for the @\\<" ++ tag ++ " />@ element."
     , "--"
@@ -232,7 +234,8 @@ makeLeaf tag = unlines
     , "-- > <" ++ tag ++ " />"
     , "--"
     , function ++ " :: Html  -- ^ Resulting HTML."
-    , function ++ " = Leaf \"" ++ tag ++ "\" \"<" ++ tag ++ "\" " ++ "\">\""
+    , function ++ " = Leaf \"" ++ tag ++ "\" \"<" ++ tag ++ "\" " ++ "\""
+               ++ (if selfClosing then " /" else "") ++ ">\""
     , "{-# INLINE " ++ function ++ " #-}"
     ]
   where
@@ -302,6 +305,7 @@ html4Strict = HtmlVariant
         , "tabindex", "title", "type", "usemap", "valign", "value", "valuetype"
         , "width"
         ]
+    , selfClosing = False
     }
 
 -- | HTML 4.0 Transitional
@@ -322,15 +326,16 @@ html4Transitional = HtmlVariant
         [ "background", "bgcolor", "clear", "compact", "hspace", "language"
         , "noshade", "nowrap", "start", "target", "vspace"
         ]
+    , selfClosing = False
     }
 
--- | HTML 4.0 Frameset
+-- | HTML 4.0 FrameSet
 --
 html4FrameSet :: HtmlVariant
 html4FrameSet = HtmlVariant
     { version = ["Html4", "FrameSet"]
     , docType =
-        [ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Frameset//EN\""
+        [ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 FrameSet//EN\""
         , "    \"http://www.w3.org/TR/html4/frameset.dtd\">"
         ]
     , parents = parents html4Transitional ++ ["frameset"]
@@ -338,6 +343,52 @@ html4FrameSet = HtmlVariant
     , attributes = attributes html4Transitional ++
         [ "frameborder", "scrolling"
         ]
+    , selfClosing = False
+    }
+
+-- | XHTML 1.0 Strict
+--
+xhtml1Strict :: HtmlVariant
+xhtml1Strict = HtmlVariant
+    { version = ["XHtml1", "Strict"]
+    , docType =
+        [ "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\""
+        , "    \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">"
+        ]
+    , parents = parents html4Strict
+    , leafs = leafs html4Strict
+    , attributes = attributes html4Strict
+    , selfClosing = True
+    }
+
+-- | XHTML 1.0 Transitional
+--
+xhtml1Transitional :: HtmlVariant
+xhtml1Transitional = HtmlVariant
+    { version = ["XHtml1", "Transitional"]
+    , docType =
+        [ "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\""
+        , "    \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">"
+        ]
+    , parents = parents html4Transitional
+    , leafs = leafs html4Transitional
+    , attributes = attributes html4Transitional
+    , selfClosing = True
+    }
+
+-- | XHTML 1.0 FrameSet
+--
+xhtml1FrameSet :: HtmlVariant
+xhtml1FrameSet = HtmlVariant
+    { version = ["XHtml1", "FrameSet"]
+    , docType =
+        [ "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 FrameSet//EN\""
+        , "    \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd\">"
+        ]
+    , parents = parents html4FrameSet
+    , leafs = leafs html4FrameSet
+    , attributes = attributes html4FrameSet
+    , selfClosing = True
     }
 
 -- | HTML 5.0
@@ -398,6 +449,7 @@ html5 = HtmlVariant
         , "summary", "tabindex", "target", "title", "type", "usemap", "value"
         , "width", "wrap", "xmlns"
         ]
+    , selfClosing = False
     }
 
 -- | A map of HTML variants, per version, lowercase.
@@ -407,6 +459,9 @@ htmlVariants = M.fromList $ map (show &&& id)
     [ html4Strict
     , html4Transitional
     , html4FrameSet
+    , xhtml1Strict
+    , xhtml1Transitional
+    , xhtml1FrameSet
     , html5
     ]
 

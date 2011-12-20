@@ -1,5 +1,5 @@
 Name:         blaze-html
-Version:      0.4.2.2
+Version:      0.4.3.0
 Homepage:     http://jaspervdj.be/blaze
 Bug-Reports:  http://github.com/jaspervdj/blaze-html/issues
 License:      BSD3
@@ -31,25 +31,25 @@ Library
 
   Exposed-modules:
     Text.Blaze
-    Text.Blaze.Internal
     Text.Blaze.Html4.FrameSet
     Text.Blaze.Html4.FrameSet.Attributes
     Text.Blaze.Html4.Strict
     Text.Blaze.Html4.Strict.Attributes
     Text.Blaze.Html4.Transitional
     Text.Blaze.Html4.Transitional.Attributes
+    Text.Blaze.Html5
+    Text.Blaze.Html5.Attributes
+    Text.Blaze.Internal
+    Text.Blaze.Renderer.Pretty
+    Text.Blaze.Renderer.String
+    Text.Blaze.Renderer.Text
+    Text.Blaze.Renderer.Utf8
     Text.Blaze.XHtml1.FrameSet
     Text.Blaze.XHtml1.FrameSet.Attributes
     Text.Blaze.XHtml1.Strict
     Text.Blaze.XHtml1.Strict.Attributes
     Text.Blaze.XHtml1.Transitional
     Text.Blaze.XHtml1.Transitional.Attributes
-    Text.Blaze.Html5
-    Text.Blaze.Html5.Attributes
-    Text.Blaze.Renderer.String
-    Text.Blaze.Renderer.Pretty
-    Text.Blaze.Renderer.Utf8
-    Text.Blaze.Renderer.Text
   
   Build-depends:
     base          >= 4 && < 5,

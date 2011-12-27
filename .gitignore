@@ -33,3 +33,9 @@ Text/Blaze/Html4/Transitional.hs
 Text/Blaze/Html4/Transitional/Attributes.hs
 Text/Blaze/Html5.hs
 Text/Blaze/Html5/Attributes.hs
+Text/Blaze/XHtml1/FrameSet.hs
+Text/Blaze/XHtml1/FrameSet/Attributes.hs
+Text/Blaze/XHtml1/Strict.hs
+Text/Blaze/XHtml1/Strict/Attributes.hs
+Text/Blaze/XHtml1/Transitional.hs
+Text/Blaze/XHtml1/Transitional/Attributes.hs

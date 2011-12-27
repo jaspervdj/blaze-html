@@ -2,7 +2,9 @@
 -- | A renderer that produces a lazy 'L.Text' value, using the Text Builder.
 --
 module Text.Blaze.Renderer.Text
-    ( renderHtml
+    ( renderHtmlBuilder
+    , renderHtmlBuilderWith
+    , renderHtml
     , renderHtmlWith
     ) where
 
@@ -59,12 +61,18 @@ fromChoiceString d (AppendChoiceString x y) =
 fromChoiceString _ EmptyChoiceString = mempty
 {-# INLINE fromChoiceString #-}
 
+-- | Render HTML to a text builder
+renderHtmlBuilder :: Html
+                  -> Builder
+renderHtmlBuilder = renderHtmlBuilderWith decodeUtf8
+{-# INLINE renderHtmlBuilder #-}
+
 -- | Render some 'Html' to a Text 'Builder'.
 --
-renderBuilder :: (ByteString -> Text)  -- ^ Decoder for bytestrings
-              -> Html                  -- ^ HTML to render
-              -> Builder               -- ^ Resulting builder
-renderBuilder d = go mempty 
+renderHtmlBuilderWith :: (ByteString -> Text)  -- ^ Decoder for bytestrings
+                      -> Html                  -- ^ HTML to render
+                      -> Builder               -- ^ Resulting builder
+renderHtmlBuilderWith d = go mempty
   where
     go :: Builder -> HtmlM b -> Builder
     go attrs (Parent _ open close content) =
@@ -73,7 +81,7 @@ renderBuilder d = go mempty
             `mappend` B.singleton '>'
             `mappend` go mempty content
             `mappend` B.fromText (getText close)
-    go attrs (Leaf _ begin end) = 
+    go attrs (Leaf _ begin end) =
         B.fromText (getText begin)
             `mappend` attrs
             `mappend` B.fromText (getText end)
@@ -91,7 +99,7 @@ renderBuilder d = go mempty
     go attrs (Append h1 h2) = go attrs h1 `mappend` go attrs h2
     go _ Empty              = mempty
     {-# NOINLINE go #-}
-{-# INLINE renderBuilder #-}
+{-# INLINE renderHtmlBuilderWith #-}
 
 -- | Render HTML to a lazy Text value. If there are any ByteString's in the
 -- input HTML, this function will consider them as UTF-8 encoded values and
@@ -109,4 +117,4 @@ renderHtml = renderHtmlWith decodeUtf8
 renderHtmlWith :: (ByteString -> Text)  -- ^ Decoder for ByteString's.
                -> Html                  -- ^ HTML to render
                -> L.Text                -- Resulting lazy text
-renderHtmlWith d = B.toLazyText . renderBuilder d
+renderHtmlWith d = B.toLazyText . renderHtmlBuilderWith d

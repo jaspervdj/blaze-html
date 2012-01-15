@@ -1,7 +1,6 @@
 ---
 title: Home
-
---- column1
+---
 
 BlazeHtml is a blazingly fast HTML combinator library for the [Haskell]
 programming language. It embeds HTML templates in Haskell code for optimal
@@ -11,16 +10,14 @@ efficiency and composability.  To get started, just
 
 [Haskell]: http://haskell.org/
 
---- column2
-
 The project is aimed at those who seek to write web applications in Haskell --
 it integrates well with all Haskell web frameworks.
 
 The best way to get started with BlazeHtml is to have a look at our [tutorial].
 
-[tutorial]: $root/tutorial.html
+[tutorial]: /tutorial.html
 
---- body
+<div id="fold" />
 
 # Features
 
@@ -31,14 +28,14 @@ The best way to get started with BlazeHtml is to have a look at our [tutorial].
 - Supports HTML 4 Strict and HTML 5
 - Tool to create code from an HTML file
 
-[our benchmarks]: $root/benchmarks.html
+[our benchmarks]: /benchmarks.html
 
 # Status
 
 The BlazeHtml API is considered stable, however, the implementation is still
 experimental. We like to encourage you to try it and tell us what you think, and
 submit possible bugs to the [issue tracker] (if you do not have a GitHub
-account, [contact us by mail]($root/about.html#contact).
+account, [contact us by mail](/about.html#contact).
 
 [issue tracker]: http://github.com/jaspervdj/blaze-html/issues/
 

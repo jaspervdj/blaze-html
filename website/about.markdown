@@ -1,7 +1,6 @@
 ---
 title: About
-
---- column1
+---
 
 The BlazeHtml originated on [ZuriHac] 2010 -- a Haskell hackaton in Zürich,
 Switzerland. It was then selected as a project for [Google Summer of Code] 2010.
@@ -9,12 +8,10 @@ Switzerland. It was then selected as a project for [Google Summer of Code] 2010.
 [ZuriHac]: http://www.haskell.org/haskellwiki/ZuriHac
 [Google Summer of Code]: http://code.google.com/soc/
 
---- column2
+The project was successfully completed, under the wise supervision of Simon
+Meier and Johan Tibell.
 
-Currently, Jasper Van der Jeugt is working on it, under the wise supervision of
-Simon Meier and Johan Tibell.
-
----
+<div id="fold" />
 
 # Authors
 

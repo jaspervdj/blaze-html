@@ -1,13 +1,10 @@
 ---
 title: Tutorial
-
---- column1
+---
 
 We hope to offer a small but comprehensible tutorial here. At the end of this
 tutorial, you should be able to write all sorts of HTML templates using
 BlazeHtml.
-
---- column2
 
 Please note that you should *at least* know some basic Haskell before starting
 this tutorial. [Real World Haskell] and [Learn You a Haskell] are two good
@@ -16,7 +13,7 @@ starting points.
 [Real World Haskell]: http://book.realworldhaskell.org/
 [Learn You a Haskell]: http://learnyouahaskell.com/
 
---- body
+<div id="fold" />
 
 Installation
 ============

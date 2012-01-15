@@ -1,7 +1,6 @@
 ---
 title: Benchmarks
-
---- column1
+---
 
 BlazeHtml is designed to be fast. In the context of an HTML generation library,
 "fast" refers to the time that it takes a webserver for generating and sending
@@ -15,20 +14,18 @@ assemble the result of a template in memory.
 All benchmarks have been executed on the same machine, a 2 Core Intel CPU T2080
 @ 1.73GHz.
 
---- column2
-
 We also have to be very careful about *what* we are actually producing and
 measuring. BlazeHtml produces a lazy `ByteString`. We have seen that the
 chunksize of this `ByteString` can be important: [this is a graph] of a
 benchmark we did where a large (128 kilobyte) HTML page is sent, with varying
 chunk sizes.
 
-[this is a graph]: $root/images/benchmarks-chunksize.png
+[this is a graph]: /images/benchmarks-chunksize.png
 
 This chunksize is now fixed for BlazeHtml: every chunk will contain around 32k
 bytes.
 
----
+<div id="fold" />
 
 # Bigtable
 
@@ -40,7 +37,7 @@ BlazeHtml, we escape all content by default, as we want to free the user from
 thinking about escaping. Obviously, the user can always explicitly state that he
 doesn't want some content to be escaped.
 
-![bigtable benchmark results]($root/images/benchmarks-bigtable.png)
+![bigtable benchmark results](/images/benchmarks-bigtable.png)
 
 # Running the benchmarks yourself
 

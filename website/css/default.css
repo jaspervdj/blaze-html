@@ -73,16 +73,8 @@ img {
     font-size: 18px;
 }
 
-#header .column {
-    width: 360px;
-    float: left;
-    padding: 0px 10px 10px 10px;
-}
-
-#content {
-    border-top: 1px solid #bbbbbb;
-    padding: 5px 10px 0px 10px;
-    clear: both;
+#fold {
+    border-bottom: 1px solid #bbbbbb;
 }
 
 #footer {

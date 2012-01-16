@@ -221,7 +221,7 @@ makeParent tag = unlines
 makeLeaf :: Bool    -- ^ Make leaf tags self-closing
          -> String  -- ^ Tag for the combinator
          -> String  -- ^ Combinator code
-makeLeaf selfClosing tag = unlines
+makeLeaf closing tag = unlines
     [ DO_NOT_EDIT
     , "-- | Combinator for the @\\<" ++ tag ++ " />@ element."
     , "--"
@@ -235,7 +235,7 @@ makeLeaf selfClosing tag = unlines
     , "--"
     , function ++ " :: Html  -- ^ Resulting HTML."
     , function ++ " = Leaf \"" ++ tag ++ "\" \"<" ++ tag ++ "\" " ++ "\""
-               ++ (if selfClosing then " /" else "") ++ ">\""
+               ++ (if closing then " /" else "") ++ ">\""
     , "{-# INLINE " ++ function ++ " #-}"
     ]
   where

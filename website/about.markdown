@@ -30,6 +30,8 @@ Meier and Johan Tibell.
 - Tom Harper
 - Yair Chuchem
 - Alex Mason
+- John MacFarlane
+- Deepak Jois
 
 # Contact
 

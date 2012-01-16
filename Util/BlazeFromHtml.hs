@@ -160,13 +160,17 @@ fromHtml variant ignore (Parent tag attrs inner) =
                                        ++ show variant
   where
     combinator = qualifiedSanitize "H." tag ++ attributes'
-    attributes' = attrs >>= \(k, v) -> if k `elem` attributes variant
-        then " ! " ++ qualifiedSanitize "A." k ++ " " ++ show v
-        else if "data-" `isPrefixOf` k
-            then " ! " ++ "dataAttribute" ++ " " ++ show (fromJust $ stripPrefix "data-" k) ++ " " ++ show v 
-            else if ignore
-                then ""
-                else error $ "Attribute " ++ k ++ " is illegal in " ++ show variant
+    attributes' = attrs >>= \(k, v) -> case k `elem` attributes variant of
+        True  -> " ! " ++ qualifiedSanitize "A." k ++ " " ++ show v
+        False
+            | "data-" `isPrefixOf` k -> " ! "
+                                     ++ "dataAttribute" ++ " "
+                                     ++ show (fromJust $ stripPrefix "data-" k)
+                                     ++ " " ++ show v
+            | ignore                 -> ""
+            | otherwise              -> error $ "Attribute "
+                                     ++ k ++ " is illegal in "
+                                     ++ show variant
 
     -- Qualifies a tag with the given qualifier if needed, and sanitizes it.
     qualifiedSanitize qualifier tag' =

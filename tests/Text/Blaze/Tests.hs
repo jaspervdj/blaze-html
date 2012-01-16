@@ -1,4 +1,4 @@
-{-# LANGUAGE OverloadedStrings, TypeSynonymInstances #-}
+{-# LANGUAGE OverloadedStrings, TypeSynonymInstances, FlexibleInstances #-}
 module Text.Blaze.Tests
     ( tests
     ) where

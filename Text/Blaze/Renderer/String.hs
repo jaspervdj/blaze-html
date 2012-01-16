@@ -26,7 +26,6 @@ escapeHtmlEntities (c:cs) k = case c of
     '>'  -> '&' : 'g' : 't' : ';'             : escapeHtmlEntities cs k
     '&'  -> '&' : 'a' : 'm' : 'p' : ';'       : escapeHtmlEntities cs k
     '"'  -> '&' : 'q' : 'u' : 'o' : 't' : ';' : escapeHtmlEntities cs k
-    '\'' -> '&' : '#' : '3' : '9' : ';'       : escapeHtmlEntities cs k
     x    -> x                                 : escapeHtmlEntities cs k
 
 -- | Render a 'ChoiceString'.

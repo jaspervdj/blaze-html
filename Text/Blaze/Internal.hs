@@ -56,6 +56,7 @@ module Text.Blaze.Internal
     ) where
 
 import Data.Monoid (Monoid, mappend, mempty, mconcat)
+import Unsafe.Coerce (unsafeCoerce)
 
 import Data.ByteString.Char8 (ByteString)
 import Data.Text (Text)
@@ -143,6 +144,10 @@ instance Monoid a => Monoid (HtmlM a) where
     {-# INLINE mappend #-}
     mconcat = foldr Append Empty
     {-# INLINE mconcat #-}
+
+instance Functor HtmlM where
+    -- Safe because it does not contain a value anyway
+    fmap _ = unsafeCoerce
 
 instance Monad HtmlM where
     return _ = Empty

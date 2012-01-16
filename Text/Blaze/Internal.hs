@@ -126,9 +126,9 @@ data HtmlM a
     | forall b c. Append (HtmlM b) (HtmlM c)
     -- | Add an attribute to the inner HTML. Raw key, key, value, HTML to
     -- receive the attribute.
-    | AddAttribute StaticString StaticString ChoiceString (HtmlM a)
+    | forall b . AddAttribute StaticString StaticString ChoiceString (HtmlM b)
     -- | Add a custom attribute to the inner HTML.
-    | AddCustomAttribute ChoiceString ChoiceString ChoiceString (HtmlM a)
+    | forall b . AddCustomAttribute ChoiceString ChoiceString ChoiceString (HtmlM b)
     -- | Empty HTML.
     | Empty
     deriving (Typeable)
@@ -157,6 +157,16 @@ instance Monad HtmlM where
     h1 >>= f = h1 >> f
         (error "Text.Blaze.Internal.HtmlM: invalid use of monadic bind")
     {-# INLINE (>>=) #-}
+
+instance Functor HtmlM where
+    fmap _ Empty = Empty
+    fmap _ (Parent a b c d) = Parent a b c d
+    fmap _ (Leaf a b c) = Leaf a b c
+    fmap _ (Content a) = Content a
+    fmap _ (Append a b) = Append a b
+    fmap _ (AddAttribute a b c d) = AddAttribute a b c d
+    fmap _ (AddCustomAttribute a b c d) =
+        AddCustomAttribute a b c d
 
 instance IsString (HtmlM a) where
     fromString = Content . fromString

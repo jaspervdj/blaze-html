@@ -22,10 +22,6 @@ Extra-source-files:
   Util/Sanitize.hs
   Util/GenerateHtmlCombinators.hs
 
-Source-repository head
-  Type:              git
-  Location:          http://github.com/jaspervdj/blaze-html.git
-
 Library
   Ghc-Options:       -Wall
 
@@ -56,3 +52,7 @@ Library
     blaze-builder >= 0.2 && < 0.4,
     text          >= 0.10,
     bytestring    >= 0.9
+
+Source-repository head
+  Type:     git
+  Location: http://github.com/jaspervdj/blaze-html.git

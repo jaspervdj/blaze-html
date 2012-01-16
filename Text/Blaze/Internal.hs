@@ -153,6 +153,16 @@ instance Monad HtmlM where
         (error "Text.Blaze.Internal.HtmlM: invalid use of monadic bind")
     {-# INLINE (>>=) #-}
 
+instance Functor HtmlM where
+    fmap _ Empty = Empty
+    fmap _ (Parent a b c d) = Parent a b c d
+    fmap _ (Leaf a b c) = Leaf a b c
+    fmap _ (Content a) = Content a
+    fmap _ (Append a b) = Append a b
+    fmap f (AddAttribute a b c html) = AddAttribute a b c (fmap f html)
+    fmap f (AddCustomAttribute a b c html) =
+        AddCustomAttribute a b c (fmap f html)
+
 instance IsString (HtmlM a) where
     fromString = Content . fromString
     {-# INLINE fromString #-}

@@ -4,8 +4,8 @@ module Main where
 
 import Control.Monad (forM_, when)
 import Control.Applicative ((<$>))
-import Data.List (isPrefixOf, stripPrefix)
-import Data.Maybe (listToMaybe, fromMaybe, fromJust)
+import Data.List (stripPrefix)
+import Data.Maybe (listToMaybe, fromMaybe)
 import Data.Char (toLower, isSpace)
 import Control.Arrow (first)
 import System.Environment (getArgs)
@@ -162,15 +162,15 @@ fromHtml variant ignore (Parent tag attrs inner) =
     combinator = qualifiedSanitize "H." tag ++ attributes'
     attributes' = attrs >>= \(k, v) -> case k `elem` attributes variant of
         True  -> " ! " ++ qualifiedSanitize "A." k ++ " " ++ show v
-        False
-            | "data-" `isPrefixOf` k -> " ! "
-                                     ++ "dataAttribute" ++ " "
-                                     ++ show (fromJust $ stripPrefix "data-" k)
-                                     ++ " " ++ show v
-            | ignore                 -> ""
-            | otherwise              -> error $ "Attribute "
-                                     ++ k ++ " is illegal in "
-                                     ++ show variant
+        False -> case stripPrefix "data-" k of
+            Just prefix -> " ! "
+                        ++ "dataAttribute" ++ " "
+                        ++ show prefix
+                        ++ " " ++ show v
+            Nothing | ignore     -> ""
+                    | otherwise  -> error $ "Attribute "
+                                 ++ k ++ " is illegal in "
+                                 ++ show variant
 
     -- Qualifies a tag with the given qualifier if needed, and sanitizes it.
     qualifiedSanitize qualifier tag' =

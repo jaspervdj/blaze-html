@@ -1,3 +1,7 @@
+{-# LANGUAGE CPP #-}
+#if defined(__GLASGOW_HASKELL__) && (__GLASGOW_HASKELL__ >= 704)
+{-# LANGUAGE Trustworthy #-}
+#endif
 -- | A renderer that produces a native Haskell 'String', mostly meant for
 -- debugging purposes.
 --

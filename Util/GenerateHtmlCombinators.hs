@@ -1,6 +1,7 @@
 {-# LANGUAGE CPP #-}
 
 #define DO_NOT_EDIT (doNotEdit __FILE__ __LINE__)
+#define TRUSTWORTHY "{-# LANGUAGE CPP #-}\n#if defined(__GLASGOW_HASKELL__) && (__GLASGOW_HASKELL__ >= 704)\n{-# LANGUAGE Trustworthy #-}\n#endif"
 
 -- | Generates code for HTML tags.
 --
@@ -67,6 +68,7 @@ writeHtmlVariant htmlVariant = do
     -- Write the main module.
     writeFile' (basePath <.> "hs") $ removeTrailingNewlines $ unlines
         [ DO_NOT_EDIT
+        , TRUSTWORTHY
         , "{-# LANGUAGE OverloadedStrings #-}"
         , "-- | This module exports HTML combinators used to create documents."
         , "--"
@@ -90,6 +92,7 @@ writeHtmlVariant htmlVariant = do
     -- Write the attribute module.
     writeFile' (basePath </> "Attributes.hs") $ removeTrailingNewlines $ unlines
         [ DO_NOT_EDIT
+        , TRUSTWORTHY
         , "-- | This module exports combinators that provide you with the"
         , "-- ability to set attributes on HTML elements."
         , "--"

@@ -1,3 +1,7 @@
+{-# LANGUAGE CPP #-}
+#if defined(__GLASGOW_HASKELL__) && (__GLASGOW_HASKELL__ >= 704)
+{-# LANGUAGE Trustworthy #-}
+#endif
 {-# LANGUAGE OverloadedStrings #-}
 module Text.Blaze.Renderer.Utf8
     ( renderHtmlBuilder

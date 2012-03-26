@@ -4,7 +4,7 @@
 
 GHC = ghc
 GHCI = ghci
-GHC_FLAGS = -O2 -fforce-recomp -idoc/examples -ibenchmarks -itests
+GHC_FLAGS = -O2 -fforce-recomp -idoc/examples -ibenchmarks -isrc -itests
 
 BENCHMARK_FLAGS = --resamples 10000
 
@@ -28,7 +28,7 @@ website-docs:
 
 # Run the tests
 test:
-	$(GHC) $(GHC_FLAGS) -fhpc --make -main-is TestSuite tests/TestSuite.hs
+	$(GHC) $(GHC_FLAGS) -fhpc --make tests/TestSuite.hs
 	rm -f TestSuite.tix
 	./tests/TestSuite
 

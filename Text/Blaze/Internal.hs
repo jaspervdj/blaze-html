@@ -172,6 +172,17 @@ newtype Tag = Tag { unTag :: StaticString }
 --
 newtype Attribute = Attribute (forall a. HtmlM a -> HtmlM a)
 
+instance Monoid Attribute where
+    -- Usually function composition does not form a monoid because we can't
+    -- prove that
+    --
+    -- > f . (g . h) == (f . g) . h
+    --
+    -- but since the functions in 'Attribute' can only apply attributes, this
+    -- is not a problem here.
+    mempty                            = Attribute id
+    Attribute f `mappend` Attribute g = Attribute (g . f)
+
 -- | The type for the value part of an attribute.
 --
 newtype AttributeValue = AttributeValue { unAttributeValue :: ChoiceString }

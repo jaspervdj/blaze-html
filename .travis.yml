@@ -1,3 +1,5 @@
 language: haskell
+before_install:
+  - "make combinators"
 before_script:
   - "cabal install HUnit QuickCheck test-framework test-framework-hunit test-framework-quickcheck2"

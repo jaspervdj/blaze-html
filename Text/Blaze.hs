@@ -40,6 +40,7 @@ module Text.Blaze
     , AttributeValue
 
       -- * Creating attributes.
+    , emptyAttribute
     , dataAttribute
     , customAttribute
 

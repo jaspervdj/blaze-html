@@ -16,7 +16,7 @@ Description:
   <http://jaspervdj.be/blaze/tutorial.html>.
 
 Build-type:    Simple
-Cabal-version: >=1.6
+Cabal-version: >= 1.8
 
 Extra-source-files:  
   src/Util/Sanitize.hs

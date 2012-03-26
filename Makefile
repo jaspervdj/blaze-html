@@ -14,7 +14,7 @@ BENCHMARK_FLAGS = --resamples 10000
 
 # Generate the actual HTML combinators
 combinators:
-	runghc Util/GenerateHtmlCombinators.hs
+	runghc -isrc src/Util/GenerateHtmlCombinators.hs
 
 # Copy the docs the website directory
 website-docs:

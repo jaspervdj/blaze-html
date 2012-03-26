@@ -103,7 +103,7 @@ writeHtmlVariant htmlVariant = do
         , unlines (map makeAttribute sortedAttributes)
         ]
   where
-    basePath = "Text" </> "Blaze" </> foldl1 (</>) version'
+    basePath  = "src" </> "Text" </> "Blaze" </> foldl1 (</>) version'
     modulName = getModuleName htmlVariant
     attributeModuleName = getAttributeModuleName htmlVariant
     attributes' = attributes htmlVariant

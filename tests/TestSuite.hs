@@ -1,6 +1,6 @@
 -- | Main module to run all tests.
 --
-module TestSuite where
+module Main where
 
 import Test.Framework (defaultMain, testGroup)
 

@@ -15,15 +15,16 @@ Description:
   starting point, as well as this tutorial:
   <http://jaspervdj.be/blaze/tutorial.html>.
 
-Build-type:          Simple
-Cabal-version:       >=1.6
+Build-type:    Simple
+Cabal-version: >=1.6
 
 Extra-source-files:  
-  Util/Sanitize.hs
-  Util/GenerateHtmlCombinators.hs
+  src/Util/Sanitize.hs
+  src/Util/GenerateHtmlCombinators.hs
 
 Library
-  Ghc-Options:       -Wall
+  Hs-source-dirs: src
+  Ghc-Options:    -Wall
 
   Exposed-modules:
     Text.Blaze
@@ -48,10 +49,29 @@ Library
     Text.Blaze.XHtml1.Transitional.Attributes
   
   Build-depends:
-    base          >= 4 && < 5,
-    blaze-builder >= 0.2 && < 0.4,
-    text          >= 0.10,
-    bytestring    >= 0.9
+    base          >= 4    && < 5,
+    blaze-builder >= 0.2  && < 0.4,
+    text          >= 0.10 && < 0.12,
+    bytestring    >= 0.9  && < 0.10
+
+Test-suite websockets-tests
+  Type:           exitcode-stdio-1.0
+  Hs-source-dirs: src tests
+  Main-is:        TestSuite.hs
+  Ghc-options:    -Wall
+
+  Build-depends:
+    HUnit                      >= 1.2 && < 1.3,
+    QuickCheck                 >= 2.4 && < 2.5,
+    containers                 >= 0.3 && < 0.5,
+    test-framework             >= 0.4 && < 0.7,
+    test-framework-hunit       >= 0.2 && < 0.3,
+    test-framework-quickcheck2 >= 0.2 && < 0.3,
+    -- Copied from regular dependencies...
+    base          >= 4    && < 5,
+    blaze-builder >= 0.2  && < 0.4,
+    text          >= 0.10 && < 0.12,
+    bytestring    >= 0.9  && < 0.10
 
 Source-repository head
   Type:     git

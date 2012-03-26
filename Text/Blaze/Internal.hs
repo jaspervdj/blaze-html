@@ -20,7 +20,6 @@ module Text.Blaze.Internal
 
       -- * Creating custom tags and attributes.
     , attribute
-    , emptyAttribute
     , dataAttribute
     , customAttribute
 
@@ -188,15 +187,6 @@ attribute :: Tag             -- ^ Raw key
 attribute rawKey key value = Attribute $
     AddAttribute (unTag rawKey) (unTag key) (unAttributeValue value)
 {-# INLINE attribute #-}
-
--- | Create an empty HTML attribute. This creates an attribute, which when
--- applied to an HTML element later using the '!' operator doesn't have any
--- effect. This is useful for composing a series of computed attributes, some of
--- which may be optionally empty and it is impossible to determine their value in
--- in advance
-emptyAttribute :: Attribute
-emptyAttribute = Attribute $ id
-{-# INLINE emptyAttribute #-}
 
 -- | From HTML 5 onwards, the user is able to specify custom data attributes.
 --

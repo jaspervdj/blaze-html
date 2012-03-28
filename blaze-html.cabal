@@ -58,6 +58,12 @@ Test-suite blaze-html-tests
   Type:           exitcode-stdio-1.0
   Hs-source-dirs: src tests
   Main-is:        TestSuite.hs
+  Other-modules:
+      Text.Blaze.Tests
+      Text.Blaze.Tests.Cases
+      Text.Blaze.Tests.Util
+      Util.Tests
+
   Ghc-options:    -Wall
 
   Build-depends:

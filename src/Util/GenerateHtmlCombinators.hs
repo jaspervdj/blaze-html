@@ -71,6 +71,7 @@ writeHtmlVariant htmlVariant = do
         , "-- | This module exports HTML combinators used to create documents."
         , "--"
         , exportList modulName $ "module Text.Blaze"
+                                : "module Text.Blaze.Html"
                                 : "docType"
                                 : "docTypeHtml"
                                 : map (sanitize . fst) sortedTags
@@ -79,6 +80,7 @@ writeHtmlVariant htmlVariant = do
         , ""
         , "import Text.Blaze"
         , "import Text.Blaze.Internal"
+        , "import Text.Blaze.Html"
         , ""
         , makeDocType $ docType htmlVariant
         , makeDocTypeHtml $ docType htmlVariant

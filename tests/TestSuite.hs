@@ -4,11 +4,11 @@ module Main where
 
 import Test.Framework (defaultMain, testGroup)
 
-import qualified Text.Blaze.Tests.Cases
+import qualified Text.Blaze.Html.Tests
 import qualified Util.Tests
 
 main :: IO ()
 main = defaultMain
-    [ testGroup "Text.Blaze.Tests.Cases" Text.Blaze.Tests.Cases.tests
+    [ testGroup "Text.Blaze.Html.Tests" Text.Blaze.Html.Tests.tests
     , testGroup "Util.Tests"             Util.Tests.tests
     ]

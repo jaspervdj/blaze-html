@@ -1,9 +1,12 @@
-{-# LANGUAGE NoMonomorphismRestriction, RankNTypes #-}
-module Text.Blaze.Html where
+module Text.Blaze.Html
+    ( module Text.Blaze
+    , Html
+    , toHtml
+    ) where
 
 import Text.Blaze
 
 type Html = Markup
 
-toHtml :: forall a. ToMarkup a => a -> Markup 
+toHtml :: ToMarkup a => a -> Markup 
 toHtml = toMarkup

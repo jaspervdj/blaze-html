@@ -70,11 +70,10 @@ writeHtmlVariant htmlVariant = do
         , "{-# LANGUAGE OverloadedStrings #-}"
         , "-- | This module exports HTML combinators used to create documents."
         , "--"
-        , exportList modulName $ "module Text.Blaze"
-                                : "module Text.Blaze.Html"
-                                : "docType"
-                                : "docTypeHtml"
-                                : map (sanitize . fst) sortedTags
+        , exportList modulName $ "module Text.Blaze.Html"
+                               : "docType"
+                               : "docTypeHtml"
+                               : map (sanitize . fst) sortedTags
         , DO_NOT_EDIT
         , "import Prelude ((>>), (.))"
         , ""

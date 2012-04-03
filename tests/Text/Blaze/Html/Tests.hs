@@ -1,7 +1,7 @@
 -- | A whole bunch of simple test cases
 --
 {-# LANGUAGE OverloadedStrings #-}
-module Text.Blaze.Tests.Cases
+module Text.Blaze.Html.Tests
     ( tests
     ) where
 
@@ -15,11 +15,10 @@ import Test.Framework.Providers.HUnit (testCase)
 import Test.Framework (Test)
 import qualified Data.ByteString.Lazy.Char8 as LBC
 
-import Text.Blaze
+import Text.Blaze.Html.Tests.Util
 import Text.Blaze.Html5 hiding (map)
-import qualified Text.Blaze.Html5 as H
 import Text.Blaze.Html5.Attributes
-import Text.Blaze.Tests.Util
+import qualified Text.Blaze.Html5 as H
 
 -- | Type for a simple HTML test. This data type contains the expected output
 -- and the HTML template.

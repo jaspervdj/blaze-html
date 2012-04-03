@@ -1,6 +1,6 @@
 -- | Utility functions for the blaze tests
 --
-module Text.Blaze.Tests.Util
+module Text.Blaze.Html.Tests.Util
     ( renderUsingString
     , renderUsingText
     , renderUsingUtf8

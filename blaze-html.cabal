@@ -1,5 +1,5 @@
 Name:         blaze-html
-Version:      0.4.4.0
+Version:      0.5.0.0
 Homepage:     http://jaspervdj.be/blaze
 Bug-Reports:  http://github.com/jaspervdj/blaze-html/issues
 License:      BSD3
@@ -46,9 +46,9 @@ Library
   Build-depends:
     base          >= 4    && < 5,
     blaze-builder >= 0.2  && < 0.4,
-    blaze-markup >= 0.1  && < 0.2,
-    text          >= 0.10 && < 0.12,
-    bytestring    >= 0.9  && < 0.10
+    blaze-markup  >= 0.5  && < 0.6,
+    bytestring    >= 0.9  && < 0.10,
+    text          >= 0.10 && < 0.12
 
 Test-suite blaze-html-tests
   Type:           exitcode-stdio-1.0
@@ -57,9 +57,8 @@ Test-suite blaze-html-tests
   Ghc-options:    -Wall
 
   Other-modules:
-    Text.Blaze.Tests
-    Text.Blaze.Tests.Cases
-    Text.Blaze.Tests.Util
+    Text.Blaze.Html.Tests
+    Text.Blaze.Html.Tests.Util
     Util.Tests
 
   Build-depends:
@@ -72,8 +71,9 @@ Test-suite blaze-html-tests
     -- Copied from regular dependencies...
     base          >= 4    && < 5,
     blaze-builder >= 0.2  && < 0.4,
-    text          >= 0.10 && < 0.12,
-    bytestring    >= 0.9  && < 0.10
+    blaze-markup  >= 0.5  && < 0.6,
+    bytestring    >= 0.9  && < 0.10,
+    text          >= 0.10 && < 0.12
 
 Source-repository head
   Type:     git

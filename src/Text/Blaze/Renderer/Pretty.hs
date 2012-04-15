@@ -1,3 +1,7 @@
+{-# LANGUAGE CPP #-}
+#if defined(__GLASGOW_HASKELL__) && (__GLASGOW_HASKELL__ >= 704)
+{-# LANGUAGE Trustworthy #-}
+#endif
 -- | A renderer that produces pretty HTML, mostly meant for debugging purposes.
 --
 module Text.Blaze.Renderer.Pretty

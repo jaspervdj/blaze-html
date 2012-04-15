@@ -7,7 +7,7 @@ module Text.Blaze.Tests.Cases
 
 import Prelude hiding (div, id)
 import Control.Monad (forM_)
-import Data.Monoid (mappend, mconcat)
+import Data.Monoid (mempty, mappend, mconcat)
 
 import Data.Text (Text)
 import Test.HUnit ((@=?))
@@ -88,6 +88,11 @@ tests = concatMap (uncurry makeTests) $ zip names
 
     , HtmlTest "<p dojoType=\"select\">A paragraph</p>" $
         p ! (customAttribute "dojoType" "select") $ "A paragraph"
+
+    , HtmlTest "<p>Hello</p>" $ p ! mempty $ "Hello"
+
+    , HtmlTest "<img src=\"foo.png\" alt=\"foo\">" $
+        img ! (src "foo.png" `mappend` alt "foo")
 
     -- ToHtml/ToValue tests
     , HtmlTest "12345678910" $ mconcat $ map toHtml [1 :: Int .. 10]

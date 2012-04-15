@@ -15,8 +15,9 @@ Build-type:    Simple
 Cabal-version: >= 1.6
 
 Executable blaze-from-html
-  Ghc-Options: -Wall
-  Main-Is:     Util/BlazeFromHtml.hs
+  Ghc-Options:    -Wall
+  Hs-source-dirs: src
+  Main-Is:        Util/BlazeFromHtml.hs
 
   Other-Modules:
     Util.GenerateHtmlCombinators

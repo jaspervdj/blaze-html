@@ -172,6 +172,10 @@ newtype Tag = Tag { unTag :: StaticString }
 --
 newtype Attribute = Attribute (forall a. HtmlM a -> HtmlM a)
 
+instance Monoid Attribute where
+    mempty                            = Attribute id
+    Attribute f `mappend` Attribute g = Attribute (g . f)
+
 -- | The type for the value part of an attribute.
 --
 newtype AttributeValue = AttributeValue { unAttributeValue :: ChoiceString }

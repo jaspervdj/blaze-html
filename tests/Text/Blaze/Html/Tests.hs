@@ -18,6 +18,7 @@ import qualified Data.ByteString.Lazy.Char8 as LBC
 import Text.Blaze.Html.Tests.Util
 import Text.Blaze.Html5 hiding (map)
 import Text.Blaze.Html5.Attributes
+import Text.Blaze.Internal
 import qualified Text.Blaze.Html5 as H
 
 -- | Type for a simple HTML test. This data type contains the expected output
@@ -85,9 +86,6 @@ tests = concatMap (uncurry makeTests) $ zip names
     , HtmlTest "<p data-foo=\"bar\">A paragraph</p>" $
         p ! (dataAttribute "foo" "bar") $ "A paragraph"
 
-    , HtmlTest "<p dojoType=\"select\">A paragraph</p>" $
-        p ! (customAttribute "dojoType" "select") $ "A paragraph"
-
     , HtmlTest "<p>Hello</p>" $ p ! mempty $ "Hello"
 
     , HtmlTest "<img src=\"foo.png\" alt=\"foo\">" $
@@ -101,6 +99,18 @@ tests = concatMap (uncurry makeTests) $ zip names
                                     `mappend` ".png")
 
     , HtmlTest "abcdefghijklmnopqrstuvwxyz" $ forM_ ['a' .. 'z'] toHtml
+
+    -- Custom elements/attributes tests
+    , HtmlTest "<p>A paragraph</p>" $
+        customParent "p" $ "A paragraph"
+
+    , HtmlTest "<img src=\"foo.png\">" $
+        customLeaf "img" False ! src "foo.png"
+
+    , HtmlTest "<img />" $ customLeaf "img" True
+
+    , HtmlTest "<p dojoType=\"select\">A paragraph</p>" $
+        p ! (customAttribute "dojoType" "select") $ "A paragraph"
     ]
   where
     names = map (("Test case " ++) . show) [1 :: Int ..]

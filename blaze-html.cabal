@@ -28,6 +28,10 @@ Library
 
   Exposed-modules:
     Text.Blaze.Html
+    Text.Blaze.Html.Renderer.Pretty
+    Text.Blaze.Html.Renderer.String
+    Text.Blaze.Html.Renderer.Text
+    Text.Blaze.Html.Renderer.Utf8
     Text.Blaze.Html4.FrameSet
     Text.Blaze.Html4.FrameSet.Attributes
     Text.Blaze.Html4.Strict

@@ -6,14 +6,14 @@ module Text.Blaze.Html.Tests.Util
     , renderUsingUtf8
     ) where
 
-import Text.Blaze.Html5 hiding (map)
-import qualified Data.ByteString.Lazy as LB
-import qualified Text.Blaze.Renderer.Utf8 as Utf8 (renderHtml)
-import qualified Text.Blaze.Renderer.Text as Text (renderHtml)
-import qualified Text.Blaze.Renderer.String as String (renderHtml)
 import Blaze.ByteString.Builder as B (toLazyByteString)
 import Blaze.ByteString.Builder.Char.Utf8 as B (fromString)
 import Data.Text.Lazy.Encoding (encodeUtf8)
+import Text.Blaze.Html (Html)
+import qualified Data.ByteString.Lazy as LB
+import qualified Text.Blaze.Html.Renderer.String as String (renderHtml)
+import qualified Text.Blaze.Html.Renderer.Text as Text (renderHtml)
+import qualified Text.Blaze.Html.Renderer.Utf8 as Utf8 (renderHtml)
 
 -- | Render HTML to an UTF-8 encoded ByteString using the String renderer
 --

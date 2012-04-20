@@ -122,7 +122,7 @@ current status.
 >         a ! href "/login" $ "Please login."
 >     Just user -> do
 >         "Logged in as "
->         string $ getUserName user
+>         toHtml $ getUserName user
 >         ". Your points: "
 >         toHtml $ getPoints user
 

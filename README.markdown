@@ -1,6 +1,8 @@
 BlazeHtml
 =========
 
+[![Build Status](https://secure.travis-ci.org/jaspervdj/blaze-html.png?branch=master)](http://travis-ci.org/jaspervdj/blaze-html)
+
 What
 ----
 

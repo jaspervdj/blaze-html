@@ -58,12 +58,12 @@ tests = concatMap (uncurry makeTests) $ zip names
     , HtmlTest "<img src=\"&amp;\">" $ img ! src "&"
 
     -- Pre-escaping cases
-    , HtmlTest "<3 Haskell" $ preEscapedText "<3 Haskell"
+    , HtmlTest "<3 Haskell" $ preEscapedToMarkup ("<3 Haskell" :: String)
 
-    , HtmlTest "<script />" $ preEscapedString "<script />"
+    , HtmlTest "<script />" $ preEscapedToMarkup ("<script />" :: Text)
 
     , HtmlTest "<p class=\"'&!;\">bad</p>" $
-        p ! class_ (preEscapedTextValue "'&!;") $ "bad"
+        p ! class_ (preEscapedToValue ("'&!;" :: String)) $ "bad"
 
     -- Unicode cases
     , HtmlTest "<span id=\"&amp;\">\206\187</span>" $

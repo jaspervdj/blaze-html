@@ -19,8 +19,12 @@ import qualified Data.Set as S
 -- > sanitize "http-equiv" == "httpEquiv"
 --
 sanitize :: String -> String
-sanitize = appendUnderscore . removeDash . map toLower
+sanitize str
+    | lower  == "doctypehtml" = "docTypeHtml"
+    | otherwise               = appendUnderscore $ removeDash lower
   where
+    lower = map toLower str
+
     -- Remove a dash, replacing it by camelcase notation
     --
     -- Example:

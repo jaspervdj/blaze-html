@@ -453,6 +453,19 @@ html5 = HtmlVariant
     , selfClosing = False
     }
 
+-- | XHTML 5.0
+--
+xhtml5 :: HtmlVariant
+xhtml5 = HtmlVariant
+    { version = ["XHtml5"]
+    , docType = ["<!DOCTYPE HTML>"]
+    , parents = parents html5
+    , leafs = leafs html5
+    , attributes = attributes html5
+    , selfClosing = True
+    }
+
+
 -- | A map of HTML variants, per version, lowercase.
 --
 htmlVariants :: Map String HtmlVariant
@@ -464,6 +477,7 @@ htmlVariants = M.fromList $ map (show &&& id)
     , xhtml1Transitional
     , xhtml1FrameSet
     , html5
+    , xhtml5
     ]
 
 main :: IO ()

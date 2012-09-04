@@ -46,6 +46,8 @@ Library
     Text.Blaze.XHtml1.Strict.Attributes
     Text.Blaze.XHtml1.Transitional
     Text.Blaze.XHtml1.Transitional.Attributes
+    Text.Blaze.XHtml5
+    Text.Blaze.XHtml5.Attributes
   
   Build-depends:
     base          >= 4     && < 5,

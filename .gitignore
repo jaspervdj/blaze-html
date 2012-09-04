@@ -39,3 +39,5 @@ src/Text/Blaze/XHtml1/Strict.hs
 src/Text/Blaze/XHtml1/Strict/Attributes.hs
 src/Text/Blaze/XHtml1/Transitional.hs
 src/Text/Blaze/XHtml1/Transitional/Attributes.hs
+src/Text/Blaze/XHtml5.hs
+src/Text/Blaze/XHtml5/Attributes.hs

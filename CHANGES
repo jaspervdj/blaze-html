@@ -1,0 +1,5 @@
+* 0.6.0.0 Started changelog
+
+  - use new bytestring builder (bytestring > 0.10.0.0)
+  - single-quotes are no longer escaped  (blaze-markup > 0.6.0.0)
+  - double-quotes are escaped using &#34; instead of &quot;

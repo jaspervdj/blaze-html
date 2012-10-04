@@ -1,5 +1,5 @@
 Name:         blaze-html
-Version:      0.5.1.0
+Version:      0.6.0.0
 Homepage:     http://jaspervdj.be/blaze
 Bug-Reports:  http://github.com/jaspervdj/blaze-html/issues
 License:      BSD3
@@ -18,7 +18,7 @@ Description:
 Build-type:    Simple
 Cabal-version: >= 1.8
 
-Extra-source-files:  
+Extra-source-files:
   src/Util/Sanitize.hs
   src/Util/GenerateHtmlCombinators.hs
 
@@ -48,13 +48,12 @@ Library
     Text.Blaze.XHtml1.Transitional.Attributes
     Text.Blaze.XHtml5
     Text.Blaze.XHtml5.Attributes
-  
+
   Build-depends:
-    base          >= 4     && < 5,
-    blaze-builder >= 0.2   && < 0.4,
-    blaze-markup  >= 0.5.1 && < 0.6,
-    bytestring    >= 0.9   && < 0.11,
-    text          >= 0.10  && < 0.12
+    base          >= 4      && < 5,
+    blaze-markup  >= 0.6    && < 0.7,
+    bytestring    >= 0.10.2 && < 0.11,
+    text          >= 0.10   && < 0.12
 
 Test-suite blaze-html-tests
   Type:           exitcode-stdio-1.0
@@ -75,11 +74,10 @@ Test-suite blaze-html-tests
     test-framework-hunit       >= 0.2 && < 0.3,
     test-framework-quickcheck2 >= 0.2 && < 0.3,
     -- Copied from regular dependencies...
-    base          >= 4     && < 5,
-    blaze-builder >= 0.2   && < 0.4,
-    blaze-markup  >= 0.5.1 && < 0.6,
-    bytestring    >= 0.9   && < 0.11,
-    text          >= 0.10  && < 0.12
+    base          >= 4      && < 5,
+    blaze-markup  >= 0.6    && < 0.7,
+    bytestring    >= 0.10.2 && < 0.11,
+    text          >= 0.10   && < 0.12
 
 Source-repository head
   Type:     git

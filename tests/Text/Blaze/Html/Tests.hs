@@ -49,11 +49,11 @@ tests = concatMap (uncurry makeTests) $ zip names
         img ! src "foo.png" ! alt "bar"
 
     -- Escaping cases
-    , HtmlTest "&quot;&amp;&quot;" "\"&\""
+    , HtmlTest "&#34;&amp;&#34;" "\"&\""
 
     , HtmlTest "&lt;img&gt;" $ toHtml ("<img>" :: Text)
 
-    , HtmlTest "&quot;&#39;&quot;" "\"'\""
+    , HtmlTest "&#34;'&#34;" "\"'\""
 
     , HtmlTest "<img src=\"&amp;\">" $ img ! src "&"
 

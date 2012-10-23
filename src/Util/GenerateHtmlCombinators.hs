@@ -443,12 +443,12 @@ html5 = HtmlVariant
         , "onseeked", "onseeking", "onselect", "onstalled", "onstorage"
         , "onsubmit", "onsuspend", "ontimeupdate", "onundo", "onunload"
         , "onvolumechange", "onwaiting", "open", "optimum", "pattern", "ping"
-        , "placeholder", "preload", "pubdate", "radiogroup", "readonly", "rel"
-        , "required", "reversed", "rows", "rowspan", "sandbox", "scope"
-        , "scoped", "seamless", "selected", "shape", "size", "sizes", "span"
-        , "spellcheck", "src", "srcdoc", "start", "step", "style", "subject"
-        , "summary", "tabindex", "target", "title", "type", "usemap", "value"
-        , "width", "wrap", "xmlns"
+        , "placeholder", "poster", "preload", "pubdate", "radiogroup"
+        , "readonly", "rel", "required", "reversed", "rows", "rowspan"
+        , "sandbox", "scope", "scoped", "seamless", "selected", "shape", "size"
+        , "sizes", "span", "spellcheck", "src", "srcdoc", "start", "step"
+        , "style", "subject", "summary", "tabindex", "target", "title", "type"
+        , "usemap", "value", "width", "wrap", "xmlns"
         ]
     , selfClosing = False
     }

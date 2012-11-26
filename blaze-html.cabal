@@ -1,5 +1,5 @@
 Name:         blaze-html
-Version:      0.5.1.0
+Version:      0.5.1.1
 Homepage:     http://jaspervdj.be/blaze
 Bug-Reports:  http://github.com/jaspervdj/blaze-html/issues
 License:      BSD3
@@ -18,7 +18,7 @@ Description:
 Build-type:    Simple
 Cabal-version: >= 1.8
 
-Extra-source-files:  
+Extra-source-files:
   src/Util/Sanitize.hs
   src/Util/GenerateHtmlCombinators.hs
 
@@ -48,7 +48,7 @@ Library
     Text.Blaze.XHtml1.Transitional.Attributes
     Text.Blaze.XHtml5
     Text.Blaze.XHtml5.Attributes
-  
+
   Build-depends:
     base          >= 4     && < 5,
     blaze-builder >= 0.2   && < 0.4,
@@ -70,7 +70,7 @@ Test-suite blaze-html-tests
   Build-depends:
     HUnit                      >= 1.2 && < 1.3,
     QuickCheck                 >= 2.4 && < 2.6,
-    containers                 >= 0.3 && < 0.5,
+    containers                 >= 0.3 && < 0.6,
     test-framework             >= 0.4 && < 0.7,
     test-framework-hunit       >= 0.2 && < 0.3,
     test-framework-quickcheck2 >= 0.2 && < 0.3,

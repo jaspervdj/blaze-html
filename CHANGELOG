@@ -1,0 +1,3 @@
+- 0.7.0.0
+    * Bump blaze-markup so we get the (!?) operator for conditionally setting
+      attributes

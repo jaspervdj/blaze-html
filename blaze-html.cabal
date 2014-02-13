@@ -19,6 +19,7 @@ Build-type:    Simple
 Cabal-version: >= 1.8
 
 Extra-source-files:
+  CHANGELOG
   src/Util/Sanitize.hs
   src/Util/GenerateHtmlCombinators.hs
 

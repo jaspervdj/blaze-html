@@ -25,6 +25,10 @@ website/_cache
 website/docs
 website/hakyll
 
+src/Text/Blaze/Html2.hs
+src/Text/Blaze/Html2/Attributes.hs
+src/Text/Blaze/Html3.hs
+src/Text/Blaze/Html3/Attributes.hs
 src/Text/Blaze/Html4/FrameSet.hs
 src/Text/Blaze/Html4/FrameSet/Attributes.hs
 src/Text/Blaze/Html4/Strict.hs
@@ -33,11 +37,17 @@ src/Text/Blaze/Html4/Transitional.hs
 src/Text/Blaze/Html4/Transitional/Attributes.hs
 src/Text/Blaze/Html5.hs
 src/Text/Blaze/Html5/Attributes.hs
+src/Text/Blaze/Html5WG.hs
+src/Text/Blaze/Html5WG/Attributes.hs
 src/Text/Blaze/XHtml1/FrameSet.hs
 src/Text/Blaze/XHtml1/FrameSet/Attributes.hs
 src/Text/Blaze/XHtml1/Strict.hs
 src/Text/Blaze/XHtml1/Strict/Attributes.hs
 src/Text/Blaze/XHtml1/Transitional.hs
 src/Text/Blaze/XHtml1/Transitional/Attributes.hs
+src/Text/Blaze/XHtml11.hs
+src/Text/Blaze/XHtml11/Attributes.hs
 src/Text/Blaze/XHtml5.hs
 src/Text/Blaze/XHtml5/Attributes.hs
+src/Text/Blaze/XHtml5WG.hs
+src/Text/Blaze/XHtml5WG/Attributes.hs

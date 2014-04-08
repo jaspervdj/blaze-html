@@ -17,23 +17,26 @@ import qualified Data.Set as S
 --
 -- > sanitize "class" == "class_"
 -- > sanitize "http-equiv" == "httpEquiv"
+-- > sanitize "xml:lang" == "xmlLang"
 --
 sanitize :: String -> String
 sanitize str
     | lower  == "doctypehtml" = "docTypeHtml"
-    | otherwise               = appendUnderscore $ removeDash lower
+    | otherwise               = appendUnderscore $ removeSpecial lower
   where
     lower = map toLower str
 
-    -- Remove a dash, replacing it by camelcase notation
+    -- Remove a dash or colon, replacing it by camelcase notation
     --
     -- Example:
     --
-    -- > removeDash "foo-bar" == "fooBar"
+    -- > removeSpecial "foo-bar" == "fooBar"
+    -- > removeSpecial "xml:lang" == "xmlLang"
     --
-    removeDash ('-' : x : xs) = toUpper x : removeDash xs
-    removeDash (x : xs) = x : removeDash xs
-    removeDash [] = []
+    removeSpecial ('-' : x : xs) = toUpper x : removeSpecial xs
+    removeSpecial (':' : x : xs) = toUpper x : removeSpecial xs
+    removeSpecial (x : xs) = x : removeSpecial xs
+    removeSpecial [] = []
 
     appendUnderscore t | t `S.member` keywords = t ++ "_"
                        | otherwise             = t

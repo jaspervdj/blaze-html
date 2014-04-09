@@ -445,6 +445,9 @@ xhtml1Strict = HtmlVariant
     , leafs = leafs html4Strict
     , attributes = filter (`notElem` ["datapagesize", "event"])
                    $ attributes html4Strict ++ [ "xml:lang", "xml:space" ]
+                   -- Other attributes: http://www.w3.org/XML/1998/namespace
+                   -- The required default namespace, xmlns, is not from XHTML
+                   ++ [ "xml:base", "xml:id", "xmlns" ]
     , selfClosing = True
     }
 
@@ -463,6 +466,9 @@ xhtml1Transitional = HtmlVariant
     , leafs = leafs html4Transitional
     , attributes = filter (`notElem` ["datapagesize", "event", "version"])
                    $ attributes html4Transitional ++ [ "xml:lang", "xml:space" ]
+                   -- Other attributes: http://www.w3.org/XML/1998/namespace
+                   -- The required default namespace, xmlns, is not from XHTML
+                   ++ [ "xml:base", "xml:id", "xmlns" ]
     , selfClosing = True
     }
 
@@ -480,6 +486,9 @@ xhtml1FrameSet = HtmlVariant
     , leafs = leafs html4FrameSet
     , attributes = filter (`notElem` ["datapagesize", "event", "version"])
                    $ attributes html4FrameSet ++ [ "xml:lang", "xml:space" ]
+                   -- Other attributes: http://www.w3.org/XML/1998/namespace
+                   -- The required default namespace, xmlns, is not from XHTML
+                   ++ [ "xml:base", "xml:id", "xmlns" ]
     , selfClosing = True
     }
 
@@ -579,6 +588,8 @@ xhtml5 = HtmlVariant
     , parents = parents html5
     , leafs = leafs html5
     , attributes = attributes html5
+                   -- Other attributes: http://www.w3.org/XML/1998/namespace
+                   ++ [ "xml:base", "xml:id", "xml:lang", "xml:space", "xmlns" ]
     , selfClosing = True
     }
 
@@ -622,6 +633,8 @@ xhtml5wg = HtmlVariant
     , parents = parents html5wg
     , leafs = leafs html5wg
     , attributes = attributes html5wg
+                   -- Other attributes: http://www.w3.org/XML/1998/namespace
+                   ++ [ "xml:base", "xml:id", "xml:lang", "xml:space", "xmlns" ]
     , selfClosing = True
     }
 

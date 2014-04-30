@@ -1,3 +1,9 @@
+- 0.7.0.2
+    * Bump QuickCheck dependency to 2.7
+
+- 0.7.0.1
+    * Fix incorrect blaze-markup dependency in tests
+
 - 0.7.0.0
     * Bump blaze-markup so we get the (!?) operator for conditionally setting
       attributes

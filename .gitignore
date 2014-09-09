@@ -5,6 +5,10 @@ local
 *.hi
 *.swp
 
+.cabal-sandbox/
+cabal.sandbox.config
+cabal.config
+
 TestSuite.tix
 .hpc
 hpc

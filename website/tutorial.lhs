@@ -36,14 +36,13 @@ Modules
 
 This tutorial is a literate haskell file, thus we should begin by importing the
 modules we are going to use. To avoid name clashes, we just import everything
-twice -- once with an alias and once without.
+while renaming the module namespace so that we can use unqualified names most
+of the time and revert to nice and short qualified names when there is a clash.
 
 > import Control.Monad (forM_)
 
-> import Text.Blaze.Html5
-> import Text.Blaze.Html5.Attributes
-> import qualified Text.Blaze.Html5 as H
-> import qualified Text.Blaze.Html5.Attributes as A
+> import Text.Blaze.Html5 as H
+> import Text.Blaze.Html5.Attributes as A
 
 As you can see, we imported the `Html5` modules. Alternatively, you can choose
 to import `Text.Blaze.Html4.Strict`. More HTML versions are likely to be added

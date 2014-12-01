@@ -1,8 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Main where
 
-import Control.Arrow ((>>>))
-
 import Hakyll
 
 main :: IO ()
@@ -21,14 +19,13 @@ main = hakyllWith config $ do
 
     match pages $ do
         route   $ setExtension "html"
-        compile $
-            pageCompiler >>>
-            applyTemplateCompiler "templates/default.html" >>>
-            relativizeUrlsCompiler
+        compile $ pandocCompiler
+            >>= loadAndApplyTemplate "templates/default.html" defaultContext
+            >>= relativizeUrls
 
     match "templates/*" $ compile templateCompiler
   where
-    pages = list
+    pages = fromList
         [ "index.markdown"
         , "tutorial.lhs"
         , "about.markdown"
@@ -36,8 +33,8 @@ main = hakyllWith config $ do
         ]
 
 
-config :: HakyllConfiguration
-config = defaultHakyllConfiguration
+config :: Configuration
+config = defaultConfiguration
     { deployCommand = "rsync --checksum -ave 'ssh -p 2222' \
                       \_site/* jaspervdj@jaspervdj.be:jaspervdj.be/blaze"
     }

@@ -266,8 +266,79 @@ makeAttribute name = unlines
   where
     function = sanitize name
 
+-- | HTML 2.0
+-- http://www.w3.org/MarkUp/html-spec/
+--
+html2 :: HtmlVariant
+html2 = HtmlVariant
+    { version = ["Html2"]
+    , docType =
+        [ "<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//EN\""
+        , "    \"http://www.w3.org/MarkUp/html-spec/html.dtd\">"
+        ]
+    , parents =
+        [ "a", "address", "b", "blockquote", "body", "cite", "code", "dd"
+        , "dir", "dl", "dt", "em", "form", "h1", "h2", "h3", "h4", "h5", "h6"
+        , "head", "html", "i", "kbd", "li", "listing", "menu", "ol", "option"
+        , "p", "plaintext", "pre", "samp", "select", "strong", "textarea"
+        , "title", "tt", "ul", "var", "xmp"
+        ]
+    , leafs =
+        [ "base", "br", "hr", "img", "input", "isindex", "link", "meta"
+        , "nextid"
+        ]
+    , attributes =
+        [ "action", "align", "alt", "checked", "cols", "compact", "content"
+        , "enctype", "href", "http-equiv", "ismap", "maxlength", "method"
+        , "methods", "multiple", "n", "name", "rel", "rev", "rows", "sdaform"
+        , "sdapref", "sdasuff", "selected", "size", "src", "title", "type"
+        , "urn", "value", "version", "width"
+        ]
+    , selfClosing = False
+    }
+
+-- | HTML 3.2
+-- http://www.w3.org/TR/REC-html32
+--
+html3 :: HtmlVariant
+html3 = HtmlVariant
+    { version = ["Html3"]
+    , docType =
+        [ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 3.2 Final//EN\""
+        , "    \"http://www.w3.org/MarkUp/Wilbur/HTML32.dtd\">"
+        ]
+    , parents =
+        [ "a", "address", "applet", "b", "big", "blockquote", "body", "center"
+        , "cite", "code", "dd", "dfn", "dir", "div", "dl", "dt", "em", "font"
+        , "form", "h1", "h2", "h3", "h4", "h5", "h6", "head", "html", "i"
+        , "kbd", "li", "listing", "map", "menu", "ol", "option", "p"
+        , "plaintext", "pre", "samp", "script", "select", "small", "strike"
+        , "strong", "style", "sub", "sup", "table", "td", "textarea", "th"
+        , "title", "tr", "tt", "u", "ul", "var", "xmp"
+        ]
+    , leafs =
+        [ "area", "base", "basefont", "br", "hr", "img", "input", "isindex"
+        , "link", "meta", "param"
+        ]
+    , attributes =
+        [ "action", "align", "alink", "alt", "background", "bgcolor", "border"
+        , "checked", "clear", "code", "codebase", "color", "cols", "colspan"
+        , "compact", "content", "coords", "enctype", "height", "href"
+        , "hspace", "http-equiv", "ismap", "link", "maxlength", "method"
+        , "multiple", "name", "nohref", "noshade", "nowrap", "prompt", "rel"
+        , "rev", "rows", "rowspan", "selected", "shape", "size", "src"
+        , "start", "text", "title", "type", "usemap", "valign", "value"
+        , "version", "vlink", "vspace", "width"
+        ]
+    , selfClosing = False
+    }
+
 -- | HTML 4.01 Strict.
--- A good reference can be found here: http://www.w3schools.com/tags/default.asp
+-- http://www.w3.org/TR/html401/index/elements.html
+-- http://www.w3.org/TR/html401/index/attributes.html
+--
+-- HTML 4.01 strict excludes elements and attributes which are labeled
+-- deprecated, loose or frameset in the above indices.
 --
 html4Strict :: HtmlVariant
 html4Strict = HtmlVariant
@@ -278,38 +349,45 @@ html4Strict = HtmlVariant
         ]
     , parents =
         [ "a", "abbr", "acronym", "address", "b", "bdo", "big", "blockquote"
-        , "body" , "button", "caption", "cite", "code", "colgroup", "dd", "del"
-        , "dfn", "div" , "dl", "dt", "em", "fieldset", "form", "h1", "h2", "h3"
-        , "h4", "h5", "h6", "head", "html", "i", "ins" , "kbd", "label"
+        , "body", "button", "caption", "cite", "code", "colgroup", "dd", "del"
+        , "dfn", "div", "dl", "dt", "em", "fieldset", "form", "h1", "h2", "h3"
+        , "h4", "h5", "h6", "head", "html", "i", "ins", "kbd", "label"
         , "legend", "li", "map", "noscript", "object", "ol", "optgroup"
         , "option", "p", "pre", "q", "samp", "script", "select", "small"
         , "span", "strong", "style", "sub", "sup", "table", "tbody", "td"
         , "textarea", "tfoot", "th", "thead", "title", "tr", "tt", "ul", "var"
         ]
     , leafs =
-        [ "area", "br", "col", "hr", "link", "img", "input",  "meta", "param"
+        [ "area", "base", "br", "col", "hr", "img", "input", "link", "meta"
+        , "param"
         ]
     , attributes =
-        [ "abbr", "accept", "accesskey", "action", "align", "alt", "archive"
-        , "axis", "border", "cellpadding", "cellspacing", "char", "charoff"
-        , "charset", "checked", "cite", "class", "classid", "codebase"
-        , "codetype", "cols", "colspan", "content", "coords", "data", "datetime"
-        , "declare", "defer", "dir", "disabled", "enctype", "for", "frame"
-        , "headers", "height", "href", "hreflang", "http-equiv", "id", "label"
-        , "lang", "maxlength", "media", "method", "multiple", "name", "nohref"
-        , "onabort", "onblur", "onchange", "onclick", "ondblclick", "onfocus"
+        [ "abbr", "accept", "accept-charset", "accesskey", "action", "align"
+        , "alt", "archive", "axis", "border", "cellpadding", "cellspacing"
+        , "char", "charoff", "charset", "checked", "cite", "class", "classid"
+        , "codebase", "codetype", "cols", "colspan", "content", "coords"
+        , "data", "datapagesize", "datetime", "declare", "defer", "dir"
+        , "disabled", "enctype", "event", "for", "frame", "headers", "height"
+        , "href", "hreflang", "http-equiv", "id", "ismap", "label", "lang"
+        , "longdesc", "maxlength", "media", "method", "multiple", "name"
+        , "nohref", "onblur", "onchange", "onclick", "ondblclick", "onfocus"
         , "onkeydown", "onkeypress", "onkeyup", "onload", "onmousedown"
         , "onmousemove", "onmouseout", "onmouseover", "onmouseup", "onreset"
         , "onselect", "onsubmit", "onunload", "profile", "readonly", "rel"
         , "rev", "rows", "rowspan", "rules", "scheme", "scope", "selected"
         , "shape", "size", "span", "src", "standby", "style", "summary"
-        , "tabindex", "title", "type", "usemap", "valign", "value", "valuetype"
-        , "width"
+        , "tabindex", "title", "type", "usemap", "valign", "value"
+        , "valuetype", "width"
         ]
     , selfClosing = False
     }
 
--- | HTML 4.0 Transitional
+-- | HTML 4.01 Transitional
+-- http://www.w3.org/TR/html401/index/elements.html
+-- http://www.w3.org/TR/html401/index/attributes.html
+--
+-- HTML 4.01 strict plus elements and attributes that are labeled loose in the
+-- above indices.
 --
 html4Transitional :: HtmlVariant
 html4Transitional = HtmlVariant
@@ -319,18 +397,26 @@ html4Transitional = HtmlVariant
         , "    \"http://www.w3.org/TR/html4/loose.dtd\">"
         ]
     , parents = parents html4Strict ++
-        [ "applet", "center", "dir", "font", "iframe", "isindex", "menu"
-        , "noframes", "s", "u"
+        [ "applet", "center", "dir", "font", "iframe", "menu", "noframes", "s"
+        , "strike", "u"
         ]
-    , leafs = leafs html4Strict ++ ["basefont"]
+    , leafs = leafs html4Strict ++
+        [ "basefont", "isindex" ]
     , attributes = attributes html4Strict ++
-        [ "background", "bgcolor", "clear", "compact", "hspace", "language"
-        , "noshade", "nowrap", "start", "target", "vspace"
+        [ "alink", "background", "bgcolor", "clear", "code", "color", "compact"
+        , "face", "frameborder", "hspace", "language", "link", "marginheight"
+        , "marginwidth", "noshade", "nowrap", "object", "prompt", "scrolling"
+        , "start", "target", "text", "version", "vlink", "vspace"
         ]
     , selfClosing = False
     }
 
--- | HTML 4.0 FrameSet
+-- | HTML 4.01 FrameSet
+-- http://www.w3.org/TR/html401/index/elements.html
+-- http://www.w3.org/TR/html401/index/attributes.html
+--
+-- HTML 4.01 transitional plus frameset elements and attributes from the above
+-- indices.
 --
 html4FrameSet :: HtmlVariant
 html4FrameSet = HtmlVariant
@@ -339,15 +425,14 @@ html4FrameSet = HtmlVariant
         [ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 FrameSet//EN\""
         , "    \"http://www.w3.org/TR/html4/frameset.dtd\">"
         ]
-    , parents = parents html4Transitional ++ ["frameset"]
-    , leafs = leafs html4Transitional ++ ["frame"]
-    , attributes = attributes html4Transitional ++
-        [ "frameborder", "scrolling"
-        ]
+    , parents = parents html4Transitional ++ [ "frameset" ]
+    , leafs = leafs html4Transitional ++ [ "frame" ]
+    , attributes = attributes html4Transitional ++ [ "noresize" ]
     , selfClosing = False
     }
 
 -- | XHTML 1.0 Strict
+-- Identical to HTML 4.01 Strict except: http://www.w3.org/TR/xhtml1/#diffs
 --
 xhtml1Strict :: HtmlVariant
 xhtml1Strict = HtmlVariant
@@ -358,11 +443,17 @@ xhtml1Strict = HtmlVariant
         ]
     , parents = parents html4Strict
     , leafs = leafs html4Strict
-    , attributes = attributes html4Strict
+    , attributes = filter (`notElem` ["datapagesize", "event"])
+                   $ attributes html4Strict ++ [ "xml:lang", "xml:space" ]
+                   -- Other attributes: http://www.w3.org/XML/1998/namespace
+                   -- The required default namespace, xmlns, is not from XHTML
+                   ++ [ "xml:base", "xml:id", "xmlns" ]
     , selfClosing = True
     }
 
 -- | XHTML 1.0 Transitional
+-- Identical to HTML 4.01 Transitional except:
+-- http://www.w3.org/TR/xhtml1/#diffs
 --
 xhtml1Transitional :: HtmlVariant
 xhtml1Transitional = HtmlVariant
@@ -373,11 +464,16 @@ xhtml1Transitional = HtmlVariant
         ]
     , parents = parents html4Transitional
     , leafs = leafs html4Transitional
-    , attributes = attributes html4Transitional
+    , attributes = filter (`notElem` ["datapagesize", "event", "version"])
+                   $ attributes html4Transitional ++ [ "xml:lang", "xml:space" ]
+                   -- Other attributes: http://www.w3.org/XML/1998/namespace
+                   -- The required default namespace, xmlns, is not from XHTML
+                   ++ [ "xml:base", "xml:id", "xmlns" ]
     , selfClosing = True
     }
 
 -- | XHTML 1.0 FrameSet
+-- Identical to HTML 4.01 FrameSet except: http://www.w3.org/TR/xhtml1/#diffs
 --
 xhtml1FrameSet :: HtmlVariant
 xhtml1FrameSet = HtmlVariant
@@ -388,97 +484,177 @@ xhtml1FrameSet = HtmlVariant
         ]
     , parents = parents html4FrameSet
     , leafs = leafs html4FrameSet
-    , attributes = attributes html4FrameSet
+    , attributes = filter (`notElem` ["datapagesize", "event", "version"])
+                   $ attributes html4FrameSet ++ [ "xml:lang", "xml:space" ]
+                   -- Other attributes: http://www.w3.org/XML/1998/namespace
+                   -- The required default namespace, xmlns, is not from XHTML
+                   ++ [ "xml:base", "xml:id", "xmlns" ]
     , selfClosing = True
     }
 
--- | HTML 5.0
--- A good reference can be found here:
--- http://www.w3schools.com/html5/html5_reference.asp
+-- | XHTML 1.1
+-- Identical to XHTML 1.0 except: http://www.w3.org/TR/xhtml11/changes.html
+--
+xhtml11 :: HtmlVariant
+xhtml11 = HtmlVariant
+    { version = ["XHtml11"]
+    , docType =
+        [ "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\""
+        , "    \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">"
+        ]
+    , parents = parents xhtml1Strict ++ [ "ruby" ]
+    , leafs = leafs xhtml1Strict
+    , attributes = attributes xhtml1Strict
+    , selfClosing = True
+    }
+
+-- | HTML 5.0 (latest draft as of 2014-03-20)
+--
+-- Current specification:
+-- http://www.w3.org/html/wg/drafts/html/CR/index.html#elements-1
+-- http://www.w3.org/html/wg/drafts/html/CR/index.html#attributes-1
+-- Replace these links once the HTML5 recommendation is issued (Q4 2014).
+--
+-- Good reference but not the actual standard:
+-- https://developer.mozilla.org/en-US/docs/Web/HTML/Element
+--
+-- HTML 5 moved away from SGML so this code is based on reviewing the indices.
 --
 html5 :: HtmlVariant
 html5 = HtmlVariant
     { version = ["Html5"]
-    , docType = ["<!DOCTYPE HTML>"]
+    , docType = ["<!DOCTYPE html>"]
     , parents =
-        [ "a", "abbr", "address", "article", "aside", "audio", "b"
-        , "bdo", "blockquote", "body", "button", "canvas", "caption", "cite"
-        , "code", "colgroup", "command", "datalist", "dd", "del", "details"
-        , "dfn", "div", "dl", "dt", "em", "fieldset", "figcaption", "figure"
+        [ "a", "abbr", "address", "article", "aside", "audio", "b", "bdi", "bdo"
+        , "blockquote", "body", "button", "canvas", "caption", "cite", "code"
+        , "colgroup", "data", "datalist", "dd", "del", "details", "dfn"
+        , "dialog", "div", "dl", "dt", "em", "fieldset", "figcaption", "figure"
         , "footer", "form", "h1", "h2", "h3", "h4", "h5", "h6", "head", "header"
-        , "hgroup", "html", "i", "iframe", "ins", "kbd", "label"
-        , "legend", "li", "map", "mark", "menu", "meter", "nav", "noscript"
-        , "object", "ol", "optgroup", "option", "output", "p", "pre", "progress"
-        , "q", "rp", "rt", "ruby", "samp", "script", "section", "select"
-        , "small", "span", "strong", "style", "sub", "summary", "sup"
-        , "table", "tbody", "td", "textarea", "tfoot", "th", "thead", "time"
-        , "title", "tr", "ul", "var", "video"
+        , "html", "i", "iframe", "ins", "kbd", "label", "legend", "li", "main"
+        , "map", "mark", "meter", "nav", "noscript", "object", "ol", "optgroup"
+        , "option", "output", "p", "pre", "progress", "q", "rb", "rp", "rt"
+        , "rtc", "ruby", "s", "samp", "script", "section", "select", "small"
+        , "span", "strong", "style", "sub", "summary", "sup", "table", "tbody"
+        , "td", "template", "textarea", "tfoot", "th", "thead", "time", "title"
+        , "tr", "u", "ul", "var", "video"
         ]
     , leafs =
-        -- http://www.whatwg.org/specs/web-apps/current-work/multipage/syntax.html#void-elements
         [ "area", "base", "br", "col", "embed", "hr", "img", "input", "keygen"
-        , "link", "menuitem", "meta", "param", "source", "track", "wbr"
+        , "link", "meta", "param", "source", "track", "wbr"
         ]
     , attributes =
-        [ "accept", "accept-charset", "accesskey", "action", "alt", "async"
-        , "autocomplete", "autofocus", "autoplay", "challenge", "charset"
-        , "checked", "cite", "class", "cols", "colspan", "content"
-        , "contenteditable", "contextmenu", "controls", "coords", "data"
-        , "datetime", "defer", "dir", "disabled", "draggable", "enctype", "for"
-        , "form", "formaction", "formenctype", "formmethod", "formnovalidate"
+        [ "abbr", "accept", "accept-charset", "accesskey", "action", "alt"
+        , "async", "autocomplete", "autofocus", "autoplay", "border"
+        , "challenge", "charset", "checked", "cite", "class", "cols", "colspan"
+        , "content", "contenteditable", "controls", "coords", "crossorigin"
+        , "data", "datetime", "default", "defer", "dir", "dirname", "disabled"
+        , "download", "draggable", "dropzone", "enctype", "for", "form"
+        , "formaction", "formenctype", "formmethod", "formnovalidate"
         , "formtarget", "headers", "height", "hidden", "high", "href"
-        , "hreflang", "http-equiv", "icon", "id", "ismap", "item", "itemprop"
-        , "keytype", "label", "lang", "list", "loop", "low", "manifest", "max"
-        , "maxlength", "media", "method", "min", "multiple", "name"
-        , "novalidate", "onbeforeonload", "onbeforeprint", "onblur", "oncanplay"
-        , "oncanplaythrough", "onchange", "oncontextmenu", "onclick"
-        , "ondblclick", "ondrag", "ondragend", "ondragenter", "ondragleave"
-        , "ondragover", "ondragstart", "ondrop", "ondurationchange", "onemptied"
-        , "onended", "onerror", "onfocus", "onformchange", "onforminput"
-        , "onhaschange", "oninput", "oninvalid", "onkeydown", "onkeyup"
+        , "hreflang", "http-equiv", "id", "ismap", "keytype", "kind", "label"
+        , "lang", "list", "loop", "low", "manifest", "max", "maxlength", "media"
+        , "mediagroup", "method", "min", "minlength", "multiple", "muted"
+        , "name", "novalidate", "onabort", "onafterprint", "onbeforeprint"
+        , "onblur", "oncancel", "oncanplay", "oncanplaythrough", "onchange"
+        , "onclick", "ondblclick", "ondrag", "ondragend", "ondragenter"
+        , "ondragleave", "ondragover", "ondragstart", "ondrop"
+        , "ondurationchange", "onemptied", "onended", "onerror", "onfocus"
+        , "onhashchange", "oninput", "oninvalid", "onkeydown", "onkeyup"
         , "onload", "onloadeddata", "onloadedmetadata", "onloadstart"
-        , "onmessage", "onmousedown", "onmousemove", "onmouseout", "onmouseover"
-        , "onmouseup", "onmousewheel", "ononline", "onpagehide", "onpageshow"
-        , "onpause", "onplay", "onplaying", "onprogress", "onpropstate"
-        , "onratechange", "onreadystatechange", "onredo", "onresize", "onscroll"
-        , "onseeked", "onseeking", "onselect", "onstalled", "onstorage"
-        , "onsubmit", "onsuspend", "ontimeupdate", "onundo", "onunload"
-        , "onvolumechange", "onwaiting", "open", "optimum", "pattern", "ping"
-        , "placeholder", "preload", "pubdate", "radiogroup", "readonly", "rel"
-        , "required", "reversed", "rows", "rowspan", "sandbox", "scope"
-        , "scoped", "seamless", "selected", "shape", "size", "sizes", "span"
-        , "spellcheck", "src", "srcdoc", "start", "step", "style", "subject"
-        , "summary", "tabindex", "target", "title", "type", "usemap", "value"
-        , "width", "wrap", "xmlns"
+        , "onmessage", "onmousedown", "onmouseenter", "onmouseleave"
+        , "onmousemove", "onmouseout", "onmouseover", "onmouseup"
+        , "onmousewheel", "onoffline", "ononline", "onpagehide", "onpageshow"
+        , "onpause", "onplay", "onplaying", "onpopstate", "onprogress"
+        , "onratechange", "onreset", "onresize", "onscroll", "onseeked"
+        , "onseeking", "onselect", "onshow", "onstalled", "onstorage"
+        , "onsubmit", "onsuspend", "ontimeupdate", "ontoggle", "onunload"
+        , "onvolumechange", "onwaiting", "open", "optimum", "pattern"
+        , "placeholder", "poster", "preload", "readonly", "rel", "required"
+        , "reversed", "rows", "rowspan", "sandbox", "scope", "scoped"
+        , "seamless", "selected", "shape", "size", "sizes", "span", "spellcheck"
+        , "src", "srcdoc", "srclang", "start", "step", "style", "tabindex"
+        , "target", "title", "translate", "type", "typemustmatch", "usemap"
+        , "value", "width", "wrap"
         ]
     , selfClosing = False
     }
 
 -- | XHTML 5.0
---
+-- Unlike HTML5, XHTML5's DOCTYPE is case sensitive.
 xhtml5 :: HtmlVariant
 xhtml5 = HtmlVariant
     { version = ["XHtml5"]
-    , docType = ["<!DOCTYPE HTML>"]
+    , docType = ["<!DOCTYPE html>"]
     , parents = parents html5
     , leafs = leafs html5
     , attributes = attributes html5
+                   -- Other attributes: http://www.w3.org/XML/1998/namespace
+                   ++ [ "xml:base", "xml:id", "xml:lang", "xml:space", "xmlns" ]
     , selfClosing = True
     }
 
+-- | HTML5 Living Document (WHATWG 2014-03-19 version)
+-- http://www.whatwg.org/specs/web-apps/current-work/multipage/section-index.html#elements-1
+-- http://www.whatwg.org/specs/web-apps/current-work/multipage/section-index.html#attributes-1
+--
+-- The WHATWG group defines a living document that W3C takes a snapshot of to
+-- create the HTML5 standard.  WHATWG will always add elements or attributes
+-- and not remove them.
+--
+-- The W3C draft for HTML5 has an rtc parent element but the WHATWG does not.
+-- W3C draft has attribute border but not WHATWG.  This is based on comparing
+-- the indices of the specifications.
+--
+-- HTML 5 moved away from SGML so this code is based on reviewing the indices.
+--
+html5wg :: HtmlVariant
+html5wg = HtmlVariant
+    { version = ["Html5WG"]
+    , docType = ["<!DOCTYPE html>"]
+    , parents = filter (`notElem` ["rtc"])
+                $ parents html5 ++ [ "hgroup", "menu" ]
+    , leafs = leafs html5 ++ [ "menuitem" ]
+    , attributes = filter (`notElem` ["border"]) $ attributes html5 ++
+                   [ "allowfullscreen", "command", "contextmenu", "icon"
+                   , "inputmode", "itemid", "itemprop", "itemtype", "menu"
+                   , "onbeforeunload", "onclose", "oncontextmenu", "oncuechange"
+                   , "ondragexit", "onkeypress", "onlanguagechange", "onsort"
+                   , "ping", "radiogroup", "sortable", "sorted", "srcset"
+                   ]
+    , selfClosing = False
+    }
+
+-- | XHTML5 Living Document (WHATWG 2014-03-19 version)
+-- Unlike HTML5, XHTML5's DOCTYPE is case sensitive.
+xhtml5wg :: HtmlVariant
+xhtml5wg = HtmlVariant
+    { version = ["XHtml5WG"]
+    , docType = ["<!DOCTYPE html>"]
+    , parents = parents html5wg
+    , leafs = leafs html5wg
+    , attributes = attributes html5wg
+                   -- Other attributes: http://www.w3.org/XML/1998/namespace
+                   ++ [ "xml:base", "xml:id", "xml:lang", "xml:space", "xmlns" ]
+    , selfClosing = True
+    }
 
 -- | A map of HTML variants, per version, lowercase.
 --
 htmlVariants :: Map String HtmlVariant
 htmlVariants = M.fromList $ map (show &&& id)
-    [ html4Strict
+    [ html2
+    , html3
+    , html4Strict
     , html4Transitional
     , html4FrameSet
     , xhtml1Strict
     , xhtml1Transitional
     , xhtml1FrameSet
+    , xhtml11
     , html5
     , xhtml5
+    , html5wg
+    , xhtml5wg
     ]
 
 main :: IO ()

@@ -33,6 +33,10 @@ Library
     Text.Blaze.Html.Renderer.String
     Text.Blaze.Html.Renderer.Text
     Text.Blaze.Html.Renderer.Utf8
+    Text.Blaze.Html2
+    Text.Blaze.Html2.Attributes
+    Text.Blaze.Html3
+    Text.Blaze.Html3.Attributes
     Text.Blaze.Html4.FrameSet
     Text.Blaze.Html4.FrameSet.Attributes
     Text.Blaze.Html4.Strict
@@ -41,14 +45,20 @@ Library
     Text.Blaze.Html4.Transitional.Attributes
     Text.Blaze.Html5
     Text.Blaze.Html5.Attributes
+    Text.Blaze.Html5WG
+    Text.Blaze.Html5WG.Attributes
     Text.Blaze.XHtml1.FrameSet
     Text.Blaze.XHtml1.FrameSet.Attributes
     Text.Blaze.XHtml1.Strict
     Text.Blaze.XHtml1.Strict.Attributes
     Text.Blaze.XHtml1.Transitional
     Text.Blaze.XHtml1.Transitional.Attributes
+    Text.Blaze.XHtml11
+    Text.Blaze.XHtml11.Attributes
     Text.Blaze.XHtml5
     Text.Blaze.XHtml5.Attributes
+    Text.Blaze.XHtml5WG
+    Text.Blaze.XHtml5WG.Attributes
 
   Build-depends:
     base          >= 4    && < 5,

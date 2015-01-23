@@ -1,3 +1,7 @@
+- 0.7.1.0
+    * Add `itemscope` and `itemprop` attributes
+    * Constraint `blaze-markup` dependency
+
 - 0.7.0.3
     * Dependency bump to allow `text-1.2`
 

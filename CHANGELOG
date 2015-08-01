@@ -1,3 +1,6 @@
+- 0.8.1.0
+    * Add `<main>` element to HTML5
+
 - 0.8.0.2
     * Relax blaze-builder dependency to include 0.3 again
 

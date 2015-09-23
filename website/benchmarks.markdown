@@ -34,8 +34,8 @@ HTML templating engines. It consists of the task of generating a 1000x10 HTML
 `<table>`, with `[1 .. 10]` as row content. Some implementations of this
 benchmark check if the row content needs to be escaped and some do not. In
 BlazeHtml, we escape all content by default, as we want to free the user from
-thinking about escaping. Obviously, the user can always explicitly state that he
-doesn't want some content to be escaped.
+thinking about escaping. Obviously, the user can always explicitly state that they
+don't want some content to be escaped.
 
 ![bigtable benchmark results](/images/benchmarks-bigtable.png)
 

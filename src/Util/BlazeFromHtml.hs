@@ -131,6 +131,7 @@ fromHtml _ _ (Text text) = ["\"" ++ concatMap escape (trim text) ++ "\""]
     -- Escape a number of characters
     escape '"'  = "\\\""
     escape '\n' = "\\n"
+    escape '\\' = "\\\\"
     escape x    = [x]
 fromHtml _ _ (Comment comment) = map ("-- " ++) $ lines comment
 fromHtml variant ignore (Block block) =
@@ -306,6 +307,7 @@ help = unlines $
 data Arg = ArgHtmlVariant HtmlVariant
          | ArgStandalone
          | ArgIgnoreErrors
+         | ArgNoTrimText
          deriving (Show, Eq)
 
 -- | A description of the options
@@ -315,6 +317,7 @@ options =
     [ Option "v" ["html-variant"] htmlVariantOption "HTML variant to use"
     , Option "s" ["standalone"] (NoArg ArgStandalone) "Produce standalone code"
     , Option "e" ["ignore-errors"] (NoArg ArgIgnoreErrors) "Ignore most errors"
+    , Option ""  ["no-trim-text"]  (NoArg ArgNoTrimText) "Do not trim text"
     ]
   where
     htmlVariantOption = flip ReqArg "VARIANT" $ \name -> ArgHtmlVariant $

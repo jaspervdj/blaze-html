@@ -12,6 +12,8 @@ import System.Environment (getArgs)
 import System.FilePath (dropExtension)
 import qualified Data.Map as M
 import System.Console.GetOpt
+import System.Exit
+import System.IO
 
 import Text.HTML.TagSoup
 
@@ -120,23 +122,25 @@ joinHtmlDoctype x = x
 -- | Produce the Blaze code from the HTML. The result is a list of lines.
 --
 fromHtml :: HtmlVariant  -- ^ Used HTML variant
-         -> Bool         -- ^ Should ignore errors
+         -> Options      -- ^ Building options
          -> Html         -- ^ HTML tree
          -> [String]     -- ^ Resulting lines of code
 fromHtml _ _ Doctype = ["docType"]
-fromHtml _ _ (Text text) = ["\"" ++ concatMap escape (trim text) ++ "\""]
+fromHtml _ opts (Text text) = ["\"" ++ concatMap escape (trim text) ++ "\""]
   where
     -- Remove whitespace on both ends of a string
-    trim = reverse . dropWhile isSpace . reverse . dropWhile isSpace
+    trim
+      | noTrimText_ opts = id
+      | otherwise        = reverse . dropWhile isSpace . reverse . dropWhile isSpace
     -- Escape a number of characters
     escape '"'  = "\\\""
     escape '\n' = "\\n"
     escape '\\' = "\\\\"
     escape x    = [x]
 fromHtml _ _ (Comment comment) = map ("-- " ++) $ lines comment
-fromHtml variant ignore (Block block) =
-    concatMap (fromHtml variant ignore) block
-fromHtml variant ignore (Parent tag attrs inner) =
+fromHtml variant opts (Block block) =
+    concatMap (fromHtml variant opts) block
+fromHtml variant opts (Parent tag attrs inner) =
     case combinatorType variant tag of
         -- Actual parent tags
         ParentCombinator -> case inner of
@@ -144,9 +148,9 @@ fromHtml variant ignore (Parent tag attrs inner) =
                 then [combinator ++
                         (if null attrs then " " else " $ ") ++ "mempty"]
                 else (combinator ++ " $ do") :
-                        indent (fromHtml variant ignore inner)
+                        indent (fromHtml variant opts inner)
             -- We join non-block parents for better readability.
-            x -> let ls = fromHtml variant ignore x
+            x -> let ls = fromHtml variant opts x
                      apply = if dropApply x then " " else " $ "
                  in case ls of (y : ys) -> (combinator ++ apply ++ y) : ys
                                [] -> [combinator]
@@ -155,8 +159,8 @@ fromHtml variant ignore (Parent tag attrs inner) =
         LeafCombinator -> [combinator]
 
         -- Unknown tag
-        UnknownCombinator -> if ignore
-            then fromHtml variant ignore inner
+        UnknownCombinator -> if ignore_ opts
+            then fromHtml variant opts inner
             else error $ "Tag " ++ tag ++ " is illegal in "
                                        ++ show variant
   where
@@ -168,7 +172,7 @@ fromHtml variant ignore (Parent tag attrs inner) =
                         ++ "dataAttribute" ++ " "
                         ++ show prefix
                         ++ " " ++ show v
-            Nothing | ignore     -> ""
+            Nothing | ignore_ opts -> ""
                     | otherwise  -> error $ "Attribute "
                                  ++ k ++ " is illegal in "
                                  ++ show variant
@@ -215,14 +219,14 @@ getImports variant =
 --
 blazeFromHtml :: HtmlVariant  -- ^ Variant to use
               -> Bool         -- ^ Produce standalone code
-              -> Bool         -- ^ Should we ignore errors
+              -> Options      -- ^ Build options
               -> String       -- ^ Template name
               -> String       -- ^ HTML code
               -> String       -- ^ Resulting code
-blazeFromHtml variant standalone ignore name =
-    unlines . addSignature . fromHtml variant ignore
+blazeFromHtml variant standalone opts name =
+    unlines . addSignature . fromHtml variant opts
             . joinHtmlDoctype . minimizeBlocks
-            . removeEmptyText . fst . makeTree variant ignore []
+            . removeEmptyText . fst . makeTree variant (ignore_ opts) []
             . parseTagsOptions parseOptions { optTagPosition = True }
   where
     addSignature body = if standalone then [ name ++ " :: Html"
@@ -240,22 +244,28 @@ indent = map ("    " ++)
 main :: IO ()
 main = do
     args <- getOpt Permute options <$> getArgs
-    case args of
-        (o, n, []) -> let v = getVariant o
-                          s = standalone' o
-                          i = ignore' o
-                      in do imports' v o
-                            main' v s i n
-        (_, _, _)  -> putStr help
+    let (o, n, errs) = args
+    case () of
+      _ | elem ArgHelp o  -> putStr help
+        | not (null errs) -> do hPutStr stderr (concat errs)
+                                hPutStrLn stderr "use -h for usage help"
+                                exitFailure
+        | otherwise       -> let v = getVariant o
+                                 s = standalone' o
+                                 i = ignore' o
+                                 t = trim' o
+                                 opts = Options i t
+                             in do imports' v o
+                                   main' v s opts n
   where
     -- No files given, work with stdin
-    main' variant standalone ignore [] = interact $
-        blazeFromHtml variant standalone ignore "template"
+    main' variant standalone opts [] = interact $
+        blazeFromHtml variant standalone opts "template"
 
     -- Handle all files
-    main' variant standalone ignore files = forM_ files $ \file -> do
+    main' variant standalone opts files = forM_ files $ \file -> do
         body <- readFile file
-        putStrLn $ blazeFromHtml variant standalone ignore
+        putStrLn $ blazeFromHtml variant standalone opts
                                  (dropExtension file) body
 
     -- Print imports if needed
@@ -267,6 +277,9 @@ main = do
 
     -- Should we ignore errors?
     ignore' opts = ArgIgnoreErrors `elem` opts
+
+    -- Should we trim whitespace from text?
+    trim' opts = ArgNoTrimText `elem` opts
 
     -- Get the variant from the options
     getVariant opts = fromMaybe defaultHtmlVariant $ listToMaybe $
@@ -308,7 +321,16 @@ data Arg = ArgHtmlVariant HtmlVariant
          | ArgStandalone
          | ArgIgnoreErrors
          | ArgNoTrimText
+         | ArgHelp
          deriving (Show, Eq)
+
+-- | The options record passed to 'blazeFromHtml'
+--
+data Options = Options
+             { ignore_     :: Bool -- ^ ignore errors
+             , noTrimText_ :: Bool -- ^ do not trim text
+             }
+  deriving (Show)
 
 -- | A description of the options
 --
@@ -317,7 +339,8 @@ options =
     [ Option "v" ["html-variant"] htmlVariantOption "HTML variant to use"
     , Option "s" ["standalone"] (NoArg ArgStandalone) "Produce standalone code"
     , Option "e" ["ignore-errors"] (NoArg ArgIgnoreErrors) "Ignore most errors"
-    , Option ""  ["no-trim-text"]  (NoArg ArgNoTrimText) "Do not trim text"
+    , Option "t" ["no-trim-text"]  (NoArg ArgNoTrimText) "Do not trim text"
+    , Option "h" ["help"] (NoArg ArgHelp) "Show help"
     ]
   where
     htmlVariantOption = flip ReqArg "VARIANT" $ \name -> ArgHtmlVariant $

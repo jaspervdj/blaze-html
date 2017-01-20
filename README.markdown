@@ -28,14 +28,8 @@ And the benchmarks using
 
     make benchmark
 
-Cabal
------
+blaze-from-html
+---------------
 
-This directory contains two `.cabal` targets: `blaze-html.cabal` and
-`blaze-from-html.cabal`. Cabal, however, only accepts one `.cabal` file in a
-directory. We have a simple `Makefile` system to switch between the targets:
-
-    make blaze-html
-    make blaze-from-html
-
-to select the desired target.
+The `blaze-from-html` tool has moved to a separate repository:
+<https://github.com/jaspervdj/blaze-from-html>.

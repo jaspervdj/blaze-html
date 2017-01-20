@@ -55,31 +55,6 @@ benchmark-bigtable-non-haskell:
 	ruby benchmarks/bigtable/erubis.rb
 	php -n benchmarks/bigtable/php.php
 
-################################################################################
-# Switching cabal files
-################################################################################
-
-# The current target used
-CURRENT=$(shell ls *.cabal | sed 's/\.cabal//')
-
-# Auxiliary
-hide-cabal-files:
-	cabal clean
-	mv ${CURRENT}.cabal ${CURRENT}.cabal.${CURRENT}
-	mv Setup.hs Setup.hs.${CURRENT}
-
-blaze-html: hide-cabal-files
-	mv blaze-html.cabal.blaze-html blaze-html.cabal
-	mv Setup.hs.blaze-html Setup.hs
-
-blaze-from-html: hide-cabal-files
-	mv blaze-from-html.cabal.blaze-from-html blaze-from-html.cabal
-	mv Setup.hs.blaze-from-html Setup.hs
-
-################################################################################
-# Switching cabal files
-################################################################################
-
 # Cleanup
 clean:
 	rm -rf doc/examples/BenchmarkServer

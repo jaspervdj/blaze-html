@@ -236,7 +236,7 @@ makeLeaf closing tag = unlines
     , "--"
     , function ++ " :: Html  -- ^ Resulting HTML."
     , function ++ " = Leaf \"" ++ tag ++ "\" \"<" ++ tag ++ "\" " ++ "\""
-               ++ (if closing then " /" else "") ++ ">\""
+               ++ (if closing then " /" else "") ++ ">\" ()"
     , "{-# INLINE " ++ function ++ " #-}"
     ]
   where

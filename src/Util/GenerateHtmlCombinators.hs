@@ -450,7 +450,7 @@ html5 = HtmlVariant
         , "scoped", "seamless", "selected", "shape", "size", "sizes", "span"
         , "spellcheck", "src", "srcdoc", "start", "step", "style", "subject"
         , "summary", "tabindex", "target", "title", "type", "usemap", "value"
-        , "width", "wrap", "xmlns"
+        , "viewport", "width", "wrap", "xmlns"
         ]
     , selfClosing = False
     }

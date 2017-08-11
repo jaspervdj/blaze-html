@@ -35,7 +35,7 @@ The best way to get started with BlazeHtml is to have a look at our [tutorial].
 The BlazeHtml API is considered stable, however, the implementation is still
 experimental. We like to encourage you to try it and tell us what you think, and
 submit possible bugs to the [issue tracker] (if you do not have a GitHub
-account, [contact us by mail](/about.html#contact).
+account, [contact us by mail](/about.html#contact)).
 
 [issue tracker]: http://github.com/jaspervdj/blaze-html/issues/
 

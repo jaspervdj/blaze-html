@@ -412,7 +412,7 @@ html5 = HtmlVariant
         , "pre", "progress", "q", "rp", "rt", "ruby", "samp", "script"
         , "section", "select", "small", "span", "strong", "style", "sub"
         , "summary", "sup", "table", "tbody", "td", "textarea", "tfoot", "th"
-        , "thead", "time", "title", "tr", "ul", "var", "video"
+        , "thead", "time", "title", "tr", "u", "ul", "var", "video"
         ]
     , leafs =
         -- http://www.whatwg.org/specs/web-apps/current-work/multipage/syntax.html#void-elements

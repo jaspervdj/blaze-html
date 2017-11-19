@@ -57,6 +57,8 @@ tests = concatMap (uncurry makeTests) $ zip names
 
     , HtmlTest "<img src=\"&amp;\">" $ img ! src "&"
 
+    , HtmlTest "<u>hello</u>" $ H.u "hello"
+
     -- Pre-escaping cases
     , HtmlTest "<3 Haskell" $ preEscapedToMarkup ("<3 Haskell" :: String)
 

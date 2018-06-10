@@ -64,13 +64,20 @@ Test-suite blaze-html-tests
   Ghc-options:    -Wall
 
   Other-modules:
+    Text.Blaze.Html
+    Text.Blaze.Html.Renderer.String
+    Text.Blaze.Html.Renderer.Text
+    Text.Blaze.Html.Renderer.Utf8
     Text.Blaze.Html.Tests
     Text.Blaze.Html.Tests.Util
+    Text.Blaze.Html5
+    Text.Blaze.Html5.Attributes
+    Util.Sanitize
     Util.Tests
 
   Build-depends:
-    HUnit                      >= 1.2 && < 1.6,
-    QuickCheck                 >= 2.4 && < 2.10,
+    HUnit                      >= 1.2 && < 1.7,
+    QuickCheck                 >= 2.4 && < 2.12,
     containers                 >= 0.3 && < 0.6,
     test-framework             >= 0.4 && < 0.9,
     test-framework-hunit       >= 0.3 && < 0.4,

@@ -446,7 +446,7 @@ html5 = HtmlVariant
         , "onsubmit", "onsuspend", "ontimeupdate", "onundo", "onunload"
         , "onvolumechange", "onwaiting", "open", "optimum", "pattern", "ping"
         , "placeholder", "preload", "pubdate", "radiogroup", "readonly", "rel"
-        , "required", "reversed", "rows", "rowspan", "sandbox", "scope"
+        , "required", "reversed", "role", "rows", "rowspan", "sandbox", "scope"
         , "scoped", "seamless", "selected", "shape", "size", "sizes", "span"
         , "spellcheck", "src", "srcdoc", "start", "step", "style", "subject"
         , "summary", "tabindex", "target", "title", "type", "usemap", "value"

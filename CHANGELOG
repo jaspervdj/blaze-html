@@ -1,5 +1,11 @@
 # Changelog
 
+- 0.9.1.0
+    * Add `u` element to HTML5
+    * Add `role` attribute to HTML5
+    * Bump HUnit dependency to 1.6
+    * Bump QuickCheck dependency to 2.11
+
 - 0.9.0.1
     * Fix CHANGELOG
 

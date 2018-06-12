@@ -1,5 +1,8 @@
 # Changelog
 
+- 0.9.1.1 (2018-06-12)
+    * Fix generated source code on Hackage
+
 - 0.9.1.0
     * Add `u` element to HTML5
     * Add `role` attribute to HTML5

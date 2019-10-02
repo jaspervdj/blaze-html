@@ -118,10 +118,6 @@ install:
   - ${CABAL} v2-build $WITHCOMPILER --disable-tests --disable-benchmarks --dep -j2 all | color_cabal_output
 script:
   - DISTDIR=$(mktemp -d /tmp/dist-test.XXXX)
-  # Pre-processing, custom step:
-  - RUNGHC="$(dirname $HC)/runghc"
-  - echo ${RUNGHC}
-  - ${RUNGHC} -isrc src/Util/GenerateHtmlCombinators.hs
   # Packaging...
   - ${CABAL} v2-sdist all | color_cabal_output
   # Unpacking...

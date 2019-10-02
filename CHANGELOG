@@ -1,5 +1,11 @@
 # Changelog
 
+- 0.9.1.2 (2019-10-02)
+    * Bump QuickCheck dependency to 2.13
+    * Bump containers dependency to 0.6
+    * Check in generated code
+    * Regenerate .travis.yml using haskell-ci
+
 - 0.9.1.1 (2018-06-12)
     * Fix generated source code on Hackage
 

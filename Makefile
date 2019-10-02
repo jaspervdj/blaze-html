@@ -2,10 +2,9 @@
 # Configuration
 ################################################################################
 
-GHC=ghc
-GHCI=ghci
-GHC_FLAGS=-O2 -fforce-recomp -idoc/examples -ibenchmarks -isrc -itests
-RUNGHC=$(shell dirname $(shell which ghc))/runghc
+GHC = ghc
+GHCI = ghci
+GHC_FLAGS = -O2 -fforce-recomp -idoc/examples -ibenchmarks -isrc -itests
 
 BENCHMARK_FLAGS = --resamples 10000
 
@@ -15,7 +14,7 @@ BENCHMARK_FLAGS = --resamples 10000
 
 # Generate the actual HTML combinators
 combinators:
-	$(RUNGHC) -isrc src/Util/GenerateHtmlCombinators.hs
+	runghc -isrc src/Util/GenerateHtmlCombinators.hs
 
 # Copy the docs the website directory
 website-docs:

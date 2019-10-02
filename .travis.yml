@@ -119,7 +119,9 @@ install:
 script:
   - DISTDIR=$(mktemp -d /tmp/dist-test.XXXX)
   # Pre-processing, custom step:
-  - make combinators
+  - RUNGHC="$(dirname $HC)/runghc"
+  - echo ${RUNGHC}
+  - ${RUNGHC} -isrc src/Util/GenerateHtmlCombinators.hs
   # Packaging...
   - ${CABAL} v2-sdist all | color_cabal_output
   # Unpacking...

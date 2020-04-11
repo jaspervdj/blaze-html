@@ -460,7 +460,7 @@ html5 = HtmlVariant
 xhtml5 :: HtmlVariant
 xhtml5 = HtmlVariant
     { version = ["XHtml5"]
-    , docType = ["<!DOCTYPE HTML>"]
+    , docType = ["<!DOCTYPE html>"]
     , parents = parents html5
     , leafs = leafs html5
     , attributes = attributes html5

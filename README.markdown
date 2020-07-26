@@ -8,9 +8,19 @@ What
 
 BlazeHtml is a library that aims to be the fastest way to generate HTML in
 Haskell. It's currently in a very experimental state, as different ideas and
-designs are tried. For more information, refer to [the website][].
+designs are tried. For more information, refer to [the website].
 
-[the website]: http://jaspervdj.be/blaze
+BlazeHtml depends on:
+
+* base
+* bytestring
+* text
+* [blaze-builder]
+* [blaze-markup]
+
+[the website]: https://jaspervdj.be/blaze/
+[blaze-builder]: https://github.com/lpsmith/blaze-builder
+[blaze-markup]: https://github.com/jaspervdj/blaze-markup
 
 How
 ---

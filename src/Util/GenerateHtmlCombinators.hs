@@ -448,9 +448,9 @@ html5 = HtmlVariant
         , "placeholder", "preload", "pubdate", "radiogroup", "readonly", "rel"
         , "required", "reversed", "role", "rows", "rowspan", "sandbox", "scope"
         , "scoped", "seamless", "selected", "shape", "size", "sizes", "span"
-        , "spellcheck", "src", "srcdoc", "start", "step", "style", "subject"
-        , "summary", "tabindex", "target", "title", "type", "usemap", "value"
-        , "width", "wrap", "xmlns"
+        , "spellcheck", "src", "srcdoc", "srcset", "start", "step", "style"
+        , "subject", "summary", "tabindex", "target", "title", "type", "usemap"
+        , "value", "width", "wrap", "xmlns"
         ]
     , selfClosing = False
     }

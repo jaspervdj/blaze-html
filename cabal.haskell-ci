@@ -1,0 +1,9 @@
+branches: master ci-*
+
+constraint-set bytestring-0.12
+  ghc: >=8.2
+  constraints: bytestring ^>=0.12.0.0
+  tests: True
+  run-tests: True
+raw-project
+  allow-newer: bytestring

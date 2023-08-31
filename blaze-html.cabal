@@ -19,8 +19,9 @@ Description:
 Build-type:    Simple
 
 Tested-with:
+  GHC == 9.8.0
   GHC == 9.6.2
-  GHC == 9.4.5
+  GHC == 9.4.7
   GHC == 9.2.8
   GHC == 9.0.2
   GHC == 8.10.7
@@ -68,8 +69,8 @@ Library
     base          >= 4    && < 5,
     blaze-builder >= 0.3  && < 0.5,
     blaze-markup  >= 0.8  && < 0.9,
-    bytestring    >= 0.9  && < 0.12,
-    text          >= 0.10 && < 2.1
+    bytestring    >= 0.9  && < 0.13,
+    text          >= 0.10 && < 2.2
 
 Test-suite blaze-html-tests
   Type:           exitcode-stdio-1.0
@@ -101,7 +102,7 @@ Test-suite blaze-html-tests
     blaze-builder >= 0.3  && < 0.5,
     blaze-markup  >= 0.8  && < 0.9,
     bytestring    >= 0.9  && < 0.13,
-    text          >= 0.10 && < 2.1
+    text          >= 0.10 && < 2.2
 
 Source-repository head
   Type:     git

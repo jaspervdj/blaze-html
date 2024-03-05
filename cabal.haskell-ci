@@ -1,18 +1,1 @@
-branches: master ci-*
-
-constraint-set bytestring-0.12
-  ghc: >=8.2
-  constraints: bytestring ^>=0.12.0.0
-  tests: True
-  run-tests: True
-
-constraint-set text-2.1
-  ghc: >=8.2
-  constraints: text ^>=2.1
-  tests: True
-  run-tests: True
-
--- for constraint sets
-raw-project
-  allow-newer: bytestring
-  allow-newer: text
+branches: master

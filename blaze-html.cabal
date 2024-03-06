@@ -1,15 +1,15 @@
-Cabal-version: >= 1.8
-Name:         blaze-html
-Version:      0.9.2.0
-Homepage:     http://jaspervdj.be/blaze
-Bug-Reports:  http://github.com/jaspervdj/blaze-html/issues
-License:      BSD3
-License-file: LICENSE
-Author:       Jasper Van der Jeugt, Simon Meier
-Maintainer:   Jasper Van der Jeugt <m@jaspervdj.be>
-Stability:    Experimental
-Category:     Text
-Synopsis:     A blazingly fast HTML combinator library for Haskell
+Cabal-version: >= 1.10
+Name:          blaze-html
+Version:       0.9.2.0
+Homepage:      http://jaspervdj.be/blaze
+Bug-Reports:   http://github.com/jaspervdj/blaze-html/issues
+License:       BSD3
+License-file:  LICENSE
+Author:        Jasper Van der Jeugt, Simon Meier
+Maintainer:    Jasper Van der Jeugt <m@jaspervdj.be>
+Stability:     Experimental
+Category:      Text
+Synopsis:      A blazingly fast HTML combinator library for Haskell
 Description:
   A blazingly fast HTML combinator library for the Haskell
   programming language. The Text.Blaze module is a good
@@ -37,8 +37,9 @@ Extra-source-files:
   src/Util/GenerateHtmlCombinators.hs
 
 Library
-  Hs-source-dirs: src
-  Ghc-Options:    -Wall
+  Hs-source-dirs:   src
+  Ghc-Options:      -Wall
+  Default-language: Haskell98
 
   Exposed-modules:
     Text.Blaze.Html
@@ -71,10 +72,11 @@ Library
     text          >= 0.10 && < 2.2
 
 Test-suite blaze-html-tests
-  Type:           exitcode-stdio-1.0
-  Hs-source-dirs: src tests
-  Main-is:        TestSuite.hs
-  Ghc-options:    -Wall
+  Type:             exitcode-stdio-1.0
+  Hs-source-dirs:   src tests
+  Main-is:          TestSuite.hs
+  Ghc-options:      -Wall
+  Default-language: Haskell98
 
   Other-modules:
     Text.Blaze.Html

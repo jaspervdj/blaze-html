@@ -1,5 +1,24 @@
 # Changelog
 
+- 0.9.2.0 (2024-03-06)
+    * Make XHTML5 doctype lowercase
+    * Add new attributes to (X)HTML5:
+        - `download`
+        - `minlength`
+        - `muted`
+        - `onkeypress`
+        - `poster`
+        - `property`
+    * Add new elements to (X)HTML5:
+        - `bdi`
+        - `data`
+        - `dialog`
+        - `picture`
+        - `s`
+        - `search`
+        - `slot`
+        - `template`
+
 - 0.9.1.2 (2019-10-02)
     * Bump QuickCheck dependency to 2.13
     * Bump containers dependency to 0.6

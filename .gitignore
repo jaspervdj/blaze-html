@@ -28,3 +28,4 @@ website/_site
 website/_cache
 website/docs
 website/hakyll
+/dist-newstyle/

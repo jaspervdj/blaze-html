@@ -1,14 +1,16 @@
 BlazeHtml
 =========
 
-[![Build Status](https://secure.travis-ci.org/jaspervdj/blaze-html.png?branch=master)](http://travis-ci.org/jaspervdj/blaze-html)
+[![Hackage](https://img.shields.io/hackage/v/blaze-html.svg?color=informational)](https://hackage.haskell.org/package/blaze-html)
+[![Stackage LTS](https://stackage.org/package/blaze-html/badge/lts)](https://stackage.org/lts/package/blaze-html)
+[![Stackage Nightly](https://stackage.org/package/blaze-html/badge/nightly)](https://stackage.org/nightly/package/blaze-html)
+[![Haskell-CI](https://github.com/jaspervdj/blaze-html/actions/workflows/haskell-ci.yml/badge.svg)](https://github.com/jaspervdj/blaze-html/actions/workflows/haskell-ci.yml)
 
 What
 ----
 
-BlazeHtml is a library that aims to be the fastest way to generate HTML in
-Haskell. It's currently in a very experimental state, as different ideas and
-designs are tried. For more information, refer to [the website][].
+BlazeHtml is a library that aims to be the fastest way to generate HTML in Haskell.
+For more information, refer to [the website][].
 
 [the website]: http://jaspervdj.be/blaze
 

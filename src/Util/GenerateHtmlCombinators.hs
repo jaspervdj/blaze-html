@@ -401,18 +401,19 @@ html5 = HtmlVariant
     { version = ["Html5"]
     , docType = ["<!DOCTYPE HTML>"]
     , parents =
-        [ "a", "abbr", "address", "article", "aside", "audio", "b"
-        , "bdo", "blockquote", "body", "button", "canvas", "caption", "cite"
-        , "code", "colgroup", "command", "datalist", "dd", "del", "details"
-        , "dfn", "div", "dl", "dt", "em", "fieldset", "figcaption", "figure"
-        , "footer", "form", "h1", "h2", "h3", "h4", "h5", "h6", "head", "header"
-        , "hgroup", "html", "i", "iframe", "ins", "kbd", "label"
+        [ "a", "abbr", "address", "article", "aside", "audio", "b", "bdi", "bdo"
+        , "blockquote", "body", "button", "canvas", "caption", "cite", "code"
+        , "colgroup", "command", "data", "datalist", "dd", "del", "details"
+        , "dfn", "dialog", "div", "dl", "dt", "em", "fieldset", "figcaption"
+        , "figure", "footer", "form", "h1", "h2", "h3", "h4", "h5", "h6", "head"
+        , "header", "hgroup", "html", "i", "iframe", "ins", "kbd", "label"
         , "legend", "li", "main", "map", "mark", "menu", "meter", "nav"
         , "noscript", "object", "ol", "optgroup", "option", "output", "p"
-        , "pre", "progress", "q", "rp", "rt", "ruby", "samp", "script"
-        , "section", "select", "small", "span", "strong", "style", "sub"
-        , "summary", "sup", "table", "tbody", "td", "textarea", "tfoot", "th"
-        , "thead", "time", "title", "tr", "u", "ul", "var", "video"
+        , "picture", "pre", "progress", "q", "rp", "rt", "ruby", "s", "samp"
+        , "search", "script", "section", "select", "slot", "small", "span"
+        , "strong", "style", "sub", "summary", "sup", "table", "tbody", "td"
+        , "template", "textarea", "tfoot", "th", "thead", "time", "title", "tr"
+        , "u", "ul", "var", "video"
         ]
     , leafs =
         -- http://www.whatwg.org/specs/web-apps/current-work/multipage/syntax.html#void-elements
@@ -424,13 +425,13 @@ html5 = HtmlVariant
         , "autocomplete", "autofocus", "autoplay", "challenge", "charset"
         , "checked", "cite", "class", "cols", "colspan", "content"
         , "contenteditable", "contextmenu", "controls", "coords", "data"
-        , "datetime", "defer", "dir", "disabled", "draggable", "enctype", "for"
+        , "datetime", "defer", "dir", "disabled", "download", "draggable", "enctype", "for"
         , "form", "formaction", "formenctype", "formmethod", "formnovalidate"
         , "formtarget", "headers", "height", "hidden", "high", "href"
         , "hreflang", "http-equiv", "icon", "id", "ismap", "item", "itemprop"
         , "itemscope", "itemtype"
         , "keytype", "label", "lang", "list", "loop", "low", "manifest", "max"
-        , "maxlength", "media", "method", "min", "multiple", "name"
+        , "maxlength", "media", "method", "min", "minlength", "multiple", "name"
         , "novalidate", "onbeforeonload", "onbeforeprint", "onblur", "oncanplay"
         , "oncanplaythrough", "onchange", "oncontextmenu", "onclick"
         , "ondblclick", "ondrag", "ondragend", "ondragenter", "ondragleave"
@@ -460,7 +461,7 @@ html5 = HtmlVariant
 xhtml5 :: HtmlVariant
 xhtml5 = HtmlVariant
     { version = ["XHtml5"]
-    , docType = ["<!DOCTYPE HTML>"]
+    , docType = ["<!DOCTYPE html>"]
     , parents = parents html5
     , leafs = leafs html5
     , attributes = attributes html5

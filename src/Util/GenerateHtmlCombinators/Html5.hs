@@ -265,6 +265,7 @@ attributes =
     , "pattern"
     , "ping"
     , "placeholder"
+    , "poster"
     , "preload"
     , "property"
     , "pubdate"

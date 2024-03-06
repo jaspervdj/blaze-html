@@ -16,6 +16,7 @@ import qualified Data.Map as M
 import Data.Char (toLower)
 import qualified Data.Set as S
 
+import qualified Util.GenerateHtmlCombinators.Html5 as Html5
 import Util.Sanitize (sanitize, prelude)
 
 -- | Datatype for an HTML variant.
@@ -393,66 +394,15 @@ xhtml1FrameSet = HtmlVariant
     }
 
 -- | HTML 5.0
--- A good reference can be found here:
--- http://www.w3schools.com/html5/html5_reference.asp
+-- Specified in a different file since this is the only one that is "alive".
 --
 html5 :: HtmlVariant
 html5 = HtmlVariant
-    { version = ["Html5"]
-    , docType = ["<!DOCTYPE HTML>"]
-    , parents =
-        [ "a", "abbr", "address", "article", "aside", "audio", "b", "bdi", "bdo"
-        , "blockquote", "body", "button", "canvas", "caption", "cite", "code"
-        , "colgroup", "command", "data", "datalist", "dd", "del", "details"
-        , "dfn", "dialog", "div", "dl", "dt", "em", "fieldset", "figcaption"
-        , "figure", "footer", "form", "h1", "h2", "h3", "h4", "h5", "h6", "head"
-        , "header", "hgroup", "html", "i", "iframe", "ins", "kbd", "label"
-        , "legend", "li", "main", "map", "mark", "menu", "meter", "nav"
-        , "noscript", "object", "ol", "optgroup", "option", "output", "p"
-        , "picture", "pre", "progress", "q", "rp", "rt", "ruby", "s", "samp"
-        , "search", "script", "section", "select", "slot", "small", "span"
-        , "strong", "style", "sub", "summary", "sup", "table", "tbody", "td"
-        , "template", "textarea", "tfoot", "th", "thead", "time", "title", "tr"
-        , "u", "ul", "var", "video"
-        ]
-    , leafs =
-        -- http://www.whatwg.org/specs/web-apps/current-work/multipage/syntax.html#void-elements
-        [ "area", "base", "br", "col", "embed", "hr", "img", "input", "keygen"
-        , "link", "menuitem", "meta", "param", "source", "track", "wbr"
-        ]
-    , attributes =
-        [ "accept", "accept-charset", "accesskey", "action", "alt", "async"
-        , "autocomplete", "autofocus", "autoplay", "challenge", "charset"
-        , "checked", "cite", "class", "cols", "colspan", "content"
-        , "contenteditable", "contextmenu", "controls", "coords", "data"
-        , "datetime", "defer", "dir", "disabled", "download", "draggable", "enctype", "for"
-        , "form", "formaction", "formenctype", "formmethod", "formnovalidate"
-        , "formtarget", "headers", "height", "hidden", "high", "href"
-        , "hreflang", "http-equiv", "icon", "id", "ismap", "item", "itemprop"
-        , "itemscope", "itemtype"
-        , "keytype", "label", "lang", "list", "loop", "low", "manifest", "max"
-        , "maxlength", "media", "method", "min", "minlength", "multiple", "name"
-        , "novalidate", "onbeforeonload", "onbeforeprint", "onblur", "oncanplay"
-        , "oncanplaythrough", "onchange", "oncontextmenu", "onclick"
-        , "ondblclick", "ondrag", "ondragend", "ondragenter", "ondragleave"
-        , "ondragover", "ondragstart", "ondrop", "ondurationchange", "onemptied"
-        , "onended", "onerror", "onfocus", "onformchange", "onforminput"
-        , "onhaschange", "oninput", "oninvalid", "onkeydown", "onkeyup"
-        , "onload", "onloadeddata", "onloadedmetadata", "onloadstart"
-        , "onmessage", "onmousedown", "onmousemove", "onmouseout", "onmouseover"
-        , "onmouseup", "onmousewheel", "ononline", "onpagehide", "onpageshow"
-        , "onpause", "onplay", "onplaying", "onprogress", "onpropstate"
-        , "onratechange", "onreadystatechange", "onredo", "onresize", "onscroll"
-        , "onseeked", "onseeking", "onselect", "onstalled", "onstorage"
-        , "onsubmit", "onsuspend", "ontimeupdate", "onundo", "onunload"
-        , "onvolumechange", "onwaiting", "open", "optimum", "pattern", "ping"
-        , "placeholder", "preload", "property", "pubdate", "radiogroup"
-        , "readonly", "rel", "required", "reversed", "role", "rows", "rowspan"
-        , "sandbox", "scope", "scoped", "seamless", "selected", "shape", "size"
-        , "sizes", "span", "spellcheck", "src", "srcdoc", "start", "step"
-        , "style", "subject", "summary", "tabindex", "target", "title", "type"
-        , "usemap", "value", "width", "wrap", "xmlns"
-        ]
+    { version     = ["Html5"]
+    , docType     = ["<!DOCTYPE HTML>"]
+    , parents     = Html5.parents
+    , leafs       = Html5.leafs
+    , attributes  = Html5.attributes
     , selfClosing = False
     }
 

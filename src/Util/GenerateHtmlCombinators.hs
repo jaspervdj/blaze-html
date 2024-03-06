@@ -431,7 +431,7 @@ html5 = HtmlVariant
         , "hreflang", "http-equiv", "icon", "id", "ismap", "item", "itemprop"
         , "itemscope", "itemtype"
         , "keytype", "label", "lang", "list", "loop", "low", "manifest", "max"
-        , "maxlength", "media", "method", "min", "multiple", "name"
+        , "maxlength", "media", "method", "min", "minlength", "multiple", "name"
         , "novalidate", "onbeforeonload", "onbeforeprint", "onblur", "oncanplay"
         , "oncanplaythrough", "onchange", "oncontextmenu", "onclick"
         , "ondblclick", "ondrag", "ondragend", "ondragenter", "ondragleave"

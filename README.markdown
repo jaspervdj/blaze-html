@@ -26,10 +26,6 @@ Run the tests using
 
     make test
 
-And the benchmarks using
-
-    make benchmark
-
 blaze-from-html
 ---------------
 

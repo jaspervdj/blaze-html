@@ -41,20 +41,20 @@ don't want some content to be escaped.
 
 # Running the benchmarks yourself
 
-Get the BlazeHtml repo.
+Get the `blaze-markup` repo.
 
-    git clone git://github.com/jaspervdj/blaze-html.git
-    cd blaze-html
+    git clone git://github.com/jaspervdj/blaze-markup.git
+    cd blaze-markup
 
 Run the ruby/php/... benchmarks. This requires you to have the different
 templating systems installed, of course.
 
-    make bench-bigtable-non-haskell
+    make benchmark-bigtable-non-haskell
 
 Run the BlazeHtml HTML benchmarks. The benchmark discussed above is called
 `bigTable`.
 
-    make bench-html
+    make benchmark
 
 The python benchmarks are located in the [spitfire] repository. Check out the
 code first:

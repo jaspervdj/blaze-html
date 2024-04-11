@@ -19,6 +19,7 @@ Description:
 Build-type:    Simple
 
 Tested-with:
+  GHC == 9.10.0
   GHC == 9.8.2
   GHC == 9.6.4
   GHC == 9.4.8
@@ -94,7 +95,7 @@ Test-suite blaze-html-tests
   Build-depends:
     HUnit                      >= 1.2 && < 1.7,
     QuickCheck                 >= 2.4 && < 2.15,
-    containers                 >= 0.3 && < 0.7,
+    containers                 >= 0.3 && < 0.8,
     test-framework             >= 0.4 && < 0.9,
     test-framework-hunit       >= 0.3 && < 0.4,
     test-framework-quickcheck2 >= 0.3 && < 0.4,

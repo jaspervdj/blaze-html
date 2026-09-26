@@ -26,7 +26,7 @@ renderHtml = R.renderMarkup
 -- Example of correct usage:
 --
 -- @
---     IO.withFile ("z.utf8." <> path) IO.ReadMode $ \h ->
+--     IO.withFile ("z.utf8." <> path) IO.WriteMode $ \h ->
 --       renderHtmlToByteStringIO (B.hPutStr h) html
 -- @
 renderHtmlToByteStringIO :: (ByteString -> IO ()) -> Html -> IO ()
